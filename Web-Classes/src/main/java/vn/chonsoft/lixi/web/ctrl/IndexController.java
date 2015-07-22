@@ -15,8 +15,30 @@ import vn.chonsoft.lixi.web.annotation.WebController;
 @WebController
 public class IndexController {
     
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
     public String index(){
        return "index"; 
+    }
+    
+    /**
+     * 
+     * for common header content
+     * 
+     * @return 
+     */
+    @RequestMapping(value = "/top", method = {RequestMethod.GET, RequestMethod.POST})
+    public String top(){
+       return "top"; 
+    }
+    
+    /**
+     * 
+     * for static footer content
+     * 
+     * @return 
+     */
+    @RequestMapping(value = "/bottom", method = {RequestMethod.GET, RequestMethod.POST})
+    public String bottom(){
+       return "bottom"; 
     }
 }
