@@ -1,0 +1,36 @@
+#help {
+	padding: 45px 0
+}
+
+#help legend {
+	font-weight: bold;
+	border: 0
+}
+
+#help .desc.contact {
+	margin-top: 50px;
+}
+
+#help .methods div {
+	text-align: center;
+	margin: 20px auto
+}
+
+#help .methods img {
+	margin-bottom: 10px;
+}
+
+#help .methods a span {
+	font-weight: normal
+}
+
+
+@media (min-width: 768px) {
+	#help {
+		padding: 85px 0
+	}
+	
+	#help .desc {
+		margin: 10px 0 20px 0;
+	}
+}

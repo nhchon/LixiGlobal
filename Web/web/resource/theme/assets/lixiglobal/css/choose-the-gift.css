@@ -1,0 +1,81 @@
+#choose-the-gift {
+	padding: 45px 0
+}
+
+#choose-the-gift legend {
+	font-weight: bold;
+	border: 0
+}
+
+#choose-the-gift .form-group.right {
+	text-align: right;
+	margin-top: 30px;
+}
+
+#choose-the-gift .form-group.right a:first-child {
+	float: left;
+}
+
+#carousel .item img {
+	max-width: 100%;
+}
+
+#carousel .item .gift {
+	text-align: center;
+}
+
+#carousel .item .gift a {
+	color: #333;
+	text-decoration: none;
+	line-height: 20px;
+}
+
+#carousel .item .gift label {
+	margin-top: 10px;
+	cursor: pointer;
+}
+
+.carousel-control {
+	background: none !important;
+	color: #777;
+}
+
+.carousel-control:hover {
+	color: #aaa;
+}
+
+.carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev {
+	left: -15px
+}
+
+.carousel-control .glyphicon-chevron-right, .carousel-control .icon-next {
+	right: -15px;
+}
+
+@media (min-width: 768px) {
+	#choose-the-gift {
+		padding: 85px 0
+	}
+	
+	#choose-the-gift .desc {
+		margin: 10px 0 20px 0;
+	}
+	
+	.carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev {
+		left: -20px
+	}
+
+	.carousel-control .glyphicon-chevron-right, .carousel-control .icon-next {
+		right: -20px;
+	}
+}
+
+@media (min-width: 992px) {
+	.carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev {
+		left: 30px
+	}
+
+	.carousel-control .glyphicon-chevron-right, .carousel-control .icon-next {
+		right: 30px;
+	}
+}

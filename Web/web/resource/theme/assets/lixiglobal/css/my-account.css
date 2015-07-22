@@ -1,0 +1,28 @@
+#my-account table {
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+#my-account table td {
+	padding: 10px
+}
+
+#my-account table tr:last-child td {
+	border-bottom: #333 solid 1px;
+}
+
+#my-account table th {
+	background-color: #E6EFF8;
+	border-top: #333 solid 1px;
+	border-bottom: #333 solid 1px;
+	padding: 10px 5px;
+	font-weight: normal;
+}
+
+#my-account table td:first-child, #my-account table th:first-child {
+	border-left: #333 solid 1px;
+}
+
+#my-account table td:last-child, #my-account table th:last-child {
+	border-right: #333 solid 1px;
+}

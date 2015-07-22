@@ -1,0 +1,22 @@
+#billing-address {
+	padding: 45px 0
+}
+
+#billing-address legend {
+	font-weight: bold;
+	border: 0
+}
+
+#billing-address .form-group.right {
+	text-align: right;
+	margin-top: 30px;
+}
+#billing-address .form-group.right a:first-child {
+	float: left;
+}
+
+@media (min-width: 768px) {
+	#billing-address {
+		padding: 85px 0
+	}
+}

@@ -1,0 +1,177 @@
+
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Lixi Global</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<link rel="shortcut icon" href="favicon.ico?v=1.0" />
+<!--[if lt IE 9]>
+<script src="js/html5.js?v=1.0"></script>
+<![endif]-->
+	<link rel="stylesheet" href="css/bootstrap.min.css?v=1.0" type="text/css" media="all" />
+<link rel="stylesheet" href="css/font-awesome.min.css?v=1.0" type="text/css" media="all" />
+<link rel="stylesheet" href="css/style.css?v=1.0" type="text/css" />
+	<link rel="stylesheet" href="css/home.css?v=1.0" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+	<section id="header">
+	<div class="container">
+		<div class="row">
+			<a id="logo" href="index.html"><img alt="Logo" src="img/logo.png" /></a>
+			<a id="menu-toggle"><i class="fa fa-bars"></i></a>
+			<ul id="menu-items">
+				<li><a href="sign-in.html">Sign In</a></li>
+				<li class="languages">
+					<a>Tiếng Việt</a>
+					<a class="active">English</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</section>
+	<!-- Page Content -->
+	<section id="home">
+		<div class="container">
+			<div class="row">
+				<div class="usp-wrapper">
+					<div class="usp">
+						Gifting has never been easier...
+						<br />
+						in <span class="strong">three easy steps</span>
+						<br />
+						with a simple fee of just <span class="price">$1.00</span><span class="star">*</span>
+					</div>
+				</div>
+				<div class="desc">
+					<div class="col-lg-1 col-md-1 hidden-sm hidden-xs"></div>
+					<div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 img choose-value">
+						<p>Choose the value of the gift you want to give in Vietnamese Dong or USD</p>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-1 col-xs-12 img arrow"></div>
+					<div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 img make-payment">
+						<p>Pay by Credit/Debit Card or with bank account</p>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-1 col-xs-12 img arrow"></div>
+					<div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 img send-gift">
+						<p>Confirmation is sent right away to the receiver from our e-commerce partner in Vietnam</p>
+					</div>
+					<div class="col-lg-1 col-md-1 hidden-sm hidden-xs"></div>
+				</div>
+				<div class="desc-txt hidden-xs">
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+						<p>Choose the value of the gift you want to give in Vietnamese Dong or USD</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+						<p>Pay by Credit/Debit Card or with bank account</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+						<p>Confirmation is sent right away to the receiver from our e-commerce partner in Vietnam</p>
+					</div>
+				</div>
+				<div id="star-desc" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 star-desc">
+					* Gift value is limited to a maximum of USD $100.00
+				</div>
+			</div>
+		</div>
+	</section>
+	<section id="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+				<div class="links">
+					<a href="index.html">Home</a>
+					<span>|</span>
+					<a href="javascript:void(0)">About us</a>
+					<br class="visible-xs" />
+					<span class="hidden-xs">|</span>
+					<a href="javascript:void(0)">Terms & Privacy</a>
+					<span>|</span>
+					<a href="help.html">Contact</a>
+					<span>|</span>
+					<a href="javascript:void(0)">Jobs</a>
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+				<div class="copyright">
+					<span>Condition of Use Privacy Notice. 2015, lixi.global Inc or its afiliates</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</section></div>
+<script type="text/javascript" src="js/jquery-2.1.4.min.js?v=1.0"></script>
+<script type="text/javascript" src="js/bootstrap.min.js?v=1.0"></script>
+<script type="text/javascript" src="js/lixi.js?v=1.0"></script><script type="text/javascript">
+/** Page Script **/
+var startViewport = null;
+var resizing = false;
+var getViewport = function() {
+	var viewPortWidth;
+	var viewPortHeight;
+	if (typeof window.innerWidth != 'undefined') {
+		viewPortWidth = window.innerWidth,
+		viewPortHeight = window.innerHeight
+	}
+	else if (typeof document.documentElement != 'undefined'
+		&& typeof document.documentElement.clientWidth != 'undefined' && document.documentElement.clientWidth != 0) {
+		viewPortWidth = document.documentElement.clientWidth,
+		viewPortHeight = document.documentElement.clientHeight
+	}
+	else {
+		viewPortWidth = document.getElementsByTagName('body')[0].clientWidth,
+		viewPortHeight = document.getElementsByTagName('body')[0].clientHeight
+	}
+	return [viewPortWidth, viewPortHeight];
+};
+var resize = function(){
+	resizing = true;
+	var viewport = getViewport();
+	var width = viewport[0];
+	var height = viewport[1];
+	var bodyHeight = $('#wrapper').outerHeight() + 95;
+	if(bodyHeight < height) {
+		var val = (height - bodyHeight) / 2;
+		var imgWidth = 1280;
+		var imgHeight = 825;
+		var ratio = imgWidth/imgHeight;
+		var maxHeight = width/ratio;
+		var homeHeight = $('#home').outerHeight() + val + val;
+		$('#home').css({
+			paddingTop: val + 'px'
+		});
+		$('#star-desc').css({
+			paddingTop: (val + 15) + 'px'
+		});
+		if(homeHeight > maxHeight) {
+			$('#home').addClass('bg-height-full');
+		} else {
+			$('#home').removeClass('bg-height-full');
+		}
+	} else {
+		$('#home').css({
+			paddingTop: '0px'
+		});
+		$('#star-desc').css({
+			paddingTop: '0px'
+		});
+	}
+	resizing = false;
+};
+$(document).ready(function(){
+	startViewport = getViewport();
+	resize();
+	setInterval(function(){
+		if(resizing)
+			return;
+		var newViewport = getViewport();
+		if(newViewport[0] != startViewport[0] || newViewport[1] != startViewport[1]) {
+			startViewport = newViewport;
+			resize();
+		}
+	}, 200)
+});
+</script>
+</body>
+</html>
