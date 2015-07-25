@@ -5,12 +5,18 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,8 +37,17 @@ import vn.chonsoft.lixi.web.annotation.WebController;
 @RequestMapping("user")
 public class UserController {
     
-    @Inject UserService userService;
+    @Autowired
+    JavaMailSender mailSender;
     
+    @Inject
+    UserService userService;
+    
+    /**
+     * 
+     * @param model
+     * @return 
+     */
     @RequestMapping(value = "signUp", method = RequestMethod.GET)
     public String signUp(Map<String, Object> model) {
 
@@ -82,9 +97,41 @@ public class UserController {
             return new ModelAndView("user/signUp");
         }
         
-        return new ModelAndView(new RedirectView("/", true, true));
+        // SignUp process complete. Check email for verification
+        
+        // compose email
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("lixi@blobal");
+        message.setTo(form.getEmail());
+        message.setSubject("Xin chao");
+        message.setText("Xin chao ");
+        
+        // send email
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> mailSender.send(message));
+        
+        model.put("email", form.getEmail());
+        return new ModelAndView("user/signUpComplete", model);
     }
     
+    /**
+     * 
+     * SignUp process complete. Check email for verification
+     * 
+     * @param model
+     * @return 
+     */
+    @RequestMapping(value = "signUpComplete", method = RequestMethod.GET)
+    public String signUpComplete(Map<String, Object> model){
+        
+        return "user/signUpComplete";
+        
+    }
+    /**
+     * 
+     * @param model
+     * @return 
+     */
     @RequestMapping(value = "signIn", method = RequestMethod.GET)
     public String signIn(Map<String, Object> model) {
 
@@ -92,6 +139,14 @@ public class UserController {
         return "user/signIn";
     }
 
+    /**
+     * 
+     * @param model
+     * @param form
+     * @param errors
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = "signIn", method = RequestMethod.POST)
     public ModelAndView signIn(Map<String, Object> model,
             @Valid UserSignInForm form, Errors errors, HttpServletRequest request) {

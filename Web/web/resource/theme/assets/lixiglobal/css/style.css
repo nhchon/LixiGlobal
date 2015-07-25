@@ -233,7 +233,9 @@ input.lixi-radio + span.lixi-radio + span.txt {
 	float: left;
 	margin-left: 0;
 }
-
+.errors {
+                color:#fe0000;
+            }
 @media (min-width: 768px) {
 	body {
 		padding-top: 95px;

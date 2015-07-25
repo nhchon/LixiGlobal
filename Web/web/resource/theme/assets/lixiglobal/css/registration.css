@@ -16,7 +16,7 @@
 	margin: 0 0 20px 0;
 }
 #registration .form-group.name input {
-	width: 30%;
+	/*width: 30%;*/
 	margin-right: 5%;
 	float: left;
 }

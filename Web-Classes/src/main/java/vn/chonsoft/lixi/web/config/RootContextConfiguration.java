@@ -10,20 +10,25 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.Executor;
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -68,6 +73,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
         excludeFilters =
         @ComponentScan.Filter({Controller.class, ControllerAdvice.class})
 )
+@PropertySource(value = { "classpath:lixi.properties" })
 @Import({ SecurityConfiguration.class })
 public class RootContextConfiguration  implements
         AsyncConfigurer, SchedulingConfigurer{
@@ -75,6 +81,9 @@ public class RootContextConfiguration  implements
     private static final Logger schedulingLogger =
             LogManager.getLogger(log.getName() + ".[scheduling]");
 
+    @Autowired
+    private Environment env;
+    
     @Bean
     public MessageSource messageSource()
     {
@@ -200,4 +209,22 @@ public class RootContextConfiguration  implements
         registrar.setTaskScheduler(scheduler);
     }
     
+    @Bean
+    public JavaMailSenderImpl javaMailSender() {
+        JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
+        mailSenderImpl.setHost(env.getProperty("smtp.host"));
+        mailSenderImpl.setPort(env.getProperty("smtp.port", Integer.class));
+        mailSenderImpl.setProtocol(env.getProperty("smtp.protocol"));
+        mailSenderImpl.setUsername(env.getProperty("smtp.username"));
+        mailSenderImpl.setPassword(env.getProperty("smtp.password"));
+
+        Properties javaMailProps = new Properties();
+        javaMailProps.put("mail.smtp.auth", true);
+        javaMailProps.put("mail.smtp.starttls.enable", true);
+        javaMailProps.put("mail.debug", true);
+
+        mailSenderImpl.setJavaMailProperties(javaMailProps);
+
+        return mailSenderImpl;
+    }    
 }
