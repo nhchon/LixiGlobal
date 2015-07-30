@@ -1,0 +1,18 @@
+<html>
+    <body>
+        <h5>Hi ${user.firstName} ${user.middleName} ${user.lastName} !</h5>
+        
+        <div>Thank you for registering at our site. Please click the link below to complete your registration.</div>
+        
+        <div>
+            <p>
+            <a href="${regisConfirmPath}" target="_blank">${regisConfirmPath}</a>
+            </p>
+        </div>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

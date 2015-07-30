@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.web.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import java.util.Map;
@@ -17,6 +18,8 @@ import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.VelocityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.AdviceMode;
@@ -45,6 +48,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -226,5 +230,18 @@ public class RootContextConfiguration  implements
         mailSenderImpl.setJavaMailProperties(javaMailProps);
 
         return mailSenderImpl;
-    }    
+    }
+    
+    @Bean
+    public VelocityEngine velocityEngine()throws VelocityException, IOException{
+        
+        VelocityEngineFactoryBean factory = new VelocityEngineFactoryBean();
+        
+        Properties velocityProperties = new Properties();
+        velocityProperties.put("resource.loader", "class");
+        velocityProperties.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        
+        factory.setVelocityProperties(velocityProperties);
+        return factory.createVelocityEngine();
+    }
 }

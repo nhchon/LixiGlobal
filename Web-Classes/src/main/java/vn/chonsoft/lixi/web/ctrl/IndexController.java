@@ -4,6 +4,17 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -14,31 +25,78 @@ import vn.chonsoft.lixi.web.annotation.WebController;
  */
 @WebController
 public class IndexController {
-    
+
     @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
-    public String index(){
-       return "index"; 
+    public String index() {
+        return "index";
     }
-    
+
     /**
-     * 
+     *
      * for common header content
-     * 
-     * @return 
+     *
+     * @return
      */
     @RequestMapping(value = "/top", method = {RequestMethod.GET, RequestMethod.POST})
-    public String top(){
-       return "top"; 
+    public String top() {
+        return "top";
     }
-    
+
     /**
-     * 
+     *
      * for static footer content
-     * 
-     * @return 
+     *
+     * @return
      */
     @RequestMapping(value = "/bottom", method = {RequestMethod.GET, RequestMethod.POST})
-    public String bottom(){
-       return "bottom"; 
+    public String bottom() {
+        return "bottom";
+    }
+
+    /**
+     * 
+     * @param request
+     * @param response
+     * @throws IOException 
+     */
+    @RequestMapping(value = "/captcha", method = RequestMethod.GET)
+    public void captCha(HttpServletRequest request, HttpServletResponse response) throws IOException{
+
+        // set mime type as jpg image
+        response.setContentType("image/jpg");
+        ServletOutputStream out = response.getOutputStream();
+        
+        int width = 150;
+        int height = 41;
+
+        BufferedImage bufferedImage = new BufferedImage(width, height,
+                BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g2d = bufferedImage.createGraphics();
+
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(0, 0, width, height);
+        
+        Font font = new Font("Comic Sans MS", Font.BOLD, 30);
+        g2d.setFont(font);
+
+        GradientPaint gp = new GradientPaint(0, 0,
+                Color.BLUE, 0, height / 2, Color.LIGHT_GRAY, true);
+
+        g2d.setPaint(gp);
+
+        // Generate and replaces all "empty substrings" with a space, and then trims off the leading / trailing spaces.
+        String captcha = RandomStringUtils.randomAlphabetic(4).replace("", " ").trim();
+        
+        request.getSession().setAttribute("captcha", captcha);
+
+        g2d.drawString(captcha, 5, 30);
+
+        g2d.dispose();
+
+        // encode the image as a JPEG data stream and write the same to servlet output stream   
+        ImageIO.write(bufferedImage, "jpg", out);
+        //
+        out.close();
     }
 }

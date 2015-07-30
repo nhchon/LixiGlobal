@@ -37,4 +37,30 @@ public class UserServiceImpl implements UserService{
     public User findByEmail(String email){
         return this.userRepository.findByEmail(email);
     }
+    
+    /**
+     * 
+     * @param code
+     * @return 
+     */
+    @Override
+    public User findByActiveCode(String code){
+        
+        return this.userRepository.findByActiveCode(code);
+        
+    }
+    
+    @Override
+    public int updateEnaled(Boolean enabled, Long id){
+        
+        return this.userRepository.updateEnaled(enabled, id);
+        
+    }
+    
+    @Override
+    public int updateActiveCode(String code, Long id){
+        
+        return this.userRepository.updateActiveCode(code, id);
+        
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 /**
@@ -52,11 +53,13 @@ public class Bootstrap implements WebApplicationInitializer{
         dispatcher.addMapping("/services/Rest/*");
         
         /* encoding filter*/
-        //FilterRegistration.Dynamic fr = container.addFilter("encodingFilter",
-        //        new CharacterEncodingFilter());
-        //fr.setInitParameter("encoding", "ISO-8859-1");
-        //fr.setInitParameter("forceEncoding", "true");
-        //fr.addMappingForUrlPatterns(null, false, "/*");
+        FilterRegistration.Dynamic fr = container.addFilter("encodingFilter",
+                new CharacterEncodingFilter());
+        fr.setInitParameter("encoding", "ISO-8859-1");
+        fr.setInitParameter("forceEncoding", "true");
+        fr.addMappingForUrlPatterns(null, false, "/*");
         
+        // requestContextFilter
+        //container.addFilter("requestContextFilter", new RequestContextFilter()).addMappingForUrlPatterns(null, false, "/*");
     }
 }

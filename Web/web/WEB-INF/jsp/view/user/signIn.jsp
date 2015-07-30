@@ -126,7 +126,7 @@
                                 </div>
                                 <div class="form-group right">
                                     <div class="col-lg-12">
-                                        <a class="forgot-password" href="password-assistance.html"><spring:message code="message.forgot_password"/></a>
+                                        <a class="forgot-password" href="<c:url value="/user/passwordAssistance"/>"><spring:message code="message.forgot_password"/></a>
                                         <br />
                                         <button type="submit" class="btn btn-primary"><spring:message code="message.sign_in"/></button>
                                     </div>
@@ -140,7 +140,7 @@
                             <br />
                             <span class="txt"><spring:message code="message.forgot_your_password"/>?</span>
                             <br class="hidden-lg hidden-md hidden-sm"/>
-                            <a href="password-assistance.html"><spring:message code="message.password_help"/></a>
+                            <a href="<c:url value="/user/passwordAssistance"/>"><spring:message code="message.password_help"/></a>
                             <br />
                             <span class="txt"><spring:message code="message.email_change"/></span>
                             <br class="hidden-lg hidden-md hidden-sm"/>

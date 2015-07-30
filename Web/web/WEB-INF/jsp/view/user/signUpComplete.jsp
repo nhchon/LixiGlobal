@@ -11,7 +11,7 @@
 
     <jsp:body>
         <!-- Page Content -->
-        <section id="email-already-in-use" class="normal-page">
+        <section class="normal-page">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
