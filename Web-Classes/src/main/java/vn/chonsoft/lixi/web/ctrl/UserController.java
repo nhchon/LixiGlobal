@@ -274,7 +274,43 @@ public class UserController {
             try {
                 
                 User u = this.userService.findByEmail(email);
-                // u is not null. Send email
+                
+                /* user is not null. Send email */
+                // update new active code
+                String activeCode = UUID.randomUUID().toString();
+                this.userService.updateActiveCode(activeCode, u.getId());
+
+                // re-send active code
+                MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+                    @SuppressWarnings({ "rawtypes", "unchecked" })
+                    @Override
+                    public void prepare(MimeMessage mimeMessage) throws Exception {
+
+                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                        message.setTo(u.getEmail());
+                        message.setCc("yhannart@gmail.com");
+                        message.setFrom("support@lixi.global");
+                        message.setSubject("LiXi.Global - Reset Your Password");
+                        message.setSentDate(Calendar.getInstance().getTime());
+
+                        Map model = new HashMap();	             
+                        model.put("user", u);
+                        // built the path
+                        String resetPasswordPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword?code="+activeCode).build().toUriString();
+                        model.put("resetPasswordPath", resetPasswordPath);
+
+                        String text = VelocityEngineUtils.mergeTemplateIntoString(
+                           velocityEngine, "emails/reset-password.vm", "UTF-8", model);
+                        message.setText(text, true);
+
+                      }
+
+                   };        
+
+                // send email
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> mailSender.send(preparator));
                 
             } catch (Exception e) {
             }
