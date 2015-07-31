@@ -86,11 +86,13 @@ public class IndexController {
         g2d.setPaint(gp);
 
         // Generate and replaces all "empty substrings" with a space, and then trims off the leading / trailing spaces.
-        String captcha = RandomStringUtils.randomAlphabetic(4).replace("", " ").trim();
+        String captcha = RandomStringUtils.randomAlphabetic(4);
+        // add spaces to enough width
+        String captchaDraw = captcha.replace("", " ").trim();
         
         request.getSession().setAttribute("captcha", captcha);
 
-        g2d.drawString(captcha, 5, 30);
+        g2d.drawString(captchaDraw, 5, 30);
 
         g2d.dispose();
 

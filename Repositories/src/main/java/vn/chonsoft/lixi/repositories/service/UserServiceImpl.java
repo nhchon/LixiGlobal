@@ -63,4 +63,11 @@ public class UserServiceImpl implements UserService{
         return this.userRepository.updateActiveCode(code, id);
         
     }
+    
+    @Override
+    public int updatePassword(String password, Long id){
+        
+        return this.userRepository.updatePassword(password, id);
+        
+    }
 }

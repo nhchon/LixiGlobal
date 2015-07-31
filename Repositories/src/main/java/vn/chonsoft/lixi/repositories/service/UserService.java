@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Lixi is a Vietnamese word for small gift of money
+ * 2015 @ Lixi Global
  */
 package vn.chonsoft.lixi.repositories.service;
 
@@ -29,4 +28,6 @@ public interface UserService {
     int updateEnaled(Boolean enabled, Long id);
     
     int updateActiveCode(String code, Long id);
+    
+    int updatePassword(String password, Long id);
 }

@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -31,6 +33,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.model.form.UserResetPasswordForm;
 import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
 import vn.chonsoft.lixi.repositories.service.UserService;
@@ -43,6 +46,8 @@ import vn.chonsoft.lixi.web.annotation.WebController;
 @WebController
 @RequestMapping("user")
 public class UserController {
+    
+    private static final Logger log = LogManager.getLogger(UserController.class);
     
     @Autowired
     JavaMailSender mailSender;
@@ -254,6 +259,9 @@ public class UserController {
     @RequestMapping(value = "passwordAssistance", method = RequestMethod.GET)
     public String passwordAssistance(Map<String, Object> model){
         
+        // don't show error
+        model.put("passwordAssistance", true);
+        
         return "user/passwordAssistance";
         
     }
@@ -266,9 +274,13 @@ public class UserController {
     @RequestMapping(value = "passwordAssistance", method = RequestMethod.POST)
     public ModelAndView sendPasswordAssistance(HttpServletRequest request){
         
+        // model
+        Map<String, Object> model = new HashMap<>();
+        
         String captcha = request.getParameter("captcha");
         // captcha is correct
-        if(captcha != null && captcha.equals(request.getSession().getAttribute("captcha"))){
+        log.info(captcha + " - " + request.getSession().getAttribute("captcha"));
+        if(captcha != null && captcha.equals((String)request.getSession().getAttribute("captcha"))){
            
             String email = request.getParameter("email");
             try {
@@ -312,11 +324,78 @@ public class UserController {
                 ExecutorService executor = Executors.newSingleThreadExecutor();
                 executor.execute(() -> mailSender.send(preparator));
                 
+                // complete
+                model.put("email", email);
+                
+                return new ModelAndView("user/passwordAssistanceComplete", model);
+                
             } catch (Exception e) {
+                
+                log.info(e.getMessage(), e);
+                
             }
         }
         
-        return new ModelAndView("user/passwordAssistance");
+        // show error message
+        model.put("passwordAssistance", false);
+        //
+        return new ModelAndView("user/passwordAssistance", model);
+        
+    }
+    
+    /**
+     * 
+     * @param model
+     * @return 
+     */
+    @RequestMapping(value = "resetPassword", method = RequestMethod.GET)
+    public ModelAndView resetPassword(Map<String, Object> model){
+        
+        model.put("userResetPasswordForm", new UserResetPasswordForm());
+        
+        return new ModelAndView("user/resetPassword", model);
+    }
+    
+    @RequestMapping(value = "resetPassword", method = RequestMethod.POST)
+    public ModelAndView resetPassword(Map<String, Object> model,
+            @Valid UserResetPasswordForm form, Errors errors) {
+        
+        if (errors.hasErrors()) {
+            return new ModelAndView("user/resetPassword");
+        }
+        
+        try{
+            
+            User u = this.userService.findByActiveCode(form.getCode());
+            if(u != null){
+                
+                // update password
+                this.userService.updatePassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()), u.getId());
+                
+                // update active code
+                this.userService.updateActiveCode(null, u.getId());
+                
+            }
+            else{
+                
+                model.put("codeIsInvalid", "yes");
+                
+                return new ModelAndView("user/resetPassword");
+            }
+            
+        } catch (ConstraintViolationException e) {
+            
+            // log
+            log.info(e.getMessage(), e);
+            
+            //
+            model.put("validationErrors", e.getConstraintViolations());
+            return new ModelAndView("user/resetPassword");
+            
+        }
+        
+        //
+        return new ModelAndView("user/resetPasswordComplete");
         
     }
     /**

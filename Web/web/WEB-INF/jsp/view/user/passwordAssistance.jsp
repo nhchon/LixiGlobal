@@ -7,6 +7,8 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            var EMAIL_MESSAGE = '<spring:message code="validate.email_required"/>';
+            var CAPTCHA_MESSAGE = '<spring:message code="validate.captcha_required"/>'
             var CONTEXT_PATH = '${pageContext.request.contextPath}';
             $(document).ready(function () {
                 $('#captchaImg').on({
@@ -15,6 +17,31 @@
                     }
                 });
             });
+            
+            function validPassAssistanceForm(){
+                
+                if (!isValidEmailAddress($('#email').val())) {
+
+                        alert(EMAIL_MESSAGE);
+                        //
+                        $('#email').focus();
+                        //
+                        return false;
+                }
+                else{
+                    
+                    if($.trim($('#captcha').val()) === ''){
+                        alert(CAPTCHA_MESSAGE);
+                        //
+                        $('#captcha').focus();
+                        //
+                        return false;
+                    }
+
+                }
+                // Ok
+                return true;
+            }
         </script>
     </jsp:attribute>
 
@@ -25,7 +52,12 @@
                 <div class="row">
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
-                        <form class="form-horizontal">
+                        <c:if test="${not passwordAssistance}">
+                            <div class="msg msg-error">
+                                There is something wrong with your email/captcha code. Please try again !
+                            </div>
+                        </c:if>
+                        <form onsubmit="return validPassAssistanceForm();" class="form-horizontal" method="post" action="${pageContext.request.contextPath}/user/passwordAssistance">
                             <fieldset>
                                 <legend>Password Assistance</legend>
                                 <div class="desc">
@@ -54,7 +86,8 @@
                                 </div>
                                 <div class="form-group right">
                                     <div class="col-lg-12">
-                                        <button class="btn btn-primary">Next</button>
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                        <button type="submit" class="btn btn-primary">Next</button>
                                     </div>
                                 </div>
                             </fieldset>
