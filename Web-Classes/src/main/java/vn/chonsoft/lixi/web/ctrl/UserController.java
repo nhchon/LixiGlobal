@@ -318,9 +318,6 @@ public class UserController {
     @RequestMapping(value = "passwordAssistance", method = RequestMethod.GET)
     public String passwordAssistance(Map<String, Object> model){
         
-        // don't show error
-        model.put("passwordAssistance", true);
-        
         return "user/passwordAssistance";
         
     }
@@ -420,13 +417,26 @@ public class UserController {
     public ModelAndView resetPassword(@PathVariable String code){
         
         Map<String, Object> model = new HashMap<>();
-        
-        UserResetPasswordForm form = new UserResetPasswordForm();
-        form.setCode(code);
-        
-        model.put("userResetPasswordForm", form);
-        
-        return new ModelAndView("user/resetPassword", model);
+        Date currentDate = Calendar.getInstance().getTime();
+        // get reset-password code
+        UserSecretCode usc = this.uscService.findByCode(code);
+        if(usc == null || usc.getExpiredDate().before(currentDate)){
+
+            // show error message
+            model.put("passwordAssistance", 1);
+
+            return new ModelAndView("user/passwordAssistance");
+
+        }
+        else{
+
+            UserResetPasswordForm form = new UserResetPasswordForm();
+            form.setCode(code);
+
+            model.put("userResetPasswordForm", form);
+
+            return new ModelAndView("user/resetPassword", model);
+        }
     }
     
     /**
@@ -446,20 +456,22 @@ public class UserController {
         
         try{
             
+            // check expired
+            Date currentDate = Calendar.getInstance().getTime();
             // get reset-password code
             UserSecretCode usc = this.uscService.findByCode(form.getCode());
-            if(usc == null){
+            if(usc == null || usc.getExpiredDate().before(currentDate)){
                 
-                model.put("codeIsInvalid", "yes");
+                // show error message
+                model.put("passwordAssistance", 1);
                 
-                return new ModelAndView("user/resetPassword");
+                return new ModelAndView("user/passwordAssistance");
                 
             }
             else{
-                
                 // update password
                 this.userService.updatePassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()), usc.getUserId().getId());
-                
+
                 // delete re-set code
                 this.uscService.delete(usc.getId());
             }
