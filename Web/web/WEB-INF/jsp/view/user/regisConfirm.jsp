@@ -16,13 +16,13 @@
                 <div class="row">
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
-                        <c:if test="${activeResult}">
+                        <c:if test="${activeResult eq 1}">
                             <h1><spring:message code="regis.thank_you"/></h1>
                             <p><spring:message code="regis.success"/></p>
                             <c:set var="signInUrl" value="${pageContext.request.contextPath}/user/signIn"/>
                             <p><spring:message code="regis.success_click" arguments="${signInUrl}"/></p>
                         </c:if>
-                        <c:if test="${not activeResult}">
+                        <c:if test="${codeWrong eq 1 || codeExpired eq 1}">
                             <h1><spring:message code="regis.sorry"/></h1>
                             <div class="msg msg-error"><spring:message code="regis.wrong"/></div>
                             <h5><spring:message code="regis.resend_code"/></h5>

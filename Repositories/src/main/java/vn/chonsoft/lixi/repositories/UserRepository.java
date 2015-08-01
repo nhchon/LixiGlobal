@@ -19,8 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
     
     User findByEmail(String email);
     
-    User findByActiveCode(String code);
-
     @Modifying
     @Transactional
     @Query("update User u set u.password = :password where u.id = :id")
@@ -33,6 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
     
     @Modifying
     @Transactional
-    @Query("update User u set u.activeCode = :activeCode where u.id = :id")
-    int updateActiveCode(@Param("activeCode") String activeCode, @Param("id") Long id);    
+    @Query("update User u set u.activated = :activated where u.id = :id")
+    int updateActivated(@Param("activated") Boolean activated, @Param("id") Long id);    
 }

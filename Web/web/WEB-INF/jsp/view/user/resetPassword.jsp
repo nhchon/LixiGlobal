@@ -65,6 +65,7 @@
                                 </div>
                                 <div class="form-group right">
                                     <div class="col-lg-12">
+                                        <form:hidden path="code"/>
                                         <button type="submit" class="btn btn-primary">Change Password</button>
                                     </div>
                                 </div>

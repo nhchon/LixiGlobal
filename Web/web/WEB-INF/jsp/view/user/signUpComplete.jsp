@@ -18,6 +18,7 @@
                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
                         <h1>Check your email</h1>
                         <p><spring:message code="signup.an_email_was_sent" arguments="${email}"/></p>
+                        <p>Please remember that the activation code will be expired after one day.</p>
                         <p>
                             Be sure to check your spam filter if you can’t find the email in
                             your inbox. You may aslo contact

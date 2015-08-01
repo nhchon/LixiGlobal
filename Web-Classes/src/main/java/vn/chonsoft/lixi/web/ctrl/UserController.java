@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
@@ -30,12 +32,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.ui.velocity.VelocityEngineUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.model.UserSecretCode;
 import vn.chonsoft.lixi.model.form.UserResetPasswordForm;
 import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
+import vn.chonsoft.lixi.repositories.service.UserSecretCodeService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.annotation.WebController;
 
@@ -57,6 +62,9 @@ public class UserController {
     
     @Inject
     UserService userService;
+    
+    @Inject
+    UserSecretCodeService uscService;
     
     /**
      * 
@@ -97,24 +105,40 @@ public class UserController {
         u.setAccountNonExpired(true);
         u.setAccountNonLocked(true);
         u.setCredentialsNonExpired(true);
-        // set active_code
-        u.setEnabled(false);
-        String activeCode = UUID.randomUUID().toString();
-        u.setActiveCode(activeCode);
-        //
-        u.setCreatedDate(Calendar.getInstance().getTime());
-        u.setCreatedBy(u.getEmail());
+        u.setEnabled(true);// enable
+        u.setActivated(false);// but not active
         
+        // created date and by
+        Date currentDate = Calendar.getInstance().getTime();
+        u.setCreatedDate(currentDate);
+        u.setCreatedBy(u.getEmail());
+
+        // generate active_code
+        String activeCode = UUID.randomUUID().toString();
+
         try {
             // check unique email
             // exceptions will be thrown if the email is not unique
             User temp = this.userService.checkUniqueEmail(u.getEmail());
             if(temp == null){
+                
                 this.userService.save(u);
+                
+                // inser activate code
+                UserSecretCode usc = new UserSecretCode();
+                usc.setUserId(u);
+                usc.setCode(activeCode);
+                usc.setCreatedDate(currentDate);
+                // activate code is expired after one day
+                usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
+                
+                this.uscService.save(usc);
             }
         } catch (ConstraintViolationException e) {
+            
             model.put("validationErrors", e.getConstraintViolations());
             return new ModelAndView("user/signUp");
+            
         }
         
         // SignUp process complete. Check email for verification
@@ -134,7 +158,7 @@ public class UserController {
                 Map model = new HashMap();	             
                 model.put("user", u);
                 // built the path
-                String regisConfirmPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm?code="+activeCode).build().toUriString();
+                String regisConfirmPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString();
                 model.put("regisConfirmPath", regisConfirmPath);
                 
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -161,26 +185,42 @@ public class UserController {
      * @param code
      * @return 
      */
-    @RequestMapping(value = "registrationConfirm", method = RequestMethod.GET)
-    public ModelAndView registrationConfirm(@RequestParam String code){
-        
+    @RequestMapping(value = "registrationConfirm/{code}", method = RequestMethod.GET)
+    public ModelAndView registrationConfirm(@PathVariable String code){
+
         Map<String, Object> model = new HashMap<>();
         
-        User u = this.userService.findByActiveCode(code);
-            
-        model.put("activeResult", (u == null ? false:true));
+        // get user activation code
+        UserSecretCode usc = this.uscService.findByCode(code);
         
-        // active success
-        if(u != null){
+        // code is wrong
+        if(usc == null){
             
-            // enable
-            this.userService.updateEnaled(Boolean.TRUE, u.getId());
-            // set null active code
-            this.userService.updateActiveCode(null, u.getId());
+            model.put("codeWrong", 1);
             
+            return new ModelAndView("user/regisConfirm", model);
         }
-        
-        return new ModelAndView("user/regisConfirm", model);
+        else{
+            
+            // check expired
+            Date currentDate = Calendar.getInstance().getTime();
+            if(usc.getExpiredDate().before(currentDate)){
+                
+                model.put("codeExpired", 1);
+
+                return new ModelAndView("user/regisConfirm", model);
+            }
+            else{
+                
+                // activate
+                this.userService.updateActivated(Boolean.TRUE, usc.getUserId().getId());
+                // delete activated code
+                this.uscService.delete(usc.getId());
+                // return
+                model.put("activeResult", 1);
+                return new ModelAndView("user/regisConfirm", model);
+            }
+        }
     }
     
     /**
@@ -199,50 +239,69 @@ public class UserController {
             
             User u = this.userService.findByEmail(email);
             
-            // update new active code
-            String activeCode = UUID.randomUUID().toString();
-            this.userService.updateActiveCode(activeCode, u.getId());
+            // if user already activated
+            if(u.getActivated()){
+                
+                // return
+                model.put("activeResult", 1);
+                return new ModelAndView("user/regisConfirm", model);
+            }
+            else{
             
-            // re-send active code
-            MimeMessagePreparator preparator = new MimeMessagePreparator() {
+                String activeCode = UUID.randomUUID().toString();
+                Date currentDate = Calendar.getInstance().getTime();
+                // inser activate code
+                UserSecretCode usc = new UserSecretCode();
+                usc.setUserId(u);
+                usc.setCode(activeCode);
+                usc.setCreatedDate(currentDate);
+                // activate code is expired after one day
+                usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
+                
+                this.uscService.save(usc);
 
-                @SuppressWarnings({ "rawtypes", "unchecked" })
-                @Override
-                public void prepare(MimeMessage mimeMessage) throws Exception {
+                // re-send active code
+                MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
-                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                    message.setTo(u.getEmail());
-                    message.setCc("yhannart@gmail.com");
-                    message.setFrom("support@lixi.global");
-                    message.setSubject("LiXi.Global - Resend activation code");
-                    message.setSentDate(Calendar.getInstance().getTime());
+                    @SuppressWarnings({ "rawtypes", "unchecked" })
+                    @Override
+                    public void prepare(MimeMessage mimeMessage) throws Exception {
 
-                    Map model = new HashMap();	             
-                    model.put("user", u);
-                    // built the path
-                    String regisConfirmPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm?code="+activeCode).build().toUriString();
-                    model.put("regisConfirmPath", regisConfirmPath);
+                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                        message.setTo(u.getEmail());
+                        message.setCc("yhannart@gmail.com");
+                        message.setFrom("support@lixi.global");
+                        message.setSubject("LiXi.Global - Resend activation code");
+                        message.setSentDate(Calendar.getInstance().getTime());
 
-                    String text = VelocityEngineUtils.mergeTemplateIntoString(
-                       velocityEngine, "emails/resend-active-code.vm", "UTF-8", model);
-                    message.setText(text, true);
+                        Map model = new HashMap();	             
+                        model.put("user", u);
+                        // built the path
+                        String regisConfirmPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString();
+                        model.put("regisConfirmPath", regisConfirmPath);
 
-                  }
+                        String text = VelocityEngineUtils.mergeTemplateIntoString(
+                           velocityEngine, "emails/resend-active-code.vm", "UTF-8", model);
+                        message.setText(text, true);
 
-               };        
+                      }
 
-            // send email
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(() -> mailSender.send(preparator));
-            
-            // return page
-            model.put("email", u.getEmail());
-            return new ModelAndView("user/signUpComplete", model);
-            
+                   };        
+
+                // send email
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> mailSender.send(preparator));
+
+                // return page
+                model.put("email", u.getEmail());
+                return new ModelAndView("user/signUpComplete", model);
+            }
         } catch (Exception e) {
             
-            // no email
-            model.put("activeResult", false);
+            log.info(e.getMessage(), e);
+            
+            // There is something wrong
+            model.put("codeWrong", 1);
             
             return new ModelAndView("user/regisConfirm", model);
         }
@@ -290,7 +349,16 @@ public class UserController {
                 /* user is not null. Send email */
                 // update new active code
                 String activeCode = UUID.randomUUID().toString();
-                this.userService.updateActiveCode(activeCode, u.getId());
+                Date currentDate = Calendar.getInstance().getTime();
+                // inser activate code
+                UserSecretCode usc = new UserSecretCode();
+                usc.setUserId(u);
+                usc.setCode(activeCode);
+                usc.setCreatedDate(currentDate);
+                // activate code is expired after one day
+                usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
+                
+                this.uscService.save(usc);
 
                 // re-send active code
                 MimeMessagePreparator preparator = new MimeMessagePreparator() {
@@ -309,7 +377,7 @@ public class UserController {
                         Map model = new HashMap();	             
                         model.put("user", u);
                         // built the path
-                        String resetPasswordPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword?code="+activeCode).build().toUriString();
+                        String resetPasswordPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword/"+activeCode).build().toUriString();
                         model.put("resetPasswordPath", resetPasswordPath);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -345,18 +413,30 @@ public class UserController {
     
     /**
      * 
-     * @param model
+     * @param code
      * @return 
      */
-    @RequestMapping(value = "resetPassword", method = RequestMethod.GET)
-    public ModelAndView resetPassword(Map<String, Object> model){
+    @RequestMapping(value = "resetPassword/{code}", method = RequestMethod.GET)
+    public ModelAndView resetPassword(@PathVariable String code){
         
-        model.put("userResetPasswordForm", new UserResetPasswordForm());
+        Map<String, Object> model = new HashMap<>();
+        
+        UserResetPasswordForm form = new UserResetPasswordForm();
+        form.setCode(code);
+        
+        model.put("userResetPasswordForm", form);
         
         return new ModelAndView("user/resetPassword", model);
     }
     
-    @RequestMapping(value = "resetPassword", method = RequestMethod.POST)
+    /**
+     * 
+     * @param model
+     * @param form
+     * @param errors
+     * @return 
+     */
+    @RequestMapping(value = "resetPassword/{code}", method = RequestMethod.POST)
     public ModelAndView resetPassword(Map<String, Object> model,
             @Valid UserResetPasswordForm form, Errors errors) {
         
@@ -366,21 +446,22 @@ public class UserController {
         
         try{
             
-            User u = this.userService.findByActiveCode(form.getCode());
-            if(u != null){
-                
-                // update password
-                this.userService.updatePassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()), u.getId());
-                
-                // update active code
-                this.userService.updateActiveCode(null, u.getId());
-                
-            }
-            else{
+            // get reset-password code
+            UserSecretCode usc = this.uscService.findByCode(form.getCode());
+            if(usc == null){
                 
                 model.put("codeIsInvalid", "yes");
                 
                 return new ModelAndView("user/resetPassword");
+                
+            }
+            else{
+                
+                // update password
+                this.userService.updatePassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()), usc.getUserId().getId());
+                
+                // delete re-set code
+                this.uscService.delete(usc.getId());
             }
             
         } catch (ConstraintViolationException e) {
@@ -394,7 +475,6 @@ public class UserController {
             
         }
         
-        //
         return new ModelAndView("user/resetPasswordComplete");
         
     }

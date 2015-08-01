@@ -8,11 +8,13 @@ package vn.chonsoft.lixi.model;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,7 +42,7 @@ public class User implements Serializable {
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
     private boolean enabled;
-    private String activeCode;
+    private boolean activated;
     private Date createdDate;
     private String createdBy;
     private Date modifiedDate;
@@ -53,7 +55,7 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public User(Long id, String firstName, String middleName, String lastName, String email, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled, String activeCode, Date createdDate, String createdBy, Date modifiedDate, String modifiedBy) {
+    public User(Long id, String firstName, String middleName, String lastName, String email, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled, boolean activated, Date createdDate, String createdBy, Date modifiedDate, String modifiedBy) {
         this.id = id;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -64,7 +66,7 @@ public class User implements Serializable {
         this.accountNonLocked = accountNonLocked;
         this.credentialsNonExpired = credentialsNonExpired;
         this.enabled = enabled;
-        this.activeCode = activeCode;
+        this.activated = activated;
         this.createdDate = createdDate;
         this.createdBy = createdBy;
         this.modifiedDate = modifiedDate;
@@ -184,16 +186,16 @@ public class User implements Serializable {
         this.enabled = enabled;
     }
 
-    @Basic
-    @Column(name = "active_code")
-    public String getActiveCode() {
-        return activeCode;
+    @Basic(optional = false)
+    @Column(name = "activated")
+    public boolean getActivated() {
+        return activated;
     }
 
-    public void setActiveCode(String activeCode) {
-        this.activeCode = activeCode;
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
-    
+
     @Basic(optional = false)
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)

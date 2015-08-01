@@ -38,18 +38,6 @@ public class UserServiceImpl implements UserService{
         return this.userRepository.findByEmail(email);
     }
     
-    /**
-     * 
-     * @param code
-     * @return 
-     */
-    @Override
-    public User findByActiveCode(String code){
-        
-        return this.userRepository.findByActiveCode(code);
-        
-    }
-    
     @Override
     public int updateEnaled(Boolean enabled, Long id){
         
@@ -58,10 +46,9 @@ public class UserServiceImpl implements UserService{
     }
     
     @Override
-    public int updateActiveCode(String code, Long id){
+    public int updateActivated(Boolean activated, Long id){
         
-        return this.userRepository.updateActiveCode(code, id);
-        
+        return this.userRepository.updateActivated(activated, id);
     }
     
     @Override

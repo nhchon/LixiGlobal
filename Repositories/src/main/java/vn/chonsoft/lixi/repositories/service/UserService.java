@@ -23,11 +23,9 @@ public interface UserService {
     @NotNull(message = "{validate.userService.login.cannot}")
     User findByEmail(@NotNull(message = "{validate.user.email}") String email);
     
-    User findByActiveCode(String code);
-    
     int updateEnaled(Boolean enabled, Long id);
-    
-    int updateActiveCode(String code, Long id);
+
+    int updateActivated(Boolean activated, Long id);
     
     int updatePassword(String password, Long id);
 }

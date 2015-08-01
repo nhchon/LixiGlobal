@@ -9,6 +9,8 @@
             <a href="${regisConfirmPath}" target="_blank">${regisConfirmPath}</a>
             </p>
         </div>
+        
+        <div><p>Please remember that the activation code will be expired after one day.</p></div>
 
         <div>
             Thank you<br/>
