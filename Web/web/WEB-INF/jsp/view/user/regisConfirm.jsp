@@ -22,6 +22,7 @@
                             <c:set var="signInUrl" value="${pageContext.request.contextPath}/user/signIn"/>
                             <p><spring:message code="regis.success_click" arguments="${signInUrl}"/></p>
                         </c:if>
+                            
                         <c:if test="${codeWrong eq 1 || codeExpired eq 1}">
                             <h1><spring:message code="regis.sorry"/></h1>
                             <div class="msg msg-error"><spring:message code="regis.wrong"/></div>

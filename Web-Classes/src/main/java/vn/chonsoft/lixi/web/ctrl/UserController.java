@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -33,7 +34,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserSecretCode;
@@ -43,6 +43,7 @@ import vn.chonsoft.lixi.model.form.UserSignUpForm;
 import vn.chonsoft.lixi.repositories.service.UserSecretCodeService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -158,7 +159,7 @@ public class UserController {
                 Map model = new HashMap();	             
                 model.put("user", u);
                 // built the path
-                String regisConfirmPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString();
+                String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString());
                 model.put("regisConfirmPath", regisConfirmPath);
                 
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -205,6 +206,9 @@ public class UserController {
             // check expired
             Date currentDate = Calendar.getInstance().getTime();
             if(usc.getExpiredDate().before(currentDate)){
+
+                // delete expired code
+                this.uscService.delete(usc.getId());
                 
                 model.put("codeExpired", 1);
 
@@ -214,8 +218,10 @@ public class UserController {
                 
                 // activate
                 this.userService.updateActivated(Boolean.TRUE, usc.getUserId().getId());
+                
                 // delete activated code
                 this.uscService.delete(usc.getId());
+                
                 // return
                 model.put("activeResult", 1);
                 return new ModelAndView("user/regisConfirm", model);
@@ -277,7 +283,7 @@ public class UserController {
                         Map model = new HashMap();	             
                         model.put("user", u);
                         // built the path
-                        String regisConfirmPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString();
+                        String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString());
                         model.put("regisConfirmPath", regisConfirmPath);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -374,7 +380,7 @@ public class UserController {
                         Map model = new HashMap();	             
                         model.put("user", u);
                         // built the path
-                        String resetPasswordPath = ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword/"+activeCode).build().toUriString();
+                        String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword/"+activeCode).build().toUriString());
                         model.put("resetPasswordPath", resetPasswordPath);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -521,12 +527,36 @@ public class UserController {
         try {
             // exceptions will be thrown if there is no account
             User u = this.userService.findByEmail(form.getEmail());
+            
+            // check activation
+            if(!u.getActivated()){
+                
+                model.put("notActivated", 1);
+                return new ModelAndView("user/signIn");
+                
+            }
+            
+            // check enabled
+            if(!u.getEnabled()){
+                
+                model.put("notEnabled", 1);
+                return new ModelAndView("user/signIn");
+                
+            }
+            
+            // check password
             if(BCrypt.checkpw(form.getPassword(), u.getPassword())){
                 
                 HttpSession session = request.getSession();
                 session.setAttribute("LOGIN_EMAIL", u.getEmail());
                 // change session id
                 request.changeSessionId();
+            }
+            else{
+                
+                model.put("signInFailed", 1);
+                return new ModelAndView("user/signIn");
+                
             }
         } catch (ConstraintViolationException e) {
             model.put("validationErrors", e.getConstraintViolations());

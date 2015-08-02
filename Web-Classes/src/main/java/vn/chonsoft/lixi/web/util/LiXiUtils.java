@@ -37,6 +37,20 @@ public abstract class LiXiUtils {
     private static final Logger log = LogManager.getLogger(LiXiUtils.class);
 
     /**
+     * 
+     * remove part ":8080" in path, but not "localhost:8080"
+     * 
+     * @param path
+     * @return 
+     */
+    public static String remove8080(String path){
+        
+        if(path == null || "".equals(path) || path.contains("localhost:8080"))
+            return path;
+        
+        return path.replaceFirst(":8080", "");
+    }
+    /**
      * the system is set default encode iso-8859-1
      * Convert to UTF-8
      * 

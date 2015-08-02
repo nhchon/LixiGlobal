@@ -28,6 +28,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
@@ -142,7 +143,7 @@ public class RootContextConfiguration  implements
     public DataSource lixiGlobalDataSource()
     {
         JndiDataSourceLookup lookup = new JndiDataSourceLookup();
-        return lookup.getDataSource("jdbc/Lixi");
+        return lookup.getDataSource(env.getProperty("datasource.name"));
     }
 
     @Bean
@@ -243,5 +244,17 @@ public class RootContextConfiguration  implements
         
         factory.setVelocityProperties(velocityProperties);
         return factory.createVelocityEngine();
+    }
+    
+    /**
+     * 
+     * http://stackoverflow.com/questions/17097521/spring-3-2-value-annotation-
+     * with-pure-java-configuration-does-not-work-but-env
+     * 
+     * @return 
+     */
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 }

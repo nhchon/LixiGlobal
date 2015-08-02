@@ -8,6 +8,64 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            var FIRST_NAME_MESSAGE = '<spring:message code="validate.user.firstName"/>';
+            var LAST_NAME_MESSAGE = '<spring:message code="validate.user.lastName"/>';
+            var EMAIL_MESSAGE = '<spring:message code="validate.email_required"/>';
+            var PASS_MESSAGE = '<spring:message code="validate.password_required"/>';
+            
+            $(document).ready(function () {
+                $('#btnSubmit').click(function(){
+                   
+                    // check first name
+                    if($.trim($('#firstName').val()) === ''){
+                        
+                        alert(FIRST_NAME_MESSAGE);
+                        $('#firstName').focus();
+                        return false;
+                        
+                    }
+                    // lastname
+                    if($.trim($('#lastName').val()) === ''){
+                        
+                        alert(LAST_NAME_MESSAGE);
+                        $('#lastName').focus();
+                        return false;
+                        
+                    }
+                    // email
+                    if(!$('#email').isValidEmailAddress()){
+                        
+                        alert(EMAIL_MESSAGE);
+                        $('#email').focus();
+                        return false;
+                    }
+                    // confEmail
+                    if(!$('#confEmail').isValidEmailAddress()){
+                        
+                        alert(EMAIL_MESSAGE);
+                        $('#confEmail').focus();
+                        return false;
+                    }
+                    // password
+                    if(!$('#password').isValidPassword()){
+                        
+                        alert(PASS_MESSAGE);
+                        $('#password').focus();
+                        return false;
+                    }
+                    
+                    // conf password
+                    if(!$('#confPassword').isValidPassword()){
+                        
+                        alert(PASS_MESSAGE);
+                        $('#confPassword').focus();
+                        return false;
+                    }
+                    
+                    //
+                    return true;
+                });
+            });
         </script>
     </jsp:attribute>
 
@@ -31,7 +89,7 @@
                         <spring:message code="message.last_name" var="lastNameMessage"/>
                         <spring:message code="message.email_place_holder" var="emailMessage"/>
                         <spring:message code="signup.retype_email" var="retypeEmailMessage"/>
-                        <spring:message code="signin.at_least_password" var="passwordMessage"/>
+                        <spring:message code="message.password_format" var="passwordMessage"/>
                         <%-- // End place holder message --%>
                         <form:form class="form-horizontal" modelAttribute="userSignUpForm">
                             <fieldset>
@@ -109,7 +167,7 @@
                                 </div>
                                 <div class="form-group right">
                                     <div class="col-lg-12">
-                                        <button type="submit" class="btn btn-primary"><spring:message code="signup.register"/></button>
+                                        <button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="signup.register"/></button>
                                     </div>
                                 </div>
                             </fieldset>
