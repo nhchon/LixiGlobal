@@ -22,7 +22,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -559,8 +558,10 @@ public class UserController {
                 
             }
         } catch (ConstraintViolationException e) {
+            
             model.put("validationErrors", e.getConstraintViolations());
             return new ModelAndView("user/signIn");
+            
         }
         
         return new ModelAndView(new RedirectView("/", true, true));

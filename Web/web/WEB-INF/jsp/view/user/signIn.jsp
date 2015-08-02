@@ -91,6 +91,13 @@
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-1 hidden-xs"></div>
                     <div class="col-lg-8 col-md-8 col-sm-10 col-xs-12">
+                    <c:if test="${validationErrors != null}"><div class="msg msg-error">
+                            <ul style="margin-bottom: 0px;">
+                            <c:forEach items="${validationErrors}" var="error">
+                                <li><c:out value="${error.message}" /></li>
+                            </c:forEach>
+                        </ul>
+                    </div></c:if>
                         <c:if test="${notActivated eq 1}">
                             <div class="msg msg-error">
                                 <c:url value="/user/registrationConfirm/not-activated-yet" var="registrationConfirm"/>
