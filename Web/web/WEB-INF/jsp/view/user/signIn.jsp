@@ -20,7 +20,7 @@
                 $('#new-customer').change(function () {
 
                     if ($(this).is(':checked')) {
-                        
+
                         // change action form to signUp
                         //$('#SignInForm').attr('action', SIGN_UP_ACTION);
                         //$("#SignInForm").attr("method", "get");
@@ -33,7 +33,7 @@
                 $("#has-account").change(function () {
 
                     if ($(this).is(':checked')) {
-                        
+
                         // change action form to sign In
                         //$('#SignInForm').attr('action', SIGN_IN_ACTION);
                         //$("#SignInForm").attr("method", "post");
@@ -48,7 +48,7 @@
 
                 // if is new-customer
                 if ($('#new-customer').is(':checked')) {
-                    
+
                     //jump to signUp page
                     document.location.href = SIGN_UP_ACTION;
                     return false;
@@ -65,17 +65,17 @@
                         return false;
                     }
                     else {
-                        
-                        if(!isValidPassword($('#password').val())){
-                            
+
+                        if (!isValidPassword($('#password').val())) {
+
                             alert(PASSWORD_MESSAGE);
                             //
                             $('#password').focus();
                             //
                             return false;
                         }
-                        else{
-                            
+                        else {
+
                             return true;
                         }
                     }
@@ -91,13 +91,13 @@
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-1 hidden-xs"></div>
                     <div class="col-lg-8 col-md-8 col-sm-10 col-xs-12">
-                    <c:if test="${validationErrors != null}"><div class="msg msg-error">
-                            <ul style="margin-bottom: 0px;">
-                            <c:forEach items="${validationErrors}" var="error">
-                                <li><c:out value="${error.message}" /></li>
-                            </c:forEach>
-                        </ul>
-                    </div></c:if>
+                        <c:if test="${validationErrors != null}"><div class="msg msg-error">
+                                <ul style="margin-bottom: 0px;">
+                                    <c:forEach items="${validationErrors}" var="error">
+                                        <li><c:out value="${error.message}" /></li>
+                                        </c:forEach>
+                                </ul>
+                            </div></c:if>
                         <c:if test="${notActivated eq 1}">
                             <div class="msg msg-error">
                                 <c:url value="/user/registrationConfirm/not-activated-yet" var="registrationConfirm"/>
@@ -125,9 +125,13 @@
                                         <input type="text" class="form-control" name="email" id="email" placeholder="<spring:message code="message.email_place_holder"/>">
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-lg-5 col-md-5 hidden-sm hidden-xs">
+                                    <div class="form-group" style="margin-bottom: 0px;">
+                                    <div class="col-lg-12">
                                         <label class="control-label"><spring:message code="signin.do_you_have_password"/></label>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0px;">
+                                    <div class="col-lg-12">       
                                         <div class="radio">
                                             <label>
                                                 <input class="lixi-radio" type="radio" name="has-account" id="new-customer" value="0">
@@ -135,6 +139,10 @@
                                                 <span class="txt"><spring:message code="signin.no_new_customer"/></span>
                                             </label>
                                         </div>
+                                    </div>                                             
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0px;">
+                                    <div class="col-lg-5 col-md-5"> 
                                         <div class="radio">
                                             <label>
                                                 <input class="lixi-radio" type="radio" name="has-account" id="has-account" value="1" checked>

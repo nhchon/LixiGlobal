@@ -1,4 +1,4 @@
-<section id="footer">
+<section id="footer" style="padding: 0px 0px">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -13,6 +13,8 @@
                     <a href="javascript:void(0);">Contact</a>
                     <span>|</span>
                     <a href="javascript:void(0);">Jobs</a>
+                    <span>|</span>
+                    <a href="<c:url value="/trader/login"/>">Traders</a>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

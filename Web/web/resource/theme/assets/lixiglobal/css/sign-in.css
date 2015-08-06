@@ -48,8 +48,9 @@
 	#SignInForm .control-label, #SignInForm .radio label {
 		padding-left: 0
 	}
-
+        /*
 	#password {
 		margin-top: 70px;
 	}
+        */
 }

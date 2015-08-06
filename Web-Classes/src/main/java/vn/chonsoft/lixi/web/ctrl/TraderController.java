@@ -94,11 +94,13 @@ public class TraderController {
             }
             
         } catch (ConstraintViolationException e) {
+            
             model.put("validationErrors", e.getConstraintViolations());
             return new ModelAndView("trader/create");
+            
         }
         
-        return new ModelAndView(new RedirectView("/", true, true));
+        return new ModelAndView(new RedirectView("/trader/login", true, true));
     }
     
     /**
@@ -107,10 +109,23 @@ public class TraderController {
      * @return 
      */
     @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String login(Map<String, Object> model) {
+    public ModelAndView login(Map<String, Object> model, HttpServletRequest request) {
 
-        model.put("traderLoginForm", new TraderLoginForm());
-        return "trader/login";
+        HttpSession session = request.getSession();
+        Long traderId = (Long)session.getAttribute("TRADER_LOGIN_ID");
+        
+        if(traderId == null){
+
+            // login
+            model.put("traderLoginForm", new TraderLoginForm());
+            return new ModelAndView("trader/login", model);
+            
+        }
+        else{
+            // Already login
+            return new ModelAndView(new RedirectView("/trader/exchangeRate", true, true));
+            
+        }
     }
 
     /**

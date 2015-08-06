@@ -339,3 +339,12 @@ input.lixi-radio + span.lixi-radio + span.txt {
 @media (min-width: 1200px) {
 	
 }
+
+.section-85-0{
+    padding: 85px 0;
+}
+
+legend{
+    border:0 none;
+    font-weight: bold;
+}
