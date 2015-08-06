@@ -57,4 +57,19 @@ public class UserServiceImpl implements UserService{
         return this.userRepository.updatePassword(password, id);
         
     }
+    
+    @Override
+    public int updateEmail(String email, Long id){
+        
+        return this.userRepository.updateEmail(email, id);
+        
+    }
+    
+    @Override
+    public int updatePhoneNumber(String phoneNumber, Long id){
+        
+        return this.userRepository.updatePhoneNumber(phoneNumber, id);
+        
+    }
+    
 }

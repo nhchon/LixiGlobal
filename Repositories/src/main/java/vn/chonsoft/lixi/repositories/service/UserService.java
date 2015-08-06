@@ -28,4 +28,8 @@ public interface UserService {
     int updateActivated(Boolean activated, Long id);
     
     int updatePassword(String password, Long id);
+    
+    int updateEmail(String email, Long id);
+    
+    int updatePhoneNumber(String phoneNumber, Long id);
 }

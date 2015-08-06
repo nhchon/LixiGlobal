@@ -14,7 +14,7 @@
                         <li class="separator hidden-sm"><span>|</span></li>
                         <li><a href="recipient.html">Send a Gift</a></li>
                         <li class="separator"><span>|</span></li>
-                        <li><a href="my-account.html">Your Account</a></li>
+                        <li><a href="<c:url value="/user/yourAccount"/>">Your Account</a></li>
                         <li class="separator hidden-sm"><span>|</span></li>
                         <li class="hidden-sm"><a href="help.html">Help</a></li>
                         <li class="separator hidden-sm"><span>|</span></li>

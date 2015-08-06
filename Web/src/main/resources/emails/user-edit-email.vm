@@ -1,0 +1,18 @@
+<html>
+    <body>
+        <h5>Hi ${user.firstName} ${user.middleName} ${user.lastName} !</h5>
+        
+        <p>Thanks for visiting LiXi.Global! Per your request, we have changed the e-mail address associated with your account</p>
+
+        <p>The e-mail address associated with your account has been changed. The old address was ${oldEmailAddress}. The new address is ${user.email}.
+
+        <p>Should you need to contact us for any reason, please know that we can give out order information only to the name and e-mail address associated with your account.</p>
+
+        <p>Thanks again for going with us.</p>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

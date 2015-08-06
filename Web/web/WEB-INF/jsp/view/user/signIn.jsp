@@ -109,7 +109,7 @@
                                 <spring:message code="signin.not_enabled"/>
                             </div>
                         </c:if>
-                        <c:if test="${signInFailed eq 1}">
+                        <c:if test="${signInFailed eq 1 || param.signInFailed eq 1}">
                             <div class="msg msg-error">
                                 <spring:message code="signin.failed"/>
                             </div>

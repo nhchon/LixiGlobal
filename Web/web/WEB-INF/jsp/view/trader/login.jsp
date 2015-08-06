@@ -23,7 +23,7 @@
                                         </c:forEach>
                                 </ul>
                             </div></c:if>
-                        <c:if test="${not empty LOGIN_FAILED}">
+                        <c:if test="${LOGIN_FAILED eq true}">
                             <div class="msg msg-error">
                                 <ul>
                                     <li><spring:message code="validate.login.cannot" /></li>
