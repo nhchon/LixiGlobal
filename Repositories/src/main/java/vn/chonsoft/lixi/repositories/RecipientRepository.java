@@ -5,14 +5,12 @@
 package vn.chonsoft.lixi.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import vn.chonsoft.lixi.model.UserSecretCode;
+import vn.chonsoft.lixi.model.Recipient;
 
 /**
  *
  * @author chonnh
  */
-public interface UserSecretCodeRepository extends JpaRepository<UserSecretCode, Long>{
-    
-    UserSecretCode findByCode(String code);
+public interface RecipientRepository extends JpaRepository<Recipient, Long>{
     
 }

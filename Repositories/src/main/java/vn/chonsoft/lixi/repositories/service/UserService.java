@@ -15,12 +15,12 @@ import vn.chonsoft.lixi.model.User;
  */
 @Validated
 public interface UserService {
+    
     void save(@NotNull(message = "{validate.userService.save.user}") User user);
     
     @Null(message = "{validate.email.inuse}")
     User checkUniqueEmail(@NotNull(message = "{validate.user.email}") String email);
     
-    @NotNull(message = "{validate.userService.login.cannot}")
     User findByEmail(@NotNull(message = "{validate.user.email}") String email);
     
     int updateEnaled(Boolean enabled, Long id);

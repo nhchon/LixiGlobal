@@ -32,10 +32,25 @@ public class UserServiceImpl implements UserService{
         return this.userRepository.findByEmail(email);
     }
     
+    /**
+     * 
+     * @param email
+     * @return 
+     */
     @Override
     @Transactional
     public User findByEmail(String email){
-        return this.userRepository.findByEmail(email);
+        
+        User u = this.userRepository.findByEmail(email);
+        if(u != null){
+            
+            // make sure recipients is loaded;
+            u.getRecipients();
+            
+        }
+        
+        return u;
+        
     }
     
     @Override

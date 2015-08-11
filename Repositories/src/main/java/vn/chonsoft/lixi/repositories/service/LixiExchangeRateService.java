@@ -27,4 +27,6 @@ public interface LixiExchangeRateService {
      * @return 
      */
     List<LixiExchangeRate> findAll();
+    
+    LixiExchangeRate findLastRecord();
 }

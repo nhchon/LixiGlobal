@@ -9,6 +9,12 @@ package vn.chonsoft.lixi.web;
  * @author chonnh
  */
 public abstract class LiXiConstants {
+    
+    public static final String SELECTED_RECIPIENT = "SELECTED_RECIPIENT";
+    public static final String CURRENCIES = "CURRENCIES";
+    
+    public static final String LOGIN_EMAIL = "LOGIN_EMAIL";
+    
     public static final String ADMIN_USER_CHANGE_PASSWORD_PAGE = "/Administration/changePassword";
     //
     public static final String VCB_EXCHANGE_RATES_PAGE = "http://www.vietcombank.com.vn/ExchangeRates/ExrateXML.aspx";

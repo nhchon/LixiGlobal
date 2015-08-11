@@ -527,8 +527,16 @@ public class UserController {
         }
         
         try {
-            // exceptions will be thrown if there is no account
+            // 
             User u = this.userService.findByEmail(form.getEmail());
+            
+            // email is not exist
+            if(u == null){
+                
+                model.put("signInFailed", 1);
+                return new ModelAndView("user/signIn");
+                
+            }
             
             // check activation
             if(!u.getActivated()){
@@ -612,7 +620,7 @@ public class UserController {
         
         // check login
         HttpSession session = request.getSession();
-        String email = (String)request.getSession().getAttribute("LOGIN_EMAIL");
+        String email = (String)session.getAttribute("LOGIN_EMAIL");
         if(email == null){
             
             model.put("signInFailed", 1);
