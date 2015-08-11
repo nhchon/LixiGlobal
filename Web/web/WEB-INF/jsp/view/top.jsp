@@ -12,7 +12,7 @@
                     <c:if test="${not empty LOGIN_EMAIL}">
                         <li class="hidden-sm"><a class="welcome">Welcome ${LOGIN_EMAIL}</a></li>
                         <li class="separator hidden-sm"><span>|</span></li>
-                        <li><a href="recipient.html">Send a Gift</a></li>
+                        <li><a href="javascript:alert('IN DEVELOP');">Send a Gift</a></li>
                         <li class="separator"><span>|</span></li>
                         <li><a href="<c:url value="/user/yourAccount"/>">Your Account</a></li>
                         <li class="separator hidden-sm"><span>|</span></li>

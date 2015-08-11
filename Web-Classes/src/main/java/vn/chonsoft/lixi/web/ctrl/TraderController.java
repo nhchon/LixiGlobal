@@ -80,9 +80,14 @@ public class TraderController {
         trader.setCreatedDate(Calendar.getInstance().getTime());
         
         try {
+            // check unique username
+            // exceptions will be thrown if the username is not unique
+            this.traderService.checkUniqueUsername(form.getUsername());
+            
             // check unique email
             // exceptions will be thrown if the email is not unique
             Trader temp = this.traderService.checkUniqueEmail(trader.getEmail());
+            
             if(temp == null){
                 
                 // check unique phone

@@ -22,6 +22,9 @@ public interface TraderService {
     @Null(message = "{validate.email.inuse}")
     Trader checkUniqueEmail(@NotNull(message = "{validate.user.email}") String email);
     
+    @Null(message = "{validate.username.inuse}")
+    Trader checkUniqueUsername(@NotNull(message = "{validate.username_required}") String username);
+    
     @Null(message = "{validate.phone_in_use}")
     Trader checkUniquePhone(@NotNull(message = "{validate.email_required}") String phone);
     

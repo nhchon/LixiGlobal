@@ -45,6 +45,12 @@ public class TraderServiceImpl implements TraderService{
         
     }
 
+    @Override
+    public Trader checkUniqueUsername(String username){
+        
+        return this.traderRepository.findByUsername(username);
+        
+    }
     /**
      * 
      * @param phone

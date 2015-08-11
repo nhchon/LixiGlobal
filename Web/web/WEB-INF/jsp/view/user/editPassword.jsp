@@ -66,7 +66,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group right">
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-5 col-md-5"></div>
+                                    <div class="col-lg-7">
                                         <button id="btnSubmit" class="btn btn-primary">Save Changes</button>
                                     </div>
                                 </div>
