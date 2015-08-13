@@ -138,7 +138,7 @@
                                         <tr <c:if test="${status.count==1}">class="warning"</c:if>>
                                             <th scope="row"><fmt:formatDate value="${exr.dateInput}" pattern="dd/MM/yyyy"/></th>
                                             <td><fmt:formatDate value="${exr.timeInput}" pattern="HH:mm:ss"/></td>
-                                            <td>${exr.currencyId.code}</td>
+                                            <td>${exr.currency.code}</td>
                                             <td>${exr.buy}</td>
                                             <td>${exr.buyPercentage}</td>
                                             <td>${exr.sell}</td>

@@ -9,8 +9,8 @@
                     </c:if>
 
                 <c:if test="${empty TRADER_LOGIN_USERNAME}">
-                    <c:if test="${not empty LOGIN_EMAIL}">
-                        <li class="hidden-sm"><a class="welcome">Welcome ${LOGIN_EMAIL}</a></li>
+                    <c:if test="${not empty USER_LOGIN_EMAIL}">
+                        <li class="hidden-sm"><a class="welcome">Welcome ${USER_LOGIN_FIRST_NAME}</a></li>
                         <li class="separator hidden-sm"><span>|</span></li>
                         <li><a href="<c:url value="/gifts/recipient"/>">Send a Gift</a></li>
                         <li class="separator"><span>|</span></li>
@@ -20,7 +20,7 @@
                         <li class="separator hidden-sm"><span>|</span></li>
                         <li class="hidden-sm"><a href="<c:url value="/user/signOut"/>">Sign Out</a></li>
                         </c:if>
-                        <c:if test="${empty LOGIN_EMAIL}">
+                        <c:if test="${empty USER_LOGIN_EMAIL}">
                         <li><a href="<c:url value="/user/signIn"/>"><spring:message code="message.sign_in"/></a></li>
                         </c:if>
                     </c:if>

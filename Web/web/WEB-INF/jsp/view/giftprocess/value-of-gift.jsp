@@ -17,6 +17,7 @@
             var MIN_VND = 200000;
             var MAX_VND = 2000000;
             var STEP_VND = 50000;
+            var RECIPIENT_NAME = "${SELECTED_RECIPIENT_NAME}";
             /* */
             $(document).ready(function () {
                 
@@ -33,6 +34,16 @@
                 $('#amount').val(50);
                 $('#giftInValue').val($('#amount').val()*$('#exchangeRate').val());
                 
+                // enterkey on amount input
+                $('#amount').bind('keypress',function (event){
+                    if (event.keyCode === 13){
+                        
+                        setGiftInValue();
+                        // focus on btnSubmit cause blur on amount input
+                        event.preventDefault();
+                        $('#btnSubmit').focus();
+                    }
+                });
                 // amount in foreign currency
                 $('#amountCurrency').change(function(){
                    
@@ -59,6 +70,21 @@
                     checkAmountNumber();
                     // convert to USD or VND
                     setGiftInValue();
+                });
+                // submit validation
+                $('#btnSubmit').click(function(){
+                   
+                    if(checkAmountNumber()){
+                        if(confirm("Are your sure the amount you want to give " + RECIPIENT_NAME + " is " + amountFormat() + " ?")){
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                    }
+                    else{
+                        return false;
+                    }
                 });
             });
             
@@ -149,6 +175,26 @@
                     }
                 }
             }
+            
+            /**
+             * 
+             * @returns {String}
+             */
+            function amountFormat(){
+                if($('#amountCurrency').val() === 'USD'){
+                    
+                    return '$' +$('#amount').val();
+                    
+                }
+                else{
+                    
+                    if($('#amountCurrency').val() === 'VND'){
+                        
+                        return $('#amount').val()+'đ';
+                        
+                    }
+                }
+            }
         </script>
     </jsp:attribute>
 
@@ -224,8 +270,8 @@
                                 </div>
                                 <div class="form-group right">
                                     <div class="col-lg-12">
-                                        <a  href="<c:url value="/gifts/chooseRecipient/${SELECTED_RECIPIENT}"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
-                                        <button class="btn btn-primary"><spring:message code="message.next"/></button>
+                                        <a  href="<c:url value="/gifts/chooseRecipient/${SELECTED_RECIPIENT_ID}"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                        <button type="submit" id="btnSubmit" class="btn btn-primary"><spring:message code="message.next"/></button>
                                     </div>
                                 </div>
                             </fieldset>

@@ -45,5 +45,15 @@ public class CurrencyTypeServiceImpl implements CurrencyTypeService{
         
     }
     
-    
+    /**
+     * 
+     * @param code
+     * @return 
+     */
+    @Override
+    public CurrencyType findByCode(String code){
+        
+        return this.currencyRepository.findByCode(code);
+        
+    }
 }

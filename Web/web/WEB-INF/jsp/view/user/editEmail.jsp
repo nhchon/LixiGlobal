@@ -44,7 +44,7 @@
                                         <label for="email" class="control-label">Old email address</label>
                                     </div>
                                     <div class="col-lg-7 col-md-7">
-                                        ${LOGIN_EMAIL}
+                                        ${USER_LOGIN_EMAIL}
                                     </div>
                                 </div>
                                 <div class="form-group">

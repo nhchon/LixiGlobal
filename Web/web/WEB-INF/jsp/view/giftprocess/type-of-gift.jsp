@@ -46,8 +46,8 @@
                                 </div>
                                 <div class="form-group right">
                                     <div class="col-lg-12">
-                                        <a href="value-of-gift.html" class="btn btn-primary">Back</a>
-                                        <a href="choose-the-gift.html" class="btn btn-primary">Next</a>
+                                        <a href="<c:url value="/gifts/value"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                        <button type="submit" id="btnSubmit" class="btn btn-primary"><spring:message code="message.next"/></button>
                                     </div>
                                 </div>
                             </fieldset>

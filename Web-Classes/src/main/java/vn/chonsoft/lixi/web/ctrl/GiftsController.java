@@ -4,15 +4,19 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -23,12 +27,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiCategory;
+import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
+import vn.chonsoft.lixi.model.trader.CurrencyType;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -59,6 +68,12 @@ public class GiftsController {
     @Inject
     LixiCategoryService lxcService;
     
+    @Inject
+    LixiOrderService lxorderService;
+    
+    @Inject
+    LixiOrderGiftService lxogiftService;
+    
     /**
      * 
      * @param request 
@@ -71,7 +86,7 @@ public class GiftsController {
         
         // check login
         HttpSession session = request.getSession();
-        String email = (String)session.getAttribute("LOGIN_EMAIL");
+        String email = (String)session.getAttribute("USER_LOGIN_EMAIL");
         if(email == null){
             
             model.put("signInFailed", 1);
@@ -127,7 +142,7 @@ public class GiftsController {
         
         // check login
         HttpSession session = request.getSession();
-        String email = (String)session.getAttribute("LOGIN_EMAIL");
+        String email = (String)session.getAttribute("USER_LOGIN_EMAIL");
         if(email == null){
             
             model.put("signInFailed", 1);
@@ -171,7 +186,7 @@ public class GiftsController {
     public ModelAndView chooseRecipient(Map<String, Object> model,
             @Valid ChooseRecipientForm form, Errors errors, HttpServletRequest request) {
         
-        String email = (String)request.getSession().getAttribute(LiXiConstants.LOGIN_EMAIL);
+        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
         
         if (errors.hasErrors()) {
@@ -189,6 +204,7 @@ public class GiftsController {
             rec.setId(form.getRecId());
             rec.setSender(u);
             rec.setFirstName(form.getFirstName());
+            rec.setMiddleName(form.getMiddleName());
             rec.setLastName(form.getLastName());
             rec.setEmail(form.getEmail());
             rec.setPhone(form.getPhone());
@@ -198,7 +214,8 @@ public class GiftsController {
             rec = this.reciService.save(rec);
             
             // store selected recipient into session
-            request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT, rec.getId());
+            request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_ID, rec.getId());
+            request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, form.getFirstName()+" "+StringUtils.defaultIfEmpty(form.getMiddleName(), "")+form.getLastName());
             
             // jump to page Value Of Gift
             return new ModelAndView(new RedirectView("/gifts/value", true, true));
@@ -211,7 +228,7 @@ public class GiftsController {
             
             model.put("validationErrors", e.getConstraintViolations());
             
-            return new ModelAndView("giftprocess/recipient");
+            return new ModelAndView("giftprocess/recipient", model);
             
         }
         
@@ -225,7 +242,7 @@ public class GiftsController {
     @RequestMapping(value = "value", method = RequestMethod.GET)
     public ModelAndView value(HttpServletRequest request){
         
-        if(request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT) == null){
+        if(request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID) == null){
             
             return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
         }
@@ -251,6 +268,78 @@ public class GiftsController {
     @RequestMapping(value = "value", method = RequestMethod.POST)
     public ModelAndView saveValue(HttpServletRequest request){
         
+        String amountCurrencyCode = request.getParameter("amountCurrency");
+        String amount = request.getParameter("amount");
+        String exchangeRate = request.getParameter("exchangeRate");
+        String giftInCurrencyCode = request.getParameter("giftInCurrencyValue");
+        String giftInValue = request.getParameter("giftInValue");
+        
+        // sender
+        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+        
+        // recipient
+        Recipient rec = this.reciService.findById((Long)request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
+        
+        // amount currency
+        CurrencyType amountCurrency = this.currencyService.findByCode(amountCurrencyCode);
+        
+        // GiftIn currency
+        CurrencyType giftInCurrency = this.currencyService.findByCode(giftInCurrencyCode);
+        
+        // default locale for number format is Locale.US
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        DecimalFormat df = (DecimalFormat)nf;
+        //df.applyPattern("###,###.##");
+        
+        try {
+            
+            LixiOrder order = null;
+            
+            // check order already created
+            if(request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null){
+                
+                Long orderId = (Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+                
+                order = this.lxorderService.findById(orderId);
+                
+            }
+            else{
+                // create order
+                order = new LixiOrder();
+                order.setSender(u);
+                order.setLixiStatus(0);
+                order.setLixiMessage(null);
+                order.setModifiedDate(Calendar.getInstance().getTime());
+
+                // save order
+                order = this.lxorderService.save(order);
+                
+                // store ID into session
+                request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
+                
+            }
+            
+            // create lixi order gift
+            LixiOrderGift lxorder = new LixiOrderGift();
+            lxorder.setRecipient(rec);
+            lxorder.setOrder(order);
+            lxorder.setAmountCurrency(amountCurrency);
+            lxorder.setAmount(df.parse(amount).floatValue());
+            lxorder.setExchangeRate(df.parse(exchangeRate).floatValue());
+            lxorder.setGiftinCurrency(giftInCurrency);
+            lxorder.setGiftin(df.parse(giftInValue).floatValue());
+            lxorder.setModifiedDate(Calendar.getInstance().getTime());
+            // save
+            lxorder = this.lxogiftService.save(lxorder);
+            
+        } catch (Exception e) {
+            //
+            log.info("Save LixiOrder failed", e);
+            
+        }
+        
+        // jump to type of gift
         return new ModelAndView(new RedirectView("/gifts/type", true, true));
         
     }

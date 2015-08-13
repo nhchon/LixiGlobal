@@ -17,4 +17,5 @@ public interface CurrencyTypeService {
     
     CurrencyType findOne(Long id);
     
+    CurrencyType findByCode(String code);
 }

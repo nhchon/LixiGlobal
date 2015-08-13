@@ -44,6 +44,7 @@ import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
 import vn.chonsoft.lixi.repositories.service.UserSecretCodeService;
 import vn.chonsoft.lixi.repositories.service.UserService;
+import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -153,7 +154,7 @@ public class UserController {
                 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(form.getEmail());
-                message.setBcc("yhannart@gmail.com");
+                message.setCc(LiXiConstants.YHANNART_GMAIL);
                 message.setFrom("support@lixi.global");
                 message.setSubject("LiXi.Global - Confirm your registration");
                 message.setSentDate(Calendar.getInstance().getTime());
@@ -277,7 +278,7 @@ public class UserController {
 
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                         message.setTo(u.getEmail());
-                        message.setCc("yhannart@gmail.com");
+                        message.setCc(LiXiConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Resend activation code");
                         message.setSentDate(Calendar.getInstance().getTime());
@@ -374,7 +375,7 @@ public class UserController {
 
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                         message.setTo(u.getEmail());
-                        message.setCc("yhannart@gmail.com");
+                        message.setCc(LiXiConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Reset Your Password");
                         message.setSentDate(Calendar.getInstance().getTime());
@@ -558,7 +559,8 @@ public class UserController {
             if(BCrypt.checkpw(form.getPassword(), u.getPassword())){
                 
                 HttpSession session = request.getSession();
-                session.setAttribute("LOGIN_EMAIL", u.getEmail());
+                session.setAttribute(LiXiConstants.USER_LOGIN_EMAIL, u.getEmail());
+                session.setAttribute(LiXiConstants.USER_LOGIN_FIRST_NAME, u.getFirstName());
                 // change session id
                 request.changeSessionId();
             }
@@ -597,7 +599,7 @@ public class UserController {
 
         // check login
         HttpSession session = request.getSession();
-        if(session.getAttribute("LOGIN_EMAIL") == null){
+        if(session.getAttribute(LiXiConstants.USER_LOGIN_EMAIL) == null){
             
             model.put("signInFailed", 1);
             return new ModelAndView(new RedirectView("/user/signIn", true, true));
@@ -620,7 +622,7 @@ public class UserController {
         
         // check login
         HttpSession session = request.getSession();
-        String email = (String)session.getAttribute("LOGIN_EMAIL");
+        String email = (String)session.getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         if(email == null){
             
             model.put("signInFailed", 1);
@@ -659,7 +661,7 @@ public class UserController {
         
         try {
             // user oldEmail
-            String email = (String)request.getSession().getAttribute("LOGIN_EMAIL");
+            String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
             
             // exceptions will be thrown if there is no account
             User u = this.userService.findByEmail(email);
@@ -693,7 +695,7 @@ public class UserController {
         
         // check login
         HttpSession session = request.getSession();
-        String email = (String)request.getSession().getAttribute("LOGIN_EMAIL");
+        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         if(email == null){
             
             model.put("signInFailed", 1);
@@ -724,7 +726,7 @@ public class UserController {
         
         try {
             // user oldEmail
-            String email = (String)request.getSession().getAttribute("LOGIN_EMAIL");
+            String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
             
             // exceptions will be thrown if there is no account
             User u = this.userService.findByEmail(email);
@@ -767,7 +769,7 @@ public class UserController {
         
         // check login
         HttpSession session = request.getSession();
-        String email = (String)request.getSession().getAttribute("LOGIN_EMAIL");
+        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         if(email == null){
             
             model.put("signInFailed", 1);
@@ -799,7 +801,7 @@ public class UserController {
         try {
             
             // user oldEmail
-            String oldEmail = (String)request.getSession().getAttribute("LOGIN_EMAIL");
+            String oldEmail = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
             
             // exceptions will be thrown if there is no account
             User u = this.userService.findByEmail(oldEmail);
@@ -827,7 +829,7 @@ public class UserController {
                     u.setEmail(form.getEmail());
                     
                     //update session
-                    request.getSession().setAttribute("LOGIN_EMAIL", form.getEmail());
+                    request.getSession().setAttribute(LiXiConstants.USER_LOGIN_EMAIL, form.getEmail());
                     
                     // send Email
                     MimeMessagePreparator preparator = new MimeMessagePreparator() {
@@ -838,7 +840,7 @@ public class UserController {
 
                             MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                             message.setTo(u.getEmail());
-                            message.setCc("yhannart@gmail.com");
+                            message.setCc(LiXiConstants.YHANNART_GMAIL);
                             message.setFrom("support@lixi.global");
                             message.setSubject("Revision to Your LiXi.Global Account");
                             message.setSentDate(Calendar.getInstance().getTime());
@@ -853,11 +855,11 @@ public class UserController {
 
                           }
 
-                        };        
+                    };        
 
-                // send oldEmail
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.execute(() -> mailSender.send(preparator));
+                    // send oldEmail
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.execute(() -> mailSender.send(preparator));
                     
                     // return your account page
                     model.put("editSuccess", 1);
@@ -888,7 +890,7 @@ public class UserController {
         
         // check login
         HttpSession session = request.getSession();
-        String email = (String)request.getSession().getAttribute("LOGIN_EMAIL");
+        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         if(email == null){
             
             model.put("signInFailed", 1);
@@ -911,7 +913,7 @@ public class UserController {
     @RequestMapping(value = "editPhoneNumber", method = RequestMethod.POST)
     public ModelAndView editPhoneNumber(HttpServletRequest request) {
         
-        String email = (String)request.getSession().getAttribute("LOGIN_EMAIL");
+        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
         
         String phone = request.getParameter("phone");

@@ -42,11 +42,11 @@
                                     <li role="presentation"><a href="javascript:alert('blog.html');">blog</a></li>
                                     <li role="presentation"><a href="javascript:alert('portfolio.html');">Portfolio</a></li>
                                     <li role="presentation"><a href="javascript:alert('contacts.html');">Contact</a></li>						
-                                    <c:if test="${not empty LOGIN_EMAIL}">
-                                        <li role="presentation"><a href="javascript:void(0);">Hello ${LOGIN_EMAIL}</a></li>
+                                    <c:if test="${not empty USER_LOGIN_EMAIL}">
+                                        <li role="presentation"><a href="javascript:void(0);">Hello ${USER_LOGIN_EMAIL}</a></li>
                                         <li role="presentation"><a href="<c:url value="/user/signOut"/>">Sign Out</a></li>
                                     </c:if>
-                                    <c:if test="${empty LOGIN_EMAIL}">
+                                    <c:if test="${empty USER_LOGIN_EMAIL}">
                                         <li role="presentation"><a href="<c:url value="/user/signUp"/>">Sign Up</a></li>						
                                         <li role="presentation"><a href="<c:url value="/user/signIn"/>">Sign In</a></li>						
                                     </c:if>

@@ -6,13 +6,17 @@
 package vn.chonsoft.lixi.model.trader;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import vn.chonsoft.lixi.model.LixiOrderGift;
 
 /**
  *
@@ -21,6 +25,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "currency_type")
 public class CurrencyType implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "amountCurrency")
+    private List<LixiOrderGift> lixiOrderList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "giftinCurrency")
+    private List<LixiOrderGift> lixiOrderList1;
     
     private static final long serialVersionUID = 1L;
     
@@ -135,5 +143,21 @@ public class CurrencyType implements Serializable {
     //public void setLixiExchangeRateList(List<LixiExchangeRate> lixiExchangeRateList) {
         //this.lixiExchangeRateList = lixiExchangeRateList;
     //}
+
+    public List<LixiOrderGift> getLixiOrderList() {
+        return lixiOrderList;
+    }
+
+    public void setLixiOrderList(List<LixiOrderGift> lixiOrderList) {
+        this.lixiOrderList = lixiOrderList;
+    }
+
+    public List<LixiOrderGift> getLixiOrderList1() {
+        return lixiOrderList1;
+    }
+
+    public void setLixiOrderList1(List<LixiOrderGift> lixiOrderList1) {
+        this.lixiOrderList1 = lixiOrderList1;
+    }
     
 }
