@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,8 @@ import vn.chonsoft.lixi.model.LixiCategory;
  * @author chonnh
  */
 public interface LixiCategoryRepository extends JpaRepository<LixiCategory, Long>{
+    
+    List<LixiCategory> findByLocale_Code(String code);
     
     @Modifying
     @Transactional

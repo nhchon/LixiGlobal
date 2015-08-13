@@ -23,5 +23,5 @@ public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Long
     
     Page<ExchangeRate> findByTraderId(Trader trader, Pageable p);
     
-    Page<ExchangeRate> findByTraderIdAndCurrencyId(Trader trader, CurrencyType cur, Pageable p);
+    Page<ExchangeRate> findByTraderIdAndCurrency(Trader trader, CurrencyType cur, Pageable p);
 }

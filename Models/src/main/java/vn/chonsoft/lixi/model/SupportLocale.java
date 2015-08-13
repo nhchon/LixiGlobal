@@ -54,7 +54,7 @@ public class SupportLocale implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "localeCode")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "locale")
     private List<LixiCategory> lixiCategoryList;
 
     public SupportLocale() {

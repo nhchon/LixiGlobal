@@ -32,7 +32,8 @@
             <jsp:invoke fragment="bottombarContent"/>
         </div>
         <!-- Common scripts -->
-        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/jquery-2.1.4.min.js"/>"></script>
+        <!--<script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/jquery-2.1.4.min.js"/>"></script>-->
+        <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/bootstrap.min.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/lixi.js"/>"></script>
         <jsp:invoke fragment="javascriptContent" />

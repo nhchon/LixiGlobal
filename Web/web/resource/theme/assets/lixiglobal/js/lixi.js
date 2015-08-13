@@ -22,6 +22,22 @@ $.fn.isValidEmailAddress = function() {
     
 };
 
+/**
+ * 
+ * @returns {Boolean}
+ */
+$.fn.isInteger = function() {
+
+    var val = this.val();
+    
+    return Math.floor(val) == val && $.isNumeric(val);
+    
+};
+
+/**
+ * 
+ * 
+ */
 $.fn.isValidPassword = function(){
     
     if(this.val() === '')

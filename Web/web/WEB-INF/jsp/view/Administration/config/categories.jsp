@@ -80,8 +80,8 @@
                                             <c:if test="${not empty vg.lixiCategoryList}">
                                                 <c:forEach items="${vg.lixiCategoryList}" var="lxc">
                                                 <td>
-                                                    <input name="${lxc.localeCode.code}" type="text" value="${lxc.name}" class="form-control"/>
-                                                    <input type="hidden" name="${lxc.localeCode.code}-id" value="${lxc.id}"/>
+                                                    <input name="${lxc.locale.code}" type="text" value="${lxc.name}" class="form-control"/>
+                                                    <input type="hidden" name="${lxc.locale.code}-id" value="${lxc.id}"/>
                                                 </td>
                                             </c:forEach>
                                         </c:if>

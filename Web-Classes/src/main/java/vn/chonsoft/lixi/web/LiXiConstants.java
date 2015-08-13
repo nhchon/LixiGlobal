@@ -12,7 +12,8 @@ public abstract class LiXiConstants {
     
     public static final String SELECTED_RECIPIENT = "SELECTED_RECIPIENT";
     public static final String CURRENCIES = "CURRENCIES";
-    
+    public static final String LIXI_EXCHANGE_RATE = "LIXI_EXCHANGE_RATE";
+    public static final String LIXI_CATEGORIES = "LIXI_CATEGORIES";
     public static final String LOGIN_EMAIL = "LOGIN_EMAIL";
     
     public static final String ADMIN_USER_CHANGE_PASSWORD_PAGE = "/Administration/changePassword";

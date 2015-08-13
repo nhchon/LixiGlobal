@@ -250,7 +250,7 @@ public class SystemConfigController {
                 lxc.setId(Integer.parseInt(idStr));
             }
             
-            lxc.setLocaleCode(sl);
+            lxc.setLocale(sl);
             
             try {
                 

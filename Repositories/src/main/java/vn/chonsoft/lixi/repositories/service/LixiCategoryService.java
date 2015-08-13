@@ -20,5 +20,7 @@ public interface LixiCategoryService {
     
     List<LixiCategory> findAll();
     
+    List<LixiCategory> findByLocaleCode(String code);
+    
     void deleteByVatGiaId(Integer vatgiaId);
 }

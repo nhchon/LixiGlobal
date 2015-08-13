@@ -67,7 +67,7 @@ public class ExchangeRate implements Serializable {
     
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private CurrencyType currencyId;
+    private CurrencyType currency;
 
     public ExchangeRate() {
     }
@@ -176,12 +176,12 @@ public class ExchangeRate implements Serializable {
         this.traderId = traderId;
     }
 
-    public CurrencyType getCurrencyId() {
-        return currencyId;
+    public CurrencyType getCurrency() {
+        return currency;
     }
 
-    public void setCurrencyId(CurrencyType currencyId) {
-        this.currencyId = currencyId;
+    public void setCurrency(CurrencyType currency) {
+        this.currency = currency;
     }
 
     @Override

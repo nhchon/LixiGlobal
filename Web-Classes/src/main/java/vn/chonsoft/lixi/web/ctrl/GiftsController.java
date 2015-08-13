@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -14,16 +15,20 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
+import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
+import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -47,6 +52,12 @@ public class GiftsController {
     
     @Inject
     CurrencyTypeService currencyService;
+    
+    @Inject
+    LixiExchangeRateService lxexrateService;
+    
+    @Inject
+    LixiCategoryService lxcService;
     
     /**
      * 
@@ -184,7 +195,7 @@ public class GiftsController {
             rec.setNote(form.getNote());
             rec.setModifiedDate(Calendar.getInstance().getTime());
             
-            this.reciService.save(rec);
+            rec = this.reciService.save(rec);
             
             // store selected recipient into session
             request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT, rec.getId());
@@ -206,6 +217,11 @@ public class GiftsController {
         
     }
     
+    /**
+     * 
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = "value", method = RequestMethod.GET)
     public ModelAndView value(HttpServletRequest request){
         
@@ -217,9 +233,46 @@ public class GiftsController {
             
             Map<String, Object> model = new HashMap<>();
             
+            // currencies
             model.put(LiXiConstants.CURRENCIES, this.currencyService.findAll());
+            
+            // exchange rates
+            model.put(LiXiConstants.LIXI_EXCHANGE_RATE, this.lxexrateService.findLastRecord());
             
             return new ModelAndView("giftprocess/value-of-gift", model);
         }
+    }
+    
+    /**
+     * 
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "value", method = RequestMethod.POST)
+    public ModelAndView saveValue(HttpServletRequest request){
+        
+        return new ModelAndView(new RedirectView("/gifts/type", true, true));
+        
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @RequestMapping(value = "type", method = RequestMethod.GET)
+    public ModelAndView typeOfGift(){
+    
+        log.info(LocaleContextHolder.getLocale());
+        
+        List<LixiCategory> categories = this.lxcService.findByLocaleCode(LocaleContextHolder.getLocale().toString());
+        
+        log.info(categories.size());
+        
+        Map<String, Object> model = new HashMap<>();
+        
+        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
+        
+        return new ModelAndView("giftprocess/type-of-gift", model);
+        
     }
 }

@@ -45,6 +45,13 @@ public class LixiCategoryServiceImpl implements LixiCategoryService{
     }
     
     @Override
+    public List<LixiCategory> findByLocaleCode(String code){
+        
+        return this.lxcRepository.findByLocale_Code(code);
+        
+    }
+    
+    @Override
     @Transactional
     public void deleteByVatGiaId(Integer vatgiaId){
         

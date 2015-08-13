@@ -244,7 +244,7 @@ public class TraderController {
                 exr.setTimeInput(timeFormat.parse(form.getTimeInput()));
             } catch (Exception e) {}
             //
-            exr.setCurrencyId(this.currencyService.findOne(form.getCurrency()));
+            exr.setCurrency(this.currencyService.findOne(form.getCurrency()));
             exr.setTraderId(this.traderService.findById(traderId));
             
             // save

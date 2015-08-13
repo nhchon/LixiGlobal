@@ -173,7 +173,7 @@
                                             <td scope="row">${exr.traderId.name}</td>
                                             <td><fmt:formatDate value="${exr.dateInput}" pattern="dd/MM/yyyy"/></td>
                                             <td><fmt:formatDate value="${exr.timeInput}" pattern="HH:mm:ss"/></td>
-                                            <td>${exr.currencyId.code}</td>
+                                            <td>${exr.currency.code}</td>
                                             <td>${exr.buy}</td>
                                             <td>${exr.sell}</td>
                                         </tr>

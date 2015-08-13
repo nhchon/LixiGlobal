@@ -90,7 +90,7 @@
                                 <legend><c:if test="${not empty RECIPIENTS}"><spring:message code="message.or"/>&nbsp;</c:if><spring:message code="gift.input_recipient"/></legend>
                                 <div class="form-group name">
                                     <div class="col-lg-5 col-md-5">
-                                        <label class="control-label"><spring:message code="gift.name_of_recipient"/>(<span class="errors">*</span>)</label>
+                                        <label class="control-label"><spring:message code="gift.name_of_recipient"/><span class="errors">*</span></label>
                                     </div>
                                     <div class="col-lg-7 col-md-7">
                                         <div class="row">
@@ -119,7 +119,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-lg-5 col-md-5">
-                                        <label class="control-label"><spring:message code="gift.phone_of_recipient"/>(<span class="errors">*</span>)</label>
+                                        <label class="control-label"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
                                     </div>
                                     <div class="col-lg-7 col-md-7">
                                         <form:input path="phone" class="form-control"/>
@@ -136,7 +136,7 @@
                                 </div>
                                     <div class="form-group">
                                         <div class="col-lg-12">
-                                            (<span class="errors">*</span>) : <i>is required</i>
+                                            <span class="errors">*</span> : <i>is required</i>
                                         </div>
                                     </div>
                                 <div class="form-group right">

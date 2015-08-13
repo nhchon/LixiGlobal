@@ -56,7 +56,7 @@ public class LixiCategory implements Serializable {
     
     @JoinColumn(name = "locale_code", referencedColumnName = "code")
     @ManyToOne(optional = false)
-    private SupportLocale localeCode;
+    private SupportLocale locale;
     
     @JoinColumn(name = "vatgia_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -124,12 +124,12 @@ public class LixiCategory implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-    public SupportLocale getLocaleCode() {
-        return localeCode;
+    public SupportLocale getLocale() {
+        return locale;
     }
 
-    public void setLocaleCode(SupportLocale localeCode) {
-        this.localeCode = localeCode;
+    public void setLocale(SupportLocale locale) {
+        this.locale = locale;
     }
 
     public VatgiaCategory getVatgiaId() {

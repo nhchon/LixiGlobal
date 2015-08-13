@@ -152,7 +152,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-7 col-md-7">
-                                        <input type="password" class="form-control" name="password" id="password" placeholder="<spring:message code="signin.at_least_password"/>">
+                                        <input type="password" class="form-control" name="password" id="password" placeholder="<spring:message code="message.password_format"/>">
                                     </div>
                                 </div>
                                 <div class="form-group right">
