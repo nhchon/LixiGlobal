@@ -5,12 +5,16 @@
 package vn.chonsoft.lixi.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
+import vn.chonsoft.lixi.model.Recipient;
 
 /**
  *
  * @author chonnh
  */
 public interface LixiOrderGiftRepository extends JpaRepository<LixiOrderGift, Long>{
+    
+    LixiOrderGift findByOrderAndRecipient(LixiOrder order, Recipient recipient);
     
 }

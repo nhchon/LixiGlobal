@@ -24,23 +24,27 @@
                                     <ul id="types" class="list-unstyled">
                                         <li>
                                             <div class="radio">
+                                                <img src="<c:url value="/resource/theme/assets/lixiglobal/img/mobile.minutes.jpg"/>" />
                                                 <label>
+                                                    <span class="txt">Top up mobile minutes</span>
+                                                    <br />
                                                     <input class="lixi-radio" type="radio" name="type-of-gift" checked>
                                                     <span class="lixi-radio"><span></span></span>
-                                                    <span class="txt">Top up mobile minutes</span>
                                                 </label>
                                             </div>
                                         </li>
-                                        <c:forEach items="${LIXI_CATEGORIES}" var="c">
-                                            <li>
-                                                <div class="radio">
-                                                    <label>
-                                                        <input class="lixi-radio" type="radio" name="type-of-gift">
-                                                        <span class="lixi-radio"><span></span></span>
-                                                        <span class="txt">${c.name}</span>
-                                                    </label>
-                                                </div>
-                                            </li>
+                                        <c:forEach items="${LIXI_CATEGORIES}" var="lxc">
+                                        <li>
+                                            <div class="radio">
+                                                <img  width="125" height="161"  src="<c:url value="/showImages/"/>${lxc.icon}" />
+                                                <label>
+                                                    <span class="txt">${lxc.name}</span>
+                                                    <br />
+                                                    <input class="lixi-radio" type="radio" name="type-of-gift">
+                                                    <span class="lixi-radio"><span></span></span>
+                                                </label>
+                                            </div>
+                                        </li>
                                         </c:forEach>
                                     </ul>
                                 </div>

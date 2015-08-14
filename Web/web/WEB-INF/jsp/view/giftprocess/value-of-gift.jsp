@@ -18,6 +18,8 @@
             var MAX_VND = 2000000;
             var STEP_VND = 50000;
             var RECIPIENT_NAME = "${SELECTED_RECIPIENT_NAME}";
+            var LAST_AMOUNT = '${SELECTED_AMOUNT}';
+            var LAST_AMOUNT_CURRENCY = '${SELECTED_AMOUNT_CURRENCY}';
             /* */
             $(document).ready(function () {
                 
@@ -26,13 +28,8 @@
                 $('#giftInValue').number( true, 2 );
                 $('#exchangeRate').number( true, 2 );
                 
-                // default VND
-                $('#giftInCurrency').val('VND');
-                $('#giftInCurrencyValue').val('VND');
-                // set default value
-                $('#amountCurrency').val('USD') ;
-                $('#amount').val(50);
-                $('#giftInValue').val($('#amount').val()*$('#exchangeRate').val());
+                // default value
+                setDefaultAmount();
                 
                 // enterkey on amount input
                 $('#amount').bind('keypress',function (event){
@@ -87,6 +84,41 @@
                     }
                 });
             });
+            
+            /**
+             * 
+             * @returns {undefined}
+             */
+            function setDefaultAmount(){
+                
+                if($.trim(LAST_AMOUNT) !== '' && $.trim(LAST_AMOUNT_CURRENCY) !== ''){
+                    
+                    $('#amount').val(LAST_AMOUNT);
+                    $('#amountCurrency').val(LAST_AMOUNT_CURRENCY);
+                    
+                    if(LAST_AMOUNT_CURRENCY === 'VND'){
+                        
+                        $('#giftInCurrency').val('USD');
+                        $('#giftInCurrencyValue').val('USD');
+                    }
+                    else{
+                        
+                        $('#giftInCurrency').val('VND');
+                        $('#giftInCurrencyValue').val('VND');
+                        
+                    }
+                }
+                else{
+                    // default VND
+                    $('#giftInCurrency').val('VND');
+                    $('#giftInCurrencyValue').val('VND');
+                    // set default value
+                    $('#amountCurrency').val('USD') ;
+                    $('#amount').val(50);
+                }
+                //
+                setGiftInValue();
+            }
             
             /**
              * 

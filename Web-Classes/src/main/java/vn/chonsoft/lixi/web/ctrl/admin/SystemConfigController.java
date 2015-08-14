@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.ctrl.admin;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,8 +12,10 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 import javax.validation.Valid;
 import javax.validation.ConstraintViolationException;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +43,7 @@ import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.SupportLocaleService;
 import vn.chonsoft.lixi.repositories.service.TraderService;
 import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
+import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -251,22 +255,62 @@ public class SystemConfigController {
             }
             
             lxc.setLocale(sl);
+            lxc.setName(name);
             
-            try {
-                
-                lxc.setName(name);
-                // for debug vietnamese on 112.213.86.84
-                log.info("request encode: " + request.getCharacterEncoding());
-                log.info("1: " + name);
-                log.info("2: " + (new String(name.getBytes("UTF-8")))); 
-                log.info("3: " + (new String(name.getBytes(), "UTF-8")));
-                log.info("4: " + (new String(name.getBytes("ISO-8859-1"), "UTF-8")));
-                
-            } catch (Exception e) {
-                
-                log.info(e.getMessage(), e);
+            // handle upload icon
+            // gets absolute path of the web application
+            String applicationPath = request.getServletContext().getRealPath("");
+            // constructs path of the directory to save uploaded file
+            String uploadFilePath = applicationPath + File.separator + LiXiConstants.WEB_INF_FOLDER + File.separator + LiXiConstants.CATEGORY_ICON_FOLDER;
+            // creates the save directory if it does not exists
+            File fileSaveDir = new File(uploadFilePath);
+            if (!fileSaveDir.exists()) {
+                fileSaveDir.mkdirs();
             }
             
+            //log.info("Upload File Directory="+fileSaveDir.getAbsolutePath());
+         
+            try {
+                
+                Part filePart = request.getPart("img-"+code); // Retrieves <input type="file" name="img-${code}">
+                if(filePart != null){
+                    
+                    String fileName = filePart.getSubmittedFileName();
+                    
+                    if(fileName != null && !"".equals(fileName)){
+                        
+                        String ext = FilenameUtils.getExtension(fileName);
+                        String newFileName = System.currentTimeMillis() + "." + ext;
+
+                        filePart.write(uploadFilePath + File.separator + newFileName);
+
+                        lxc.setIcon(newFileName);
+                    }
+                    else{
+                        
+                        // keep old file
+                        String oldFile = request.getParameter("img-old-"+code);
+                        if(oldFile != null && !"".equals(oldFile)){
+                            
+                            lxc.setIcon(oldFile);
+                        }
+                        else{
+                            // no image
+                            lxc.setIcon(LiXiConstants.NO_IMAGE_JPG);
+                        }
+                    }
+                }
+                else{
+                    // no image
+                    lxc.setIcon(LiXiConstants.NO_IMAGE_JPG);
+                }
+            } catch (Exception e) {
+                
+                // no icon
+                lxc.setIcon(LiXiConstants.NO_IMAGE_JPG);
+                
+            }
+            //
             lxc.setCreatedDate(Calendar.getInstance().getTime());
             lxc.setCreatedBy(createdBy);
             lxc.setVatgiaId(vgc);

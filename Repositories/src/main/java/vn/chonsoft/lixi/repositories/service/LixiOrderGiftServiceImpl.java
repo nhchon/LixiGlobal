@@ -8,7 +8,9 @@ import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
+import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.repositories.LixiOrderGiftRepository;
 
 /**
@@ -18,7 +20,7 @@ import vn.chonsoft.lixi.repositories.LixiOrderGiftRepository;
 @Service
 public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
 
-    @Inject LixiOrderGiftRepository lxorderRepository;
+    @Inject LixiOrderGiftRepository lxogiftRepository;
     
     
     /**
@@ -30,7 +32,7 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
     @Override
     public LixiOrderGift save(LixiOrderGift gift) {
         
-        return this.lxorderRepository.save(gift);
+        return this.lxogiftRepository.save(gift);
         
     }
 
@@ -43,9 +45,15 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
     @Override
     public List<LixiOrderGift> save(List<LixiOrderGift> gifts) {
         
-        return this.lxorderRepository.save(gifts);
+        return this.lxogiftRepository.save(gifts);
         
     }
     
-    
+    @Override
+    @Transactional
+    public LixiOrderGift findByOrderAndRecipient(LixiOrder order, Recipient recipient){
+        
+        return this.lxogiftRepository.findByOrderAndRecipient(order, recipient);
+        
+    }
 }

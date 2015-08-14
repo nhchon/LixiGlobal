@@ -9,14 +9,21 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 
 /**
@@ -26,6 +33,8 @@ import vn.chonsoft.lixi.web.annotation.WebController;
 @WebController
 public class IndexController {
 
+    private static final Logger log = LogManager.getLogger(IndexController.class);
+    
     @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
     public String index() {
         return "index";
@@ -54,18 +63,18 @@ public class IndexController {
     }
 
     /**
-     * 
+     *
      * @param request
      * @param response
-     * @throws IOException 
+     * @throws IOException
      */
     @RequestMapping(value = "/captcha", method = RequestMethod.GET)
-    public void captCha(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public void captCha(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // set mime type as jpg image
         response.setContentType("image/jpg");
         ServletOutputStream out = response.getOutputStream();
-        
+
         int width = 150;
         int height = 41;
 
@@ -76,7 +85,7 @@ public class IndexController {
 
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, width, height);
-        
+
         Font font = new Font("Comic Sans MS", Font.BOLD, 30);
         g2d.setFont(font);
 
@@ -89,7 +98,7 @@ public class IndexController {
         String captcha = RandomStringUtils.randomAlphabetic(4);
         // add spaces to enough width
         String captchaDraw = captcha.replace("", " ").trim();
-        
+
         request.getSession().setAttribute("captcha", captcha);
 
         g2d.drawString(captchaDraw, 5, 30);
@@ -100,5 +109,58 @@ public class IndexController {
         ImageIO.write(bufferedImage, "jpg", out);
         //
         out.close();
+    }
+
+    /**
+     * 
+     * show 
+     * @param request
+     * @param response
+     * @param name 
+     */
+    @RequestMapping(value = "/showImages/{name:.+}", method = RequestMethod.GET)
+    public void showImages(HttpServletRequest request, HttpServletResponse response, @PathVariable("name") String name) {
+        
+        // gets absolute path of the web application
+        String applicationPath = request.getServletContext().getRealPath("");
+        // constructs path of the directory to save uploaded file
+        String uploadFilePath = FilenameUtils.normalize(applicationPath + File.separator + LiXiConstants.WEB_INF_FOLDER + File.separator + LiXiConstants.CATEGORY_ICON_FOLDER + File.separator + name);
+        String noImageFilePath = FilenameUtils.normalize(applicationPath + File.separator + LiXiConstants.WEB_INF_FOLDER + File.separator + LiXiConstants.CATEGORY_ICON_FOLDER + File.separator + "no_image.jpg");
+        //System.out.println(uploadFilePath);
+        //System.out.println(FilenameUtils.normalize(uploadFilePath));
+        
+        try {
+            
+            ServletOutputStream out = response.getOutputStream();
+            BufferedImage image = null;
+            File file = new File(uploadFilePath);
+            
+            if(file.isFile()){
+                
+                // set mime type as jpg image
+                response.setContentType("image/" + FilenameUtils.getExtension(name));
+
+                // the line that reads the image file
+                image = ImageIO.read(file);
+
+            }
+            else{
+                
+                file = new File(noImageFilePath);
+                // set mime type as jpg image
+                response.setContentType("image/jpg");
+
+                // the line that reads the image file
+                image = ImageIO.read(file);
+
+            }
+            // write out stream
+            ImageIO.write(image, FilenameUtils.getExtension(name), out);
+            
+        } catch (IOException e) {
+            
+            // todo: return safe photo instead
+            log.info(e.getMessage(), e);
+        }
     }
 }

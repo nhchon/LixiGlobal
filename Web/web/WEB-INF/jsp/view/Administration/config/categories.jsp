@@ -40,6 +40,15 @@
                     document.location.href = '<c:url value="/Administration/SystemConfig/categories"/>/del/'+vgId;
                 }
             }
+            
+            function removeIcon(formId, code){
+            
+                var formId = "form"+formId;
+                var oForm = document.getElementById(formId);
+                
+                oForm.elements["img-old-"+code].value = "";
+                oForm.elements["icon-"+code].src = "<c:url value="/resource/theme/assets/lixiglobal/img/no_image.jpg"/>";
+            }
         </script>    
     </jsp:attribute>
     <jsp:body>
@@ -67,30 +76,41 @@
                                 <th><spring:message code="message.vat_gia_category_name"/></th>
                                     <c:forEach items="${SUPPORT_LOCALE}" var="sl">
                                     <th>${sl.name}</th>
+                                    <td></td>
                                     </c:forEach>
                                 <th><!-- Submit button --></th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach items="${VATGIA_CATEGORIES}" var="vg">
-                                <form:form id="form${vg.id}" role="form" action="${pageContext.request.contextPath}/Administration/SystemConfig/categories" method="post">
+                                <form:form id="form${vg.id}" role="form" action="${pageContext.request.contextPath}/Administration/SystemConfig/categories" method="post" enctype="multipart/form-data">
                                     <tr>
                                         <td><input name="vgId" type="text" value="${vg.id}" class="form-control" readonly="" style="width:50px;"/></td>
                                         <td><input name="vgName" type="text" value="${vg.title}" class="form-control"/></td>
-                                            <c:if test="${not empty vg.lixiCategoryList}">
-                                                <c:forEach items="${vg.lixiCategoryList}" var="lxc">
+                                        <c:if test="${not empty vg.lixiCategoryList}">
+                                            <c:forEach items="${vg.lixiCategoryList}" var="lxc">
                                                 <td>
                                                     <input name="${lxc.locale.code}" type="text" value="${lxc.name}" class="form-control"/>
                                                     <input type="hidden" name="${lxc.locale.code}-id" value="${lxc.id}"/>
+                                                </td>
+                                                <td>
+                                                    <img name="icon-${lxc.locale.code}" width="136" height="136" src="<c:url value="/showImages/"/>${lxc.icon}"/>
+                                                    <input type="hidden" name="img-old-${lxc.locale.code}" value="${lxc.icon}"/>
+                                                    <button type="button" onclick="removeIcon(${vg.id}, '${lxc.locale.code}');">Remove Icon</button>
+                                                    <input type="file" name="img-${lxc.locale.code}" class="form-control"/>
                                                 </td>
                                             </c:forEach>
                                         </c:if>
                                         <c:if test="${empty vg.lixiCategoryList}">
                                             <c:forEach items="${SUPPORT_LOCALE}" var="sl">
                                                 <td><input name="${sl.code}" type="text" value="" class="form-control"/></td>
-                                                </c:forEach>
-                                            </c:if>
-                                                <td><button class="btn btn-primary" type="submit" onclick="return validateCategoryName(${vg.id});">Save</button>
+                                                <td>
+                                                    <input type="file" name="img" class="form-control"/>
+                                                </td>
+                                            </c:forEach>
+                                                
+                                        </c:if>
+                                        <td><button class="btn btn-primary" type="submit" onclick="return validateCategoryName(${vg.id});">Save</button>
                                             <c:if test="${not empty vg.lixiCategoryList}">
                                                 <button class="btn btn-warning" type="button" onclick="deleteCategory(${vg.id});">Delete</button>
                                             </c:if>

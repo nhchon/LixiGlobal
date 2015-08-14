@@ -106,6 +106,11 @@ public class GiftsController {
         
     }
     
+    /**
+     * 
+     * @param model
+     * @param email 
+     */
     private void setRecipients(Map<String, Object> model, String email){
         
         User u = this.userService.findByEmail(email);
@@ -128,6 +133,37 @@ public class GiftsController {
             model.put("RECIPIENTS", u.getRecipients());
         }
         
+    }
+    
+    private boolean addMoreIdToSession(HttpSession session, String attrName, Long id){
+        
+        // new recipient
+        if(id <= 0) return true;
+        
+        // param session is always not null
+        String ids = (String)session.getAttribute(attrName);
+        String vid = ","+id+",";
+        
+        if(ids == null || "".equals(ids)){
+            
+            session.setAttribute(attrName, vid);
+            return true;
+        }
+        else{
+            
+            
+            if(ids.contains(vid)){
+                
+                return false;
+            }
+            else{
+                
+                ids += vid;
+            
+                session.setAttribute(attrName, ids);
+                return true;
+            }
+        }
     }
     /**
      * 
@@ -188,18 +224,17 @@ public class GiftsController {
         
         String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
+        // select recipients of user
+        setRecipients(model, u);
         
         if (errors.hasErrors()) {
 
-            // select recipients of user
-            setRecipients(model, u);
-            //
             return new ModelAndView("giftprocess/recipient");
         }
         
         try {
-            
-            //
+                
+            // save new recipient
             Recipient rec = new Recipient();
             rec.setId(form.getRecId());
             rec.setSender(u);
@@ -210,21 +245,21 @@ public class GiftsController {
             rec.setPhone(form.getPhone());
             rec.setNote(form.getNote());
             rec.setModifiedDate(Calendar.getInstance().getTime());
-            
+
             rec = this.reciService.save(rec);
-            
+
             // store selected recipient into session
             request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_ID, rec.getId());
-            request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, form.getFirstName()+" "+StringUtils.defaultIfEmpty(form.getMiddleName(), "")+form.getLastName());
-            
+            request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, form.getFirstName()+" "+StringUtils.defaultIfEmpty(form.getMiddleName(), "")+" "+form.getLastName());
+            // store id to session
+            addMoreIdToSession(request.getSession(), LiXiConstants.SELECTED_RECIPIENT_IDS, rec.getId());
+
             // jump to page Value Of Gift
             return new ModelAndView(new RedirectView("/gifts/value", true, true));
             
         } catch (ConstraintViolationException e) {
             
             log.info(e.getMessage(), e);
-            
-            setRecipients(model, u);
             
             model.put("validationErrors", e.getConstraintViolations());
             
@@ -320,18 +355,39 @@ public class GiftsController {
                 
             }
             
-            // create lixi order gift
-            LixiOrderGift lxorder = new LixiOrderGift();
-            lxorder.setRecipient(rec);
-            lxorder.setOrder(order);
-            lxorder.setAmountCurrency(amountCurrency);
-            lxorder.setAmount(df.parse(amount).floatValue());
-            lxorder.setExchangeRate(df.parse(exchangeRate).floatValue());
-            lxorder.setGiftinCurrency(giftInCurrency);
-            lxorder.setGiftin(df.parse(giftInValue).floatValue());
-            lxorder.setModifiedDate(Calendar.getInstance().getTime());
-            // save
-            lxorder = this.lxogiftService.save(lxorder);
+            // check recipient already selected
+            LixiOrderGift lxogift = this.lxogiftService.findByOrderAndRecipient(order, rec);
+            if(lxogift != null){
+                
+                // update
+                lxogift.setAmountCurrency(amountCurrency);
+                lxogift.setAmount(df.parse(amount).floatValue());
+                lxogift.setExchangeRate(df.parse(exchangeRate).floatValue());
+                lxogift.setGiftinCurrency(giftInCurrency);
+                lxogift.setGiftin(df.parse(giftInValue).floatValue());
+                lxogift.setModifiedDate(Calendar.getInstance().getTime());
+                // save
+                this.lxogiftService.save(lxogift);
+                
+            }
+            else{
+                // create lixi order gift
+                lxogift = new LixiOrderGift();
+                lxogift.setRecipient(rec);
+                lxogift.setOrder(order);
+                lxogift.setAmountCurrency(amountCurrency);
+                lxogift.setAmount(df.parse(amount).floatValue());
+                lxogift.setExchangeRate(df.parse(exchangeRate).floatValue());
+                lxogift.setGiftinCurrency(giftInCurrency);
+                lxogift.setGiftin(df.parse(giftInValue).floatValue());
+                lxogift.setModifiedDate(Calendar.getInstance().getTime());
+                // save
+                this.lxogiftService.save(lxogift);
+            }
+            
+            // store amount and curreny into session for back button
+            request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT, amount);
+            request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_CURRENCY, amountCurrencyCode);
             
         } catch (Exception e) {
             //
