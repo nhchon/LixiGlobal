@@ -22,6 +22,7 @@ public interface LixiExchangeRateService {
      */
     void save(@NotNull(message = "{validate.thethingtosavemustnotbenull}") LixiExchangeRate lx);
     
+    LixiExchangeRate findById(Long id);
     /**
      * 
      * @return 

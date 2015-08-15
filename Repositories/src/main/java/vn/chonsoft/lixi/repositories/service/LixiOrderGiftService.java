@@ -22,4 +22,6 @@ public interface LixiOrderGiftService {
     List<LixiOrderGift> save(List<LixiOrderGift> gifts);
     
     LixiOrderGift findByOrderAndRecipient(LixiOrder order, Recipient recipient);
+    
+    LixiOrderGift findById(Long id);
 }

@@ -237,6 +237,11 @@
                 <div class="row">
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+                        <c:if test="${param.wrong eq 1}">
+                            <div class="msg msg-error">
+                                <spring:message code="gift.wrong_with_value"/>
+                            </div>
+                        </c:if>
                         <form class="form-horizontal" method="post" action="${pageContext.request.contextPath}/gifts/value">
                             <fieldset>
                                 <legend><spring:message code="gift.choose_value"/></legend>

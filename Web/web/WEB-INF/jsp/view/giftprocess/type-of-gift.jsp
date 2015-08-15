@@ -7,6 +7,30 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            $(document).ready(function () {
+                
+                $('#btnSubmit').click(function(){
+                    
+                    var value = $('input[name=type-of-gift]:checked', '#typeOfGiftForm').val();
+                    
+                    if(value === 'MOBILE_MINUTES'){
+                        
+                        alert('Sorry ! This function is in developement');
+                        return false;
+                    }
+                    else{
+                        
+                        if($.trim(value) === ''){
+                            
+                            alert('Please choose type of gift');
+                            
+                            return false;
+                        }
+                    }
+                    //
+                    return true;
+                });
+            });
         </script>
     </jsp:attribute>
 
@@ -17,7 +41,12 @@
                 <div class="row">
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
-                        <form class="form-horizontal">
+                        <c:if test="${param.wrong eq 1}">
+                            <div class="msg msg-error">
+                                <spring:message code="gift.wrong_with_type"/>
+                            </div>
+                        </c:if>
+                        <form id="typeOfGiftForm" class="form-horizontal" action="${pageContext.request.contextPath}/gifts/type" method="post">
                             <fieldset>
                                 <legend>Choose Type of Gift</legend>
                                 <div class="form-group">
@@ -28,7 +57,7 @@
                                                 <label>
                                                     <span class="txt">Top up mobile minutes</span>
                                                     <br />
-                                                    <input class="lixi-radio" type="radio" name="type-of-gift" checked>
+                                                    <input class="lixi-radio" type="radio" name="type-of-gift" checked value="MOBILE_MINUTES"/>
                                                     <span class="lixi-radio"><span></span></span>
                                                 </label>
                                             </div>
@@ -40,7 +69,7 @@
                                                 <label>
                                                     <span class="txt">${lxc.name}</span>
                                                     <br />
-                                                    <input class="lixi-radio" type="radio" name="type-of-gift">
+                                                    <input <c:if test="${SELECTED_LIXI_CATEGORY == lxc.id}">checked</c:if> class="lixi-radio" type="radio" name="type-of-gift" value="${lxc.id}">
                                                     <span class="lixi-radio"><span></span></span>
                                                 </label>
                                             </div>
@@ -55,12 +84,12 @@
                                     </div>
                                 </div>
                             </fieldset>
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />        
                         </form>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                 </div>
             </div>
         </section>
-
     </jsp:body>
 </template:Client>

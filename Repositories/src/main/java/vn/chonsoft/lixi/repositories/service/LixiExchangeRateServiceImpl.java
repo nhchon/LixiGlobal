@@ -37,6 +37,12 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
         
     }
 
+    @Override
+    public LixiExchangeRate findById(Long id){
+        
+        return this.lxrRepository.findOne(id);
+        
+    }
     /**
      * 
      * @return 

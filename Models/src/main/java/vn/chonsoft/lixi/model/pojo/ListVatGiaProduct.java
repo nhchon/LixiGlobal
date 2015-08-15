@@ -10,16 +10,17 @@ import java.util.List;
  *
  * @author chonnh
  */
-public class ListVatGiaCategoryPojo {
+public class ListVatGiaProduct {
     
-    private List<VatGiaCategoryPojo> data;
+    private List<VatGiaProduct> data;
 
-    public List<VatGiaCategoryPojo> getData() {
+    public List<VatGiaProduct> getData() {
         return data;
     }
 
-    public void setData(List<VatGiaCategoryPojo> data) {
+    public void setData(List<VatGiaProduct> data) {
         this.data = data;
     }
+    
     
 }

@@ -10,17 +10,23 @@ package vn.chonsoft.lixi.web;
  */
 public abstract class LiXiConstants {
     
+    public static final String VND = "VND";
+    public static final String USD = "USD";
+    
     // current recipient
     public static final String SELECTED_RECIPIENT_ID = "SELECTED_RECIPIENT_ID";
     public static final String SELECTED_RECIPIENT_IDS = "SELECTED_RECIPIENT_IDS";
     public static final String SELECTED_RECIPIENT_NAME = "SELECTED_RECIPIENT_NAME";
     public static final String SELECTED_AMOUNT = "SELECTED_AMOUNT";
+    public static final String SELECTED_AMOUNT_IN_VND = "SELECTED_AMOUNT_IN_VND";
     public static final String SELECTED_AMOUNT_CURRENCY = "SELECTED_AMOUNT_CURRENCY";
+    public static final String SELECTED_LIXI_CATEGORY = "SELECTED_LIXI_CATEGORY";
     
     public static final String CURRENCIES = "CURRENCIES";
     public static final String LIXI_EXCHANGE_RATE = "LIXI_EXCHANGE_RATE";
     public static final String LIXI_CATEGORIES = "LIXI_CATEGORIES";
     public static final String LIXI_ORDER_ID = "LIXI_ORDER_ID";
+    public static final String LIXI_ORDER_GIFT_ID = "LIXI_ORDER_GIFT_ID";
     
     public static final String USER_LOGIN_EMAIL = "USER_LOGIN_EMAIL";
     public static final String USER_LOGIN_FIRST_NAME = "USER_LOGIN_FIRST_NAME";

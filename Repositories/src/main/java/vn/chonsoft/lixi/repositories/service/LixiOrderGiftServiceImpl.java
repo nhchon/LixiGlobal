@@ -56,4 +56,16 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
         return this.lxogiftRepository.findByOrderAndRecipient(order, recipient);
         
     }
+    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public LixiOrderGift findById(Long id){
+        
+        return this.lxogiftRepository.findOne(id);
+        
+    }
 }

@@ -6,9 +6,7 @@ package vn.chonsoft.lixi.web.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import org.apache.http.HttpHost;
-import org.apache.http.impl.client.HttpClients;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -16,15 +14,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.web.client.RestTemplate;
-import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.model.pojo.Exrate;
-import vn.chonsoft.lixi.model.pojo.ListVatGiaCategoryPojo;
-import vn.chonsoft.lixi.model.pojo.VatGiaCategoryPojo;
 import vn.chonsoft.lixi.web.LiXiConstants;
 
 /**
@@ -36,6 +27,31 @@ public abstract class LiXiUtils {
     //
     private static final Logger log = LogManager.getLogger(LiXiUtils.class);
 
+    /**
+     * 
+     * Check user is loggined or not
+     * 
+     * @param request
+     * @return 
+     */
+    public static boolean isLoggined(HttpServletRequest request){
+        
+        return request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL) != null;
+        
+    }
+    
+    /**
+     * 
+     * @param amountCode
+     * @param amount
+     * @param giftInValue
+     * @return 
+     */
+    public static String getAmountInVnd(String amountCode, String amount, String giftInValue){
+        
+        return LiXiConstants.VND.equals(amountCode)?amount:giftInValue;
+        
+    }
     /**
      * 
      * remove part ":8080" in path, but not "localhost:8080"
@@ -71,67 +87,6 @@ public abstract class LiXiUtils {
         }
         
         return str;
-    }
-    /**
-     * 
-     * @param vgcpojo
-     * @return 
-     */
-    public static VatgiaCategory convertFromPojo2Model(VatGiaCategoryPojo vgcpojo){
-        
-        return new VatgiaCategory(vgcpojo.getId(), vgcpojo.getTitle());
-        
-    }
-    /**
-     * 
-     * @param vgcpojos
-     * @return 
-     */
-    public static List<VatgiaCategory> convertFromPojo2Model(ListVatGiaCategoryPojo vgcpojos){
-        
-        List<VatgiaCategory> vgcs = new ArrayList<>();
-        
-        if(vgcpojos == null) return vgcs;
-        
-        for(VatGiaCategoryPojo vgcpojo : vgcpojos.getData()){
-            
-            VatgiaCategory vgc = new VatgiaCategory(vgcpojo.getId(), vgcpojo.getTitle());
-            
-            vgcs.add(vgc);
-            
-        }
-        
-        return vgcs;
-        
-    }
-    /**
-     *
-     * @return
-     */
-    public static ListVatGiaCategoryPojo getVatGiaCategory() {
-
-        try {
-
-            /* Load baokim properties */
-            Resource resource = new ClassPathResource("/baokim.properties");
-            Properties props = PropertiesLoaderUtils.loadProperties(resource);
-            
-            //
-            final AuthHttpComponentsClientHttpRequestFactory requestFactory
-                    = new AuthHttpComponentsClientHttpRequestFactory(
-                            HttpClients.createDefault(), HttpHost.create(props.getProperty("baokim.host")), props.getProperty("baokim.username"), props.getProperty("baokim.password"));
-            //
-            final RestTemplate restTemplate = new RestTemplate(requestFactory);
-            //
-            return restTemplate.getForObject(props.getProperty("baokim.list_category_page"), ListVatGiaCategoryPojo.class);
-
-        } catch (Exception e) {
-
-            log.info(e.getMessage(), e);
-
-        }
-
-        return null;
     }
 
     /**

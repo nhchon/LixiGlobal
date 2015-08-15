@@ -51,6 +51,20 @@ public class LixiCategoryServiceImpl implements LixiCategoryService{
         
     }
     
+    @Transactional
+    @Override
+    public LixiCategory findById(Integer id){
+        
+        LixiCategory lxc = this.lxcRepository.findOne(id);
+        if(lxc != null){
+            // make sure
+            lxc.getVatgiaId();
+        }
+        
+        return lxc;
+        
+    }
+    
     @Override
     @Transactional
     public void deleteByVatGiaId(Integer vatgiaId){

@@ -32,8 +32,8 @@ import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.SupportLocale;
 import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.form.LiXiExchangeRateForm;
-import vn.chonsoft.lixi.model.pojo.ListVatGiaCategoryPojo;
-import vn.chonsoft.lixi.model.pojo.VatGiaCategoryPojo;
+import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
+import vn.chonsoft.lixi.model.pojo.VatGiaCategory;
 import vn.chonsoft.lixi.model.trader.ExchangeRate;
 import vn.chonsoft.lixi.model.trader.Trader;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
@@ -46,6 +46,7 @@ import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
+import vn.chonsoft.lixi.web.util.LiXiVatGiaUtils;
 
 /**
  *
@@ -192,14 +193,14 @@ public class SystemConfigController {
         //
         List<VatgiaCategory> vgcs = new ArrayList<>();
         // get category from BaoKim service
-        ListVatGiaCategoryPojo vgcpojos = LiXiUtils.getVatGiaCategory();
+        ListVatGiaCategory vgcpojos = LiXiVatGiaUtils.getInstance().getVatGiaCategory();
 
-        for (VatGiaCategoryPojo vgcpojo : vgcpojos.getData()) {
+        for (VatGiaCategory vgcpojo : vgcpojos.getData()) {
 
             VatgiaCategory vgc = this.vgcService.findOne(vgcpojo.getId());
             if (vgc == null) {
 
-                vgcs.add(LiXiUtils.convertFromPojo2Model(vgcpojo));
+                vgcs.add(LiXiVatGiaUtils.getInstance().convertFromPojo2Model(vgcpojo));
 
             } else {
 

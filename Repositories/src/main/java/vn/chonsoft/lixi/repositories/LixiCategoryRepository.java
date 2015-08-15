@@ -16,7 +16,7 @@ import vn.chonsoft.lixi.model.LixiCategory;
  *
  * @author chonnh
  */
-public interface LixiCategoryRepository extends JpaRepository<LixiCategory, Long>{
+public interface LixiCategoryRepository extends JpaRepository<LixiCategory, Integer>{
     
     List<LixiCategory> findByLocale_Code(String code);
     

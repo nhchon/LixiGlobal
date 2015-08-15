@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -56,6 +57,11 @@ public class LixiOrderGift implements Serializable {
     private float productPrice;
     
     @Basic
+    @Lob
+    @Column(name = "note")
+    private String note;
+    
+    @Basic
     @Column(name = "bk_status")
     private int bkStatus;
     
@@ -89,6 +95,10 @@ public class LixiOrderGift implements Serializable {
     @ManyToOne(optional = false)
     private LixiOrder order;
     
+    @JoinColumn(name = "lx_exchange_rate_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private LixiExchangeRate lxExchangeRate;
+    
     @JoinColumn(name = "amount_currency", referencedColumnName = "code")
     @ManyToOne(optional = false)
     private CurrencyType amountCurrency;
@@ -104,13 +114,14 @@ public class LixiOrderGift implements Serializable {
         this.id = id;
     }
 
-    public LixiOrderGift(Long id, float amount, float exchangeRate, float giftin, int productId, float productPrice, Date modifiedDate) {
+    public LixiOrderGift(Long id, float amount, float exchangeRate, float giftin, int productId, float productPrice, String note, Date modifiedDate) {
         this.id = id;
         this.amount = amount;
         this.exchangeRate = exchangeRate;
         this.giftin = giftin;
         this.productId = productId;
         this.productPrice = productPrice;
+        this.note = note;
         this.modifiedDate = modifiedDate;
     }
 
@@ -168,6 +179,14 @@ public class LixiOrderGift implements Serializable {
 
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public LixiExchangeRate getLxExchangeRate() {
+        return lxExchangeRate;
+    }
+
+    public void setLxExchangeRate(LixiExchangeRate lxExchangeRate) {
+        this.lxExchangeRate = lxExchangeRate;
     }
 
     public LixiCategory getCategory() {
@@ -240,6 +259,14 @@ public class LixiOrderGift implements Serializable {
 
     public void setBkUpdated(Date bkUpdated) {
         this.bkUpdated = bkUpdated;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     
