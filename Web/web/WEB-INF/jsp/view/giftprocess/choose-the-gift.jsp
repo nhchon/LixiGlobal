@@ -36,9 +36,11 @@
                 <div class="row">
                     <div class="col-lg-1 col-md-1 hidden-sm col-xs-1"></div>
                     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-10">
-                        <form id="SignInForm" class="form-horizontal">
+                        <form class="form-horizontal" action="${pageContext.request.contextPath}/gifts/choose" method="post">
                             <fieldset>
                                 <legend>Choose the Gift</legend>
+                                <p><spring:message code="gift.closest_price"/></p>
+                                
                                 <div class="form-group">
                                     <div id="carousel" class="carousel slide" data-ride="carousel" data-interval="0" data-wrap="false">
                                         <div class="carousel-inner" role="listbox">
@@ -58,9 +60,12 @@
                                                         <a class="price">${p.price} VND</a>
                                                         <br />
                                                         <label>
-                                                            <input class="lixi-radio" type="radio" name="gift">
+                                                            <input class="lixi-radio" type="radio" name="gift" value="${p.id}">
                                                             <span class="lixi-radio"><span></span></span>
                                                         </label>
+                                                        <input type="hidden" name="price-${p.id}" value="${p.price}"/>
+                                                        <input type="hidden" name="name-${p.id}" value="${p.name}"/>
+                                                        <input type="hidden" name="image-${p.id}" value="${p.image_url}"/>
                                                     </div>
                                                 <%-- // End of Show product --%>
                                                 <c:if test="${theCount.count%5 eq 0 or theCount.last}">
@@ -82,7 +87,7 @@
                                 <div class="form-group right">
                                     <div class="col-lg-12">
                                         <a href="<c:url value="/gifts/type"/>" class="btn btn-primary">Back</a>
-                                        <a href="more-gift.html" class="btn btn-primary">Next</a>
+                                        <button type="submit" class="btn btn-primary">Next</button>
                                     </div>
                                 </div>
                             </fieldset>

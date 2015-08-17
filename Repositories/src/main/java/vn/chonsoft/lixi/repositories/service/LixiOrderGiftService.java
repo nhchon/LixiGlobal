@@ -17,11 +17,27 @@ import vn.chonsoft.lixi.model.Recipient;
 @Validated
 public interface LixiOrderGiftService {
     
+    int updateProductIdAndPrice(int productId, float productPrice, Long id);
+    
     LixiOrderGift save (LixiOrderGift gift);
     
     List<LixiOrderGift> save(List<LixiOrderGift> gifts);
     
+    void delete(LixiOrderGift gift);
+    
+    void delete(Long id);
+    
     LixiOrderGift findByOrderAndRecipient(LixiOrder order, Recipient recipient);
     
     LixiOrderGift findById(Long id);
+    
+    /**
+     * 
+     * confirm oder gift belong to order
+     * 
+     * @param id
+     * @param order
+     * @return 
+     */
+    LixiOrderGift findByIdAndOrder(Long id, LixiOrder order);
 }

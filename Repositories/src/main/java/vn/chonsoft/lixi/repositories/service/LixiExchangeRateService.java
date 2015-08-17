@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 
@@ -29,5 +30,5 @@ public interface LixiExchangeRateService {
      */
     List<LixiExchangeRate> findAll();
     
-    LixiExchangeRate findLastRecord();
+    LixiExchangeRate findLastRecord(String code);
 }

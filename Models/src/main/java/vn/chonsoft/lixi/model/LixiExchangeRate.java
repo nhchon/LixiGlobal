@@ -70,7 +70,7 @@ public class LixiExchangeRate implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     
-    @JoinColumn(name = "currency", referencedColumnName = "id")
+    @JoinColumn(name = "currency", referencedColumnName = "code")
     @ManyToOne(optional = false)
     private CurrencyType currency;
 

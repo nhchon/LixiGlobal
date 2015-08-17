@@ -54,12 +54,17 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
         
     }
     
+    /**
+     * 
+     * @param code
+     * @return 
+     */
     @Override
-    public LixiExchangeRate findLastRecord(){
+    public LixiExchangeRate findLastRecord(String code){
         
         Pageable just1rec = new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
         
-        Page<LixiExchangeRate> p1 = this.lxrRepository.findAll(just1rec);
+        Page<LixiExchangeRate> p1 = this.lxrRepository.findByCurrency_Code(code, just1rec);
         
         if(p1 != null){
             

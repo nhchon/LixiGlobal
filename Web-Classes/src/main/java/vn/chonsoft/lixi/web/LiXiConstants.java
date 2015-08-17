@@ -25,6 +25,7 @@ public abstract class LiXiConstants {
     public static final String CURRENCIES = "CURRENCIES";
     public static final String LIXI_EXCHANGE_RATE = "LIXI_EXCHANGE_RATE";
     public static final String LIXI_CATEGORIES = "LIXI_CATEGORIES";
+    public static final String LIXI_ORDER = "LIXI_ORDER";
     public static final String LIXI_ORDER_ID = "LIXI_ORDER_ID";
     public static final String LIXI_ORDER_GIFT_ID = "LIXI_ORDER_GIFT_ID";
     

@@ -49,6 +49,44 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
         
     }
     
+    /**
+     * 
+     * @param gift 
+     */
+    @Override
+    @Transactional
+    public void delete(LixiOrderGift gift){
+        
+        this.lxogiftRepository.delete(gift);
+    }
+    
+    /**
+     * 
+     * @param id 
+     */
+    @Override
+    @Transactional
+    public void delete(Long id){
+        
+        this.lxogiftRepository.delete(id);
+        
+    }
+    
+    /**
+     * 
+     * @param productId
+     * @param productPrice
+     * @param id
+     * @return 
+     */
+    @Override
+    @Transactional
+    public int updateProductIdAndPrice(int productId, float productPrice, Long id){
+        
+        return this.lxogiftRepository.updateProductIdAndPrice(productId, productPrice, id);
+        
+    }
+    
     @Override
     @Transactional
     public LixiOrderGift findByOrderAndRecipient(LixiOrder order, Recipient recipient){
@@ -60,12 +98,31 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
     /**
      * 
      * @param id
+     * @param order
      * @return 
      */
     @Override
+    @Transactional
+    public LixiOrderGift findByIdAndOrder(Long id, LixiOrder order){
+        
+        return this.lxogiftRepository.findByIdAndOrder(id, order);
+        
+    }
+    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    @Transactional
     public LixiOrderGift findById(Long id){
         
-        return this.lxogiftRepository.findOne(id);
+        LixiOrderGift gift = this.lxogiftRepository.findOne(id);
+        if(gift != null){
+            gift.getRecipient();
+        }
+        return gift;
         
     }
 }

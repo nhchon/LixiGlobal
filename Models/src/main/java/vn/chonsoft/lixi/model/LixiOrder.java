@@ -55,7 +55,12 @@ public class LixiOrder implements Serializable {
     @ManyToOne(optional = false)
     private User sender;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "order")
+    @JoinColumn(name = "lx_exchange_rate_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private LixiExchangeRate lxExchangeRate;
+    
+    
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "order")
     private List<LixiOrderGift> gifts;
     
     public LixiOrder() {
@@ -108,6 +113,14 @@ public class LixiOrder implements Serializable {
 
     public void setSender(User sender) {
         this.sender = sender;
+    }
+
+    public LixiExchangeRate getLxExchangeRate() {
+        return lxExchangeRate;
+    }
+
+    public void setLxExchangeRate(LixiExchangeRate lxExchangeRate) {
+        this.lxExchangeRate = lxExchangeRate;
     }
 
     public List<LixiOrderGift> getGifts() {

@@ -6,17 +6,13 @@
 package vn.chonsoft.lixi.model.trader;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import vn.chonsoft.lixi.model.LixiOrderGift;
 
 /**
  *
@@ -25,10 +21,6 @@ import vn.chonsoft.lixi.model.LixiOrderGift;
 @Entity
 @Table(name = "currency_type")
 public class CurrencyType implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "amountCurrency")
-    private List<LixiOrderGift> lixiOrderList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "giftinCurrency")
-    private List<LixiOrderGift> lixiOrderList1;
     
     private static final long serialVersionUID = 1L;
     
@@ -50,11 +42,6 @@ public class CurrencyType implements Serializable {
     @Column(name = "sort_order")
     private int sortOrder;
     
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "currencyId")
-    //private List<ExchangeRate> exchangeRateList;
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "currency")
-    //private List<LixiExchangeRate> lixiExchangeRateList;
-
     public CurrencyType() {
     }
 
@@ -101,16 +88,6 @@ public class CurrencyType implements Serializable {
         this.sortOrder = sortOrder;
     }
 
-    /*
-    public List<ExchangeRate> getExchangeRateList() {
-        return exchangeRateList;
-    }
-
-    public void setExchangeRateList(List<ExchangeRate> exchangeRateList) {
-        this.exchangeRateList = exchangeRateList;
-    }
-    */
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -136,28 +113,4 @@ public class CurrencyType implements Serializable {
         return "vn.chonsoft.lixi.model.trader.CurrencyType[ id=" + id + " ]";
     }
 
-    //public List<LixiExchangeRate> getLixiExchangeRateList() {
-        //return lixiExchangeRateList;
-    //}
-
-    //public void setLixiExchangeRateList(List<LixiExchangeRate> lixiExchangeRateList) {
-        //this.lixiExchangeRateList = lixiExchangeRateList;
-    //}
-
-    public List<LixiOrderGift> getLixiOrderList() {
-        return lixiOrderList;
-    }
-
-    public void setLixiOrderList(List<LixiOrderGift> lixiOrderList) {
-        this.lixiOrderList = lixiOrderList;
-    }
-
-    public List<LixiOrderGift> getLixiOrderList1() {
-        return lixiOrderList1;
-    }
-
-    public void setLixiOrderList1(List<LixiOrderGift> lixiOrderList1) {
-        this.lixiOrderList1 = lixiOrderList1;
-    }
-    
 }

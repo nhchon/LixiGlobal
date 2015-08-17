@@ -310,8 +310,8 @@ public class GiftsController {
             // currencies
             model.put(LiXiConstants.CURRENCIES, this.currencyService.findAll());
             
-            // exchange rates
-            LixiExchangeRate lxexrate = this.lxexrateService.findLastRecord();
+            // lastest exchange rates
+            LixiExchangeRate lxexrate = this.lxexrateService.findLastRecord(LiXiConstants.USD);
             model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxexrate);
             
             // store lixi exhange rate id into session
@@ -374,6 +374,7 @@ public class GiftsController {
                 // create order
                 order = new LixiOrder();
                 order.setSender(u);
+                order.setLxExchangeRate(lxExchangerate);
                 order.setLixiStatus(0);
                 order.setLixiMessage(null);
                 order.setModifiedDate(Calendar.getInstance().getTime());
@@ -393,10 +394,8 @@ public class GiftsController {
                 // update
                 lxogift.setAmountCurrency(amountCurrency);
                 lxogift.setAmount(df.parse(amount).floatValue());
-                lxogift.setExchangeRate(df.parse(exchangeRate).floatValue());
-                lxogift.setLxExchangeRate(lxExchangerate);
-                lxogift.setGiftinCurrency(giftInCurrency);
-                lxogift.setGiftin(df.parse(giftInValue).floatValue());
+                //lxogift.setGiftinCurrency(giftInCurrency);
+                //lxogift.setGiftin(df.parse(giftInValue).floatValue());
                 lxogift.setModifiedDate(Calendar.getInstance().getTime());
                 // save
                 this.lxogiftService.save(lxogift);
@@ -408,12 +407,11 @@ public class GiftsController {
                 lxogift.setRecipient(rec);
                 lxogift.setNote(rec.getNote());// note for each gift
                 lxogift.setOrder(order);
+                lxogift.setProductQuantity(1);
                 lxogift.setAmountCurrency(amountCurrency);
                 lxogift.setAmount(df.parse(amount).floatValue());
-                lxogift.setExchangeRate(df.parse(exchangeRate).floatValue());
-                lxogift.setLxExchangeRate(lxExchangerate);
-                lxogift.setGiftinCurrency(giftInCurrency);
-                lxogift.setGiftin(df.parse(giftInValue).floatValue());
+                //lxogift.setGiftinCurrency(giftInCurrency);
+                //lxogift.setGiftin(df.parse(giftInValue).floatValue());
                 lxogift.setModifiedDate(Calendar.getInstance().getTime());
                 // save
                 this.lxogiftService.save(lxogift);
@@ -423,7 +421,7 @@ public class GiftsController {
             request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT, amount);
             request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_CURRENCY, amountCurrencyCode);
             // store amount in vnd
-            request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND, LiXiUtils.getAmountInVnd(amountCurrencyCode, amount, giftInValue));
+            request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND, df.parse(LiXiUtils.getAmountInVnd(amountCurrencyCode, amount, giftInValue)).floatValue());
             // store current Lixi order gift id
             request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_GIFT_ID, lxogift.getId());
             
@@ -524,12 +522,151 @@ public class GiftsController {
         ListVatGiaProduct products = LiXiVatGiaUtils.getInstance().getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
         
         log.info("products: " +(products == null));
-        log.info(products.getData().size());
+        //log.info(products.getData().size());
         
         Map<String, Object> model = new HashMap<>();
         model.put("PRODUCTS", products);
         
         return new ModelAndView("giftprocess/choose-the-gift", model);
         
+    }
+    
+    @RequestMapping(value = "choose", method = RequestMethod.POST)
+    public ModelAndView saveTheGift(HttpServletRequest request){
+        
+        // check login
+        if(!LiXiUtils.isLoggined(request)){
+            
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+            
+        }
+        
+        String giftIdStr = request.getParameter("gift");
+        String priceStr = request.getParameter("price-" + giftIdStr);
+        String name = request.getParameter("name-" + giftIdStr);
+        String image = request.getParameter("image-" + giftIdStr);
+        
+        log.info(giftIdStr + " - " + priceStr);
+        // parse
+        int giftId = Integer.parseInt(giftIdStr);
+        float price = Float.parseFloat(priceStr);
+        
+        // update lixi order gift
+        LixiOrderGift lxogift = this.lxogiftService.findById((Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_GIFT_ID));
+        
+        lxogift.setProductId(giftId);
+        lxogift.setProductPrice(price);
+        lxogift.setProductName(name);
+        lxogift.setProductImage(image);
+                
+        this.lxogiftService.save(lxogift);
+        
+        // jump to more-recipient
+        return new ModelAndView(new RedirectView("/gifts/more-recipient", true, true));
+    }
+    
+    @RequestMapping(value = "more-recipient", method = RequestMethod.GET)
+    public ModelAndView moreRecipient(HttpServletRequest request){
+        
+        // check login
+        if(!LiXiUtils.isLoggined(request)){
+            
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+            
+        }
+        
+        LixiOrder order = this.lxorderService.findById((Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        
+        log.info("order id: " + request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        log.info("gifts: " + order.getGifts().size());
+                
+        Map<String, Object> model = new HashMap<>();
+        
+        model.put(LiXiConstants.LIXI_ORDER, order);
+        
+        return new ModelAndView("giftprocess/more-recipient", model);
+    }
+    
+    /**
+     * 
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "delete", method = RequestMethod.GET)
+    public ModelAndView delete(HttpServletRequest request){
+        
+        // check login
+        if(!LiXiUtils.isLoggined(request)){
+            
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+            
+        }
+        
+        // get lixi order gift id
+        String giftStr = request.getParameter("gift");
+        log.info("delete gift id: " + giftStr);
+        LixiOrder order = this.lxorderService.findById((Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        
+        LixiOrderGift lxogift = this.lxogiftService.findByIdAndOrder(Long.parseLong(giftStr), order);
+        
+        if(lxogift != null){
+            
+            this.lxogiftService.delete(lxogift.getId());
+            
+        }
+        else{
+            
+            log.info("Lixi order gift is null: " + giftStr);
+        }
+        
+        // jump 
+        return new ModelAndView(new RedirectView("/gifts/more-recipient", true, true));
+    }
+    
+    /**
+     * 
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "review", method = RequestMethod.GET)
+    public ModelAndView review(HttpServletRequest request){
+        
+        // check login
+        if(!LiXiUtils.isLoggined(request)){
+            
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+            
+        }
+        
+        Map<String, Object> model = new HashMap<>();
+
+        // lastest exchange rates: USD <-> VND
+        LixiExchangeRate lxexrate = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+        
+        // update latest exchange rate
+        LixiOrder order = this.lxorderService.findById((Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        order.setLxExchangeRate(lxexrate);
+        order = this.lxorderService.save(order);
+        
+        // calculate gift in value
+        for(LixiOrderGift lxogift : order.getGifts()){
+            
+            if(LiXiConstants.USD.equals(lxogift.getAmountCurrency().getCode())){
+                
+                //lxogift.setGiftinCurrency(this.currencyService.findByCode(LiXiConstants.VND));
+                // calculate
+                //lxogift.setGiftin(lxogift.getAmount() * (float)lxexrate.getBuy());
+            }
+            else{
+                
+                //lxogift.setGiftinCurrency(this.currencyService.findByCode(LiXiConstants.USD));
+                // calculate
+                //lxogift.setGiftin(lxogift.getAmount() / (float)lxexrate.getBuy());
+            }
+        }
+        
+        model.put(LiXiConstants.LIXI_ORDER, order);
+     
+        return new ModelAndView("giftprocess/review-the-order", model);
     }
 }

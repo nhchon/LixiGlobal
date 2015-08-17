@@ -37,10 +37,22 @@ public class LixiOrderServiceImpl implements LixiOrderService{
      * @param id
      * @return 
      */
+    @Transactional
     @Override
     public LixiOrder findById(Long id) {
         
-        return this.lxorderRepository.findOne(id);
+        LixiOrder order = this.lxorderRepository.findOne(id);
+        if(order != null){
+            
+            // make sure load gifts
+            order.getGifts().size();
+            
+            // exchange rate
+            order.getLxExchangeRate();
+            
+        }
+        
+        return order;
         
     }
     
