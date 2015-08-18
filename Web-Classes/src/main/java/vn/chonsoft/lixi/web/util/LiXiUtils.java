@@ -5,7 +5,9 @@
 package vn.chonsoft.lixi.web.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +16,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderGift;
+import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.model.pojo.Exrate;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -40,6 +45,34 @@ public abstract class LiXiUtils {
         
     }
     
+    /**
+     * 
+     * 
+     * @param order
+     * @return 
+     */
+    public static Map<Recipient, List<LixiOrderGift>> genMapRecGifts(LixiOrder order){
+        
+        Map<Recipient, List<LixiOrderGift>> recGifts = new HashMap<>();
+        
+        for(LixiOrderGift lxogift : order.getGifts()){
+            
+            if(recGifts.containsKey(lxogift.getRecipient())){
+                
+                recGifts.get(lxogift.getRecipient()).add(lxogift);
+                
+            }
+            else{
+                
+                List<LixiOrderGift> gifts = new ArrayList<>();
+                gifts.add(lxogift);
+                
+                recGifts.put(lxogift.getRecipient(), gifts);
+            }
+        }
+        
+        return recGifts;
+    }
     /**
      * 
      * @param amountCode

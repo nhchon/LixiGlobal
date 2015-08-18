@@ -87,9 +87,17 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
         
     }
     
+    /**
+     * 
+     * one recipient have more than one gift
+     * 
+     * @param order
+     * @param recipient
+     * @return 
+     */
     @Override
     @Transactional
-    public LixiOrderGift findByOrderAndRecipient(LixiOrder order, Recipient recipient){
+    public List<LixiOrderGift> findByOrderAndRecipient(LixiOrder order, Recipient recipient){
         
         return this.lxogiftRepository.findByOrderAndRecipient(order, recipient);
         

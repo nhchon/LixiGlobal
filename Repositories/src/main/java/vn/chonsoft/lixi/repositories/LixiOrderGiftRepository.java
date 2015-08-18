@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,7 +25,7 @@ public interface LixiOrderGiftRepository extends JpaRepository<LixiOrderGift, Lo
     @Query("update LixiOrderGift p set p.productId = :productId, p.productPrice = :productPrice where p.id = :id")
     int updateProductIdAndPrice(@Param("productId") int productId, @Param("productPrice") float productPrice, @Param("id") Long id);
     
-    LixiOrderGift findByOrderAndRecipient(LixiOrder order, Recipient recipient);
+    List<LixiOrderGift> findByOrderAndRecipient(LixiOrder order, Recipient recipient);
     
     LixiOrderGift findByIdAndOrder(Long id, LixiOrder order);
 }

@@ -55,7 +55,7 @@ public class Recipient implements Serializable {
     @Column(name = "phone")
     private String phone;
     
-    @Basic(optional = false)
+    @Basic
     @Lob
     @Column(name = "note")
     private String note;

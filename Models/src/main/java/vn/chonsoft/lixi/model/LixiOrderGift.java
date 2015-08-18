@@ -18,7 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.springframework.data.annotation.Transient;
 import vn.chonsoft.lixi.model.trader.CurrencyType;
 
 /**
@@ -62,11 +61,6 @@ public class LixiOrderGift implements Serializable {
     private int productQuantity;
     
     @Basic
-    @Lob
-    @Column(name = "note")
-    private String note;
-    
-    @Basic
     @Column(name = "bk_status")
     private int bkStatus;
     
@@ -104,12 +98,6 @@ public class LixiOrderGift implements Serializable {
     @ManyToOne(optional = false)
     private CurrencyType amountCurrency;
     
-    //@Transient
-    //private float giftin;
-    
-    //@Transient
-    //private CurrencyType giftinCurrency;
-
     public LixiOrderGift() {
     }
 
@@ -117,12 +105,11 @@ public class LixiOrderGift implements Serializable {
         this.id = id;
     }
 
-    public LixiOrderGift(Long id, float amount, int productId, float productPrice, String note, Date modifiedDate) {
+    public LixiOrderGift(Long id, float amount, int productId, float productPrice, Date modifiedDate) {
         this.id = id;
         this.amount = amount;
         this.productId = productId;
         this.productPrice = productPrice;
-        this.note = note;
         this.modifiedDate = modifiedDate;
     }
 
@@ -141,15 +128,7 @@ public class LixiOrderGift implements Serializable {
     public void setAmount(float amount) {
         this.amount = amount;
     }
-    /*
-    public float getGiftin() {
-        return giftin;
-    }
 
-    public void setGiftin(float giftin) {
-        this.giftin = giftin;
-    }
-    */
     public int getProductId() {
         return productId;
     }
@@ -229,15 +208,7 @@ public class LixiOrderGift implements Serializable {
     public void setAmountCurrency(CurrencyType amountCurrency) {
         this.amountCurrency = amountCurrency;
     }
-    /*
-    public CurrencyType getGiftinCurrency() {
-        return giftinCurrency;
-    }
 
-    public void setGiftinCurrency(CurrencyType giftinCurrency) {
-        this.giftinCurrency = giftinCurrency;
-    }
-    */
     public int getBkStatus() {
         return bkStatus;
     }
@@ -270,15 +241,6 @@ public class LixiOrderGift implements Serializable {
         this.bkUpdated = bkUpdated;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    
     @Override
     public int hashCode() {
         int hash = 0;

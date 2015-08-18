@@ -28,7 +28,10 @@ public abstract class LiXiConstants {
     public static final String LIXI_ORDER = "LIXI_ORDER";
     public static final String LIXI_ORDER_ID = "LIXI_ORDER_ID";
     public static final String LIXI_ORDER_GIFT_ID = "LIXI_ORDER_GIFT_ID";
-    
+    public static final String LIXI_ORDER_GIFT_PRODUCT_ID = "LIXI_ORDER_GIFT_PRODUCT_ID";
+    public static final String LIXI_ORDER_GIFT_PRODUCT_QUANTITY = "LIXI_ORDER_GIFT_PRODUCT_QUANTITY";
+    public static final String REC_GIFTS = "REC_GIFTS";
+            
     public static final String USER_LOGIN_EMAIL = "USER_LOGIN_EMAIL";
     public static final String USER_LOGIN_FIRST_NAME = "USER_LOGIN_FIRST_NAME";
     

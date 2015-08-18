@@ -79,3 +79,8 @@
 		right: 30px;
 	}
 }
+.lixi-select{
+    width:50px;
+    display: inline-block;
+    padding: 6px 6px;
+}
