@@ -73,6 +73,7 @@
                    
                     if(checkAmountNumber()){
                         if(confirm("Are your sure the amount you want to give " + RECIPIENT_NAME + " is " + amountFormat() + " ?")){
+                            
                             return true;
                         }
                         else{
@@ -226,6 +227,23 @@
                         
                     }
                 }
+            }
+            /**
+             * 
+             * @returns {undefined}
+             */
+            function getVNDAmount(){
+                if($('#amountCurrency').val() === 'VND'){
+                    
+                    return $('#amount').val();
+                    
+                }
+                else{
+                    
+                    return $('#giftInValue').val();
+                        
+                }
+                
             }
         </script>
     </jsp:attribute>

@@ -72,6 +72,13 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
         
     }
     
+    @Override
+    @Transactional
+    public void deleteByOrderAndProductId(LixiOrder order, int productId){
+        
+        this.lxogiftRepository.deleteByOrderAndProductId(order, productId);
+        
+    }
     /**
      * 
      * @param productId

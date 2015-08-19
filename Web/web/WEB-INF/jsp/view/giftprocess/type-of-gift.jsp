@@ -28,6 +28,7 @@
                         }
                     }
                     //
+                    document.location.href = "<c:url value="/gifts/choose/"/>" + value;
                     return true;
                 });
             });
@@ -46,7 +47,7 @@
                                 <spring:message code="gift.wrong_with_type"/>
                             </div>
                         </c:if>
-                        <form id="typeOfGiftForm" class="form-horizontal" action="${pageContext.request.contextPath}/gifts/type" method="post">
+                        <form id="typeOfGiftForm" class="form-horizontal">
                             <fieldset>
                                 <legend>Choose Type of Gift</legend>
                                 <div class="form-group">
@@ -80,7 +81,7 @@
                                 <div class="form-group right">
                                     <div class="col-lg-12">
                                         <a href="<c:url value="/gifts/value"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
-                                        <button type="submit" id="btnSubmit" class="btn btn-primary"><spring:message code="message.next"/></button>
+                                        <button type="button" id="btnSubmit" class="btn btn-primary"><spring:message code="message.next"/></button>
                                     </div>
                                 </div>
                             </fieldset>

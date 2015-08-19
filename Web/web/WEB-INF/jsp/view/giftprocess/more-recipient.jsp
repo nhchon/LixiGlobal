@@ -14,6 +14,16 @@
                 }
 
             }
+            
+            /**
+            * 
+
+             * @param {type} id
+             * @returns {undefined}             */
+            function updateQUantity(id){
+                
+                document.location.href = "<c:url value="/gifts/update"/>" + "/" + id + "/" + $('#quantity-'+id).val();
+            }
         </script>
     </jsp:attribute>
 
@@ -29,8 +39,33 @@
                                 <spring:message code="validate.there_is_something_wrong"/>
                             </div>
                         </c:if>
+                        
+                        <c:if test="${exceed eq 1 || param.exceed eq 1}">
+                            <div class="msg msg-error">
+                                <spring:message code="validate.exceeded"/>
+                            </div>
+                        </c:if>
 
                         <h1>Summary</h1>
+                        <br/>
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2">
+                                <spring:message code="message.exchange_rate"/>:
+                            </div>
+                            <div class="col-lg-10 col-md-10">
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                    <input type="text" class="form-control" id="rate-from" value="1 ${LIXI_ORDER.lxExchangeRate.currency.code}" readonly=""/>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="text-align: center;">
+                                    <img alt="" src="<c:url value="/resource/theme/assets/lixiglobal/img/currency.exchange.jpg"/>" />
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                    <input type="text" class="form-control" name="exchangeRate" id="exchangeRate" value="${LIXI_ORDER.lxExchangeRate.buy} VND" readonly=""/>
+                                </div>
+
+                            </div>
+                        </div>
+                                <br/>
                         <div class="row">
                             <div class="col-lg-12">
                                 <table class="table">
@@ -54,28 +89,37 @@
                                                 <td class="col-md-3" style="text-align: right;"><a href="<c:url value="/gifts/add-more/${entry.key.id}"/>" class="btn btn-sm btn-success">Add More</a></td>
                                             </tr>
                                             <c:forEach items="${entry.value}" var="g">
+                                                <c:if test="${g.productId > 0}">
                                                 <tr>
                                                     <td class="col-md-2"></td>
                                                     <td class="col-md-2">${g.productName}</td>
-                                                    <td class="col-md-1">${g.productQuantity}</td>
+                                                    <td class="col-md-1">
+                                                        <select class="form-control lixi-select" name="quantity-${g.id}" id="quantity-${g.id}">
+                                                        <c:forEach var="i" begin="1" end="5">
+                                                            <option value="${i}" <c:if test="${g.productQuantity == i}">selected</c:if>>${i}</option>
+                                                        </c:forEach>
+                                                        </select>                                                        
+                                                    </td>
                                                     <td class="col-md-2" style="text-align: right;"><fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/></td>
                                                     <td class="col-md-2" style="text-align: right;"><fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></td>
                                                     <td class="col-md-3" style="text-align: right;">
-                                                        <a href="<c:url value="/gifts/change/${g.id}"/>" class="btn btn-sm btn-primary">Change</a>
+                                                        <a href="javascript:updateQUantity(${g.id});" class="btn btn-sm btn-primary">Update</a>
                                                         <a href="javascript:confirmDeleteItem(${g.id})" class="btn btn-sm btn-danger">Delete</a>
                                                     </td>
                                                     <c:set var="total" value="${total + g.productPrice * g.productQuantity}"/>
                                                 </tr>
+                                                </c:if>
                                             </c:forEach>
                                         </c:forEach>
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td style="text-align: right;"><strong><fmt:formatNumber value="${total}" pattern="###,###.##"/></strong></td>
+                                            <td colspan="4">
+                                                Your maximum payment amount: <strong><fmt:formatNumber value="${USER_MAXIMUM_PAYMENT.amount}" pattern="###,###.##"/>&nbsp;${USER_MAXIMUM_PAYMENT.code}</strong>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <strong><fmt:formatNumber value="${total / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong> USD<br/>
+                                                <strong><fmt:formatNumber value="${total}" pattern="###,###.##"/></strong> VND</td>
                                             <td></td>
                                         </tr>
                                     </tfoot>

@@ -47,6 +47,9 @@ public class UserServiceImpl implements UserService{
             // make sure recipients is loaded;
             u.getRecipients();
             
+            // maximum payment amount
+            u.getUserMoneyLevel().getMoneyLevel();
+            
         }
         
         return u;

@@ -4,9 +4,12 @@
  */
 package vn.chonsoft.lixi.web.util;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +50,40 @@ public abstract class LiXiUtils {
     
     /**
      * 
+     * @return 
+     */
+    public static DecimalFormat getNumberFormat(){
+        
+        // always use Locale.US for  number format
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        DecimalFormat df = (DecimalFormat) nf;
+        df.applyPattern("###,###.##");
+        
+        return df;
+    }
+    /**
+     * 
+     * @param order
+     * @return 
+     */
+    public static float calculateCurrentPayment(LixiOrder order){
+        
+        if(order == null) return 0;
+        
+        float sum = 0;
+        
+        if(order.getGifts() != null){
+            for(LixiOrderGift gift : order.getGifts()){
+
+                sum += (gift.getProductPrice() * gift.getProductQuantity());
+
+            }
+        }
+        return sum / (float)order.getLxExchangeRate().getBuy();
+                
+    }
+    /**
+     * 
      * 
      * @param order
      * @return 
@@ -83,6 +120,17 @@ public abstract class LiXiUtils {
     public static String getAmountInVnd(String amountCode, String amount, String giftInValue){
         
         return LiXiConstants.VND.equals(amountCode)?amount:giftInValue;
+        
+    }
+    
+    /**
+     * 
+     * @param vndAmount
+     * @return 
+     */
+    public static float getBeginPrice(float vndAmount){
+        
+        return (vndAmount > LiXiConstants.VND_200K ? vndAmount - LiXiConstants.VND_100K : vndAmount);
         
     }
     /**

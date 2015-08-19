@@ -12,7 +12,8 @@ public abstract class LiXiConstants {
     
     public static final String VND = "VND";
     public static final String USD = "USD";
-    
+    public static final float VND_100K = 100000f;
+    public static final float VND_200K = 200000f;
     // current recipient
     public static final String SELECTED_RECIPIENT_ID = "SELECTED_RECIPIENT_ID";
     public static final String SELECTED_RECIPIENT_IDS = "SELECTED_RECIPIENT_IDS";
@@ -34,6 +35,10 @@ public abstract class LiXiConstants {
             
     public static final String USER_LOGIN_EMAIL = "USER_LOGIN_EMAIL";
     public static final String USER_LOGIN_FIRST_NAME = "USER_LOGIN_FIRST_NAME";
+    public static final String USER_MAXIMUM_PAYMENT = "USER_MAXIMUM_PAYMENT";
+    public static final String CURRENT_PAYMENT = "CURRENT_PAYMENT";
+    
+    public static final String PRODUCTS = "PRODUCTS";
     
     public static final String YHANNART_GMAIL = "yhannart@gmail.com";
     

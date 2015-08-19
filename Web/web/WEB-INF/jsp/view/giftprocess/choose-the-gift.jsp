@@ -56,6 +56,11 @@
                                 <spring:message code="validate.please_choose_the_gift"/>
                             </div>
                         </c:if>
+                        <c:if test="${exceed eq 1 || param.exceed eq 1}">
+                            <div class="msg msg-error">
+                                <spring:message code="validate.exceeded"/>
+                            </div>
+                        </c:if>
                         <form id="chooseGiftForm" class="form-horizontal" action="${pageContext.request.contextPath}/gifts/choose" method="post">
                             <fieldset>
                                 <legend><spring:message code="gift.choose_the_gift"/></legend>
@@ -76,8 +81,10 @@
                                                             <br />
                                                             <a class="name">${p.name}</a>
                                                             <br />
-                                                            <a class="price">${p.price} VND</a>
+                                                            <a class="price"><fmt:formatNumber value="${p.price}" pattern="###,###.##"/> VND</a>
                                                             <br />
+                                                            <a class="price"><fmt:formatNumber value="${p.price / LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> USD</a>
+                                                            <br/>
                                                             <label>
                                                                 <input class="lixi-radio" type="radio" name="gift" value="${p.id}" <c:if test="${LIXI_ORDER_GIFT_PRODUCT_ID == p.id}">checked</c:if>>
                                                                 <span class="lixi-radio"><span></span></span>
@@ -110,9 +117,22 @@
                                         </a>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        Your maximum payment amount: <strong><fmt:formatNumber value="${USER_MAXIMUM_PAYMENT.amount}" pattern="###,###.##"/>&nbsp;${USER_MAXIMUM_PAYMENT.code}</strong>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="pull-right">
+                                            Current payment: <strong><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/> USD</strong>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group right">
                                     <div class="col-lg-12">
                                         <a href="<c:url value="/gifts/type"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                        <c:if test="${not empty LIXI_ORDER_ID && LIXI_ORDER_ID > 0}">
+                                            <a href="<c:url value="/gifts/more-recipient"/>" class="btn btn-primary">View Order Summary</a>
+                                        </c:if>
                                         <button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="message.next"/></button>
                                     </div>
                                 </div>

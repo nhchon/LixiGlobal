@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -36,9 +35,11 @@ public class LixiOrderGift implements Serializable {
     @Column(name = "id")
     private Long id;
     
+    /*
     @Basic(optional = false)
     @Column(name = "amount")
     private float amount;
+    */
     
     @Basic
     @Column(name = "product_id")
@@ -94,9 +95,11 @@ public class LixiOrderGift implements Serializable {
     @ManyToOne(optional = false)
     private LixiOrder order;
     
+    /*
     @JoinColumn(name = "amount_currency", referencedColumnName = "code")
     @ManyToOne(optional = false)
     private CurrencyType amountCurrency;
+    */
     
     public LixiOrderGift() {
     }
@@ -105,9 +108,9 @@ public class LixiOrderGift implements Serializable {
         this.id = id;
     }
 
-    public LixiOrderGift(Long id, float amount, int productId, float productPrice, Date modifiedDate) {
+    public LixiOrderGift(Long id, int productId, float productPrice, Date modifiedDate) {
         this.id = id;
-        this.amount = amount;
+        //this.amount = amount;
         this.productId = productId;
         this.productPrice = productPrice;
         this.modifiedDate = modifiedDate;
@@ -121,6 +124,7 @@ public class LixiOrderGift implements Serializable {
         this.id = id;
     }
 
+    /*
     public float getAmount() {
         return amount;
     }
@@ -128,7 +132,8 @@ public class LixiOrderGift implements Serializable {
     public void setAmount(float amount) {
         this.amount = amount;
     }
-
+    */
+    
     public int getProductId() {
         return productId;
     }
@@ -200,7 +205,7 @@ public class LixiOrderGift implements Serializable {
     public void setOrder(LixiOrder order) {
         this.order = order;
     }
-
+    /*
     public CurrencyType getAmountCurrency() {
         return amountCurrency;
     }
@@ -208,7 +213,7 @@ public class LixiOrderGift implements Serializable {
     public void setAmountCurrency(CurrencyType amountCurrency) {
         this.amountCurrency = amountCurrency;
     }
-
+    */
     public int getBkStatus() {
         return bkStatus;
     }

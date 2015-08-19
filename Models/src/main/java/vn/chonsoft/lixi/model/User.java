@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -51,6 +52,8 @@ public class User implements Serializable {
     private String modifiedBy;
 
     private List<Recipient> recipients;
+    
+    private UserMoneyLevel userMoneyLevel;
     
     public User() {
     }
@@ -275,5 +278,14 @@ public class User implements Serializable {
     public String toString() {
         return "vn.chonsoft.lixi.model.User[ " + id + ", " + firstName + ", " + lastName + ", " + email + " ]";
     }
-    
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    public UserMoneyLevel getUserMoneyLevel() {
+        return userMoneyLevel;
+    }
+
+    public void setUserMoneyLevel(UserMoneyLevel userMoneyLevel) {
+        this.userMoneyLevel = userMoneyLevel;
+    }
+
 }

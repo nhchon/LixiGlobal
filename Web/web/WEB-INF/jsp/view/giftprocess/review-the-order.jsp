@@ -59,6 +59,7 @@
                                             </tr>
                                             <c:set var="recTotal" value="0"/>
                                             <c:forEach items="${entry.value}" var="g">
+                                                <c:if test="${g.productId > 0}">
                                                 <tr>
                                                     <td class="col-md-2"></td>
                                                     <td class="col-md-2">${g.productName}</td>
@@ -78,6 +79,7 @@
                                                     <c:set var="total" value="${total + g.productPrice * g.productQuantity}"/>
                                                     <c:set var="recTotal" value="${recTotal + g.productPrice * g.productQuantity}"/>
                                                 </tr>
+                                                </c:if>
                                             </c:forEach>
                                             <tr>
                                             <td></td>
@@ -94,14 +96,18 @@
                                             <tr>
                                                 <td class="col-md-2">Message:</td>
                                                 <td class="col-md-7" colspan="5">
+                                                    <form action="${pageContext.request.contextPath}/gifts/editNote" method="post">
                                                     <div class="row">
                                                         <div class="col-md-10">
-                                                            <textarea class="form-control">${entry.key.note}</textarea>
+                                                            <textarea name="note" class="form-control">${entry.key.note}</textarea>
                                                         </div>
                                                         <div class="col-md-2" style="vertical-align: middle;">
                                                             <button class="btn btn-sm btn-primary">Edit</button>
                                                         </div>
                                                     </div>
+                                                        <input type="hidden" name="recId" value="${entry.key.id}"/>
+                                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                                    </form>
                                                 </td>
                                                 
                                             </tr>
@@ -124,7 +130,7 @@
                             </div>
                         </div>
                         <div class="btns">
-                            <a href="billing-address.php" class="btn btn-primary left">Back</a>
+                            <a href="<c:url value="/gifts/more-recipient"/>" class="btn btn-primary left">Back</a>
                             <a href="pay-by-card.php" class="btn btn-primary">Pay by Card</a>
                             <a href="pay-by-bank-account.php" class="btn btn-primary">Pay by Bank Account</a>
                         </div>                    </div>
