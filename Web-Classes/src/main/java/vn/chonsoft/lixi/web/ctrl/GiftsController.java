@@ -348,6 +348,7 @@ public class GiftsController {
      * @param request
      * @return
      */
+    /*
     @RequestMapping(value = "type", method = RequestMethod.POST)
     public ModelAndView typeOfGift(@RequestParam("type-of-gift") int category, HttpServletRequest request) {
 
@@ -367,7 +368,9 @@ public class GiftsController {
         }
         // get current order gift id
         Long orderGiftId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_GIFT_ID);
+        
         log.info("orderGiftId at type POST: " + orderGiftId);
+        
         LixiOrderGift lxogift = this.lxogiftService.findById(orderGiftId);
         lxogift.setCategory(lxcategory);
         // save category
@@ -380,7 +383,8 @@ public class GiftsController {
         return new ModelAndView(new RedirectView("/gifts/choose", true, true));
 
     }
-
+    */
+    
     /**
      *
      * @param model
@@ -409,9 +413,6 @@ public class GiftsController {
         // get price, amount in VND - 100k
         float price = LiXiUtils.getBeginPrice((float) request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND));
         ListVatGiaProduct products = LiXiVatGiaUtils.getInstance().getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
-
-        log.info("products: " + (products == null));
-        //log.info(products.getData().size());
 
         // get order
         LixiOrder order = null;
@@ -544,6 +545,15 @@ public class GiftsController {
             order.setLixiMessage(null);
             order.setModifiedDate(Calendar.getInstance().getTime());
 
+            // set card and billing address from last order
+            LixiOrder lastOrder = this.lxorderService.findLastOrder(u);
+            // last user's order
+            if(lastOrder != null){
+                // use the last payment method
+                order.setCard(lastOrder.getCard());
+                order.setBillingAddress(lastOrder.getBillingAddress());
+            }
+            
             // save order
             order = this.lxorderService.save(order);
 

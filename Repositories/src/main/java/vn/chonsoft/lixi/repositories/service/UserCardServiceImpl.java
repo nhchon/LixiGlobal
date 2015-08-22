@@ -71,4 +71,17 @@ public class UserCardServiceImpl implements UserCardService{
         return this.ucRepository.findByIdAndUser(id, u);
         
     }
+    
+    /**
+     * 
+     * card number is unique
+     * 
+     * @param cardNumber
+     * @return 
+     */
+    @Override
+    public UserCard findByCardNumber(String cardNumber){
+        
+        return this.ucRepository.findByCardNumber(cardNumber);
+    }
 }

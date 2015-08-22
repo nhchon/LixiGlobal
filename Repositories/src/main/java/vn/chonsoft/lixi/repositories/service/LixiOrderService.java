@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.User;
 
 /**
  *
@@ -13,6 +14,8 @@ import vn.chonsoft.lixi.model.LixiOrder;
  */
 @Validated
 public interface LixiOrderService {
+    
+    LixiOrder findLastOrder(User user);
     
     LixiOrder findById(Long id);
     

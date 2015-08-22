@@ -27,4 +27,5 @@ public interface UserCardRepository  extends JpaRepository<UserCard, Long>{
      */
     UserCard findByIdAndUser(Long id, User u);
     
+    UserCard findByCardNumber(String cardNumber);
 }

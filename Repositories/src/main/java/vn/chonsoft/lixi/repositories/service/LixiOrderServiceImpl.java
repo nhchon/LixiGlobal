@@ -4,10 +4,16 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import javax.inject.Inject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.repositories.LixiOrderRepository;
 
 /**
@@ -62,4 +68,30 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         
     }
     
+    /**
+     * 
+     * @param user
+     * @return 
+     */
+    @Override
+    public LixiOrder findLastOrder(User user){
+        
+        Pageable just1rec = new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
+        
+        Page<LixiOrder> page1 = this.lxorderRepository.findBySender(user, just1rec);
+        
+        if(page1 != null){
+            
+            List<LixiOrder> l1 = page1.getContent();
+            
+            if(l1 != null && !l1.isEmpty()){
+                
+                return l1.get(0);
+                
+            }
+        }
+        //
+        return null;
+        
+    }
 }

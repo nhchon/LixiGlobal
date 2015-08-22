@@ -42,9 +42,11 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td><button type="submit" class="btn btn-primary">Use this payment method</button></td>
+                                            <td><button type="submit" class="btn btn-primary">Use this payment method</button>
+                                            <a href="<c:url value="/checkout/cards/add"/>" class="btn btn-primary">Add new card</a>
+                                            </td>
                                             <td></td>
-                                            <td></td>
+                                            <td><a href="<c:url value="/gifts/review"/>" class="btn btn-primary"><spring:message code="message.back"/></a></td>
                                         </tr>
                                     </tfoot>
                                 </table>

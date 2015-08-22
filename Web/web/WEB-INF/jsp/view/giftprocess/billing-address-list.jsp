@@ -9,7 +9,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12" style="padding-left: 30px;">
-            Please choose a billing address from your address book below, or <a href="">enter a new billing address</a>
+            Please choose a billing address from your address book below, or <a href="javascript:newBillingAddress();">enter a new billing address</a>
         </div>
     </div>
     <div class="page-header" style="margin:20px 10px 20px">

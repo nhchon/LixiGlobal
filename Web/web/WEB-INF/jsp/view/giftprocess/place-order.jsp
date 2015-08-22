@@ -6,6 +6,8 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            var NOT_NULL_MESSAGE = '<spring:message code="validate.not_null"/>';
+            
             function editMobilePhone(recId) {
 
                 $('#phone').val($('#phone_' + recId).text());
@@ -15,22 +17,82 @@
             }
             
             function showPageBillAdd(page){
-                $.get( '<c:url value="/checkout/choose-billing-address/${LIXI_ORDER.sender.id}?paging.page"/>='+page, function( data ) {
+                $.get( '<c:url value="/checkout/choose-billing-address?paging.page"/>='+page, function( data ) {
                     $('#billingAddressListContent').html(data);
                     $('#billingAddressListModal').modal({show:true});
                 });
             }
             
+            /**
+             * 
+             * @param {type} baId
+             * @returns {undefined}
+             */
             function useThisAddress(baId){
                 
                 $('#billingAdd').html($('#billingAdd-'+baId).val());
                 
                 $('#billingAddressListModal').modal('toggle');
             }
+            
+            function newBillingAddress(){
+                $.get( '<c:url value="/checkout/billing-address-modal"/>', function( data ) {
+                    $('#billingAddressListContent').html(data);
+                    $('#billingAddressListModal').modal({show:true});
+                });
+            }
+            
+            function saveNewBillingAddress(){
+                
+                if($.trim($('#fullName').val()) === ''){
+                    
+                    $('#fullName').attr("placeholder", NOT_NULL_MESSAGE);
+                    $('#fullName').focus();
+                    return false;
+                }
+                // add1
+                if($.trim($('#add1').val()) === ''){
+                    
+                    $('#add1').attr("placeholder", NOT_NULL_MESSAGE);
+                    $('#add1').focus();
+                    return false;
+                }
+                // city
+                if($.trim($('#city').val()) === ''){
+                    
+                    $('#city').attr("placeholder", NOT_NULL_MESSAGE);
+                    $('#city').focus();
+                    return false;
+                }
+                // state
+                if($.trim($('#state').val()) === ''){
+                    
+                    $('#state').attr("placeholder", NOT_NULL_MESSAGE);
+                    $('#state').focus();
+                    return false;
+                }
+                // zipCode
+                if($.trim($('#zipCode').val()) === ''){
+                    
+                    $('#zipCode').attr("placeholder", NOT_NULL_MESSAGE);
+                    $('#zipCode').focus();
+                    return false;
+                }
+                // phone
+                if($.trim($('#phone').val()) === ''){
+
+                    $('#phone').attr("placeholder", NOT_NULL_MESSAGE);
+                    $('#phone').focus();
+                    return false;
+                }
+                //
+                return true;
+            }
         </script>
     </jsp:attribute>
 
     <jsp:body>
+        <form>
         <section id="place-order" class="normal-page">
             <div class="container">
                 <div class="row">
@@ -83,7 +145,7 @@
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             ${g.productQuantity} x <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
                                                         </td>
-                                                        <td style="text-align: right"><a href="type-of-gift.html"><i class="fa fa-pencil"></i> Change</a></td>
+                                                        <td style="text-align: right"><a href="javascript:alert('In Dev');"><i class="fa fa-pencil"></i> Change</a></td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -104,8 +166,8 @@
                                     <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.card.cardNumber)}"/>
                                     <td><b>${LIXI_ORDER.card.cardTypeName}</b> ending with ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}
                                     <br/>
-                                    <b>Billing address:</b> <span id="billingAdd">${BILLING_ADDRESS.fullName}, ${BILLING_ADDRESS.add1}
-                                    <c:if test="${not empty BILLING_ADDRESS.add2}">&nbsp; ${BILLING_ADDRESS.add2}}</c:if>
+                                    <b>Billing address:</b> <span id="billingAdd">${LIXI_ORDER.billingAddress.fullName}, ${LIXI_ORDER.billingAddress.add1}
+                                    <c:if test="${not empty LIXI_ORDER.billingAddress.add2}">&nbsp; ${LIXI_ORDER.billingAddress.add2}}</c:if>
                                     , ...</span> <a href="javascript:showPageBillAdd(1);" style="font-weight:normal;">Change</a>
                                     </td>
                                     <td style="text-align: right;vertical-align: top;"><a href="<c:url value="/checkout/cards/change"/>"><i class="fa fa-pencil"></i> Change</a></td>
@@ -121,6 +183,7 @@
                 </div>
             </div>
         </section>
+        </form>
         <!-- Modal -->
         <div class="modal fade" id="editMobilePhoneModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -133,7 +196,7 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <input id="phone" name="phone" type="text" class="form-control"/>
+                                    <input id="mobilePhone" name="mobilePhone" type="text" class="form-control"/>
                                 </div>
                             </div>
                         </div>

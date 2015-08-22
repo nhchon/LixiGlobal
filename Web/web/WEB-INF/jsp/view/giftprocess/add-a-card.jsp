@@ -28,6 +28,13 @@
                                 <spring:message code="validate.checkout.exp_date"/>
                             </div>
                         </c:if>
+                        <c:if test="${card_number_failed eq 1 || param.card_number_failed eq 1}">
+                            <div class="msg msg-error">
+                                <spring:message code="validate.checkout.card_in_use">
+                                    <spring:argument value="${cardAddForm.cardNumber}"/>
+                                </spring:message>
+                            </div>
+                        </c:if>
                         <form:form modelAttribute="cardAddForm">
                             <fieldset>
                                 <legend><spring:message code="card.pay_by_card"/></legend>

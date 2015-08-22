@@ -141,8 +141,8 @@
                         </div>
                         <div class="btns">
                             <a href="<c:url value="/gifts/more-recipient"/>" class="btn btn-primary left">Back</a>
-                            <a href="<c:url value="/checkout/cards/add"/>" class="btn btn-primary">Pay by Card</a>
-                            <a href="javascript:alert('In Dev');" class="btn btn-primary">Pay by Bank Account</a>
+                            <a href="<c:url value="/checkout/cards/change"/>" class="btn btn-primary">Pay by Card</a>
+                            <a href="<c:url value="/checkout/pay-by-bank-account"/>" class="btn btn-primary">Pay by Bank Account</a>
                         </div>                    </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                 </div>

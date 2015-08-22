@@ -23,4 +23,6 @@ public interface UserCardService {
     List<UserCard> findByUser(User u);
     
     UserCard findByIdAndUser(Long id, User u);
+    
+    UserCard findByCardNumber(String cardNumber);
 }
