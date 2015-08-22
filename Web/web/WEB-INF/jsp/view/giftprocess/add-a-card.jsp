@@ -133,7 +133,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group right">
-                                    <a href="review-cart.html" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                    <a href="<c:url value="${backUrl}"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
                                     <button type="submit" class="btn btn-primary"><spring:message code="card.add"/></button>
                                 </div>
                             </fieldset>

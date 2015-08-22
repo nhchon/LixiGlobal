@@ -79,10 +79,21 @@ public class CheckOutController {
             return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
 
         }
+        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+        List<UserCard> cards = this.ucService.findByUser(u);
+        if(cards == null || cards.isEmpty()){
+            
+            // back url
+            model.put("backUrl", "/gifts/review");
+        }
+        else{
+            model.put("backUrl", "/checkout/cards/change");
+        }
         
         CardAddForm addForm = new CardAddForm();
         addForm.setCardType(1);
-        
+
         model.put("cardAddForm", addForm);
         
         return new ModelAndView("giftprocess/add-a-card", model);

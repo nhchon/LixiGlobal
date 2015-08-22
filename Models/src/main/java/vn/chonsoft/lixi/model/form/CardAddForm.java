@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.model.form;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import vn.chonsoft.lixi.validations.NotBlank;
 
 /**
@@ -31,6 +32,7 @@ public class CardAddForm {
     @Max(9999)
     private Integer expYear;
     
+    @NotNull(message = "{validate.not_null}")
     @Min(100)
     @Max(999)
     private Integer cvv;
