@@ -50,6 +50,12 @@ public class LixiOrderServiceImpl implements LixiOrderService{
             // exchange rate
             order.getLxExchangeRate();
             
+            //
+            order.getCard();
+            
+            //
+            order.getBillingAddress();
+            
         }
         
         return order;

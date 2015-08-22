@@ -55,6 +55,10 @@ public class User implements Serializable {
     
     private UserMoneyLevel userMoneyLevel;
     
+    private List<UserCard> userCards;
+    
+    private List<BillingAddress> addresses;
+    
     public User() {
     }
 
@@ -245,7 +249,16 @@ public class User implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    public List<UserCard> getUserCards() {
+        return userCards;
+    }
+
+    public void setUserCards(List<UserCard> userCards) {
+        this.userCards = userCards;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender")
     public List<Recipient> getRecipients() {
         return recipients;
     }
@@ -254,6 +267,26 @@ public class User implements Serializable {
         this.recipients = recipients;
     }
 
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    public UserMoneyLevel getUserMoneyLevel() {
+        return userMoneyLevel;
+    }
+
+    public void setUserMoneyLevel(UserMoneyLevel userMoneyLevel) {
+        this.userMoneyLevel = userMoneyLevel;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    public List<BillingAddress> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<BillingAddress> addresses) {
+        this.addresses = addresses;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -278,14 +311,5 @@ public class User implements Serializable {
     public String toString() {
         return "vn.chonsoft.lixi.model.User[ " + id + ", " + firstName + ", " + lastName + ", " + email + " ]";
     }
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    public UserMoneyLevel getUserMoneyLevel() {
-        return userMoneyLevel;
-    }
-
-    public void setUserMoneyLevel(UserMoneyLevel userMoneyLevel) {
-        this.userMoneyLevel = userMoneyLevel;
-    }
-
+    
 }

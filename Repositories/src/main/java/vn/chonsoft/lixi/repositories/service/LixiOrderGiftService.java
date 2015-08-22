@@ -42,4 +42,6 @@ public interface LixiOrderGiftService {
      * @return 
      */
     LixiOrderGift findByIdAndOrder(Long id, LixiOrder order);
+    
+    LixiOrderGift findByOrderAndRecipientAndProductId(LixiOrder order, Recipient recipient, Integer productId);
 }

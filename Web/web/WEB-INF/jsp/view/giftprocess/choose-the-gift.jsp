@@ -58,7 +58,10 @@
                         </c:if>
                         <c:if test="${exceed eq 1 || param.exceed eq 1}">
                             <div class="msg msg-error">
-                                <spring:message code="validate.exceeded"/>
+                                <spring:message code="validate.exceeded">
+                                    <spring:argument value="${EXCEEDED_VND}"/>
+                                    <spring:argument value="${EXCEEDED_USD}"/>
+                                </spring:message>
                             </div>
                         </c:if>
                         <form id="chooseGiftForm" class="form-horizontal" action="${pageContext.request.contextPath}/gifts/choose" method="post">
@@ -119,11 +122,20 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        Your maximum payment amount: <strong><fmt:formatNumber value="${USER_MAXIMUM_PAYMENT.amount}" pattern="###,###.##"/>&nbsp;${USER_MAXIMUM_PAYMENT.code}</strong>
+                                        <div class="row">
+                                            <div class="col-lg-6">Your maximum payment amount:</div>
+                                            <div class="col-lg-3" style="padding-left: 0px;text-align: right;">
+                                                <strong><fmt:formatNumber value="${USER_MAXIMUM_PAYMENT.amount * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/>&nbsp;VND</strong>
+                                                <br/>
+                                                <strong><fmt:formatNumber value="${USER_MAXIMUM_PAYMENT.amount}" pattern="###,###.##"/>&nbsp;${USER_MAXIMUM_PAYMENT.code}</strong>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="pull-right">
-                                            Current payment: <strong><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/> USD</strong>
+                                            Current payment: <strong><fmt:formatNumber value="${CURRENT_PAYMENT * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> VND</strong>
+                                            <br/>
+                                            <div class="pull-right"><strong><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/> USD</strong></div>
                                         </div>
                                     </div>
                                 </div>

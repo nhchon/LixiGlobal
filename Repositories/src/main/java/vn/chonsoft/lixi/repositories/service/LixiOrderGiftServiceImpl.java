@@ -135,9 +135,24 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
         
         LixiOrderGift gift = this.lxogiftRepository.findOne(id);
         if(gift != null){
+            //
             gift.getRecipient();
         }
         return gift;
+        
+    }
+    
+    /**
+     * 
+     * @param order
+     * @param recipient
+     * @param productId
+     * @return 
+     */
+    @Override
+    public LixiOrderGift findByOrderAndRecipientAndProductId(LixiOrder order, Recipient recipient, Integer productId){
+        
+        return this.lxogiftRepository.findByOrderAndRecipientAndProductId(order, recipient, productId);
         
     }
 }

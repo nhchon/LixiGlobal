@@ -40,5 +40,15 @@ public class RecipientServiceImpl implements RecipientService{
         
     }
     
-    
+    /**
+     * 
+     * @param phone
+     * @param id
+     * @return 
+     */
+    @Override
+    public int updatePhone(String phone, Long id){
+        
+        return this.reciRepository.updatePhone(phone, id);
+    }
 }

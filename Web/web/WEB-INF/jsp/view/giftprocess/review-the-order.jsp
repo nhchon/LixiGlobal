@@ -6,6 +6,24 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            var CONFIRM_MESSAGE = "<spring:message code="gift.delete_confirm"/>";
+            function confirmDeleteItem(id) {
+
+                if (confirm(CONFIRM_MESSAGE)) {
+                    document.location.href = "<c:url value="/gifts/delete?gift="/>" + id;
+                }
+
+            }
+            
+            /**
+             * 
+             * @param {type} id
+             * @returns {undefined}             
+             * */
+            function updateQUantity(id){
+                
+                document.location.href = "<c:url value="/gifts/update"/>" + "/" + id + "/" + $('#quantity-'+id).val();
+            }
         </script>
     </jsp:attribute>
 
@@ -44,7 +62,6 @@
                                     <th>Quantity</th>
                                     <th style="text-align: right;">Price</th>
                                     <th style="text-align: right;">Total</th>
-                                    <th></th>
                                     </thead>
                                     <tbody>
                                         <c:set var="total" value="0"/>
@@ -52,10 +69,9 @@
                                             <tr style="background-color: #f9f9f9;">
                                                 <td class="col-md-2"><strong>${entry.key.firstName}&nbsp;${entry.key.middleName}&nbsp;${entry.key.lastName}</strong></td>
                                                 <td class="col-md-2"></td>
-                                                <td class="col-md-1"></td>
-                                                <td class="col-md-2" style="text-align: right;"></td>
-                                                <td class="col-md-2" style="text-align: right;"></td>
-                                                <td class="col-md-3" style="text-align: right;"><a href="<c:url value="/gifts/add-more/${entry.key.id}"/>" class="btn btn-sm btn-success">Add More</a></td>
+                                                <td class="col-md-2"></td>
+                                                <td class="col-md-3" style="text-align: right;"></td>
+                                                <td class="col-md-3" style="text-align: right;"></td>
                                             </tr>
                                             <c:set var="recTotal" value="0"/>
                                             <c:forEach items="${entry.value}" var="g">
@@ -63,18 +79,14 @@
                                                 <tr>
                                                     <td class="col-md-2"></td>
                                                     <td class="col-md-2">${g.productName}</td>
-                                                    <td class="col-md-1">${g.productQuantity}</td>
-                                                    <td class="col-md-2" style="text-align: right;">
+                                                    <td class="col-md-2">${g.productQuantity}</td>
+                                                    <td class="col-md-3" style="text-align: right;">
                                                         <fmt:formatNumber value="${g.productPrice / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> USD <br/>
                                                         <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
                                                     </td>
-                                                    <td class="col-md-2" style="text-align: right;">
+                                                    <td class="col-md-3" style="text-align: right;">
                                                         <fmt:formatNumber value="${g.productPrice * g.productQuantity / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> USD<br/>
                                                         <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/> VND
-                                                    </td>
-                                                    <td class="col-md-3" style="text-align: right;">
-                                                        <a href="<c:url value="/gifts/change/${g.id}"/>" class="btn btn-sm btn-primary">Change</a>
-                                                        <a href="javascript:confirmDeleteItem(${g.id})" class="btn btn-sm btn-danger">Delete</a>
                                                     </td>
                                                     <c:set var="total" value="${total + g.productPrice * g.productQuantity}"/>
                                                     <c:set var="recTotal" value="${recTotal + g.productPrice * g.productQuantity}"/>
@@ -90,12 +102,11 @@
                                                 <strong><fmt:formatNumber value="${recTotal / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong> USD<br/>
                                                 <strong><fmt:formatNumber value="${recTotal}" pattern="###,###.##"/></strong> VND
                                             </td>
-                                            <td></td>
                                             </tr>                                                
                                             <!-- // message -->
                                             <tr>
                                                 <td class="col-md-2">Message:</td>
-                                                <td class="col-md-7" colspan="5">
+                                                <td class="col-md-7" colspan="4">
                                                     <form action="${pageContext.request.contextPath}/gifts/editNote" method="post">
                                                     <div class="row">
                                                         <div class="col-md-10">
@@ -123,7 +134,6 @@
                                                 <strong><fmt:formatNumber value="${total / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong> USD<br/>
                                                 <strong><fmt:formatNumber value="${total}" pattern="###,###.##"/></strong> VND
                                             </td>
-                                            <td></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -131,8 +141,8 @@
                         </div>
                         <div class="btns">
                             <a href="<c:url value="/gifts/more-recipient"/>" class="btn btn-primary left">Back</a>
-                            <a href="pay-by-card.php" class="btn btn-primary">Pay by Card</a>
-                            <a href="pay-by-bank-account.php" class="btn btn-primary">Pay by Bank Account</a>
+                            <a href="<c:url value="/checkout/cards/add"/>" class="btn btn-primary">Pay by Card</a>
+                            <a href="javascript:alert('In Dev');" class="btn btn-primary">Pay by Bank Account</a>
                         </div>                    </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                 </div>

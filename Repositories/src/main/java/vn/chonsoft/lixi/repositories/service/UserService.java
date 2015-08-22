@@ -16,7 +16,7 @@ import vn.chonsoft.lixi.model.User;
 @Validated
 public interface UserService {
     
-    void save(@NotNull(message = "{validate.userService.save.user}") User user);
+    User save(@NotNull(message = "{validate.userService.save.user}") User user);
     
     @Null(message = "{validate.email.inuse}")
     User checkUniqueEmail(@NotNull(message = "{validate.user.email}") String email);

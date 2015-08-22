@@ -5,18 +5,14 @@
 package vn.chonsoft.lixi.repositories.service;
 
 import org.springframework.validation.annotation.Validated;
-import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.UserMoneyLevel;
 
 /**
  *
  * @author chonnh
  */
 @Validated
-public interface RecipientService {
+public interface UserMoneyLevelService {
     
-    Recipient save(Recipient rec);
-    
-    Recipient findById(Long id);
-    
-    int updatePhone(String phone, Long id);
+    UserMoneyLevel save(UserMoneyLevel uml);
 }

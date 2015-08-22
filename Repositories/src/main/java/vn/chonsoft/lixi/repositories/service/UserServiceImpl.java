@@ -20,10 +20,17 @@ public class UserServiceImpl implements UserService{
     
     @Inject UserRepository userRepository; 
     
+    /**
+     * 
+     * @param user
+     * @return 
+     */
     @Override
     @Transactional
-    public void save(User user){
-        this.userRepository.save(user);
+    public User save(User user){
+        
+        return this.userRepository.save(user);
+        
     }
     
     @Override
@@ -45,11 +52,13 @@ public class UserServiceImpl implements UserService{
         if(u != null){
             
             // make sure recipients is loaded;
-            u.getRecipients();
+            u.getRecipients().size();
             
             // maximum payment amount
             u.getUserMoneyLevel().getMoneyLevel();
             
+            //
+            u.getAddresses().size();
         }
         
         return u;

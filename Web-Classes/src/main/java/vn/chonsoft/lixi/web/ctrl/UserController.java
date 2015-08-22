@@ -35,6 +35,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.model.UserMoneyLevel;
 import vn.chonsoft.lixi.model.UserSecretCode;
 import vn.chonsoft.lixi.model.form.UserEditEmailForm;
 import vn.chonsoft.lixi.model.form.UserEditNameForm;
@@ -42,6 +43,8 @@ import vn.chonsoft.lixi.model.form.UserEditPasswordForm;
 import vn.chonsoft.lixi.model.form.UserResetPasswordForm;
 import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
+import vn.chonsoft.lixi.repositories.service.MoneyLevelService;
+import vn.chonsoft.lixi.repositories.service.UserMoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserSecretCodeService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -59,17 +62,22 @@ public class UserController {
     private static final Logger log = LogManager.getLogger(UserController.class);
     
     @Autowired
-    JavaMailSender mailSender;
+    private JavaMailSender mailSender;
     
     @Autowired
-    VelocityEngine velocityEngine;
+    private VelocityEngine velocityEngine;
     
     @Inject
-    UserService userService;
+    private UserService userService;
     
     @Inject
-    UserSecretCodeService uscService;
+    private UserSecretCodeService uscService;
     
+    @Inject
+    private MoneyLevelService mlService;
+    
+    @Inject
+    private UserMoneyLevelService umlService;
     /**
      * 
      * @param model
@@ -126,7 +134,17 @@ public class UserController {
             User temp = this.userService.checkUniqueEmail(u.getEmail());
             if(temp == null){
                 
-                this.userService.save(u);
+                // get id returned
+                u = this.userService.save(u);
+                
+                // inser default money level
+                UserMoneyLevel uml = new UserMoneyLevel();
+                uml.setUser(u);
+                uml.setMoneyLevel(this.mlService.findByIsDefault());
+                uml.setModifiedDate(currentDate);
+                uml.setModifiedBy(LiXiConstants.SYSTEM_AUTO);
+                
+                this.umlService.save(uml);
                 
                 // inser activate code
                 UserSecretCode usc = new UserSecretCode();
@@ -160,7 +178,7 @@ public class UserController {
                 message.setSentDate(Calendar.getInstance().getTime());
                 
                 Map model = new HashMap();	             
-                model.put("user", u);
+                model.put("user", userService.findByEmail(form.getEmail()));
                 // built the path
                 String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString());
                 model.put("regisConfirmPath", regisConfirmPath);
@@ -577,7 +595,7 @@ public class UserController {
             
         }
         
-        return new ModelAndView(new RedirectView("/", true, true));
+        return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
     }
     
     @RequestMapping(value = "signOut", method = RequestMethod.GET)

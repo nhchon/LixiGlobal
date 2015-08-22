@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.web.util;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -48,6 +49,28 @@ public abstract class LiXiUtils {
         
     }
     
+    /**
+     * 
+     * @param month
+     * @param year
+     * @return 
+     */
+    public static boolean checkMonthYearGreaterThanCurrent(int month, int year){
+        
+        Calendar cal = Calendar.getInstance();
+        int cyear = cal.get(cal.YEAR);
+        int cmonth = cal.get(cal.MONTH)+1; //zero-based
+        
+        if(year < cyear){
+            return false;
+        }
+        else{
+            if(month < cmonth)
+                return false;
+        }
+        //
+        return true;
+    }
     /**
      * 
      * @return 
