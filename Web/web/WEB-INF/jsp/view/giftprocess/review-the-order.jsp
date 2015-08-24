@@ -36,6 +36,12 @@
                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
                         <h1><spring:message code="gift.review_order"/></h1>
                         <br/>
+                        <c:if test="${empty REC_GIFTS}">
+                            <div class="msg msg-error">
+                                Sorry ! There is no item in your order
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty REC_GIFTS}">
                         <div class="row">
                             <div class="col-lg-2 col-md-2">
                                 <spring:message code="message.exchange_rate"/>:
@@ -139,10 +145,13 @@
                                 </table>
                             </div>
                         </div>
+                        </c:if>
                         <div class="btns">
                             <a href="<c:url value="/gifts/more-recipient"/>" class="btn btn-primary left">Back</a>
+                            <c:if test="${not empty REC_GIFTS}">
                             <a href="<c:url value="/checkout/cards/change"/>" class="btn btn-primary">Pay by Card</a>
                             <a href="<c:url value="/checkout/pay-by-bank-account"/>" class="btn btn-primary">Pay by Bank Account</a>
+                            </c:if>
                         </div>                    </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                 </div>

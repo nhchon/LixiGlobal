@@ -26,7 +26,8 @@ public abstract class LiXiConstants {
     public static final String SELECTED_AMOUNT = "SELECTED_AMOUNT";
     public static final String SELECTED_AMOUNT_IN_VND = "SELECTED_AMOUNT_IN_VND";
     public static final String SELECTED_AMOUNT_CURRENCY = "SELECTED_AMOUNT_CURRENCY";
-    public static final String SELECTED_LIXI_CATEGORY = "SELECTED_LIXI_CATEGORY";
+    public static final String SELECTED_LIXI_CATEGORY_ID = "SELECTED_LIXI_CATEGORY";
+    public static final String SELECTED_LIXI_CATEGORY_NAME = "SELECTED_LIXI_CATEGORY_NAME";
     
     public static final String CURRENCIES = "CURRENCIES";
     public static final String LIXI_EXCHANGE_RATE = "LIXI_EXCHANGE_RATE";
@@ -49,6 +50,7 @@ public abstract class LiXiConstants {
     public static final String BILLING_ADDRESS = "BILLING_ADDRESS";
     public static final String BILLING_ADDRESS_ES = "BILLING_ADDRESS_ES";
     public static final String CARD_ID = "CARD_ID";
+    public static final String SELECTED_CARD_ID = "SELECTED_CARD_ID";
     public static final String CARDS = "CARDS";
     public static final String PRODUCTS = "PRODUCTS";
     

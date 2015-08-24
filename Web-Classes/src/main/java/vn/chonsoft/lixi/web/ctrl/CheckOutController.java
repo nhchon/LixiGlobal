@@ -14,9 +14,12 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -164,7 +167,17 @@ public class CheckOutController {
             
             this.lxorderService.save(order);
             
-            return new ModelAndView(new RedirectView("/checkout/billing-address", true, true));
+            // check billing address
+            Pageable just6rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
+            Page<BillingAddress> addresses = this.baService.findByUser(u, just6rec);
+            if(addresses != null && addresses.hasContent()){
+                // jump to page choose billing address
+                return new ModelAndView(new RedirectView("/checkout/choose-billing-address", true, true));
+            }
+            else{
+                // add a new billing address
+                return new ModelAndView(new RedirectView("/checkout/billing-address", true, true));
+            }
             
         } catch (ConstraintViolationException e) {
 
@@ -242,6 +255,34 @@ public class CheckOutController {
      * @param request
      * @return 
      */
+    @RequestMapping(value = "choose-billing-address-modal", method = RequestMethod.GET)
+    public ModelAndView chooseBillingAddressModal(Map<String, Object> model, @PageableDefault(value = 6) Pageable page,  HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+        //Pageable just2rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
+        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+
+        Page<BillingAddress> addresses = this.baService.findByUser(u, page);
+        
+        model.put(LiXiConstants.BILLING_ADDRESS_ES, addresses);
+        model.put(LiXiConstants.USER_LOGIN_ID, u.getId());
+        
+        return new ModelAndView("giftprocess/billing-address-list", model);
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param page
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = "choose-billing-address", method = RequestMethod.GET)
     public ModelAndView chooseBillingAddress(Map<String, Object> model, @PageableDefault(value = 6) Pageable page,  HttpServletRequest request){
         
@@ -260,7 +301,7 @@ public class CheckOutController {
         model.put(LiXiConstants.BILLING_ADDRESS_ES, addresses);
         model.put(LiXiConstants.USER_LOGIN_ID, u.getId());
         
-        return new ModelAndView("giftprocess/billing-address-list", model);
+        return new ModelAndView("giftprocess/choose-billing-address", model);
     }
     
     /**
@@ -303,6 +344,51 @@ public class CheckOutController {
         
         return billingAddress(model, form, errors, request);
     }
+
+    /**
+     * 
+     * @param baId
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "billing-address/{baId}", method = RequestMethod.GET)
+    public ModelAndView billingAddress(@PathVariable Long baId, HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+        // login user
+        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+        
+        BillingAddress ba = this.baService.findByIdAndUser(baId, u);
+        if(ba == null){
+            
+            return new ModelAndView("giftprocess/billing-address");
+        }
+        else{
+            
+            // update bill address attr for selected card
+            LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+            
+            if(order.getCard() != null){
+                
+                UserCard uc = order.getCard();
+                if(uc != null){
+                    //
+                    uc.setBillingAddress(this.baService.findById(baId));
+                    this.ucService.save(uc);
+                }
+            }
+        }
+        
+        //
+        return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
+    }
+    
     /**
      * 
      * @param model
@@ -355,14 +441,7 @@ public class CheckOutController {
             String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
             User u = this.userService.findByEmail(email);
             
-            LixiOrder order = null;
-            // order already created
-            if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
-
-                order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-            }
-            else{
-
+            if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) == null) {
                 // order not exist, go to Choose recipient page
                 return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
             }
@@ -380,9 +459,18 @@ public class CheckOutController {
             
             bil = this.baService.save(bil);
             
-            // update billing address for order
-            order.setBillingAddress(bil);
-            this.lxorderService.save(order);
+            // update billing address for card
+            LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+            
+            if(order.getCard() != null){
+                
+                UserCard uc = order.getCard();
+                if(uc != null){
+                    //
+                    uc.setBillingAddress(bil);
+                    this.ucService.save(uc);
+                }
+            }
             
         } catch (ConstraintViolationException e) {
             
@@ -470,5 +558,27 @@ public class CheckOutController {
         this.recService.updatePhone(phone, Long.parseLong(recId));
         
         return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
+    }
+
+    /**
+     * 
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "thank-you", method = RequestMethod.GET)
+    public ModelAndView thankYou(HttpServletRequest request){
+
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+     
+        // remove Lixi order id
+        request.getSession().removeAttribute(LiXiConstants.LIXI_ORDER_ID);
+        
+        //
+        return new ModelAndView("giftprocess/thank-you");
     }
 }

@@ -59,9 +59,6 @@ public class LixiOrderServiceImpl implements LixiOrderService{
             //
             order.getCard();
             
-            //
-            order.getBillingAddress();
-            
         }
         
         return order;

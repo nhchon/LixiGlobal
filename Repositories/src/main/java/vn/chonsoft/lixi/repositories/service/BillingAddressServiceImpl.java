@@ -40,6 +40,12 @@ public class BillingAddressServiceImpl implements BillingAddressService{
         
     }
 
+    @Override
+    public BillingAddress findById(Long id){
+        
+        return this.baRepository.findOne(id);
+        
+    }
     /**
      * 
      * @param u
@@ -64,5 +70,12 @@ public class BillingAddressServiceImpl implements BillingAddressService{
         Page<BillingAddress> entities = this.baRepository.findByUser(u, page);
         
         return new PageImpl<>(entities.getContent(), page, entities.getTotalElements());
+    }
+    
+    @Override
+    public BillingAddress findByIdAndUser(Long id, User u){
+        
+        return this.baRepository.findByIdAndUser(id, u);
+        
     }
 }

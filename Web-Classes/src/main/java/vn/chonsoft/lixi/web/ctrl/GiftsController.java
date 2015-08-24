@@ -20,7 +20,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiCategory;
@@ -342,51 +341,6 @@ public class GiftsController {
 
     /**
      *
-     * Not In Use currently
-     *
-     * @param category
-     * @param request
-     * @return
-     */
-    /*
-    @RequestMapping(value = "type", method = RequestMethod.POST)
-    public ModelAndView typeOfGift(@RequestParam("type-of-gift") int category, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
-
-        LixiCategory lxcategory = this.lxcService.findById(category);
-
-        if (lxcategory == null) {
-
-            return new ModelAndView(new RedirectView("/gifts/type?wrong=1", true, true));
-
-        }
-        // get current order gift id
-        Long orderGiftId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_GIFT_ID);
-        
-        log.info("orderGiftId at type POST: " + orderGiftId);
-        
-        LixiOrderGift lxogift = this.lxogiftService.findById(orderGiftId);
-        lxogift.setCategory(lxcategory);
-        // save category
-        this.lxogiftService.save(lxogift);
-
-        // store lixi category id into session for next and back action
-        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY, lxcategory.getId());
-
-        // jump
-        return new ModelAndView(new RedirectView("/gifts/choose", true, true));
-
-    }
-    */
-    
-    /**
-     *
      * @param model
      * @param category
      * @param request
@@ -408,7 +362,8 @@ public class GiftsController {
         // prepare for Choose the gift page
         LixiCategory lxcategory = this.lxcService.findById(category);
         // store category into session
-        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY, category);
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, category);
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName());
 
         // get price, amount in VND - 100k
         float price = LiXiUtils.getBeginPrice((float) request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND));
@@ -488,7 +443,7 @@ public class GiftsController {
         // no need to check
         float price = Float.parseFloat(priceStr);
         int quantity = Integer.parseInt(quantityStr);
-        LixiCategory lxCategory = this.lxcService.findById((Integer) request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY));
+        LixiCategory lxCategory = this.lxcService.findById((Integer) request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID));
 
         LixiOrder order = null;
         // check order already created
@@ -551,7 +506,6 @@ public class GiftsController {
             if(lastOrder != null){
                 // use the last payment method
                 order.setCard(lastOrder.getCard());
-                order.setBillingAddress(lastOrder.getBillingAddress());
             }
             
             // save order
@@ -703,6 +657,11 @@ public class GiftsController {
         if (lxogift == null) {
 
             return new ModelAndView(new RedirectView("/gifts/more-recipient?wrong=1", true, true));
+        }
+        // quantity = 0
+        if(quantity ==0 ){
+            
+            // delete the order
         }
         // else
         float currentPayment = LiXiUtils.calculateCurrentPayment(order);

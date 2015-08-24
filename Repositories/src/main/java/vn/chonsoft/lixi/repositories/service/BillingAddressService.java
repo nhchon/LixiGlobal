@@ -20,7 +20,11 @@ public interface BillingAddressService {
     
     BillingAddress save(BillingAddress ba);
     
+    BillingAddress findById(Long id);
+    
     List<BillingAddress> findByUser(User u);
     
     Page<BillingAddress> findByUser(User u, Pageable p);
+    
+    BillingAddress findByIdAndUser(Long id, User u);
 }

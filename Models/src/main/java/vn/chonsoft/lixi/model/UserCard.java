@@ -62,6 +62,10 @@ public class UserCard implements Serializable {
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
+
+    @JoinColumn(name = "bill_address", referencedColumnName = "id")
+    @ManyToOne
+    private BillingAddress billingAddress;
     
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -145,6 +149,15 @@ public class UserCard implements Serializable {
         this.cardCvv = cardCvv;
     }
 
+    public BillingAddress getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(BillingAddress billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    
     public Date getModifiedDate() {
         return modifiedDate;
     }

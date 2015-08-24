@@ -42,7 +42,14 @@ public class UserCardServiceImpl implements UserCardService{
     @Override
     public UserCard findById(Long id){
         
-        return this.ucRepository.findOne(id);
+        UserCard uc = this.ucRepository.findOne(id);
+        if(uc != null){
+            
+            // load billing address
+            uc.getBillingAddress();
+        }
+        
+        return uc;
         
     }
     /**

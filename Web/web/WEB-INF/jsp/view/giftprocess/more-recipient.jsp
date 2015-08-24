@@ -34,6 +34,7 @@
                 <div class="row">
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+                        <h1>Summary</h1>
                         <c:if test="${wrong eq 1 || param.wrong eq 1}">
                             <div class="msg msg-error">
                                 <spring:message code="validate.there_is_something_wrong"/>
@@ -48,9 +49,13 @@
                                 </spring:message>
                             </div>
                         </c:if>
-
-                        <h1>Summary</h1>
+                        <c:if test="${empty REC_GIFTS}">
+                            <div class="msg msg-error">
+                                Sorry ! There is no item in your order
+                            </div>
+                        </c:if>
                         <br/>
+                        <c:if test="${not empty REC_GIFTS}">
                         <div class="row">
                             <div class="col-lg-2 col-md-2">
                                 <spring:message code="message.exchange_rate"/>:
@@ -142,12 +147,13 @@
                                 </table>
                             </div>
                         </div>
+                        </c:if>                    
                         <h1>Add Additional Recipient?</h1>
                         <br />
                         <p>Do you want to send a gift to another person?</p>
                         <div class="btns">
                             <a href="<c:url value="/gifts/recipient"/>" class="btn btn-primary">Yes, I do</a>
-                            <a href="<c:url value="/gifts/review"/>" class="btn btn-primary">No, thank you</a>
+                            <c:if test="${not empty REC_GIFTS}"><a href="<c:url value="/gifts/review"/>" class="btn btn-primary">No, thank you</a></c:if>
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>

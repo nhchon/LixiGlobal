@@ -7,6 +7,7 @@
         <script type="text/javascript">
             /** Page Script **/
             var NOT_NULL_MESSAGE = '<spring:message code="validate.not_null"/>';
+            var BILLING_ADDRESS_MODAL_URL = '<c:url value="/checkout/billing-address-modal"/>';
             
             function editMobilePhone(recId) {
 
@@ -17,78 +18,13 @@
             }
             
             function showPageBillAdd(page){
-                $.get( '<c:url value="/checkout/choose-billing-address?paging.page"/>='+page, function( data ) {
+                $.get( '<c:url value="/checkout/choose-billing-address-modal?paging.page"/>='+page, function( data ) {
                     $('#billingAddressListContent').html(data);
                     $('#billingAddressListModal').modal({show:true});
                 });
-            }
-            
-            /**
-             * 
-             * @param {type} baId
-             * @returns {undefined}
-             */
-            function useThisAddress(baId){
-                
-                $('#billingAdd').html($('#billingAdd-'+baId).val());
-                
-                $('#billingAddressListModal').modal('toggle');
-            }
-            
-            function newBillingAddress(){
-                $.get( '<c:url value="/checkout/billing-address-modal"/>', function( data ) {
-                    $('#billingAddressListContent').html(data);
-                    $('#billingAddressListModal').modal({show:true});
-                });
-            }
-            
-            function saveNewBillingAddress(){
-                
-                if($.trim($('#fullName').val()) === ''){
-                    
-                    $('#fullName').attr("placeholder", NOT_NULL_MESSAGE);
-                    $('#fullName').focus();
-                    return false;
-                }
-                // add1
-                if($.trim($('#add1').val()) === ''){
-                    
-                    $('#add1').attr("placeholder", NOT_NULL_MESSAGE);
-                    $('#add1').focus();
-                    return false;
-                }
-                // city
-                if($.trim($('#city').val()) === ''){
-                    
-                    $('#city').attr("placeholder", NOT_NULL_MESSAGE);
-                    $('#city').focus();
-                    return false;
-                }
-                // state
-                if($.trim($('#state').val()) === ''){
-                    
-                    $('#state').attr("placeholder", NOT_NULL_MESSAGE);
-                    $('#state').focus();
-                    return false;
-                }
-                // zipCode
-                if($.trim($('#zipCode').val()) === ''){
-                    
-                    $('#zipCode').attr("placeholder", NOT_NULL_MESSAGE);
-                    $('#zipCode').focus();
-                    return false;
-                }
-                // phone
-                if($.trim($('#phone').val()) === ''){
-
-                    $('#phone').attr("placeholder", NOT_NULL_MESSAGE);
-                    $('#phone').focus();
-                    return false;
-                }
-                //
-                return true;
             }
         </script>
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/billingAddress.js"/>"></script>
     </jsp:attribute>
 
     <jsp:body>
@@ -99,6 +35,12 @@
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
                         <h1><spring:message code="order.place_your_order"/></h1>
+                        <c:if test="${empty REC_GIFTS}">
+                            <div class="msg msg-error">
+                                Sorry ! There is no item in your order
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty REC_GIFTS}">
                         <div class="info-bound">
                             <table class="recipient">
                                 <c:set var="allRecipientTotal" value="0"/>
@@ -145,7 +87,7 @@
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             ${g.productQuantity} x <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
                                                         </td>
-                                                        <td style="text-align: right"><a href="javascript:alert('In Dev');"><i class="fa fa-pencil"></i> Change</a></td>
+                                                        <td style="text-align: right"><a href="<c:url value="/gifts/more-recipient"/>"><i class="fa fa-pencil"></i> Change</a></td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -166,17 +108,18 @@
                                     <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.card.cardNumber)}"/>
                                     <td><b>${LIXI_ORDER.card.cardTypeName}</b> ending with ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}
                                     <br/>
-                                    <b>Billing address:</b> <span id="billingAdd">${LIXI_ORDER.billingAddress.fullName}, ${LIXI_ORDER.billingAddress.add1}
-                                    <c:if test="${not empty LIXI_ORDER.billingAddress.add2}">&nbsp; ${LIXI_ORDER.billingAddress.add2}}</c:if>
+                                    <b>Billing address:</b> <span id="billingAdd">${LIXI_ORDER.card.billingAddress.fullName}, ${LIXI_ORDER.card.billingAddress.add1}
+                                    <c:if test="${not empty LIXI_ORDER.card.billingAddress.add2}">&nbsp; ${LIXI_ORDER.card.billingAddress.add2}}</c:if>
                                     , ...</span> <a href="javascript:showPageBillAdd(1);" style="font-weight:normal;">Change</a>
                                     </td>
                                     <td style="text-align: right;vertical-align: top;"><a href="<c:url value="/checkout/cards/change"/>"><i class="fa fa-pencil"></i> Change</a></td>
                                 </tr>
                             </table>
                         </div>
+                        </c:if>        
                         <div class="btns">
-                            <a href="review-cart.html" class="btn btn-primary left"><spring:message code="message.back"/></a>
-                            <a href="thanks.html" class="btn btn-primary">Place Order</a>
+                            <a href="<c:url value="/checkout/cards/change"/>" class="btn btn-primary left"><spring:message code="message.back"/></a>
+                            <c:if test="${not empty REC_GIFTS}"><a href="<c:url value="/checkout/thank-you"/>" class="btn btn-primary">Place Order</a></c:if>
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>

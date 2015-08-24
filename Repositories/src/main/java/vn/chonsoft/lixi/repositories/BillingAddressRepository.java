@@ -17,6 +17,8 @@ import vn.chonsoft.lixi.model.User;
  */
 public interface BillingAddressRepository extends JpaRepository<BillingAddress, Long>{
    
+    BillingAddress findByIdAndUser(Long id, User u);
+    
     List<BillingAddress> findByUser(User u);
     
     Page<BillingAddress> findByUser(User u, Pageable p);

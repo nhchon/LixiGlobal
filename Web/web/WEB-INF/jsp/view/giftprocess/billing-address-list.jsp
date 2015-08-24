@@ -32,15 +32,12 @@
                         <br/>
                         Phone: ${ba.phone}
                         <br/><br/>
-                        <button type="button" onclick="useThisAddress(${ba.id})" class="btn btn-primary">Use this address</button>
+                        <button type="button" onclick="document.location.href='<c:url value="/checkout/billing-address/${ba.id}"/>';" class="btn btn-primary">Use this address</button>
                     </div>
                 <c:if test="${theCount.count%3 eq 0 or theCount.last}">
                         <p>&nbsp;</p>
                     </div>
                 </c:if>
-                        <input type="hidden" id="billingAdd-${ba.id}" value="${ba.fullName}, ${ba.add1}
-                                    <c:if test="${not empty ba.add2}">&nbsp; ${ba.add2}}</c:if>
-                        , ..."/>
             </c:forEach>
         </div></div>
 </div>
