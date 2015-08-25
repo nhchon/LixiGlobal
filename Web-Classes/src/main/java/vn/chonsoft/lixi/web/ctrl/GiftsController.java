@@ -506,6 +506,7 @@ public class GiftsController {
             if(lastOrder != null){
                 // use the last payment method
                 order.setCard(lastOrder.getCard());
+                order.setBankAccount(lastOrder.getBankAccount());
             }
             
             // save order

@@ -105,14 +105,25 @@
                                 <tr>
                                     <td></td>
                                     <td>Payment Method</td>
+                                    
+                                    <td>
+                                    <c:if test="${not empty LIXI_ORDER.card}">
                                     <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.card.cardNumber)}"/>
-                                    <td><b>${LIXI_ORDER.card.cardTypeName}</b> ending with ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}
+                                    <b>${LIXI_ORDER.card.cardTypeName}</b> ending with ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}
                                     <br/>
                                     <b>Billing address:</b> <span id="billingAdd">${LIXI_ORDER.card.billingAddress.fullName}, ${LIXI_ORDER.card.billingAddress.add1}
                                     <c:if test="${not empty LIXI_ORDER.card.billingAddress.add2}">&nbsp; ${LIXI_ORDER.card.billingAddress.add2}}</c:if>
-                                    , ...</span> <a href="javascript:showPageBillAdd(1);" style="font-weight:normal;">Change</a>
+                                    , ...</span>&nbsp;
+                                    </c:if>
+                                    <c:if test="${not empty LIXI_ORDER.bankAccount}">
+                                        <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.bankAccount.checkingAccount)}"/>
+                                        <b>${LIXI_ORDER.bankAccount.name}</b> ending in ${fn:substring(LIXI_ORDER.bankAccount.checkingAccount, lengthCard-4, lengthCard)}
+                                        <br/>
+                                        <b>Billing address:</b> <span id="billingAdd">${LIXI_ORDER.bankAccount.billingAddress.fullName}, ${LIXI_ORDER.bankAccount.billingAddress.add1}
+                                    </c:if>
+                                    <a href="javascript:showPageBillAdd(1);" style="font-weight:normal;">Change</a>
                                     </td>
-                                    <td style="text-align: right;vertical-align: top;"><a href="<c:url value="/checkout/cards/change"/>"><i class="fa fa-pencil"></i> Change</a></td>
+                                    <td style="text-align: right;vertical-align: top;"><a href="<c:url value="/checkout/payment-method/change"/>"><i class="fa fa-pencil"></i> Change</a></td>
                                 </tr>
                             </table>
                         </div>

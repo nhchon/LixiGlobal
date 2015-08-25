@@ -59,6 +59,8 @@ public class LixiOrderServiceImpl implements LixiOrderService{
             //
             order.getCard();
             
+            //
+            order.getBankAccount();
         }
         
         return order;
@@ -83,7 +85,12 @@ public class LixiOrderServiceImpl implements LixiOrderService{
             
             if(l1 != null && !l1.isEmpty()){
                 
-                return l1.get(0);
+                LixiOrder i0 = l1.get(0);
+                // load them
+                i0.getCard();
+                i0.getBankAccount();
+                
+                return i0;
                 
             }
         }

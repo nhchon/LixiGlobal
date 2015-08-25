@@ -52,6 +52,7 @@ public abstract class LiXiConstants {
     public static final String CARD_ID = "CARD_ID";
     public static final String SELECTED_CARD_ID = "SELECTED_CARD_ID";
     public static final String CARDS = "CARDS";
+    public static final String ACCOUNTS = "ACCOUNTS";
     public static final String PRODUCTS = "PRODUCTS";
     
     public static final String YHANNART_GMAIL = "yhannart@gmail.com";

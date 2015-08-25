@@ -63,6 +63,10 @@ public class LixiOrder implements Serializable {
     @ManyToOne
     private UserCard card;
 
+    @JoinColumn(name = "bank_account_id", referencedColumnName = "id")
+    @ManyToOne
+    private UserBankAccount bankAccount;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "order")
     private List<LixiOrderGift> gifts;
     
@@ -132,6 +136,14 @@ public class LixiOrder implements Serializable {
 
     public void setCard(UserCard card) {
         this.card = card;
+    }
+
+    public UserBankAccount getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(UserBankAccount bankAccount) {
+        this.bankAccount = bankAccount;
     }
 
     public List<LixiOrderGift> getGifts() {

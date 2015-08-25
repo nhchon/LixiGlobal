@@ -30,12 +30,15 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
+import vn.chonsoft.lixi.model.form.BankAccountAddForm;
 import vn.chonsoft.lixi.model.form.BillingAddressForm;
 import vn.chonsoft.lixi.model.form.CardAddForm;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
+import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -66,6 +69,9 @@ public class CheckOutController {
     
     @Inject
     private RecipientService recService;
+    
+    @Inject
+    private UserBankAccountService ubcService;
     /**
      * Add a card
      * 
@@ -216,23 +222,157 @@ public class CheckOutController {
             // there is no card, it means user had no order
             return new ModelAndView(new RedirectView("/checkout/cards/add", true, true));
         }
+        else{
+            
+            // choose payment method
+            return new ModelAndView(new RedirectView("/checkout/payment-method/change", true, true));
+        }
+    }
+    
+    ////////////////////////// Bank Account
+    @RequestMapping(value = "pay-by-bank-account/change", method = RequestMethod.GET)
+    public ModelAndView payByBankAccount(Map<String, Object> model, HttpServletRequest request){
         
-        model.put(LiXiConstants.CARDS, cards);
-        model.put(LiXiConstants.LIXI_ORDER, order);
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+
+        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+
+        LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
         
-        return new ModelAndView("giftprocess/change-payment-method");
+        List<UserBankAccount> accounts = this.ubcService.findByUser(u);
+        if(accounts == null || accounts.isEmpty()){
+            
+            // there is no bank account, add a new
+            return new ModelAndView(new RedirectView("/checkout/pay-by-bank-account/add", true, true));
+        }
+        else{
+            
+            // choose payment method
+            return new ModelAndView(new RedirectView("/checkout/payment-method/change", true, true));
+        }
+        
     }
     
     /**
      * 
-     * User change payment method
+     * Add bank account
      * 
-     * @param cardId
+     * @param model
      * @param request
      * @return 
      */
-    @RequestMapping(value = "cards/change", method = RequestMethod.POST)
-    public ModelAndView changeCards(@RequestParam Long cardId,  HttpServletRequest request){
+    @RequestMapping(value = "pay-by-bank-account/add", method = RequestMethod.GET)
+    public ModelAndView addBankAccount(Map<String, Object> model, HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+
+        model.put("bankAccountAddForm", new BankAccountAddForm());
+        
+        return new ModelAndView("giftprocess/pay-by-bank-account");
+    }
+    
+    /**
+     * 
+     * submit new bank account
+     * 
+     * @param model
+     * @param form
+     * @param errors
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "pay-by-bank-account", method = RequestMethod.POST)
+    public ModelAndView payByBankAccount(Map<String, Object> model,
+            @Valid BankAccountAddForm form, Errors errors, HttpServletRequest request) {
+
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+        
+        if (errors.hasErrors()) {
+            
+            return new ModelAndView("giftprocess/pay-by-bank-account");
+        }
+        
+        try {
+            // login user
+            String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+            User u = this.userService.findByEmail(email);
+            
+            UserBankAccount ubc = new UserBankAccount();
+            ubc.setName(form.getName());
+            ubc.setBankRounting(form.getBankRounting());
+            ubc.setCheckingAccount(form.getCheckingAccount());
+            ubc.setDriverLicense(form.getDriverLicense());
+            ubc.setState(form.getState());
+            ubc.setModifiedDate(Calendar.getInstance().getTime());
+            ubc.setBillingAddress(null);
+            ubc.setUser(u);
+            
+            ubc = this.ubcService.save(ubc);
+            
+            // update order, add bank account
+            LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+            order.setBankAccount(ubc);
+            
+            this.lxorderService.save(order);
+            
+        } catch (ConstraintViolationException e) {
+            
+            log.info("Insert bank account failed", e);
+            //
+            model.put("validationErrors", e.getConstraintViolations());
+            return new ModelAndView("giftprocess/pay-by-bank-account", model);
+        }
+        
+        //
+        return new ModelAndView(new RedirectView("/checkout/choose-billing-address", true, true));
+    }
+    
+    /////////////////////////
+    @RequestMapping(value = "payment-method/change", method = RequestMethod.GET)
+    public ModelAndView changePaymentMethod(Map<String, Object> model, HttpServletRequest request){
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+
+        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+
+        LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        
+        model.put(LiXiConstants.ACCOUNTS, this.ubcService.findByUser(u));
+        model.put(LiXiConstants.CARDS, this.ucService.findByUser(u));
+        model.put(LiXiConstants.LIXI_ORDER, order);
+        
+        return new ModelAndView("giftprocess/change-payment-method");
+    }
+    /**
+     * 
+     * User change payment method
+     * 
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "payment-method/change", method = RequestMethod.POST)
+    public ModelAndView changePaymentMethod(HttpServletRequest request){
         
         // check login
         if (!LiXiUtils.isLoggined(request)) {
@@ -241,8 +381,39 @@ public class CheckOutController {
 
         }
         
+        String cardIdStr = request.getParameter("cardId");
+        String accIdStr = request.getParameter("accId");
+        
+        Long cardId = 0L;
+        Long accId = 0L;
+        try {
+            //
+            if(cardIdStr != null && !"".equals(cardIdStr)){
+                cardId = Long.parseLong(cardIdStr);
+            }
+            //
+            if(accIdStr != null && !"".equals(accIdStr)){
+                accId = Long.parseLong(accIdStr);
+            }
+        } catch (Exception e) {log.info("parse number wrong", e);}
+        
+        // There is something wrong
+        if(accId <= 0 && cardId <= 0){
+            
+            return new ModelAndView(new RedirectView("/checkout/payment-method/change?wrong=1", true, true));
+        }
+        
         LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-        order.setCard(this.ucService.findById(cardId));
+        if(cardId > 0){
+            //
+            order.setCard(this.ucService.findById(cardId));
+            order.setBankAccount(null);
+        }
+        else{
+            //
+            order.setBankAccount(this.ubcService.findById(accId));
+            order.setCard(null);
+        }
         
         this.lxorderService.save(order);
         
@@ -277,6 +448,8 @@ public class CheckOutController {
     }
     
     /**
+     * 
+     * Choose a billing address from a list
      * 
      * @param model
      * @param page
@@ -373,14 +546,25 @@ public class CheckOutController {
             
             // update bill address attr for selected card
             LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-            
-            if(order.getCard() != null){
                 
-                UserCard uc = order.getCard();
-                if(uc != null){
-                    //
-                    uc.setBillingAddress(this.baService.findById(baId));
-                    this.ucService.save(uc);
+            UserCard uc = order.getCard();
+            if(uc != null){
+                //
+                uc.setBillingAddress(this.baService.findById(baId));
+                order.setCard(this.ucService.save(uc));
+                // update order
+                this.lxorderService.save(order);
+            }
+            else{
+
+                UserBankAccount ubc = order.getBankAccount();
+                if(ubc != null){
+                    log.info("update billing address for bank account");
+                    // update billing address for ubc
+                    ubc.setBillingAddress(this.baService.findById(baId));
+                    order.setBankAccount(this.ubcService.save(ubc));
+                    //update order
+                    this.lxorderService.save(order);
                 }
             }
         }
@@ -470,6 +654,15 @@ public class CheckOutController {
                     uc.setBillingAddress(bil);
                     this.ucService.save(uc);
                 }
+                else{
+                    
+                    UserBankAccount ubc = order.getBankAccount();
+                    if(ubc != null){
+                        // update billing address for ubc
+                        ubc.setBillingAddress(bil);
+                        this.ubcService.save(ubc);
+                    }
+                }
             }
             
         } catch (ConstraintViolationException e) {
@@ -482,24 +675,6 @@ public class CheckOutController {
     }
     
     
-    /**
-     * 
-     * @param model
-     * @param request
-     * @return 
-     */
-    @RequestMapping(value = "pay-by-bank-account", method = RequestMethod.GET)
-    public ModelAndView payByBankAccount(Map<String, Object> model, HttpServletRequest request){
-        
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
-
-        return new ModelAndView("giftprocess/pay-by-bank-account");
-    }
     /**
      * 
      * @param model 

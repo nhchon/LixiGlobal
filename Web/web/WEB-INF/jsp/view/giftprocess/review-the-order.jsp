@@ -150,7 +150,7 @@
                             <a href="<c:url value="/gifts/more-recipient"/>" class="btn btn-primary left">Back</a>
                             <c:if test="${not empty REC_GIFTS}">
                             <a href="<c:url value="/checkout/cards/change"/>" class="btn btn-primary">Pay by Card</a>
-                            <a href="<c:url value="/checkout/pay-by-bank-account"/>" class="btn btn-primary">Pay by Bank Account</a>
+                            <a href="<c:url value="/checkout/pay-by-bank-account/change"/>" class="btn btn-primary">Pay by Bank Account</a>
                             </c:if>
                         </div>                    </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>

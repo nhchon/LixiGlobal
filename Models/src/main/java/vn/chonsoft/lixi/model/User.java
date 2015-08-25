@@ -57,6 +57,8 @@ public class User implements Serializable {
     
     private List<UserCard> userCards;
     
+    private List<UserBankAccount> userBankAccounts;
+    
     private List<BillingAddress> addresses;
     
     public User() {
@@ -261,6 +263,15 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender")
     public List<Recipient> getRecipients() {
         return recipients;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    public List<UserBankAccount> getUserBankAccounts() {
+        return userBankAccounts;
+    }
+
+    public void setUserBankAccounts(List<UserBankAccount> userBankAccounts) {
+        this.userBankAccounts = userBankAccounts;
     }
 
     public void setRecipients(List<Recipient> recipients) {
