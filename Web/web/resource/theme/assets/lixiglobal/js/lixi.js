@@ -45,8 +45,13 @@ $.fn.isValidPassword = function(){
 
     var isAtLeast8 = this.val().length >= 8;
     var hasUppercase = !(this.val() === this.val().toLowerCase());
+    // has number
+    var regex = /\d/g;
+    var hasNumber = regex.test(this.val());
+    // only normal chars
+    var normalChars = /^[a-zA-Z0-9- ]*$/.test(this.val());
     
-    return (isAtLeast8 && hasUppercase);;
+    return (isAtLeast8 && hasUppercase && hasNumber && !normalChars);;
 }
 /**
  * 

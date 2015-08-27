@@ -1,11 +1,16 @@
 <template:Client htmlTitle="LiXi Global - Blank Sample Page">
 
     <jsp:attribute name="extraHeadContent">
-        <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/intlTelInput.css"/>" type="text/css" />
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/registration.css"/>" type="text/css" />
+        <style>
+            .progress{
+                margin-bottom: 0px;
+            }
+        </style>
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/plugins/pwstrength/pwstrength.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
             var FIRST_NAME_MESSAGE = '<spring:message code="validate.user.firstName"/>';
@@ -14,6 +19,21 @@
             var PASS_MESSAGE = '<spring:message code="validate.password_required"/>';
             
             $(document).ready(function () {
+                "use strict";
+                var options = {};
+                options.ui = {
+                    showVerdictsInsideProgressBar: true,
+                    viewports: {
+                        progress: ".pwstrength_viewport_progress"
+                    }
+                };
+                options.common = {
+                    debug: true,
+                    minChar: 8,
+                    usernameField: '#email'
+                };
+                $(':password').pwstrength(options);
+            
                 $('#btnSubmit').click(function(){
                    
                     // check first name
@@ -147,13 +167,14 @@
                                 <div class="desc">
                                     <spring:message code="signup.protect_your_info"/>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" id="pwd-container">
                                     <div class="col-lg-4 col-md-4">
                                         <label class="control-label"><spring:message code="signup.enter_password"/></label>
                                     </div>
                                     <div class="col-lg-8 col-md-8">
                                         <form:input type="password" class="form-control" path="password" placeholder="${passwordMessage}"/>
                                         <span class="help-block errors"><form:errors path="password" /></span>
+                                        <div class="pwstrength_viewport_progress"></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
