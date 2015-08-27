@@ -2,15 +2,35 @@
 
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/password-assistance.css"/>" type="text/css" />
+        <style>
+            .progress{
+                margin-bottom: 0px;
+            }
+        </style>
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/plugins/pwstrength/pwstrength.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
             var EMAIL_MESSAGE = '<spring:message code="validate.email_required"/>';
             var CAPTCHA_MESSAGE = '<spring:message code="validate.captcha_required"/>'
             var CONTEXT_PATH = '${pageContext.request.contextPath}';
             $(document).ready(function () {
+                "use strict";
+                var options = {};
+                options.ui = {
+                    showVerdictsInsideProgressBar: true,
+                    viewports: {
+                        progress: ".pwstrength_viewport_progress"
+                    }
+                };
+                options.common = {
+                    debug: true,
+                    minChar: 8,
+                    usernameField: '#email'
+                };
+                $(':password').pwstrength(options);
             });
             
             function validResetPassForm(){
@@ -38,7 +58,7 @@
                         <c:if test="${codeIsInvalid == 'yes'}">
                             <div class="msg msg-error">There is something wrong. Please try again !</div>
                         </c:if>
-                        <spring:message code="signin.at_least_password" var="passwordMessage"/>
+                        <spring:message code="message.password_format" var="passwordMessage"/>
                         <form:form onsubmit="return validResetPassForm();" class="form-horizontal" modelAttribute="userResetPasswordForm">
                             <fieldset>
                                 <legend>Reset Your Password</legend>
@@ -52,11 +72,12 @@
                                     <div class="col-lg-7 col-md-7">
                                         <form:password path="password" class="form-control" placeholder="${passwordMessage}"/>
                                         <span class="help-block errors"><form:errors path="password" /></span>
+                                        <div class="pwstrength_viewport_progress"></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-lg-5 col-md-5">
-                                        <label for="captcha" class="control-label">Retype your new password</label>
+                                        <label for="confPassword" class="control-label">Retype your new password</label>
                                     </div>
                                     <div class="col-lg-7 col-md-7">
                                         <form:password path="confPassword" class="form-control" placeholder="${passwordMessage}"/>

@@ -1,9 +1,15 @@
 <template:Client htmlTitle="LiXi Global - Blank Sample Page">
 
     <jsp:attribute name="extraHeadContent">
+        <style>
+            .progress{
+                margin-bottom: 0px;
+            }
+        </style>
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/plugins/pwstrength/pwstrength.js"/>"></script>
         <script type="text/javascript">
             var NAME_MESSAGE = '<spring:message code="validate.trader.name"/>';
             var EMAIL_MESSAGE = '<spring:message code="validate.email_required"/>';
@@ -12,6 +18,21 @@
             var PASS_MESSAGE = '<spring:message code="validate.password_required"/>';
             /** Page Script **/
             $(document).ready(function () {
+                "use strict";
+                var options = {};
+                options.ui = {
+                    showVerdictsInsideProgressBar: true,
+                    viewports: {
+                        progress: ".pwstrength_viewport_progress"
+                    }
+                };
+                options.common = {
+                    debug: true,
+                    minChar: 8,
+                    usernameField: '#email'
+                };
+                $(':password').pwstrength(options);
+                
                 $('#btnSubmit').click(function(){
                     
                     if($.trim($('#name').val()) === ''){
@@ -105,6 +126,7 @@
                                     <label for="password"><spring:message code="message.password"/>:</label>
                                     <form:password path="password" class="form-control"/>
                                     <span class="help-block with-errors errors"><form:errors path="password" /></span>
+                                    <div class="pwstrength_viewport_progress"></div>
                                 </div>
 
                                 <button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="message.create_account"/></button>
