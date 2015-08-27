@@ -28,6 +28,22 @@ public class RecipientServiceImpl implements RecipientService{
 
     /**
      * 
+     * Used for check unique recipient :D
+     * 
+     * @param firstName
+     * @param middleName
+     * @param lastName
+     * @param phone
+     * @return 
+     */
+    @Override
+    public Recipient findByFirstNameAndMiddleNameAndLastNameAndPhone(String firstName, String middleName, String lastName, String phone){
+        
+        return this.reciRepository.findByFirstNameAndMiddleNameAndLastNameAndPhone(firstName, middleName, lastName, phone);
+        
+    }
+    /**
+     * 
      * 
      * @param rec
      * @return the saved entity

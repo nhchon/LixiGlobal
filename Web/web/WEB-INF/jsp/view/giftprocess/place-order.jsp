@@ -28,7 +28,6 @@
     </jsp:attribute>
 
     <jsp:body>
-        <form>
         <section id="place-order" class="normal-page">
             <div class="container">
                 <div class="row">
@@ -121,23 +120,57 @@
                                         <br/>
                                         <b>Billing address:</b> <span id="billingAdd">${LIXI_ORDER.bankAccount.billingAddress.fullName}, ${LIXI_ORDER.bankAccount.billingAddress.add1}
                                     </c:if>
-                                    <a href="javascript:showPageBillAdd(1);" style="font-weight:normal;">Change</a>
+                                    <a href="javascript:showPageBillAdd(1);" style="font-weight:normal;">&nbsp;Change</a>
                                     </td>
                                     <td style="text-align: right;vertical-align: top;"><a href="<c:url value="/checkout/payment-method/change"/>"><i class="fa fa-pencil"></i> Change</a></td>
                                 </tr>
                             </table>
                         </div>
-                        </c:if>        
+                        </c:if>
+                        <form action="${pageContext.request.contextPath}/checkout/place-order" method="post">
+                        <div class="info-bound" style="padding-top:0px; padding-bottom: 0px;">
+                            <table class="table" style="margin-bottom: 0px;">
+                                <tr>
+                                    <td style="border-top:none;width: 5%;">
+                                        <div class="checkbox">
+                                        <input type="radio" name="setting" value="0"/>
+                                        </div>
+                                    </td>
+                                    <td style="border-top:none;width: 60%;">
+                                        <div class="checkbox">
+                                        Gift only<br/>Do not allow refund to receiver
+                                        </div>
+                                    </td>
+                                    <td style="border-top:none;width: 5%;">
+                                        <div class="checkbox">
+                                            <input type="radio" name="setting" value="1" checked=""/>
+                                        </div>
+                                    </td>
+                                    <td style="border-top:none;">
+                                        <div class="checkbox">
+                                        <label>Allow refund to receiver<br/>If so choosen
+                                        </label>
+                                    </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="border-top:none;padding: 0px; text-align: center;">
+                                        <span class="help-block">(The option you choose will be applied to everyone on the order)</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                         <div class="btns">
                             <a href="<c:url value="/checkout/cards/change"/>" class="btn btn-primary left"><spring:message code="message.back"/></a>
-                            <c:if test="${not empty REC_GIFTS}"><a href="<c:url value="/checkout/thank-you"/>" class="btn btn-primary">Place Order</a></c:if>
+                            <c:if test="${not empty REC_GIFTS}"><button type="submit" class="btn btn-primary">Place Order</button></c:if>
                         </div>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                        </form>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                 </div>
             </div>
         </section>
-        </form>
         <!-- Modal -->
         <div class="modal fade" id="editMobilePhoneModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">

@@ -46,6 +46,9 @@ public class LixiOrder implements Serializable {
     @Column(name = "lixi_message")
     private String lixiMessage;
     
+    @Column(name = "setting")
+    private Integer setting;
+    
     @Basic(optional = false)
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -104,6 +107,14 @@ public class LixiOrder implements Serializable {
 
     public void setLixiMessage(String lixiMessage) {
         this.lixiMessage = lixiMessage;
+    }
+
+    public Integer getSetting() {
+        return setting;
+    }
+
+    public void setSetting(Integer setting) {
+        this.setting = setting;
     }
 
     public Date getModifiedDate() {

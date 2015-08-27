@@ -22,4 +22,5 @@ public interface RecipientRepository extends JpaRepository<Recipient, Long>{
     @Query("update Recipient r set r.phone = :phone where r.id = :id")
     int updatePhone(@Param("phone") String password, @Param("id") Long id);
     
+    Recipient findByFirstNameAndMiddleNameAndLastNameAndPhone(String firstName, String middleName, String lastName, String phone);
 }

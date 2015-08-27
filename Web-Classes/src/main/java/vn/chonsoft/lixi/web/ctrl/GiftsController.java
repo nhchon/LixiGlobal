@@ -75,13 +75,12 @@ public class GiftsController {
 
     /**
      *
+     * @param model
      * @param request
      * @return
      */
     @RequestMapping(value = "recipient", method = RequestMethod.GET)
-    public ModelAndView recipient(HttpServletRequest request) {
-
-        Map<String, Object> model = new HashMap<>();
+    public ModelAndView recipient(Map<String, Object> model, HttpServletRequest request) {
 
         // check login
         if (!LiXiUtils.isLoggined(request)) {
@@ -100,7 +99,11 @@ public class GiftsController {
             model.put("RECIPIENTS", u.getRecipients());
         }
 
-        model.put("chooseRecipientForm", new ChooseRecipientForm());
+        // default value for message note
+        ChooseRecipientForm form = new ChooseRecipientForm();
+        form.setNote("Happy Birthday");
+        
+        model.put("chooseRecipientForm", form);
 
         return new ModelAndView("giftprocess/recipient", model);
 
@@ -211,9 +214,22 @@ public class GiftsController {
         }
 
         try {
+            Recipient rec = null;
+            // check unique recipient
+            if(form.getRecId() <= 0){
+                rec = this.reciService.findByFirstNameAndMiddleNameAndLastNameAndPhone(LiXiUtils.fixEncode(form.getFirstName()), LiXiUtils.fixEncode(form.getMiddleName()), LiXiUtils.fixEncode(form.getLastName()), form.getPhone());
+                if(rec != null){
 
+                    // duplicate recipient
+                    model.put("duplicate", 1);
+                    model.put("recipientName", StringUtils.join(new String[]{LiXiUtils.fixEncode(form.getFirstName()), LiXiUtils.fixEncode(form.getMiddleName()), LiXiUtils.fixEncode(form.getLastName())}, " "));
+                    model.put("recipientPhone", form.getPhone());
+
+                    return recipient(model, request);
+                }
+            }
             // save new recipient
-            Recipient rec = new Recipient();
+            rec = new Recipient();
             rec.setId(form.getRecId());
             rec.setSender(u);
             rec.setFirstName(LiXiUtils.fixEncode(form.getFirstName()));

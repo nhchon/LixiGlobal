@@ -17,7 +17,7 @@
             var CAPTCHA_MESSAGE = '<spring:message code="validate.captcha_required"/>'
             var CONTEXT_PATH = '${pageContext.request.contextPath}';
             $(document).ready(function () {
-                "use strict";
+                //"use strict";
                 var options = {};
                 options.ui = {
                     showVerdictsInsideProgressBar: true,

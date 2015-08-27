@@ -24,13 +24,10 @@
         <link href="<c:url value="/resource/theme/assets/css/bootstrap.min.css"/>" rel="stylesheet" type="text/css">
         <link href="<c:url value="/resource/theme/assets/css/font-awesome.min.css"/>" rel="stylesheet" type="text/css">
         <link href="<c:url value="/resource/theme/assets/css/main.css"/>" rel="stylesheet" type="text/css">
-        <link href="<c:url value="/resource/theme/assets/css/my-custom-styles.css"/>" rel="stylesheet" type="text/css">
         <!--[if lte IE 9]>
             <link href="<c:url value="/resource/theme/assets/css/main-ie.css"/>" rel="stylesheet" type="text/css"/>
             <link href="<c:url value="/resource/theme/assets/css/main-ie-part2.css"/>" rel="stylesheet" type="text/css"/>
         <![endif]-->
-        <!-- CSS for demo style switcher. you can remove this -->
-        <link href="<c:url value="/resource/theme/demo-style-switcher/assets/css/style-switcher.css"/>" rel="stylesheet" type="text/css">
         <!-- Fav and touch icons -->
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<c:url value="/resource/theme/assets/ico/kingadmin-favicon144x144.png"/>">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<c:url value="/resource/theme/assets/ico/kingadmin-favicon114x114.png"/>">
@@ -83,15 +80,11 @@
         <!-- END FOOTER -->
 
         <!-- STYLE SWITCHER -->
-        <%@ include file="/WEB-INF/jsp/view/Administration/add-on/styleSwitcher.jsp" %>
         <!-- END STYLE SWITCHER -->
         <!-- Javascript -->
         <script src="<c:url value="/resource/theme/assets/js/jquery/jquery-2.1.0.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/js/bootstrap/bootstrap.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/js/plugins/modernizr/modernizr.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/js/plugins/bootstrap-tour/bootstrap-tour.custom.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/js/king-common.js"/>"></script>
-        <script src="<c:url value="/resource/theme/demo-style-switcher/assets/js/deliswitch.js"/>"></script>
         <!-- javascript at end of page-->
         <jsp:invoke fragment="javascriptContent" />
         <!-- // -->

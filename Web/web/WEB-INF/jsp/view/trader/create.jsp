@@ -18,7 +18,7 @@
             var PASS_MESSAGE = '<spring:message code="validate.password_required"/>';
             /** Page Script **/
             $(document).ready(function () {
-                "use strict";
+                //"use strict";
                 var options = {};
                 options.ui = {
                     showVerdictsInsideProgressBar: true,

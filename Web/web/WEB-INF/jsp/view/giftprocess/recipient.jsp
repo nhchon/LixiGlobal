@@ -67,6 +67,15 @@
                             </c:forEach>
                         </ul>
                         </div></c:if>
+                        <c:if test="${duplicate eq 1 || param.duplicate eq 1}">
+                            <div class="msg msg-error">
+                                <spring:message code="validate.dup_reci">
+                                    <spring:argument value="${recipientName}"/>
+                                    <spring:argument value="${recipientPhone}"/>
+                                </spring:message>    
+                            </div>
+                        </c:if>                        
+                        
                         <form:form modelAttribute="chooseRecipientForm"  class="form-horizontal">
                             
                             <c:if test="${not empty RECIPIENTS}">
@@ -131,7 +140,7 @@
                                         <label class="control-label"><spring:message code="gift.note"/></label>
                                     </div>
                                     <div class="col-lg-7 col-md-7">
-                                        <form:textarea class="form-control" path="note" maxlength="128" placeholder="Happy birthday"/>
+                                        <form:textarea class="form-control" path="note" maxlength="128"/>
                                     </div>
                                 </div>
                                     <div class="form-group">
