@@ -8,7 +8,7 @@ package vn.chonsoft.lixi.model.pojo;
  *
  * @author chonnh
  */
-public class VatGiaCategory {
+public class VatGiaCategoryPj {
     
     private Integer id;
     private String title;

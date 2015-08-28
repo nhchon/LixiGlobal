@@ -87,8 +87,8 @@
                                     <tr>
                                         <td><input name="vgId" type="text" value="${vg.id}" class="form-control" readonly="" style="width:50px;"/></td>
                                         <td><input name="vgName" type="text" value="${vg.title}" class="form-control"/></td>
-                                        <c:if test="${not empty vg.lixiCategoryList}">
-                                            <c:forEach items="${vg.lixiCategoryList}" var="lxc">
+                                        <c:if test="${not empty vg.lixiCategories}">
+                                            <c:forEach items="${vg.lixiCategories}" var="lxc">
                                                 <td>
                                                     <input name="${lxc.locale.code}" type="text" value="${lxc.name}" class="form-control"/>
                                                     <input type="hidden" name="${lxc.locale.code}-id" value="${lxc.id}"/>
@@ -101,7 +101,7 @@
                                                 </td>
                                             </c:forEach>
                                         </c:if>
-                                        <c:if test="${empty vg.lixiCategoryList}">
+                                        <c:if test="${empty vg.lixiCategories}">
                                             <c:forEach items="${SUPPORT_LOCALE}" var="sl">
                                                 <td><input name="${sl.code}" type="text" value="" class="form-control"/></td>
                                                 <td>
@@ -111,7 +111,7 @@
                                                 
                                         </c:if>
                                         <td><button class="btn btn-primary" type="submit" onclick="return validateCategoryName(${vg.id});">Save</button>
-                                            <c:if test="${not empty vg.lixiCategoryList}">
+                                            <c:if test="${not empty vg.lixiCategories}">
                                                 <button class="btn btn-warning" type="button" onclick="deleteCategory(${vg.id});">Delete</button>
                                             </c:if>
                                         </td>    

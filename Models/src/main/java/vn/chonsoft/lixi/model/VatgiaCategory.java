@@ -35,7 +35,7 @@ public class VatgiaCategory implements Serializable {
     private String title;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vatgiaId", fetch = FetchType.EAGER)
-    private List<LixiCategory> lixiCategoryList;
+    private List<LixiCategory> lixiCategories;
 
     public VatgiaCategory() {
     }
@@ -65,12 +65,12 @@ public class VatgiaCategory implements Serializable {
         this.title = title;
     }
 
-    public List<LixiCategory> getLixiCategoryList() {
-        return lixiCategoryList;
+    public List<LixiCategory> getLixiCategories() {
+        return lixiCategories;
     }
 
-    public void setLixiCategoryList(List<LixiCategory> lixiCategoryList) {
-        this.lixiCategoryList = lixiCategoryList;
+    public void setLixiCategories(List<LixiCategory> lixiCategories) {
+        this.lixiCategories = lixiCategories;
     }
 
     @Override

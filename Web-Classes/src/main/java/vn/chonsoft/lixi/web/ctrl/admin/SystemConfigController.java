@@ -33,7 +33,7 @@ import vn.chonsoft.lixi.model.SupportLocale;
 import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.form.LiXiExchangeRateForm;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
-import vn.chonsoft.lixi.model.pojo.VatGiaCategory;
+import vn.chonsoft.lixi.model.pojo.VatGiaCategoryPj;
 import vn.chonsoft.lixi.model.trader.ExchangeRate;
 import vn.chonsoft.lixi.model.trader.Trader;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
@@ -46,7 +46,7 @@ import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
-import vn.chonsoft.lixi.web.util.LiXiVatGiaUtils;
+import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
 
 /**
  *
@@ -60,25 +60,25 @@ public class SystemConfigController {
     private static final Logger log = LogManager.getLogger(SystemConfigController.class);
 
     @Inject
-    CurrencyTypeService currencyService;
+    private CurrencyTypeService currencyService;
     
     @Inject
-    TraderService traderService;
+    private TraderService traderService;
     
     @Inject
-    ExchangeRateService exrService;
+    private ExchangeRateService exrService;
     
     @Inject
-    LixiExchangeRateService lxrService;
+    private LixiExchangeRateService lxrService;
     
     @Inject
-    VatgiaCategoryService vgcService;
+    private VatgiaCategoryService vgcService;
     
     @Inject
-    LixiCategoryService lxcService;
+    private LixiCategoryService lxcService;
     
     @Inject
-    SupportLocaleService slService;
+    private SupportLocaleService slService;
 
     /**
      *
@@ -195,7 +195,7 @@ public class SystemConfigController {
         // get category from BaoKim service
         ListVatGiaCategory vgcpojos = LiXiVatGiaUtils.getInstance().getVatGiaCategory();
 
-        for (VatGiaCategory vgcpojo : vgcpojos.getData()) {
+        for (VatGiaCategoryPj vgcpojo : vgcpojos.getData()) {
 
             VatgiaCategory vgc = this.vgcService.findOne(vgcpojo.getId());
             if (vgc == null) {
@@ -236,7 +236,7 @@ public class SystemConfigController {
 
         //
         List<SupportLocale> sls = this.slService.findAll();
-        List<LixiCategory> lixiCategoryList = new ArrayList<>();
+        List<LixiCategory> lixiCategories = new ArrayList<>();
         for (SupportLocale sl : sls) {
 
             String code = sl.getCode();
@@ -315,10 +315,10 @@ public class SystemConfigController {
             lxc.setCreatedDate(Calendar.getInstance().getTime());
             lxc.setCreatedBy(createdBy);
             lxc.setVatgiaId(vgc);
-            lixiCategoryList.add(lxc);
+            lixiCategories.add(lxc);
         }
 
-        vgc.setLixiCategoryList(lixiCategoryList);
+        vgc.setLixiCategories(lixiCategories);
 
         //
         this.vgcService.save(vgc);

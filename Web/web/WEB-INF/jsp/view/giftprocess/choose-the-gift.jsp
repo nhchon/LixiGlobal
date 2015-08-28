@@ -67,7 +67,7 @@
                         <form id="chooseGiftForm" class="form-horizontal" action="${pageContext.request.contextPath}/gifts/choose" method="post">
                             <fieldset>
                                 <legend><spring:message code="gift.choose_the_gift"/></legend>
-                                <c:if test="${empty PRODUCTS.data}">
+                                <c:if test="${empty PRODUCTS}">
                                     <div class="msg msg-error">
                                         <spring:message code="validate.no_gift">
                                             <spring:argument value="${SELECTED_LIXI_CATEGORY_NAME}"/>
@@ -76,12 +76,12 @@
                                         </spring:message>
                                     </div>
                                 </c:if>
-                                <c:if test="${not empty PRODUCTS.data}">
+                                <c:if test="${not empty PRODUCTS}">
                                     <p><spring:message code="gift.closest_price"/></p>
                                     <div class="form-group">
                                         <div id="carousel" class="carousel slide" data-ride="carousel" data-interval="0" data-wrap="false">
                                             <div class="carousel-inner" role="listbox">
-                                                <c:forEach items="${PRODUCTS.data}" var="p" varStatus="theCount">
+                                                <c:forEach items="${PRODUCTS}" var="p" varStatus="theCount">
                                                     <c:if test="${theCount.index%5 eq 0}">
                                                         <div class="item<c:if test="${theCount.index eq 0}"> active</c:if>">
                                                                 <div class="hidden-xs hidden-sm row">
@@ -90,7 +90,7 @@
 
                                                             <%-- Show product --%>
                                                             <div class="col-lg-2 col-md-2 gift">
-                                                                <div><img width="144" height="144" alt="" src="${p.image_url}" /></div>
+                                                                <div><img width="144" height="144" alt="" src="${p.imageUrl}" /></div>
                                                                 <br />
                                                                 <a class="name">${p.name}</a>
                                                                 <br />
@@ -104,7 +104,7 @@
                                                                     </label>
                                                                     <input type="hidden" name="price-${p.id}" value="${p.price}"/>
                                                                 <input type="hidden" name="name-${p.id}" value="${p.name}"/>
-                                                                <input type="hidden" name="image-${p.id}" value="${p.image_url}"/>
+                                                                <input type="hidden" name="image-${p.id}" value="${p.imageUrl}"/>
                                                                 <div style="text-align: center;">
                                                                     <select class="form-control lixi-select" name="quantity-${p.id}">
                                                                         <c:forEach var="i" begin="1" end="5">
@@ -156,7 +156,7 @@
                                         <c:if test="${not empty LIXI_ORDER_ID && LIXI_ORDER_ID > 0}">
                                             <a href="<c:url value="/gifts/more-recipient"/>" class="btn btn-primary">View Order Summary</a>
                                         </c:if>
-                                        <c:if test="${not empty PRODUCTS.data}"><button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="message.next"/></button></c:if>
+                                        <c:if test="${not empty PRODUCTS}"><button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="message.next"/></button></c:if>
                                         </div>
                                     </div>
                                 </fieldset>

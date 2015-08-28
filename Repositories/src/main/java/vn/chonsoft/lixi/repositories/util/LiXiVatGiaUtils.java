@@ -2,9 +2,10 @@
  * Lixi is a Vietnamese word for small gift of money
  * 2015 @ Lixi Global
  */
-package vn.chonsoft.lixi.web.util;
+package vn.chonsoft.lixi.repositories.util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import org.apache.http.HttpHost;
@@ -16,9 +17,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.web.client.RestTemplate;
 import vn.chonsoft.lixi.model.VatgiaCategory;
+import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
-import vn.chonsoft.lixi.model.pojo.VatGiaCategory;
+import vn.chonsoft.lixi.model.pojo.VatGiaCategoryPj;
+import vn.chonsoft.lixi.model.pojo.VatGiaProductPj;
 
 /**
  *
@@ -75,11 +78,12 @@ public class LiXiVatGiaUtils {
      * @param vgcpojo
      * @return 
      */
-    public VatgiaCategory convertFromPojo2Model(VatGiaCategory vgcpojo){
+    public VatgiaCategory convertFromPojo2Model(VatGiaCategoryPj vgcpojo){
         
         return new VatgiaCategory(vgcpojo.getId(), vgcpojo.getTitle());
         
     }
+    
     /**
      * 
      * @param vgcpojos
@@ -91,7 +95,7 @@ public class LiXiVatGiaUtils {
         
         if(vgcpojos == null) return vgcs;
         
-        for(VatGiaCategory vgcpojo : vgcpojos.getData()){
+        for(VatGiaCategoryPj vgcpojo : vgcpojos.getData()){
             
             VatgiaCategory vgc = new VatgiaCategory(vgcpojo.getId(), vgcpojo.getTitle());
             
@@ -101,6 +105,46 @@ public class LiXiVatGiaUtils {
         
         return vgcs;
         
+    }
+    /**
+     * 
+     * @param pj
+     * @return 
+     */
+    public VatgiaProduct convertVatGiaProduct2Model(VatGiaProductPj pj){
+        
+        if(pj == null) return null;
+        //
+        VatgiaProduct p = new VatgiaProduct();
+        p.setId(pj.getId());
+        p.setCategoryId(pj.getCategory_id());
+        p.setCategoryName(pj.getCategory_name());
+        p.setName(pj.getName());
+        p.setPrice(pj.getPrice());
+        p.setImageUrl(pj.getImage_url());
+        p.setLinkDetail(pj.getLink_detail());
+        p.setModifiedDate(Calendar.getInstance().getTime());
+        
+        return p;
+    }
+
+    /**
+     * 
+     * @param pjs
+     * @return 
+     */
+    public List<VatgiaProduct> convertVatGiaProduct2Model(ListVatGiaProduct pjs){
+        
+        if(pjs == null || pjs.getData() == null) return null;
+        //
+        List<VatgiaProduct> ps = new ArrayList<>();
+        for(VatGiaProductPj p : pjs.getData()){
+            
+            ps.add(convertVatGiaProduct2Model(p));
+            
+        }
+        //
+        return ps;
     }
     /**
      *

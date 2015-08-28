@@ -28,6 +28,7 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
@@ -37,10 +38,11 @@ import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserService;
+import vn.chonsoft.lixi.repositories.service.VatgiaProductService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
-import vn.chonsoft.lixi.web.util.LiXiVatGiaUtils;
+import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
 
 /**
  *
@@ -53,28 +55,33 @@ public class GiftsController {
     private static final Logger log = LogManager.getLogger(GiftsController.class);
 
     @Inject
-    UserService userService;
+    private UserService userService;
 
     @Inject
-    RecipientService reciService;
+    private RecipientService reciService;
 
     @Inject
-    CurrencyTypeService currencyService;
+    private CurrencyTypeService currencyService;
 
     @Inject
-    LixiExchangeRateService lxexrateService;
+    private LixiExchangeRateService lxexrateService;
 
     @Inject
-    LixiCategoryService lxcService;
+    private LixiCategoryService lxcService;
 
     @Inject
-    LixiOrderService lxorderService;
+    private LixiOrderService lxorderService;
 
     @Inject
-    LixiOrderGiftService lxogiftService;
+    private LixiOrderGiftService lxogiftService;
 
+    @Inject
+    private VatgiaProductService vgpService;
+    
     /**
      *
+     * select one of ready recipients or create a new recipients
+     * 
      * @param model
      * @param request
      * @return
@@ -140,6 +147,8 @@ public class GiftsController {
 
     /**
      *
+     * choose a ready recipient
+     * 
      * @param recId
      * @param request
      * @return
@@ -185,6 +194,8 @@ public class GiftsController {
 
     /**
      *
+     * A recipient is selected or created: check unique recipient, update him or created new
+     * 
      * @param model
      * @param form
      * @param errors
@@ -215,26 +226,32 @@ public class GiftsController {
 
         try {
             Recipient rec = null;
+            
+            // correct name, fix encode, capitalize
+            form.setFirstName(LiXiUtils.correctName(form.getFirstName()));
+            form.setMiddleName(LiXiUtils.correctName(form.getMiddleName()));
+            form.setLastName(LiXiUtils.correctName(form.getLastName()));
+            
             // check unique recipient
             if(form.getRecId() <= 0){
-                rec = this.reciService.findByFirstNameAndMiddleNameAndLastNameAndPhone(LiXiUtils.fixEncode(form.getFirstName()), LiXiUtils.fixEncode(form.getMiddleName()), LiXiUtils.fixEncode(form.getLastName()), form.getPhone());
+                rec = this.reciService.findByFirstNameAndMiddleNameAndLastNameAndPhone(form.getFirstName(), form.getMiddleName(), form.getLastName(), form.getPhone());
                 if(rec != null){
 
                     // duplicate recipient
                     model.put("duplicate", 1);
-                    model.put("recipientName", StringUtils.join(new String[]{LiXiUtils.fixEncode(form.getFirstName()), LiXiUtils.fixEncode(form.getMiddleName()), LiXiUtils.fixEncode(form.getLastName())}, " "));
+                    model.put("recipientName", StringUtils.join(new String[]{form.getFirstName(),form.getMiddleName(), form.getLastName()}, " "));
                     model.put("recipientPhone", form.getPhone());
 
                     return recipient(model, request);
                 }
             }
-            // save new recipient
+            // save or update the recipient
             rec = new Recipient();
             rec.setId(form.getRecId());
             rec.setSender(u);
-            rec.setFirstName(LiXiUtils.fixEncode(form.getFirstName()));
-            rec.setMiddleName(LiXiUtils.fixEncode(form.getMiddleName()));
-            rec.setLastName(LiXiUtils.fixEncode(form.getLastName()));
+            rec.setFirstName(form.getFirstName());
+            rec.setMiddleName(form.getMiddleName());
+            rec.setLastName(form.getLastName());
             rec.setEmail(form.getEmail());
             rec.setPhone(form.getPhone());
             rec.setNote(LiXiUtils.fixEncode(form.getNote()));// note
@@ -263,6 +280,8 @@ public class GiftsController {
 
     /**
      *
+     * enter the amount want to give
+     * 
      * @param request
      * @return
      */
@@ -300,6 +319,8 @@ public class GiftsController {
 
     /**
      *
+     * submit the amount
+     * 
      * @param request
      * @return
      */
@@ -329,6 +350,8 @@ public class GiftsController {
 
     /**
      *
+     * choose the type of gift want to give
+     * 
      * @param request
      * @return
      */
@@ -383,7 +406,14 @@ public class GiftsController {
 
         // get price, amount in VND - 100k
         float price = LiXiUtils.getBeginPrice((float) request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND));
-        ListVatGiaProduct products = LiXiVatGiaUtils.getInstance().getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
+        List<VatgiaProduct> products = this.vgpService.findByCategoryIdAndPrice(lxcategory.getVatgiaId().getId(), price);
+        if(products == null || products.isEmpty()){
+            
+            // call BaoKim Rest service
+            log.info("No products in database. So call BaoKim Rest service");
+            ListVatGiaProduct pjs = LiXiVatGiaUtils.getInstance().getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
+            products = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(pjs);
+        }
 
         // get order
         LixiOrder order = null;

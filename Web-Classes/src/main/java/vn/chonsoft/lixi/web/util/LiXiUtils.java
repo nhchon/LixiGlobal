@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -49,6 +50,18 @@ public abstract class LiXiUtils {
         
     }
     
+    /**
+     * 
+     * fix encode and capitalize fully
+     * 
+     * @param name
+     * @return 
+     */
+    public static String correctName(String name){
+        
+        return WordUtils.capitalizeFully(fixEncode(name));
+        
+    }
     /**
      * 
      * @param month

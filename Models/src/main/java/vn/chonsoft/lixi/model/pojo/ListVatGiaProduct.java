@@ -12,13 +12,13 @@ import java.util.List;
  */
 public class ListVatGiaProduct {
     
-    private List<VatGiaProduct> data;
+    private List<VatGiaProductPj> data;
 
-    public List<VatGiaProduct> getData() {
+    public List<VatGiaProductPj> getData() {
         return data;
     }
 
-    public void setData(List<VatGiaProduct> data) {
+    public void setData(List<VatGiaProductPj> data) {
         this.data = data;
     }
     
