@@ -22,7 +22,9 @@ public interface VatgiaProductService {
     @Transactional
     List<VatgiaProduct> save(List<VatgiaProduct> products);
     
-    List<VatgiaProduct> findByCategoryIdAndPrice(int category, double price);
+    List<VatgiaProduct> findByCategoryIdAndAliveAndPrice(int category, int alive, double price);
+    
+    int updateAlive(Integer category, Integer alive);
     
     public void loadAllVatGiaProducts();
 }

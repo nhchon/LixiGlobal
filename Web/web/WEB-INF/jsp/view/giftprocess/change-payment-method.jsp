@@ -103,7 +103,7 @@
                                             </td>
                                             <td  colspan="2" style="text-align: right;">
                                                 <a href="<c:url value="/checkout/cards/add"/>" class="btn btn-primary">Add new card</a>
-                                                <a href="<c:url value="/checkout/cards/add"/>" class="btn btn-primary">Add new bank account</a>
+                                                <a href="<c:url value="/checkout/pay-by-bank-account/add"/>" class="btn btn-primary">Add new bank account</a>
                                                 <button onclick="return checkSelectedPayment();" type="submit" class="btn btn-primary">Use this payment method</button>
                                             </td>
                                         </tr>

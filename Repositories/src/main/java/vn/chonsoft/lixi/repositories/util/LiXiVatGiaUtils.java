@@ -182,7 +182,7 @@ public class LiXiVatGiaUtils {
      * @param price
      * @return 
      */
-    public ListVatGiaProduct getVatGiaProducts(int categoryId, float price){
+    public ListVatGiaProduct getVatGiaProducts(int categoryId, double price){
         // check properties is null
         if(baokimProp == null) return null;
         //

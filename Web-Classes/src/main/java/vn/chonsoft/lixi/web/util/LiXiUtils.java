@@ -102,11 +102,11 @@ public abstract class LiXiUtils {
      * @param order
      * @return 
      */
-    public static float calculateCurrentPayment(LixiOrder order){
+    public static double calculateCurrentPayment(LixiOrder order){
         
         if(order == null) return 0;
         
-        float sum = 0;
+        double sum = 0;
         
         if(order.getGifts() != null){
             for(LixiOrderGift gift : order.getGifts()){
@@ -115,7 +115,7 @@ public abstract class LiXiUtils {
 
             }
         }
-        return sum / (float)order.getLxExchangeRate().getBuy();
+        return sum / order.getLxExchangeRate().getBuy();
                 
     }
     /**
@@ -164,7 +164,7 @@ public abstract class LiXiUtils {
      * @param vndAmount
      * @return 
      */
-    public static float getBeginPrice(float vndAmount){
+    public static double getBeginPrice(double vndAmount){
         
         return (vndAmount > LiXiConstants.VND_200K ? vndAmount - LiXiConstants.VND_100K : vndAmount);
         

@@ -58,19 +58,37 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
     /**
      * 
      * @param category
+     * @param alive
      * @param price
      * @return 
      */
     @Override
-    public List<VatgiaProduct> findByCategoryIdAndPrice(int category, double price){
+    public List<VatgiaProduct> findByCategoryIdAndAliveAndPrice(int category, int alive, double price){
         
-        return this.vgpRepository.findByCategoryIdAndPriceIsGreaterThanEqual(category, price);
+        return this.vgpRepository.findByCategoryIdAndAliveAndPriceIsGreaterThanEqual(category, alive, price);
+        
+    }
+    
+    /**
+     * 
+     * update alive attribute before load products again from BaoKim
+     * 
+     * @param category
+     * @param alive
+     * @return 
+     */
+    @Override
+    @Transactional
+    public int updateAlive(Integer category, Integer alive){
+        
+        return this.vgpRepository.updateAlive(category, alive);
         
     }
     ///////////////////////////////////////////////////////////////////////////
     /**
      * 
      */
+    @Override
     @Scheduled(cron = "0 1 1 * * ?")
     public void loadAllVatGiaProducts(){
         
@@ -86,6 +104,9 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
             
             // save to database
             synchronized(this){
+                // update alive = 0
+                updateAlive(c.getId(), 0);
+                // update products
                 this.vgpRepository.save(ps);
             }
         }

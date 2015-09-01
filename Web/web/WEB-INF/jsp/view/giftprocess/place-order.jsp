@@ -97,8 +97,32 @@
                                 </c:forEach>
                                 <tr>
                                     <td></td>
-                                    <td><b>TOTAL</b></td>
+                                    <td><b>Gift Price:</b></td>
                                     <td>(in USD) <b>$<fmt:formatNumber value="${allRecipientTotal / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></b></td>
+                                    <td></td>
+                                </tr>
+                                <c:if test="${not empty CARD_PROCESSING_FEE_THIRD_PARTY}">
+                                <tr>
+                                    <td></td>
+                                    <td><b>Card Processing Fee:</b></td>
+                                    <td>
+                                        <b>$<fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></b>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                </c:if>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Lixi Handling Fee:</b></td>
+                                    <td><b>$${LIXI_HANDLING_FEE_TOTAL}</b> ($${LIXI_HANDLING_FEE.fee} per person)<br/>
+                                    
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>TOTAL:</b></td>
+                                    <td><b>$<fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></b></td>
                                     <td></td>
                                 </tr>
                                 <tr>

@@ -12,6 +12,13 @@ public abstract class LiXiConstants {
     
     public static final String SYSTEM_AUTO = "SYSTEM_AUTO";
     
+    // FEE
+    public static final String LIXI_HANDLING_FEE_TOTAL = "LIXI_HANDLING_FEE_TOTAL";
+    public static final String LIXI_HANDLING_FEE = "LIXI_HANDLING_FEE";
+    public static final String CARD_PROCESSING_FEE_THIRD_PARTY = "CARD_PROCESSING_FEE_THIRD_PARTY";
+    public static final String LIXI_CARD_PROCESSING_FEE_ADD_ON = "LIXI_CARD_PROCESSING_FEE_ADD_ON";
+    public static final String LIXI_FINAL_TOTAL = "LIXI_FINAL_TOTAL";
+    
     public static final String VND = "VND";
     public static final String USD = "USD";
     public static final float VND_100K = 100000f;
@@ -54,6 +61,7 @@ public abstract class LiXiConstants {
     public static final String CARDS = "CARDS";
     public static final String ACCOUNTS = "ACCOUNTS";
     public static final String PRODUCTS = "PRODUCTS";
+    public static final String LIXI_TOTAL_AMOUNT = "LIXI_TOTAL_AMOUNT";
     
     public static final String YHANNART_GMAIL = "yhannart@gmail.com";
     

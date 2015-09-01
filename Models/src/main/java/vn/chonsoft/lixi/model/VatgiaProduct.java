@@ -53,6 +53,10 @@ public class VatgiaProduct implements Serializable {
     @Column(name = "link_detail")
     private String linkDetail;
     
+    @Basic
+    @Column(name = "alive")
+    private int alive;
+    
     @Basic(optional = false)
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -65,12 +69,13 @@ public class VatgiaProduct implements Serializable {
         this.id = id;
     }
 
-    public VatgiaProduct(Integer id, int categoryId, String categoryName, String name, double price, Date modifiedDate) {
+    public VatgiaProduct(Integer id, int categoryId, String categoryName, String name, double price, int alive, Date modifiedDate) {
         this.id = id;
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.name = name;
         this.price = price;
+        this.alive = alive;
         this.modifiedDate = modifiedDate;
     }
 
@@ -130,6 +135,14 @@ public class VatgiaProduct implements Serializable {
         this.linkDetail = linkDetail;
     }
 
+    public int getAlive() {
+        return alive;
+    }
+
+    public void setAlive(int alive) {
+        this.alive = alive;
+    }
+    
     public Date getModifiedDate() {
         return modifiedDate;
     }

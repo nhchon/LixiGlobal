@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.BillingAddress;
+import vn.chonsoft.lixi.model.LixiCardFee;
+import vn.chonsoft.lixi.model.LixiFee;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
@@ -35,7 +37,10 @@ import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.form.BankAccountAddForm;
 import vn.chonsoft.lixi.model.form.BillingAddressForm;
 import vn.chonsoft.lixi.model.form.CardAddForm;
+import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
+import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
+import vn.chonsoft.lixi.repositories.service.LixiFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
@@ -73,6 +78,11 @@ public class CheckOutController {
     @Inject
     private UserBankAccountService ubcService;
     
+    @Inject
+    private LixiFeeService feeService;
+    
+    @Inject
+    private LixiCardFeeService cardFeeService;
     /**
      * Add a card
      * 
@@ -742,11 +752,54 @@ public class CheckOutController {
             // order not exist, go to Choose recipient page
             return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
         }
+        LixiFee handlingFee = this.feeService.findByCode(LiXiConstants.LIXI_HANDLING_FEE);
+        LixiFee cardProcessingFeeAddOn = this.feeService.findByCode(LiXiConstants.LIXI_CARD_PROCESSING_FEE_ADD_ON);
+        
+        // for sample
+        LixiCardFee cardFeeByThirdParty = null;
+        if(order.getCard() != null){
+            cardFeeByThirdParty = this.cardFeeService.findByCardTypeAndCreditDebitAndCountry(order.getCard().getCardType(), "DEBIT", "USA");
+        }
         
         Map<Recipient, List<LixiOrderGift>> recGifts = LiXiUtils.genMapRecGifts(order);
         model.put(LiXiConstants.LIXI_ORDER, order);
         model.put(LiXiConstants.REC_GIFTS, recGifts);
         
+        // calculate the total
+        double finalTotal = 0;
+        double total = 0;
+        for (Map.Entry<Recipient, List<LixiOrderGift>> entry : recGifts.entrySet())
+        {
+            for(LixiOrderGift gift : entry.getValue()){
+                
+                total += (gift.getProductPrice() * gift.getProductQuantity());
+            }
+        }
+        // convert to usd
+        total = total / order.getLxExchangeRate().getBuy();
+        
+        // card processing fee
+        double cardFeeNumber = 0;
+        if(order.getSetting() == EnumLixiOrderSetting.ALLOW_REFUND.getValue()){
+            cardFeeNumber = ((total * cardFeeByThirdParty.getAllowRefund()) / 100.0);
+        }
+        else{
+            cardFeeNumber = ((total * cardFeeByThirdParty.getGiftOnly()) / 100.0);
+        }
+        
+        // LIXI_CARD_PROCESSING_FEE_ADD_ON
+        cardFeeNumber += cardProcessingFeeAddOn.getFee();
+        // round two decimals
+        cardFeeNumber = Math.round(cardFeeNumber * 100.0) / 100.0f;
+        
+        // final total 
+        finalTotal = total + cardFeeNumber + (handlingFee.getFee() * recGifts.keySet().size());
+        
+        // 
+        model.put(LiXiConstants.LIXI_FINAL_TOTAL, finalTotal);
+        model.put(LiXiConstants.LIXI_HANDLING_FEE, handlingFee);
+        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, handlingFee.getFee() * recGifts.keySet().size());
+        model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFeeNumber);
         
         return new ModelAndView("giftprocess/place-order");
     }

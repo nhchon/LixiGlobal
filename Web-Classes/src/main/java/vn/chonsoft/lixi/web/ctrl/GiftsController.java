@@ -30,10 +30,13 @@ import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
+import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
+import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
+import vn.chonsoft.lixi.repositories.service.LixiFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
@@ -78,6 +81,11 @@ public class GiftsController {
     @Inject
     private VatgiaProductService vgpService;
     
+    @Inject
+    private LixiFeeService feeService;
+    
+    @Inject
+    private LixiCardFeeService cardFeeService;
     /**
      *
      * select one of ready recipients or create a new recipients
@@ -338,7 +346,7 @@ public class GiftsController {
             request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT, amount);
             request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_CURRENCY, amountCurrencyCode);
             // store amount in vnd
-            request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND, LiXiUtils.getNumberFormat().parse(LiXiUtils.getAmountInVnd(amountCurrencyCode, amount, giftInValue)).floatValue());
+            request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND, LiXiUtils.getNumberFormat().parse(LiXiUtils.getAmountInVnd(amountCurrencyCode, amount, giftInValue)).doubleValue());
         } catch (Exception e) {
 
             log.info("parse amount is error:", e);
@@ -405,8 +413,8 @@ public class GiftsController {
         request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName());
 
         // get price, amount in VND - 100k
-        float price = LiXiUtils.getBeginPrice((float) request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND));
-        List<VatgiaProduct> products = this.vgpService.findByCategoryIdAndPrice(lxcategory.getVatgiaId().getId(), price);
+        double price = LiXiUtils.getBeginPrice((double) request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND));
+        List<VatgiaProduct> products = this.vgpService.findByCategoryIdAndAliveAndPrice(lxcategory.getVatgiaId().getId(), 1, price);
         if(products == null || products.isEmpty()){
             
             // call BaoKim Rest service
@@ -487,7 +495,7 @@ public class GiftsController {
         User u = this.userService.findByEmail(email);
 
         // no need to check
-        float price = Float.parseFloat(priceStr);
+        double price = Double.parseDouble(priceStr);
         int quantity = Integer.parseInt(quantityStr);
         LixiCategory lxCategory = this.lxcService.findById((Integer) request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID));
 
@@ -511,7 +519,7 @@ public class GiftsController {
             
         }
         
-        float currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        double currentPayment = LiXiUtils.calculateCurrentPayment(order);
         currentPayment += ((price * quantity) / buy);
 
         if (currentPayment > u.getUserMoneyLevel().getMoneyLevel().getAmount()) {
@@ -521,8 +529,8 @@ public class GiftsController {
             model.put(LiXiConstants.LIXI_ORDER_GIFT_PRODUCT_ID, giftId);
             model.put(LiXiConstants.LIXI_ORDER_GIFT_PRODUCT_QUANTITY, quantity);
             
-            float exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
-            float exceededPaymentVND = exceededPaymentUSD * (float)buy;
+            double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
+            double exceededPaymentVND = exceededPaymentUSD * buy;
             
             log.info(exceededPaymentVND + " - " + exceededPaymentUSD);
             
@@ -544,6 +552,8 @@ public class GiftsController {
             order.setLxExchangeRate(lxExch);
             order.setLixiStatus(0);
             order.setLixiMessage(null);
+            // default is allow refund
+            order.setSetting(EnumLixiOrderSetting.ALLOW_REFUND.getValue());
             order.setModifiedDate(Calendar.getInstance().getTime());
 
             // set card and billing address from last order
@@ -711,7 +721,7 @@ public class GiftsController {
             // delete the order
         }
         // else
-        float currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        double currentPayment = LiXiUtils.calculateCurrentPayment(order);
         currentPayment += ((lxogift.getProductPrice() * (quantity - lxogift.getProductQuantity())) / order.getLxExchangeRate().getBuy());
 
         // maximum payment is over
@@ -722,8 +732,8 @@ public class GiftsController {
             // maximum payment is over
             model.put("exceed", 1);
             
-            float exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
-            float exceededPaymentVND = exceededPaymentUSD * (float)order.getLxExchangeRate().getBuy();
+            double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
+            double exceededPaymentVND = exceededPaymentUSD * order.getLxExchangeRate().getBuy();
             
             log.info(exceededPaymentVND + " - " + exceededPaymentUSD);
             
