@@ -12,15 +12,24 @@
         </li>
         <li class="active">
             <a href="#" class="js-sub-menu-toggle">
+                <i class="fa fa-dashboard fa-fw"></i><span class="text">Orders</span>
+                <i class="toggle-icon fa fa-angle-left"></i>
+            </a>
+            <ul class="sub-menu open">
+                <li class="active"><a href="<c:url value="/Administration/Orders/newOrders"/>"><span class="text">New Orders</span></a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="js-sub-menu-toggle">
                 <i class="fa fa-dashboard fa-fw"></i><span class="text">System Config</span>
                 <i class="toggle-icon fa fa-angle-left"></i>
             </a>
             <ul class="sub-menu open">
-                <li class="active"><a href="<c:url value="/Administration/SystemConfig/categories"/>"><span class="text">Categories</span></a></li>
+                <li><a href="<c:url value="/Administration/SystemConfig/categories"/>"><span class="text">Categories</span></a></li>
                 <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>"><span class="text">LiXi Exchange Rate</span></a></li>
             </ul>
         </li>
-        <li class="active">
+        <li>
             <a href="#" class="js-sub-menu-toggle">
                 <i class="fa fa-dashboard fa-fw"></i><span class="text">System Users</span>
                 <i class="toggle-icon fa fa-angle-left"></i>

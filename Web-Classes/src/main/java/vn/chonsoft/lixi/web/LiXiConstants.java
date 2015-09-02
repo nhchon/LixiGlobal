@@ -12,6 +12,10 @@ public abstract class LiXiConstants {
     
     public static final String SYSTEM_AUTO = "SYSTEM_AUTO";
     
+    //public static final int LIXI_ORDER_NOT_COMPLETE = 0;
+    public static final int LIXI_ORDER_NOT_YET_SUBMITTED = -1;
+    public static final int LIXI_ORDER_SUBMITTED = 0;
+    public static final int LIXI_ORDER_GIFT_NOT_SUBMITTED = -1;
     // FEE
     public static final String LIXI_HANDLING_FEE_TOTAL = "LIXI_HANDLING_FEE_TOTAL";
     public static final String LIXI_HANDLING_FEE = "LIXI_HANDLING_FEE";
@@ -21,8 +25,8 @@ public abstract class LiXiConstants {
     
     public static final String VND = "VND";
     public static final String USD = "USD";
-    public static final float VND_100K = 100000f;
-    public static final float VND_200K = 200000f;
+    public static final double VND_100K = 100000;
+    public static final double VND_200K = 200000;
     public static final String EXCEEDED_VND = "EXCEEDED_VND";
     public static final String EXCEEDED_USD = "EXCEEDED_USD";
     
@@ -39,6 +43,7 @@ public abstract class LiXiConstants {
     public static final String CURRENCIES = "CURRENCIES";
     public static final String LIXI_EXCHANGE_RATE = "LIXI_EXCHANGE_RATE";
     public static final String LIXI_CATEGORIES = "LIXI_CATEGORIES";
+    public static final String LIXI_ORDERS = "LIXI_ORDERS";
     public static final String LIXI_ORDER = "LIXI_ORDER";
     public static final String LIXI_ORDER_ID = "LIXI_ORDER_ID";
     public static final String LIXI_ORDER_GIFT_ID = "LIXI_ORDER_GIFT_ID";

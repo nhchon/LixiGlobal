@@ -550,7 +550,7 @@ public class GiftsController {
             order = new LixiOrder();
             order.setSender(u);
             order.setLxExchangeRate(lxExch);
-            order.setLixiStatus(0);
+            order.setLixiStatus(LiXiConstants.LIXI_ORDER_NOT_YET_SUBMITTED);
             order.setLixiMessage(null);
             // default is allow refund
             order.setSetting(EnumLixiOrderSetting.ALLOW_REFUND.getValue());
@@ -588,6 +588,7 @@ public class GiftsController {
             lxogift.setProductName(name);
             lxogift.setProductImage(image);
             lxogift.setProductQuantity(quantity);
+            lxogift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED);// not yet submitted
             lxogift.setModifiedDate(Calendar.getInstance().getTime());
 
             this.lxogiftService.save(lxogift);

@@ -4,6 +4,9 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
@@ -17,8 +20,11 @@ public interface LixiOrderService {
     
     LixiOrder findLastOrder(User user);
     
+    List<LixiOrder> findAll(List<Long> ids);
+    
     LixiOrder findById(Long id);
     
     LixiOrder save(LixiOrder order);
     
+    Page<LixiOrder> findByLixiStatus(Integer status, Pageable page);
 }

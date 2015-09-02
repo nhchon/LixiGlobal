@@ -18,4 +18,5 @@ public interface LixiOrderRepository  extends JpaRepository<LixiOrder, Long>{
     
     Page<LixiOrder> findBySender(User sender, Pageable page);
     
+    Page<LixiOrder> findByLixiStatus(Integer status, Pageable page);
 }

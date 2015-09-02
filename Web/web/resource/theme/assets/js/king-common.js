@@ -380,7 +380,7 @@ $(document).ready(function(){
 	//*******************************************
 	/*	BOOTSTRAP TOUR
 	/********************************************/
-
+        /*
 	var kingTour = new Tour({
 		//basePath: "edit/basepath/see/doc/", // please see documentation for this setting
 		basePath: "/dev/kingadmin-1.4/",
@@ -433,7 +433,7 @@ $(document).ready(function(){
 			$('#start-tour').prop('disabled', false);
 		}
 	});
-
+        */
 
 	/************************
 	/*	TOP BAR
@@ -449,7 +449,7 @@ $(document).ready(function(){
 			});
 		}
 	}
-
+        /*
 	kingTour.init();
 
 	$('#start-tour').click( function() {
@@ -461,7 +461,7 @@ $(document).ready(function(){
 
 		$(this).prop('disabled', true);
 	});
-
+        */
 	$btnGlobalvol = $('.btn-global-volume');
 	$theIcon = $btnGlobalvol.find('i');
 

@@ -88,7 +88,7 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
      */
     @Override
     @Transactional
-    public int updateProductIdAndPrice(int productId, float productPrice, Long id){
+    public int updateProductIdAndPrice(int productId, double productPrice, Long id){
         
         return this.lxogiftRepository.updateProductIdAndPrice(productId, productPrice, id);
         

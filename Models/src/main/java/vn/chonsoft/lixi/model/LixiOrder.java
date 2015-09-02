@@ -22,6 +22,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.model.pojo.EnumLixiOrderStatus;
 
 /**
  *
@@ -101,6 +103,11 @@ public class LixiOrder implements Serializable {
         this.lixiStatus = lixiStatus;
     }
 
+    public String getLixiStatusName(){
+        
+        return EnumLixiOrderStatus.findByValue(lixiStatus).toString();
+    }
+    
     public String getLixiMessage() {
         return lixiMessage;
     }
@@ -117,6 +124,12 @@ public class LixiOrder implements Serializable {
         this.setting = setting;
     }
 
+    public String getSettingName(){
+        
+        return EnumLixiOrderSetting.findByValue(setting).toString();
+        
+    }
+    
     public Date getModifiedDate() {
         return modifiedDate;
     }

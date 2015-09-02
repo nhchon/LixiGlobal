@@ -73,6 +73,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
      * @return 
      */
     @Override
+    @Transactional
     public LixiOrder findLastOrder(User user){
         
         Pageable just1rec = new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
@@ -96,6 +97,41 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         }
         //
         return null;
+        
+    }
+    
+    /**
+     * 
+     * @param status
+     * @param page
+     * @return 
+     */
+    @Override
+    @Transactional
+    public Page<LixiOrder> findByLixiStatus(Integer status, Pageable page){
+        
+        Page<LixiOrder> ps = this.lxorderRepository.findByLixiStatus(status, page);
+        if(ps != null && ps.hasContent()){
+            ps.getContent().forEach((LixiOrder o) -> o.getGifts().size());
+        }
+        
+        return ps;
+    }
+    
+    /**
+     * 
+     * @param ids
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<LixiOrder> findAll(List<Long> ids){
+        
+        List<LixiOrder> ls = this.lxorderRepository.findAll(ids);
+        if(ls != null && !ls.isEmpty()){
+            ls.forEach((LixiOrder o) -> o.getGifts().size());
+        }
+        return ls;
         
     }
 }

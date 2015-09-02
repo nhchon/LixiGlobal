@@ -1,12 +1,6 @@
 <template:Admin htmlTitle="Administration -:- Dashboard">
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
-        <script src="<c:url value="/resource/theme/assets/js/plugins/datatable/jquery.dataTables.min.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/js/plugins/datatable/exts/dataTables.colVis.bootstrap.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/js/plugins/datatable/exts/dataTables.colReorder.min.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/js/plugins/datatable/exts/dataTables.tableTools.min.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/js/plugins/datatable/dataTables.bootstrap.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/js/king-table.js"/>"></script>
         <script type="text/javascript">
             var BUY = [];
             var SELL = [];

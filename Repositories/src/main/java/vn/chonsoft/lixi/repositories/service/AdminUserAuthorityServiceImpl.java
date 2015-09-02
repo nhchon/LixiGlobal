@@ -20,7 +20,8 @@ import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
 @Service
 public class AdminUserAuthorityServiceImpl implements AdminUserAuthorityService{
 
-    @Inject AdminUserAuthorityRepository auAuRepository;
+    @Inject
+    private AdminUserAuthorityRepository auAuRepository;
 
     /**
      * 

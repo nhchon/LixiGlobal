@@ -19,7 +19,7 @@
     <loggers>
         <root level="warn">
             <appender-ref ref="Console" />
-            <appender-ref ref="WroxFileAppender" />
+            <appender-ref ref="ChonSoftLixiFileAppender" />
         </root>
         <logger name="vn.chonsoft" level="info" />
         <logger name="org.apache" level="info" />

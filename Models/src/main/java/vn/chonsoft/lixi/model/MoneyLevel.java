@@ -37,7 +37,7 @@ public class MoneyLevel implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "amount")
-    private float amount;
+    private double amount;
     
     @Basic(optional = false)
     @Column(name = "code")
@@ -66,7 +66,7 @@ public class MoneyLevel implements Serializable {
         this.id = id;
     }
 
-    public MoneyLevel(Long id, float amount, String code, Date modifiedDate, String modifiedBy) {
+    public MoneyLevel(Long id, double amount, String code, Date modifiedDate, String modifiedBy) {
         this.id = id;
         this.amount = amount;
         this.code = code;
@@ -82,11 +82,11 @@ public class MoneyLevel implements Serializable {
         this.id = id;
     }
 
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

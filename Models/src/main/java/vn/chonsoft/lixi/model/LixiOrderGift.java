@@ -34,12 +34,6 @@ public class LixiOrderGift implements Serializable {
     @Column(name = "id")
     private Long id;
     
-    /*
-    @Basic(optional = false)
-    @Column(name = "amount")
-    private float amount;
-    */
-    
     @Basic
     @Column(name = "product_id")
     private int productId;
@@ -123,16 +117,6 @@ public class LixiOrderGift implements Serializable {
         this.id = id;
     }
 
-    /*
-    public float getAmount() {
-        return amount;
-    }
-
-    public void setAmount(float amount) {
-        this.amount = amount;
-    }
-    */
-    
     public int getProductId() {
         return productId;
     }
