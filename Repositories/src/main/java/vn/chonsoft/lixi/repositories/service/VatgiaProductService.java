@@ -22,6 +22,8 @@ public interface VatgiaProductService {
     @Transactional
     List<VatgiaProduct> save(List<VatgiaProduct> products);
     
+    VatgiaProduct findById(Integer id);
+    
     List<VatgiaProduct> findByCategoryIdAndAliveAndPrice(int category, int alive, double price);
     
     int updateAlive(Integer category, Integer alive);

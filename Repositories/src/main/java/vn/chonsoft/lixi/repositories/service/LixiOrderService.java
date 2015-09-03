@@ -18,13 +18,17 @@ import vn.chonsoft.lixi.model.User;
 @Validated
 public interface LixiOrderService {
     
+    int updateStatus(Integer status, Long id);
+    
+    LixiOrder save(LixiOrder order);
+    
     LixiOrder findLastOrder(User user);
     
     List<LixiOrder> findAll(List<Long> ids);
     
     LixiOrder findById(Long id);
     
-    LixiOrder save(LixiOrder order);
-    
     Page<LixiOrder> findByLixiStatus(Integer status, Pageable page);
+    
+    LixiOrder findLastBySenderAndLixiStatus(User sender, Integer status);
 }

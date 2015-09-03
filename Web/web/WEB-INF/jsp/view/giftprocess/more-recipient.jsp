@@ -102,7 +102,7 @@
                                                     <td class="col-md-2"></td>
                                                     <td class="col-md-2">${g.productName}</td>
                                                     <td class="col-md-1">
-                                                        <select class="form-control lixi-select" name="quantity-${g.id}" id="quantity-${g.id}">
+                                                        <select onchange="if(confirm('Update quatity of this product ?')){document.location.href='<c:url value="/gifts/update/"/>'+${g.id}+'/'+this.value}" class="form-control lixi-select" name="quantity-${g.id}" id="quantity-${g.id}">
                                                         <c:forEach var="i" begin="1" end="5">
                                                             <option value="${i}" <c:if test="${g.productQuantity == i}">selected</c:if>>${i}</option>
                                                         </c:forEach>
@@ -117,7 +117,7 @@
                                                         <fmt:formatNumber value="${g.productPrice / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> USD
                                                     </td>
                                                     <td class="col-md-3" style="text-align: right;">
-                                                        <a href="javascript:updateQUantity(${g.id});" class="btn btn-sm btn-primary">Update</a>
+                                                        <a href="<c:url value="/gifts/change/${g.id}/${g.productId}/${g.productQuantity}"/>" class="btn btn-sm btn-primary">Change</a>
                                                         <a href="javascript:confirmDeleteItem(${g.id})" class="btn btn-sm btn-danger">Delete</a>
                                                     </td>
                                                     <c:set var="total" value="${total + g.productPrice * g.productQuantity}"/>
@@ -139,8 +139,9 @@
                                                 </div>
                                             </td>
                                             <td style="text-align: right;">
-                                                <strong><fmt:formatNumber value="${total / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong> USD<br/>
-                                                <strong><fmt:formatNumber value="${total}" pattern="###,###.##"/></strong> VND</td>
+                                                <strong><fmt:formatNumber value="${total}" pattern="###,###.##"/></strong> VND<br/>
+                                                <strong><fmt:formatNumber value="${total / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong> USD
+                                                </td>
                                             <td></td>
                                         </tr>
                                     </tfoot>

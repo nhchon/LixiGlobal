@@ -387,9 +387,33 @@ public class GiftsController {
     }
 
     /**
+     * 
+     * change the gift
+     * 
+     * @param model
+     * @param lxOrderGift
+     * @param productId
+     * @param quantity
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "change/{lxOrderGift}/{productId}/{quantity}", method = RequestMethod.GET)
+    public ModelAndView changeTheGist(Map<String, Object> model, @PathVariable Long lxOrderGift, @PathVariable Integer productId, @PathVariable Integer quantity, HttpServletRequest request) {
+        
+        // log
+        log.info("change id: " + productId + " quantity: " + quantity);
+        LixiOrderGift orderGift = this.lxogiftService.findById(lxOrderGift);
+        
+        model.put(LiXiConstants.LIXI_ORDER_GIFT_ID, orderGift.getId());
+        model.put(LiXiConstants.LIXI_ORDER_GIFT_PRODUCT_ID, productId);
+        model.put(LiXiConstants.LIXI_ORDER_GIFT_PRODUCT_QUANTITY, quantity);
+        
+        return chooseGift(orderGift.getCategory().getId(), model, request);
+    }
+    /**
      *
      * @param model
-     * @param category
+     * @param category LixiCategory Id
      * @param request
      * @return
      */
@@ -412,8 +436,12 @@ public class GiftsController {
         request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, category);
         request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName());
 
-        // get price, amount in VND - 100k
-        double price = LiXiUtils.getBeginPrice((double) request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND));
+        // get price, default is ? VND
+        double price = 0;
+        if(request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND) != null){
+            price = (double)request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND);
+        };
+        
         List<VatgiaProduct> products = this.vgpService.findByCategoryIdAndAliveAndPrice(lxcategory.getVatgiaId().getId(), 1, price);
         if(products == null || products.isEmpty()){
             
@@ -422,7 +450,7 @@ public class GiftsController {
             ListVatGiaProduct pjs = LiXiVatGiaUtils.getInstance().getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
             products = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(pjs);
         }
-
+        log.info("products == null " + (products == null || products.isEmpty()));
         // get order
         LixiOrder order = null;
         LixiExchangeRate lxExch = null;
@@ -472,16 +500,16 @@ public class GiftsController {
         String name = request.getParameter("name-" + giftIdStr);
         String image = request.getParameter("image-" + giftIdStr);
         String quantityStr = request.getParameter("quantity-" + giftIdStr);
-
+        String orderGiftIdStr = request.getParameter("orderGiftId");
+        
         log.info(giftIdStr + " - " + priceStr);
         // parse
         int giftId = 0;
-        try {
-            // error number
-            giftId = Integer.parseInt(giftIdStr);
-
-        } catch (Exception e) {}
-
+        long orderGiftId = 0;
+        //parse
+        try { giftId = Integer.parseInt(giftIdStr);} catch (Exception e) {}
+        try { orderGiftId = Long.parseLong(orderGiftIdStr);} catch (Exception e) {}
+        
         if (giftId == 0) {
 
             // wrong gift id
@@ -519,7 +547,7 @@ public class GiftsController {
             
         }
         
-        double currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        double currentPayment = LiXiUtils.calculateCurrentPayment(order, orderGiftId);
         currentPayment += ((price * quantity) / buy);
 
         if (currentPayment > u.getUserMoneyLevel().getMoneyLevel().getAmount()) {
@@ -550,7 +578,7 @@ public class GiftsController {
             order = new LixiOrder();
             order.setSender(u);
             order.setLxExchangeRate(lxExch);
-            order.setLixiStatus(LiXiConstants.LIXI_ORDER_NOT_YET_SUBMITTED);
+            order.setLixiStatus(LiXiConstants.LIXI_ORDER_UNFINISHED);
             order.setLixiMessage(null);
             // default is allow refund
             order.setSetting(EnumLixiOrderSetting.ALLOW_REFUND.getValue());
@@ -573,38 +601,123 @@ public class GiftsController {
         }
         
         // Recipient
-        Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
+        Recipient rec = null;
         
-        // check the gift already bought
-        LixiOrderGift alreadyGift = this.lxogiftService.findByOrderAndRecipientAndProductId(order, rec, giftId);
-        if(alreadyGift == null){
-            // create lixi order gift
-            LixiOrderGift lxogift = new LixiOrderGift();
-            lxogift.setRecipient(rec);
-            lxogift.setOrder(order);
-            lxogift.setCategory(lxCategory);
-            lxogift.setProductId(giftId);
-            lxogift.setProductPrice(price);
-            lxogift.setProductName(name);
-            lxogift.setProductImage(image);
-            lxogift.setProductQuantity(quantity);
-            lxogift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED);// not yet submitted
-            lxogift.setModifiedDate(Calendar.getInstance().getTime());
+        LixiOrderGift alreadyGift = null;
+        
+        // change the gift
+        if(orderGiftId > 0){
+            
+            alreadyGift = this.lxogiftService.findById(orderGiftId);
+            if(alreadyGift != null){
+                alreadyGift.setProductId(giftId);
+                alreadyGift.setProductPrice(price);
+                alreadyGift.setProductName(name);
+                alreadyGift.setProductImage(image);
+                alreadyGift.setProductQuantity(quantity);
+                alreadyGift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED);// not yet submitted
+                alreadyGift.setModifiedDate(Calendar.getInstance().getTime());
 
-            this.lxogiftService.save(lxogift);
-
+                this.lxogiftService.save(alreadyGift);
+            }
         }
         else{
+            // get recipient
+            rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
             
-            // update quantity
-            alreadyGift.setProductQuantity(alreadyGift.getProductQuantity() + quantity);
-            
-            this.lxogiftService.save(alreadyGift);
+            // check the gifts already bought
+            alreadyGift = this.lxogiftService.findByOrderAndRecipientAndProductId(order, rec, giftId);
+            if(alreadyGift == null){
+                // create lixi order gift
+                LixiOrderGift lxogift = new LixiOrderGift();
+                lxogift.setRecipient(rec);
+                lxogift.setOrder(order);
+                lxogift.setCategory(lxCategory);
+                lxogift.setProductId(giftId);
+                lxogift.setProductPrice(price);
+                lxogift.setProductName(name);
+                lxogift.setProductImage(image);
+                lxogift.setProductQuantity(quantity);
+                lxogift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED);// not yet submitted
+                lxogift.setModifiedDate(Calendar.getInstance().getTime());
+
+                this.lxogiftService.save(lxogift);
+
+            }
+            else{
+                // update quantity
+                alreadyGift.setProductQuantity(alreadyGift.getProductQuantity() + quantity);
+
+                this.lxogiftService.save(alreadyGift);
+            }
         }
         // jump to more-recipient
         return new ModelAndView(new RedirectView("/gifts/more-recipient", true, true));
     }
+    
+    /**
+     * 
+     * check order is exceeded
+     * 
+     * @param model
+     * @param lxOrderGift
+     * @param productId
+     * @param quantity
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "checkExceed/{lxOrderGift}/{productId}/{quantity}", method = RequestMethod.GET)
+    public ModelAndView checkExceed(Map<String, Object> model, @PathVariable Long lxOrderGift, @PathVariable Integer productId, @PathVariable Integer quantity, HttpServletRequest request){
+        
+        // sender
+        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+        
+        LixiOrder order = null;
+        // check order already created
+        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
 
+            Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+
+            order = this.lxorderService.findById(orderId);
+
+        }
+        
+        // get price
+        VatgiaProduct vgp = this.vgpService.findById(productId);
+        double price = vgp.getPrice();
+        
+        // check current payment <==> maximum payment
+        LixiExchangeRate lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+        double buy = lxExch.getBuy();
+        if(order != null){
+            
+            // get buy from order
+            buy = order.getLxExchangeRate().getBuy();
+            
+        }
+        
+        double currentPayment = LiXiUtils.calculateCurrentPayment(order, lxOrderGift);
+        currentPayment += ((price * quantity) / buy);
+
+        if (currentPayment > u.getUserMoneyLevel().getMoneyLevel().getAmount()) {
+
+            // maximum payment is over
+            model.put("exceed", 1);
+            
+            double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
+            double exceededPaymentVND = exceededPaymentUSD * buy;
+            
+            model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
+            
+            model.put(LiXiConstants.EXCEEDED_USD, LiXiUtils.getNumberFormat().format(exceededPaymentUSD));
+            
+        }
+        else{
+            model.put("exceed", 0);
+        }
+        return new ModelAndView("giftprocess/exceed", model);
+    }
     /**
      *
      * @param model 
@@ -629,7 +742,7 @@ public class GiftsController {
         if(orderId == null){
             
             // to do
-            
+            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
         }
         
         LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));

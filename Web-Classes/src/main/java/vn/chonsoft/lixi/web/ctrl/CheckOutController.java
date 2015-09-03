@@ -720,6 +720,31 @@ public class CheckOutController {
         return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
     }
 
+    /**
+     * 
+     * Edit recipient's phone number 
+     * 
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "edit-email", method = RequestMethod.POST)
+    public ModelAndView editRecEmail(HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+        
+        String recId = request.getParameter("recId");
+        String email = request.getParameter("emailAddress");
+        
+        this.recService.updateEmail(email, Long.parseLong(recId));
+        
+        return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
+    }
+    
     
     
     /**
@@ -812,6 +837,44 @@ public class CheckOutController {
      * @param request
      * @return 
      */
+    @RequestMapping(value = "place-order/settings/{setting}", method = RequestMethod.GET)
+    public ModelAndView settings(@PathVariable Integer setting, HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+        
+        
+        LixiOrder order = null;
+        // order already created
+        Long orderId = (Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if (orderId != null) {
+            
+            order = this.lxorderService.findById(orderId);
+            
+            // save setting
+            order.setSetting(setting);
+            
+            this.lxorderService.save(order);
+            
+        }
+        // jump
+        return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
+        
+    }
+    
+    /**
+     * 
+     * submit order
+     * Set setting: gift only or allow refund
+     * 
+     * @param setting
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = "place-order", method = RequestMethod.POST)
     public ModelAndView placeOrder(@RequestParam Integer setting, HttpServletRequest request){
         
@@ -861,7 +924,10 @@ public class CheckOutController {
             return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
 
         }
-     
+        
+        // update finished status
+        this.lxorderService.updateStatus(LiXiConstants.LIXI_ORDER_NOT_YET_SUBMITTED, (Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        
         // remove Lixi order id
         request.getSession().removeAttribute(LiXiConstants.LIXI_ORDER_ID);
         

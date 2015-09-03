@@ -100,9 +100,10 @@ public abstract class LiXiUtils {
     /**
      * 
      * @param order
+     * @param excludeOrderGift Exclude this order gift id
      * @return 
      */
-    public static double calculateCurrentPayment(LixiOrder order){
+    public static double calculateCurrentPayment(LixiOrder order, long excludeOrderGift){
         
         if(order == null) return 0;
         
@@ -111,11 +112,24 @@ public abstract class LiXiUtils {
         if(order.getGifts() != null){
             for(LixiOrderGift gift : order.getGifts()){
 
-                sum += (gift.getProductPrice() * gift.getProductQuantity());
+                if(gift.getId().longValue() != excludeOrderGift){
+                    sum += (gift.getProductPrice() * gift.getProductQuantity());
+                }
 
             }
         }
         return sum / order.getLxExchangeRate().getBuy();
+                
+    }
+    
+    /**
+     * 
+     * @param order
+     * @return 
+     */
+    public static double calculateCurrentPayment(LixiOrder order){
+        
+        return calculateCurrentPayment(order, -1);
                 
     }
     /**
@@ -159,16 +173,6 @@ public abstract class LiXiUtils {
         
     }
     
-    /**
-     * 
-     * @param vndAmount
-     * @return 
-     */
-    public static double getBeginPrice(double vndAmount){
-        
-        return (vndAmount > LiXiConstants.VND_200K ? vndAmount - LiXiConstants.VND_100K : vndAmount);
-        
-    }
     /**
      * 
      * remove part ":8080" in path, but not "localhost:8080"

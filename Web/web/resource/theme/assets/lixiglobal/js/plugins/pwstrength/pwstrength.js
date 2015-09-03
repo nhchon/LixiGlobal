@@ -136,7 +136,6 @@ try {
                     funct = rulesEngine.validation[rule],
                     result,
                     errorMessage;
-
                 if (!$.isFunction(funct)) {
                     funct = options.rules.extra[rule];
                 }
@@ -197,11 +196,15 @@ defaultOptions.rules.scores = {
     wordTwoCharacterClasses: 2,
     wordRepetitions: -25,
     wordLowercase: 1,
-    wordUppercase: 3,
-    wordOneNumber: 3,
+    //3
+    wordUppercase: 15,
+    // 3
+    wordOneNumber: 15,
     wordThreeNumbers: 5,
-    wordOneSpecialChar: 3,
-    wordTwoSpecialChar: 5,
+    // 3
+    wordOneSpecialChar: 20,
+    // 5
+    wordTwoSpecialChar: 30,
     wordUpperLowerCombo: 2,
     wordLetterNumberCombo: 2,
     wordLetterNumberCharCombo: 2
@@ -563,7 +566,6 @@ var methods = {};
             verdictText,
             verdictLevel,
             score;
-
         if (options === undefined) { return; }
 
         options.instances.errors = [];
@@ -586,7 +588,6 @@ var methods = {};
         verdictText = ui.getVerdictAndCssClass(options, score);
         verdictLevel = verdictText[2];
         verdictText = verdictText[0];
-
         if (options.common.debug) { console.log(score + ' - ' + verdictText); }
 
         if ($.isFunction(options.common.onKeyUp)) {

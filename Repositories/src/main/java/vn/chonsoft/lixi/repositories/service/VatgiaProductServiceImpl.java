@@ -57,6 +57,17 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
     
     /**
      * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public VatgiaProduct findById(Integer id){
+        
+        return this.vgpRepository.findOne(id);
+        
+    }
+    /**
+     * 
      * @param category
      * @param alive
      * @param price
@@ -89,7 +100,7 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
      * 
      */
     @Override
-    @Scheduled(cron = "0 1 1 * * ?")
+    //@Scheduled(cron = "0 1 1 * * ?")
     public void loadAllVatGiaProducts(){
         
         // get list vatgia categories

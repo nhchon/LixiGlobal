@@ -1,4 +1,4 @@
-<template:Client htmlTitle="LiXi Global - Blank Sample Page">
+<template:Client htmlTitle="LiXi Global - Place Order Page">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>
@@ -7,14 +7,62 @@
         <script type="text/javascript">
             /** Page Script **/
             var NOT_NULL_MESSAGE = '<spring:message code="validate.not_null"/>';
+            var EMAIL_MESSAGE = '<spring:message code="validate.email_required"/>'
             var BILLING_ADDRESS_MODAL_URL = '<c:url value="/checkout/billing-address-modal"/>';
+            
+            $(document).ready(function(){
+                
+                $('input[name=setting]').change(function(){
+                   
+                    if($(this).prop("checked")){
+                        
+                        document.location.href = '<c:url value="/checkout/place-order/settings/"/>' + $(this).val();
+                        
+                    }
+                });
+            });
             
             function editMobilePhone(recId) {
 
-                $('#phone').val($('#phone_' + recId).text());
+                $('#mobilePhone').val($('#phone_' + recId).text());
                 $('#recId').val(recId);
 
                 $('#editMobilePhoneModal').modal();
+            }
+            
+            function editEmailAddress(recId) {
+
+                $('#emailAddress').val($('#email_' + recId).text());
+                $('#editEmailForm input[name=recId]').val(recId);
+
+                $('#editEmailModal').modal();
+            }
+            
+            function checkMobilePhone(){
+                
+                if($.trim($('#mobilePhone').val()) === ''){
+                    
+                    alert(NOT_NULL_MESSAGE);
+                    $('#mobilePhone').attr("placeholder", NOT_NULL_MESSAGE);
+                    $('#mobilePhone').focus();
+                    
+                    return false;
+                }
+                //
+                return true;
+            }
+            
+            function checkEmail(){
+                
+                if(!$('#emailAddress').isValidEmailAddress()){
+                    
+                    alert(EMAIL_MESSAGE);
+                    $('#emailAddress').attr("placeholder", EMAIL_MESSAGE);
+                    $('#emailAddress').focus();
+                    return false;
+                }
+                //
+                return true;
             }
             
             function showPageBillAdd(page){
@@ -23,6 +71,8 @@
                     $('#billingAddressListModal').modal({show:true});
                 });
             }
+            
+            
         </script>
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/billingAddress.js"/>"></script>
     </jsp:attribute>
@@ -48,13 +98,17 @@
                                         <td><b>${recCount.count}</b></td>
                                         <td style="max-width: 250px;"><spring:message code="order.send_to"/></td>
                                         <td>${entry.key.firstName}&nbsp;${entry.key.middleName}&nbsp;${entry.key.lastName}</td>
-                                        <td></td>
+                                        <td style="text-align: right;">
+                                            <a href="<c:url value="/gifts/more-recipient"/>"><i class="fa fa-pencil"></i> Change</a>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td>Email Address</td>
-                                        <td>${entry.key.email}</td>
-                                        <td></td>
+                                        <td id="email_${entry.key.id}">${entry.key.email}</td>
+                                        <td style="text-align: right;">
+                                            <a title="Change this email" href="javascript:editEmailAddress(${entry.key.id});"><i class="fa fa-pencil"></i> Change</a>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td></td>
@@ -85,20 +139,21 @@
                                                             ${g.productName}
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             ${g.productQuantity} x <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
+                                                            <fmt:formatNumber var="itemInUSD"  value="${(g.productPrice * g.productQuantity) / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> 
+                                                            = ${itemInUSD} USD
                                                         </td>
                                                         <td style="text-align: right"><a href="<c:url value="/gifts/more-recipient"/>"><i class="fa fa-pencil"></i> Change</a></td>
                                                     </tr>
                                                 </table>
                                             </td>
                                         </tr>
-                                        <c:set var="recipientTotal" value="${recipientTotal + g.productPrice * g.productQuantity}"/>
-                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + g.productPrice * g.productQuantity}"/>
+                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + itemInUSD}"/>
                                     </c:forEach>
                                 </c:forEach>
                                 <tr>
                                     <td></td>
                                     <td><b>Gift Price:</b></td>
-                                    <td>(in USD) <b>$<fmt:formatNumber value="${allRecipientTotal / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></b></td>
+                                    <td><b>$<fmt:formatNumber value="${allRecipientTotal}" pattern="###,###.##"/></b></td>
                                     <td></td>
                                 </tr>
                                 <c:if test="${not empty CARD_PROCESSING_FEE_THIRD_PARTY}">
@@ -157,7 +212,7 @@
                                 <tr>
                                     <td style="border-top:none;width: 5%;">
                                         <div class="checkbox">
-                                        <input type="radio" name="setting" value="0"/>
+                                            <input type="radio" name="setting" value="0" <c:if test="${LIXI_ORDER.setting eq 0}">checked=""</c:if>/>
                                         </div>
                                     </td>
                                     <td style="border-top:none;width: 60%;">
@@ -167,7 +222,7 @@
                                     </td>
                                     <td style="border-top:none;width: 5%;">
                                         <div class="checkbox">
-                                            <input type="radio" name="setting" value="1" checked=""/>
+                                            <input type="radio" name="setting" value="1"  <c:if test="${LIXI_ORDER.setting eq 1}">checked=""</c:if>/>
                                         </div>
                                     </td>
                                     <td style="border-top:none;">
@@ -195,7 +250,7 @@
                 </div>
             </div>
         </section>
-        <!-- Modal -->
+        <!-- Modal Edit Mobile Phone -->
         <div class="modal fade" id="editMobilePhoneModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -215,7 +270,33 @@
                             <input type="hidden" name="recId" id="recId"/>
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button id="btnSubmitEditPhone" onclick="return checkMobilePhone();" type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Edit Email -->
+        <div class="modal fade" id="editEmailModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Edit Email Address</h4>
+                    </div>
+                    <form id="editEmailForm" role="form" method="post" action="${pageContext.request.contextPath}/checkout/edit-email">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input id="emailAddress" name="emailAddress" type="email" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="recId"/>
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button onclick="return checkEmail();" type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </form>
                 </div>

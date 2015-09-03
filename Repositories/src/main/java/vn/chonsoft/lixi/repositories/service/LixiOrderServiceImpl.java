@@ -40,6 +40,18 @@ public class LixiOrderServiceImpl implements LixiOrderService{
 
     /**
      * 
+     * @param status
+     * @param id
+     * @return 
+     */
+    @Override
+    public int updateStatus(Integer status, Long id){
+        
+        return this.lxorderRepository.updateStatus(status, id);
+        
+    }
+    /**
+     * 
      * @param id
      * @return 
      */
@@ -133,5 +145,18 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         }
         return ls;
         
+    }
+    
+    @Override
+    public LixiOrder findLastBySenderAndLixiStatus(User sender, Integer status){
+        
+        List<LixiOrder> ls = this.lxorderRepository.findBySenderAndLixiStatus(sender, status);
+        if(ls != null && !ls.isEmpty()){
+                
+                return ls.get(0);
+                
+        }
+        //
+        return null;
     }
 }

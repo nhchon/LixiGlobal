@@ -39,6 +39,63 @@
                         return true;
                     }
                 });
+                
+                $('input[name=gift]').change(function(){
+                   
+                    if($(this).prop("checked")){
+                        
+                        var orderGiftId = $('#orderGiftId').val();
+                        if(orderGiftId == ''){
+                            orderGiftId = '0';
+                        }
+                        //
+                        var productId = $(this).val();
+                        var quantity = $('#quantity-' + productId).val();
+                        
+                        
+                    }
+                });
+                
+                $( "select" ).change(function (){
+                
+                    var orderGiftId = $('#orderGiftId').val();
+                    if(orderGiftId == ''){
+                        orderGiftId = '0';
+                    }
+                    var name = $(this).attr('name')
+                    var res = name.split("-");
+                    var productId = res[1];
+                    var quantity = $(this).val();
+                    
+                    $('input[name=gift]').each(function(){
+                        if($(this).val() == productId && $(this).prop("checked")){
+                            $.ajax({
+                                url : '<c:url value="/gifts/checkExceed"/>' + '/'+orderGiftId+'/'+productId+ '/' + quantity,
+                                type: "get",
+                                dataType: 'json',
+                                success:function(data, textStatus, jqXHR) 
+                                {
+                                    if(data.data.exceed == '1'){
+                                        $('#divError').remove();
+                                        $('#chooseGiftForm').prepend('<div class="msg msg-error" id="divError">' + data.data.message + '</div>')
+                                    }else{
+                                        // no exceed, remove error
+                                        $('#divError').remove();
+                                    }
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) 
+                                { 
+                                    alert(errorThrown);
+                                    //alert('Đã có lỗi, vui lòng thử lại !'); 
+                                }    
+                            });
+                            // out
+                            return false;
+                        }
+                    });
+                });
+                
+                
             })
 
         </script>
@@ -57,7 +114,7 @@
                             </div>
                         </c:if>
                         <c:if test="${exceed eq 1 || param.exceed eq 1}">
-                            <div class="msg msg-error">
+                            <div class="msg msg-error" id="divError">
                                 <spring:message code="validate.exceeded">
                                     <spring:argument value="${EXCEEDED_VND}"/>
                                     <spring:argument value="${EXCEEDED_USD}"/>
@@ -106,7 +163,7 @@
                                                                 <input type="hidden" name="name-${p.id}" value="${p.name}"/>
                                                                 <input type="hidden" name="image-${p.id}" value="${p.imageUrl}"/>
                                                                 <div style="text-align: center;">
-                                                                    <select class="form-control lixi-select" name="quantity-${p.id}">
+                                                                    <select class="form-control lixi-select" name="quantity-${p.id}" id="quantity-${p.id}">
                                                                         <c:forEach var="i" begin="1" end="5">
                                                                             <option value="${i}" <c:if test="${(LIXI_ORDER_GIFT_PRODUCT_ID == p.id) && (LIXI_ORDER_GIFT_PRODUCT_QUANTITY == i)}">selected</c:if>>${i}</option>
                                                                         </c:forEach>
@@ -152,7 +209,9 @@
                                 </c:if>        
                                 <div class="form-group right">
                                     <div class="col-lg-12">
+                                        <c:if test="${empty LIXI_ORDER_GIFT_ID}">
                                         <a href="<c:url value="/gifts/type"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                        </c:if>
                                         <c:if test="${not empty LIXI_ORDER_ID && LIXI_ORDER_ID > 0}">
                                             <a href="<c:url value="/gifts/more-recipient"/>" class="btn btn-primary">View Order Summary</a>
                                         </c:if>
@@ -161,6 +220,7 @@
                                     </div>
                                 </fieldset>
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <input type="hidden" id="orderGiftId" name="orderGiftId" value="${LIXI_ORDER_GIFT_ID}"/>
                         </form>
 
                     </div>

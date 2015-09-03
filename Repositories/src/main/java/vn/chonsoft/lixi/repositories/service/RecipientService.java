@@ -21,4 +21,6 @@ public interface RecipientService {
     Recipient findByFirstNameAndMiddleNameAndLastNameAndPhone(String firstName, String middleName, String lastName, String phone);
     
     int updatePhone(String phone, Long id);
+    
+    int updateEmail(String email, Long id);
 }

@@ -34,6 +34,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserMoneyLevel;
 import vn.chonsoft.lixi.model.UserSecretCode;
@@ -43,6 +44,7 @@ import vn.chonsoft.lixi.model.form.UserEditPasswordForm;
 import vn.chonsoft.lixi.model.form.UserResetPasswordForm;
 import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
+import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.MoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserMoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserSecretCodeService;
@@ -78,6 +80,9 @@ public class UserController {
     
     @Inject
     private UserMoneyLevelService umlService;
+    
+    @Inject
+    private LixiOrderService lxorderService;
     /**
      * 
      * @param model
@@ -579,8 +584,16 @@ public class UserController {
                 HttpSession session = request.getSession();
                 session.setAttribute(LiXiConstants.USER_LOGIN_EMAIL, u.getEmail());
                 session.setAttribute(LiXiConstants.USER_LOGIN_FIRST_NAME, u.getFirstName());
+                
                 // change session id
                 request.changeSessionId();
+                
+                // check the order that unfinished
+                LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, LiXiConstants.LIXI_ORDER_UNFINISHED);
+                if(order != null){
+                    // continue to finish this order
+                    request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
+                }
             }
             else{
                 

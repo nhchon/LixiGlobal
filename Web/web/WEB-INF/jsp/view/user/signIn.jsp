@@ -2,15 +2,35 @@
 
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/sign-in.css"/>" type="text/css" />
+        <style>
+            .progress{
+                margin-bottom: 0px;
+            }
+        </style>
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/plugins/pwstrength/pwstrength.js"/>"></script>
         <script type="text/javascript">
             var EMAIL_MESSAGE = '<spring:message code="validate.email_required"/>';
             var PASSWORD_MESSAGE = '<spring:message code="validate.password_required"/>';
             var SIGN_UP_ACTION = '<c:url value="/user/signUp"/>';
             var SIGN_IN_ACTION = '<c:url value="/user/signIn"/>';
             $(document).ready(function () {
+                "use strict";
+                var options = {};
+                options.ui = {
+                    showVerdictsInsideProgressBar: true,
+                    viewports: {
+                        progress: ".pwstrength_viewport_progress"
+                    }
+                };
+                options.common = {
+                    debug: true,
+                    minChar: 8,
+                    usernameField: '#email'
+                };
+                $(':password').pwstrength(options);
 
                 // set focus on load
                 $('#email').focus();
@@ -141,7 +161,7 @@
                                         </div>
                                     </div>                                             
                                 </div>
-                                <div class="form-group" style="margin-bottom: 0px;">
+                                <div class="form-group" style="margin-bottom: 0px;" id="pwd-container">
                                     <div class="col-lg-5 col-md-5"> 
                                         <div class="radio">
                                             <label>
@@ -153,6 +173,8 @@
                                     </div>
                                     <div class="col-lg-7 col-md-7">
                                         <input type="password" class="form-control" name="password" id="password" placeholder="<spring:message code="message.password_format"/>">
+                                        <span class="help-block errors"></span>
+                                        <div class="pwstrength_viewport_progress"></div>
                                     </div>
                                 </div>
                                 <div class="form-group right">

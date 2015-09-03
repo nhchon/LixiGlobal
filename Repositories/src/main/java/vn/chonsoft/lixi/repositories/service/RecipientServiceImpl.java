@@ -67,4 +67,11 @@ public class RecipientServiceImpl implements RecipientService{
         
         return this.reciRepository.updatePhone(phone, id);
     }
+    
+    @Override
+    public int updateEmail(String email, Long id){
+        
+        return this.reciRepository.updateEmail(email, id);
+        
+    }
 }
