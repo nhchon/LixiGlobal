@@ -27,7 +27,7 @@
                 };
                 options.common = {
                     debug: true,
-                    minChar: 8,
+                    minChar: 6,
                     usernameField: '#email'
                 };
                 $(':password').pwstrength(options);

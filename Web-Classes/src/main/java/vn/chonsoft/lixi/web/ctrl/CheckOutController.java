@@ -211,6 +211,8 @@ public class CheckOutController {
     
     /**
      * 
+     * pay by card
+     * 
      * @param model
      * @param request
      * @return 
@@ -229,9 +231,14 @@ public class CheckOutController {
 
         LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
         
+        // check already have card
         List<UserCard> cards = this.ucService.findByUser(u);
         if(cards == null || cards.isEmpty()){
             
+            // pay by card, set bank account is null
+            order.setBankAccount(null);
+            this.lxorderService.save(order);
+        
             // there is no card, it means user had no order
             return new ModelAndView(new RedirectView("/checkout/cards/add", true, true));
         }
@@ -243,6 +250,13 @@ public class CheckOutController {
     }
     
     ////////////////////////// Bank Account
+    /**
+     * pay by bank account
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = "pay-by-bank-account/change", method = RequestMethod.GET)
     public ModelAndView payByBankAccount(Map<String, Object> model, HttpServletRequest request){
         
@@ -260,6 +274,10 @@ public class CheckOutController {
         
         List<UserBankAccount> accounts = this.ubcService.findByUser(u);
         if(accounts == null || accounts.isEmpty()){
+            
+            // pay by bank account, set card is null
+            order.setCard(null);
+            this.lxorderService.save(order);        
             
             // there is no bank account, add a new
             return new ModelAndView(new RedirectView("/checkout/pay-by-bank-account/add", true, true));
@@ -305,7 +323,7 @@ public class CheckOutController {
      * @param request
      * @return 
      */
-    @RequestMapping(value = "pay-by-bank-account", method = RequestMethod.POST)
+    @RequestMapping(value = "pay-by-bank-account/add", method = RequestMethod.POST)
     public ModelAndView payByBankAccount(Map<String, Object> model,
             @Valid BankAccountAddForm form, Errors errors, HttpServletRequest request) {
 
@@ -456,7 +474,10 @@ public class CheckOutController {
         User u = this.userService.findByEmail(email);
 
         Page<BillingAddress> addresses = this.baService.findByUser(u, page);
-        
+        if(addresses==null || addresses.getContent()==null || addresses.getContent().isEmpty()){
+            // jump to add new address
+            return new ModelAndView(new RedirectView("/checkout/billing-address", true, true));
+        }
         model.put(LiXiConstants.BILLING_ADDRESS_ES, addresses);
         model.put(LiXiConstants.USER_LOGIN_ID, u.getId());
         
@@ -780,11 +801,6 @@ public class CheckOutController {
         LixiFee handlingFee = this.feeService.findByCode(LiXiConstants.LIXI_HANDLING_FEE);
         LixiFee cardProcessingFeeAddOn = this.feeService.findByCode(LiXiConstants.LIXI_CARD_PROCESSING_FEE_ADD_ON);
         
-        // for sample
-        LixiCardFee cardFeeByThirdParty = null;
-        if(order.getCard() != null){
-            cardFeeByThirdParty = this.cardFeeService.findByCardTypeAndCreditDebitAndCountry(order.getCard().getCardType(), "DEBIT", "USA");
-        }
         
         Map<Recipient, List<LixiOrderGift>> recGifts = LiXiUtils.genMapRecGifts(order);
         model.put(LiXiConstants.LIXI_ORDER, order);
@@ -805,11 +821,31 @@ public class CheckOutController {
         
         // card processing fee
         double cardFeeNumber = 0;
-        if(order.getSetting() == EnumLixiOrderSetting.ALLOW_REFUND.getValue()){
-            cardFeeNumber = ((total * cardFeeByThirdParty.getAllowRefund()) / 100.0);
+        if(order.getCard() != null){
+            
+            // get card fee
+            LixiCardFee cardFeeByThirdParty = this.cardFeeService.findByCardTypeAndCreditDebitAndCountry(order.getCard().getCardType(), "DEBIT", "USA");
+            
+            if(order.getSetting() == EnumLixiOrderSetting.ALLOW_REFUND.getValue()){
+                cardFeeNumber = ((total * cardFeeByThirdParty.getAllowRefund()) / 100.0);
+            }
+            else{
+                cardFeeNumber = ((total * cardFeeByThirdParty.getGiftOnly()) / 100.0);
+            }
         }
         else{
-            cardFeeNumber = ((total * cardFeeByThirdParty.getGiftOnly()) / 100.0);
+            
+            // payment by bank account
+            LixiFee eCheckFee = null;
+            if(order.getSetting() == EnumLixiOrderSetting.ALLOW_REFUND.getValue()){
+                // get echeck fee
+                eCheckFee = this.feeService.findByCode(LiXiConstants.LIXI_ECHECK_FEE_ALLOW_REFUND);
+            }
+            else{
+                eCheckFee = this.feeService.findByCode(LiXiConstants.LIXI_ECHECK_FEE_GIFT_ONLY);
+            }
+            
+            cardFeeNumber = ((total * eCheckFee.getFee()) / 100.0);
         }
         
         // LIXI_CARD_PROCESSING_FEE_ADD_ON

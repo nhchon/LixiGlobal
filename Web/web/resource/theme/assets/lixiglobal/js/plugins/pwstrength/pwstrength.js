@@ -196,15 +196,11 @@ defaultOptions.rules.scores = {
     wordTwoCharacterClasses: 2,
     wordRepetitions: -25,
     wordLowercase: 1,
-    //3
-    wordUppercase: 15,
-    // 3
-    wordOneNumber: 15,
+    wordUppercase: 3,
+    wordOneNumber: 3,
     wordThreeNumbers: 5,
-    // 3
-    wordOneSpecialChar: 20,
-    // 5
-    wordTwoSpecialChar: 30,
+    wordOneSpecialChar: 3,
+    wordTwoSpecialChar: 5,
     wordUpperLowerCombo: 2,
     wordLetterNumberCombo: 2,
     wordLetterNumberCharCombo: 2

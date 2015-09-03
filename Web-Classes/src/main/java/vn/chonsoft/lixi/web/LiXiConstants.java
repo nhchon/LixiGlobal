@@ -21,6 +21,8 @@ public abstract class LiXiConstants {
     public static final String LIXI_HANDLING_FEE = "LIXI_HANDLING_FEE";
     public static final String CARD_PROCESSING_FEE_THIRD_PARTY = "CARD_PROCESSING_FEE_THIRD_PARTY";
     public static final String LIXI_CARD_PROCESSING_FEE_ADD_ON = "LIXI_CARD_PROCESSING_FEE_ADD_ON";
+    public static final String LIXI_ECHECK_FEE_GIFT_ONLY = "LIXI_ECHECK_FEE_GIFT_ONLY";
+    public static final String LIXI_ECHECK_FEE_ALLOW_REFUND = "LIXI_ECHECK_FEE_ALLOW_REFUND";
     public static final String LIXI_FINAL_TOTAL = "LIXI_FINAL_TOTAL";
     
     public static final String VND = "VND";
@@ -29,6 +31,9 @@ public abstract class LiXiConstants {
     public static final double VND_200K = 200000;
     public static final String EXCEEDED_VND = "EXCEEDED_VND";
     public static final String EXCEEDED_USD = "EXCEEDED_USD";
+    public static final String CURRENT_PAYMENT = "CURRENT_PAYMENT";
+    public static final String CURRENT_PAYMENT_VND = "CURRENT_PAYMENT_VND";
+    public static final String CURRENT_PAYMENT_USD = "CURRENT_PAYMENT_USD";
     
     // current recipient
     public static final String SELECTED_RECIPIENT_ID = "SELECTED_RECIPIENT_ID";
@@ -55,7 +60,6 @@ public abstract class LiXiConstants {
     public static final String USER_LOGIN_EMAIL = "USER_LOGIN_EMAIL";
     public static final String USER_LOGIN_FIRST_NAME = "USER_LOGIN_FIRST_NAME";
     public static final String USER_MAXIMUM_PAYMENT = "USER_MAXIMUM_PAYMENT";
-    public static final String CURRENT_PAYMENT = "CURRENT_PAYMENT";
     public static final String CURRENT_CARD = "CURRENT_CARD";
     public static final String CARD_TYPE_NAME = "CARD_TYPE_NAME";
     public static final String CARD_ENDING_WITH = "CARD_ENDING_WITH";

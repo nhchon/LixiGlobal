@@ -159,7 +159,12 @@
                                 <c:if test="${not empty CARD_PROCESSING_FEE_THIRD_PARTY}">
                                 <tr>
                                     <td></td>
-                                    <td><b>Card Processing Fee:</b></td>
+                                    <td>
+                                        <b>
+                                        <c:if test="${not empty LIXI_ORDER.card}">Card Processing Fee:</c:if>
+                                        <c:if test="${not empty LIXI_ORDER.bankAccount}">eCheck Processing Fee:</c:if>
+                                        </b>
+                                    </td>
                                     <td>
                                         <b>$<fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></b>
                                     </td>

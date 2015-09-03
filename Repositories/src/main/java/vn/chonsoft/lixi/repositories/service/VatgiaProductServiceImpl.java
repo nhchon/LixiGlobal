@@ -100,7 +100,9 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
      * 
      */
     @Override
+    @Transactional
     //@Scheduled(cron = "0 1 1 * * ?")
+    @Scheduled(fixedDelay=24*60*60*1000, initialDelay=24*60*60*1000)
     public void loadAllVatGiaProducts(){
         
         // get list vatgia categories
@@ -114,12 +116,12 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
             List<VatgiaProduct> ps = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(vgps);
             
             // save to database
-            synchronized(this){
+            //synchronized(this){
                 // update alive = 0
                 updateAlive(c.getId(), 0);
                 // update products
                 this.vgpRepository.save(ps);
-            }
+            //}
         }
     }
     

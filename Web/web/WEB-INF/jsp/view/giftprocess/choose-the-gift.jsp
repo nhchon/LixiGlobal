@@ -51,8 +51,8 @@
                         //
                         var productId = $(this).val();
                         var quantity = $('#quantity-' + productId).val();
-                        
-                        
+                        //
+                        checkExceed(orderGiftId, productId, quantity);
                     }
                 });
                 
@@ -69,26 +69,8 @@
                     
                     $('input[name=gift]').each(function(){
                         if($(this).val() == productId && $(this).prop("checked")){
-                            $.ajax({
-                                url : '<c:url value="/gifts/checkExceed"/>' + '/'+orderGiftId+'/'+productId+ '/' + quantity,
-                                type: "get",
-                                dataType: 'json',
-                                success:function(data, textStatus, jqXHR) 
-                                {
-                                    if(data.data.exceed == '1'){
-                                        $('#divError').remove();
-                                        $('#chooseGiftForm').prepend('<div class="msg msg-error" id="divError">' + data.data.message + '</div>')
-                                    }else{
-                                        // no exceed, remove error
-                                        $('#divError').remove();
-                                    }
-                                },
-                                error: function(jqXHR, textStatus, errorThrown) 
-                                { 
-                                    alert(errorThrown);
-                                    //alert('Đã có lỗi, vui lòng thử lại !'); 
-                                }    
-                            });
+                            
+                            checkExceed(orderGiftId, productId, quantity);
                             // out
                             return false;
                         }
@@ -97,7 +79,32 @@
                 
                 
             })
-
+            
+            function checkExceed(orderGiftId, productId, quantity){
+                $.ajax({
+                    url : '<c:url value="/gifts/checkExceed"/>' + '/'+orderGiftId+'/'+productId+ '/' + quantity,
+                    type: "get",
+                    dataType: 'json',
+                    success:function(data, textStatus, jqXHR) 
+                    {
+                        if(data.data.exceed == '1'){
+                            $('#divError').remove();
+                            $('#chooseGiftForm').prepend('<div class="msg msg-error" id="divError">' + data.data.message + '</div>')
+                        }else{
+                            // no exceed, remove error
+                            $('#divError').remove();
+                        }
+                        // show current payment
+                        $('#currentPaymentVND').html(data.data.CURRENT_PAYMENT_VND);
+                        $('#currentPaymentUSD').html(data.data.CURRENT_PAYMENT_USD);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) 
+                    { 
+                        //alert(errorThrown);
+                        //alert('Đã có lỗi, vui lòng thử lại !'); 
+                    }    
+                });
+            }
         </script>
     </jsp:attribute>
 
@@ -200,9 +207,9 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="pull-right">
-                                                Current payment: <strong><fmt:formatNumber value="${CURRENT_PAYMENT * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> VND</strong>
+                                                Current payment: <strong><span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></span> VND</strong>
                                                 <br/>
-                                                <div class="pull-right"><strong><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/> USD</strong></div>
+                                                <div class="pull-right"><strong><span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span> USD</strong></div>
                                             </div>
                                         </div>
                                     </div>

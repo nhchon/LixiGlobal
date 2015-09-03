@@ -241,7 +241,7 @@ public class GiftsController {
             form.setLastName(LiXiUtils.correctName(form.getLastName()));
             
             // check unique recipient
-            if(form.getRecId() <= 0){
+            if((form.getRecId()== null) || form.getRecId() <= 0){
                 rec = this.reciService.findByFirstNameAndMiddleNameAndLastNameAndPhone(form.getFirstName(), form.getMiddleName(), form.getLastName(), form.getPhone());
                 if(rec != null){
 
@@ -688,13 +688,15 @@ public class GiftsController {
         double price = vgp.getPrice();
         
         // check current payment <==> maximum payment
-        LixiExchangeRate lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
-        double buy = lxExch.getBuy();
+        double buy = 0;
         if(order != null){
-            
             // get buy from order
             buy = order.getLxExchangeRate().getBuy();
-            
+        }
+        else{
+            // get current exchange rate
+            LixiExchangeRate lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+            buy = lxExch.getBuy();
         }
         
         double currentPayment = LiXiUtils.calculateCurrentPayment(order, lxOrderGift);
@@ -716,6 +718,10 @@ public class GiftsController {
         else{
             model.put("exceed", 0);
         }
+        // store current payment
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
+        
         return new ModelAndView("giftprocess/exceed", model);
     }
     /**

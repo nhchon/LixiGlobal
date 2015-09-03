@@ -37,6 +37,11 @@ public abstract class LiXiUtils {
     //
     private static final Logger log = LogManager.getLogger(LiXiUtils.class);
 
+    // always use Locale.US for  number format
+    private static DecimalFormat df = (DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
+    static{
+        df.applyPattern("###,###.##");
+    }
     /**
      * 
      * Check user is loggined or not
@@ -89,12 +94,6 @@ public abstract class LiXiUtils {
      * @return 
      */
     public static DecimalFormat getNumberFormat(){
-        
-        // always use Locale.US for  number format
-        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
-        DecimalFormat df = (DecimalFormat) nf;
-        df.applyPattern("###,###.##");
-        
         return df;
     }
     /**
@@ -112,7 +111,7 @@ public abstract class LiXiUtils {
         if(order.getGifts() != null){
             for(LixiOrderGift gift : order.getGifts()){
 
-                if(gift.getId().longValue() != excludeOrderGift){
+                if(gift.getId() != excludeOrderGift){
                     sum += (gift.getProductPrice() * gift.getProductQuantity());
                 }
 
