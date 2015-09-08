@@ -115,7 +115,7 @@
                     $('#giftInCurrencyValue').val('VND');
                     // set default value
                     $('#amountCurrency').val('USD') ;
-                    $('#amount').val(50);
+                    $('#amount').val(10);
                 }
                 //
                 setGiftInValue();
@@ -265,6 +265,11 @@
                                 <legend><spring:message code="gift.choose_value"/></legend>
                                 <div class="form-group">
                                     <div class="col-lg-5 col-md-5">
+                                        {You can give to more than one person. Enter value for one person at a time}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-5 col-md-5">
                                         <label for="value" class="control-label">
                                             <spring:message code="gift.what_is_the_amount"/>
                                             <br />
@@ -304,15 +309,19 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-lg-5 col-md-5">
-                                        <label for="value" class="control-label"><spring:message code="gift.gift_in"/></label>
+                                        <label for="value" class="control-label"><spring:message code="gift.gift_in" arguments="${SELECTED_RECIPIENT_NAME}"/></label>
+                                        <br/>(<spring:message code="gift.gift_in_note1"/>&nbsp;<spring:message code="gift.gift_in_note2"/>&nbsp;<spring:message code="gift.gift_in_note3"/>)
                                     </div>
                                     <div class="col-lg-7 col-md-7 row">
                                         <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                            <input class="form-control" type="text" name="giftInCurrency" id="giftInCurrency" disabled=""/>
+                                            <%--
                                             <select class="form-control"  name="giftInCurrency" id="giftInCurrency" disabled="">
                                                 <c:forEach items="${CURRENCIES}" var="c">
                                                     <option value="${c.code}">${c.code}</option>
                                                 </c:forEach>
                                             </select>
+                                            --%>
                                             <input type="hidden" name="giftInCurrencyValue" id="giftInCurrencyValue"/>
                                         </div>
                                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">

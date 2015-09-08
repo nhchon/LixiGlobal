@@ -26,6 +26,8 @@ public class ChooseRecipientForm{
     
     private String email;
     
+    private String dialCode;
+    
     @NotBlank(message = "{validate.phone_required}")
     private String phone;
     
@@ -77,6 +79,14 @@ public class ChooseRecipientForm{
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getDialCode() {
+        return dialCode;
+    }
+
+    public void setDialCode(String dialCode) {
+        this.dialCode = dialCode;
     }
 
     public String getNote() {

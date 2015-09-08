@@ -1,14 +1,28 @@
 <template:Client htmlTitle="LiXi Global - Choose Recipient">
 
     <jsp:attribute name="extraHeadContent">
+        <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/intlTelInput.css"/>" type="text/css" />
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/recipient.css"/>" type="text/css" />
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/intlTelInput_1.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
             $(document).ready(function () {
                 
+                //
+                $('#iso2Code').change(function(){
+                    if($(this).val() === 'VN'){
+                        
+                        $('#dialCode').val('+84');
+            
+                    }
+                    else if($(this).val() === 'US'){
+                        $('#dialCode').val('+1');
+                    }
+                });
+                //
                 $('#recId').change(function () {
                     
                     if($(this).val() > 0){
@@ -77,12 +91,14 @@
                         </c:if>                        
                         
                         <form:form modelAttribute="chooseRecipientForm"  class="form-horizontal">
-                            
                             <c:if test="${not empty RECIPIENTS}">
                                 <fieldset>
-                                <legend><spring:message code="gift.select_recipient"/></legend>
+                                <legend></legend>
                                 <div class="form-group">
                                     <div class="col-lg-5 col-md-5">
+                                        <span style="font-weight: bold;font-size: 21px;"><spring:message code="gift.select_recipient"/></span>
+                                    </div>
+                                    <div class="col-lg-7 col-md-7">
                                         <select class="form-control" id="recId" name="recId">
                                             <option value="0"><spring:message code="gift.select_recipient"/></option>
                                             <c:forEach items="${RECIPIENTS}" var="rec">
@@ -92,7 +108,7 @@
                                     </div>
                                 </div>
                                 </fieldset>
-                                            <br/>
+                                <br/>
                             </c:if>
                             
                             <fieldset>
@@ -131,8 +147,25 @@
                                         <label class="control-label"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
                                     </div>
                                     <div class="col-lg-7 col-md-7">
-                                        <form:input path="phone" class="form-control"/>
-                                        <span class="help-block errors"><form:errors path="phone" /></span>
+                                        <div class="row">
+                                            <div class="col-md-2" style="padding-right: 0px;">
+                                                <select class="form-control" id="iso2Code">
+                                                    <option value="VN">VN</option>
+                                                    <option value="US">US</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1" style="padding-left: 0px; padding-right: 0px;">
+                                                <form:input path="dialCode" class="form-control" readonly="true" value="+84" style="padding: 6px;"/>
+                                            </div>
+                                            <div class="col-md-9" style="padding-left: 0px;">
+                                                <form:input path="phone" class="form-control"/>
+                                                
+                                                <span class="help-block errors"><form:errors path="phone" /></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12"><span class="help-block">(Only mobile phone number. No first 0 i.e. 967 00 78 69, 169 262 31 88)</span></div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
