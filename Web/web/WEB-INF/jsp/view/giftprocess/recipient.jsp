@@ -150,12 +150,12 @@
                                         <div class="row">
                                             <div class="col-md-2" style="padding-right: 0px;">
                                                 <select class="form-control" id="iso2Code">
-                                                    <option value="VN">VN</option>
-                                                    <option value="US">US</option>
+                                                    <option value="VN" <c:if test="${chooseRecipientForm.dialCode eq '+84'}">selected=""</c:if>>VN</option>
+                                                    <option value="US" <c:if test="${chooseRecipientForm.dialCode eq '+1'}">selected=""</c:if>>US</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-1" style="padding-left: 0px; padding-right: 0px;">
-                                                <form:input path="dialCode" class="form-control" readonly="true" value="+84" style="padding: 6px;"/>
+                                                <form:input path="dialCode" class="form-control" readonly="true" style="padding: 6px;"/>
                                             </div>
                                             <div class="col-md-9" style="padding-left: 0px;">
                                                 <form:input path="phone" class="form-control"/>

@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  *
@@ -62,6 +63,13 @@ public class VatgiaProduct implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
 
+    /* selected in current order */
+    @Transient
+    private Boolean selected;
+    
+    @Transient
+    private Integer quantity;
+    
     public VatgiaProduct() {
     }
 
@@ -149,6 +157,22 @@ public class VatgiaProduct implements Serializable {
 
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public Boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     @Override

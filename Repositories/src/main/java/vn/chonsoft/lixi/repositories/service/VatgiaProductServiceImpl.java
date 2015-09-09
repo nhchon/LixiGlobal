@@ -6,6 +6,9 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.inject.Inject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,6 +85,22 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
     
     /**
      * 
+     * @param category
+     * @param alive
+     * @param price
+     * @param page
+     * @return 
+     */
+    @Override
+    public Page<VatgiaProduct> findByCategoryIdAndAliveAndPrice(int category, int alive, double price, Pageable page){
+        
+        Page<VatgiaProduct> entities = this.vgpRepository.findByCategoryIdAndAliveAndPriceIsGreaterThanEqual(category, alive, price, page);
+        
+        return new PageImpl<>(entities.getContent(), page, entities.getTotalElements());
+        
+    }
+    /**
+     * 
      * update alive attribute before load products again from BaoKim
      * 
      * @param category
@@ -102,7 +121,7 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
     @Override
     @Transactional
     //@Scheduled(cron = "0 1 1 * * ?")
-    @Scheduled(fixedDelay=24*60*60*1000, initialDelay=24*60*60*1000)
+    //@Scheduled(fixedDelay=24*60*60*1000, initialDelay=60*1000)
     public void loadAllVatGiaProducts(){
         
         // get list vatgia categories
@@ -116,12 +135,12 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
             List<VatgiaProduct> ps = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(vgps);
             
             // save to database
-            //synchronized(this){
+            synchronized(this){
                 // update alive = 0
                 updateAlive(c.getId(), 0);
                 // update products
                 this.vgpRepository.save(ps);
-            //}
+            }
         }
     }
     

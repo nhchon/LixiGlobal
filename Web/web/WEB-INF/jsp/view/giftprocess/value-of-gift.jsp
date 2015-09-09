@@ -17,6 +17,7 @@
             var MIN_VND = 200000;
             var MAX_VND = 2000000;
             var STEP_VND = 50000;
+            var DEFAULT_VALUE = 25;
             var RECIPIENT_NAME = "${SELECTED_RECIPIENT_NAME}";
             var LAST_AMOUNT = '${SELECTED_AMOUNT}';
             var LAST_AMOUNT_CURRENCY = '${SELECTED_AMOUNT_CURRENCY}';
@@ -49,7 +50,7 @@
                         $('#giftInCurrency').val('VND');
                         $('#giftInCurrencyValue').val('VND');
                         // default value for USD
-                        $('#amount').val(50);
+                        $('#amount').val(DEFAULT_VALUE);
                     }
                     else{
                         
@@ -115,7 +116,7 @@
                     $('#giftInCurrencyValue').val('VND');
                     // set default value
                     $('#amountCurrency').val('USD') ;
-                    $('#amount').val(10);
+                    $('#amount').val(DEFAULT_VALUE);
                 }
                 //
                 setGiftInValue();
@@ -265,7 +266,7 @@
                                 <legend><spring:message code="gift.choose_value"/></legend>
                                 <div class="form-group">
                                     <div class="col-lg-5 col-md-5">
-                                        {You can give to more than one person. Enter value for one person at a time}
+                                        (You can give to more than one person. Enter value for one person at a time)
                                     </div>
                                 </div>
                                 <div class="form-group">

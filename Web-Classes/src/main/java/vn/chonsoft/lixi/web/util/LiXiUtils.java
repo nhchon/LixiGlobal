@@ -96,7 +96,21 @@ public abstract class LiXiUtils {
     public static DecimalFormat getNumberFormat(){
         return df;
     }
+    
     /**
+     * 
+     * @param alreadyGift
+     * @return 
+     */
+    public static Long getOrderGiftId(LixiOrderGift alreadyGift){
+        
+        if(alreadyGift == null) return -1L;
+        else
+            return alreadyGift.getId();
+    }
+    /**
+     * 
+     * sum order, in VND
      * 
      * @param order
      * @param excludeOrderGift Exclude this order gift id
@@ -117,7 +131,7 @@ public abstract class LiXiUtils {
 
             }
         }
-        return sum / order.getLxExchangeRate().getBuy();
+        return sum;
                 
     }
     

@@ -42,8 +42,10 @@ public abstract class LiXiConstants {
     public static final String SELECTED_AMOUNT = "SELECTED_AMOUNT";
     public static final String SELECTED_AMOUNT_IN_VND = "SELECTED_AMOUNT_IN_VND";
     public static final String SELECTED_AMOUNT_CURRENCY = "SELECTED_AMOUNT_CURRENCY";
-    public static final String SELECTED_LIXI_CATEGORY_ID = "SELECTED_LIXI_CATEGORY";
+    public static final String SELECTED_LIXI_CATEGORY_ID = "SELECTED_LIXI_CATEGORY_ID";
     public static final String SELECTED_LIXI_CATEGORY_NAME = "SELECTED_LIXI_CATEGORY_NAME";
+    public static final String SELECTED_PRODUCT_ID = "SELECTED_PRODUCT_ID";
+    public static final String SELECTED_PRODUCT_QUANTITY = "SELECTED_PRODUCT_QUANTITY";
     
     public static final String CURRENCIES = "CURRENCIES";
     public static final String LIXI_EXCHANGE_RATE = "LIXI_EXCHANGE_RATE";
@@ -70,6 +72,8 @@ public abstract class LiXiConstants {
     public static final String CARDS = "CARDS";
     public static final String ACCOUNTS = "ACCOUNTS";
     public static final String PRODUCTS = "PRODUCTS";
+    public static final String PAGES = "PAGES";
+    public static final Integer NUM_PRODUCTS_PER_PAGE = 6;
     public static final String LIXI_TOTAL_AMOUNT = "LIXI_TOTAL_AMOUNT";
     
     public static final String YHANNART_GMAIL = "yhannart@gmail.com";

@@ -5,6 +5,8 @@
 package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.VatgiaProduct;
@@ -25,6 +27,8 @@ public interface VatgiaProductService {
     VatgiaProduct findById(Integer id);
     
     List<VatgiaProduct> findByCategoryIdAndAliveAndPrice(int category, int alive, double price);
+    
+    Page<VatgiaProduct> findByCategoryIdAndAliveAndPrice(int category, int alive, double price, Pageable page);
     
     int updateAlive(Integer category, Integer alive);
     

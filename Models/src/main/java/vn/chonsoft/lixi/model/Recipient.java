@@ -50,6 +50,9 @@ public class Recipient implements Serializable {
     @Column(name = "email")
     private String email;
     
+    @Column(name = "dial_code")
+    private String dialCode;
+    
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     @Basic(optional = false)
     @Column(name = "phone")
@@ -76,10 +79,11 @@ public class Recipient implements Serializable {
         this.id = id;
     }
 
-    public Recipient(Long id, String firstName, String lastName, String phone, String note, Date modifiedDate) {
+    public Recipient(Long id, String firstName, String lastName, String dialCode, String phone, String note, Date modifiedDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.dialCode = dialCode;
         this.phone = phone;
         this.note = note;
         this.modifiedDate = modifiedDate;
@@ -123,6 +127,14 @@ public class Recipient implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDialCode() {
+        return dialCode;
+    }
+
+    public void setDialCode(String dialCode) {
+        this.dialCode = dialCode;
     }
 
     public String getPhone() {
