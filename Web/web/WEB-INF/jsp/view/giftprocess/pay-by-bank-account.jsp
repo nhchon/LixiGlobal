@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="form-group right">
                                     <div class="col-lg-12">
-                                        <a href="<c:url value="/gifts/review"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                        <a href="<c:url value="/checkout/payment-method/change"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
                                         <button type="submit" id="btnSubmit" class="btn btn-primary">Continue</button>
                                     </div>
                                 </div>

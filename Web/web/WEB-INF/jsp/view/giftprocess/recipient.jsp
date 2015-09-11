@@ -10,7 +10,9 @@
         <script type="text/javascript">
             /** Page Script **/
             $(document).ready(function () {
-                
+                // default dial code
+                $('#iso2Code').val('VN');
+                $('#dialCode').val('+84');
                 //
                 $('#iso2Code').change(function(){
                     if($(this).val() === 'VN'){

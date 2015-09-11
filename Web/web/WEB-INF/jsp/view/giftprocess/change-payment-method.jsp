@@ -99,10 +99,16 @@
                                     <tfoot>
                                         <tr>
                                             <td>
-                                                <a href="<c:url value="/gifts/review"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                                <c:if test="${not empty param.returnUrl}">
+                                                    <a href="${param.returnUrl}" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                                </c:if>
+                                                <c:if test="${empty param.returnUrl}"> 
+                                                    <a href="<c:url value="/gifts/more-recipient"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                                </c:if>   
                                             </td>
                                             <td  colspan="2" style="text-align: right;">
-                                                <a href="<c:url value="/checkout/cards/add"/>" class="btn btn-primary">Add new card</a>
+                                                <c:url value="/checkout/payment-method/change" var="returnUrlForNewCard"/>
+                                                <a href="<c:url value="/checkout/cards/add?returnUrl=${returnUrlForNewCard}"/>" class="btn btn-primary">Add new card</a>
                                                 <a href="<c:url value="/checkout/pay-by-bank-account/add"/>" class="btn btn-primary">Add new bank account</a>
                                                 <button onclick="return checkSelectedPayment();" type="submit" class="btn btn-primary">Use this payment method</button>
                                             </td>

@@ -16,10 +16,34 @@
                    
                     if($(this).prop("checked")){
                         
-                        document.location.href = '<c:url value="/checkout/place-order/settings/"/>' + $(this).val();
+                        //document.location.href = '<c:url value="/checkout/place-order/settings/"/>' + $(this).val();
+                        $.ajax({
+                            url : '<c:url value="/checkout/place-order/calculateFee"/>' + '/'+$(this).val(),
+                            type: "get",
+                            dataType: 'json',
+                            success:function(data, textStatus, jqXHR) 
+                            {
+                                if(data.data.error == '0'){
+                                    //alert(data.data.LIXI_HANDLING_FEE_TOTAL);
+                                    $('#CARD_PROCESSING_FEE_THIRD_PARTY').html(data.data.CARD_PROCESSING_FEE_THIRD_PARTY)
+                                    $('#LIXI_HANDLING_FEE_TOTAL').html(data.data.LIXI_HANDLING_FEE_TOTAL)
+                                    $('#LIXI_FINAL_TOTAL').html(data.data.LIXI_FINAL_TOTAL)
+                                }
+                                else{
+                                    // TODO 
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) 
+                            { 
+                                //alert(errorThrown);
+                                //alert('Đã có lỗi, vui lòng thử lại !'); 
+                            }    
+                        });
                         
                     }
                 });
+                
+                
             });
             
             function editMobilePhone(recId) {
@@ -166,7 +190,7 @@
                                         </b>
                                     </td>
                                     <td>
-                                        <b>$<fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></b>
+                                        <b>$<span id="CARD_PROCESSING_FEE_THIRD_PARTY"><fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></span></b>
                                     </td>
                                     <td></td>
                                 </tr>
@@ -174,7 +198,7 @@
                                 <tr>
                                     <td></td>
                                     <td><b>Lixi Handling Fee:</b></td>
-                                    <td><b>$${LIXI_HANDLING_FEE_TOTAL}</b> ($${LIXI_HANDLING_FEE.fee} per person)<br/>
+                                    <td><b>$<span id="LIXI_HANDLING_FEE_TOTAL">${LIXI_HANDLING_FEE_TOTAL}</span></b> ($${LIXI_HANDLING_FEE.fee} per person)<br/>
                                     
                                     </td>
                                     <td></td>
@@ -182,7 +206,7 @@
                                 <tr>
                                     <td></td>
                                     <td><b>TOTAL:</b></td>
-                                    <td><b>$<fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></b></td>
+                                    <td><b>$<span id="LIXI_FINAL_TOTAL"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></b></td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -206,7 +230,8 @@
                                     </c:if>
                                     <a href="javascript:showPageBillAdd(1);" style="font-weight:normal;">&nbsp;Change</a>
                                     </td>
-                                    <td style="text-align: right;vertical-align: top;"><a href="<c:url value="/checkout/payment-method/change"/>"><i class="fa fa-pencil"></i> Change</a></td>
+                                    <c:url value="/checkout/place-order" var="returnUrl"/>
+                                    <td style="text-align: right;vertical-align: top;"><a href="<c:url value="/checkout/payment-method/change?returnUrl=${returnUrl}"/>"><i class="fa fa-pencil"></i> Change</a></td>
                                 </tr>
                             </table>
                         </div>
@@ -245,7 +270,7 @@
                             </table>
                         </div>
                         <div class="btns">
-                            <a href="<c:url value="/checkout/cards/change"/>" class="btn btn-primary left"><spring:message code="message.back"/></a>
+                            <a href="<c:url value="/checkout/payment-method/change"/>" class="btn btn-primary left"><spring:message code="message.back"/></a>
                             <c:if test="${not empty REC_GIFTS}"><button type="submit" class="btn btn-primary">Place Order</button></c:if>
                         </div>
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

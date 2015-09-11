@@ -7,6 +7,26 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            $(document).ready(function () {
+                
+                // get focus on cardName
+                $('#cardName').focus();
+                //
+                $('#btnSubmit').click(function () {
+                    
+                    var value = $('input[name=paymentMethod]:checked', '#cardAddForm').val();
+                    
+                    if(value === 'card'){
+                        
+                        return true;
+                    }
+                    else{
+                        // pay by bank account
+                        document.location.href= '<c:url value="/checkout/pay-by-bank-account/add"/>';
+                        return false;
+                    }
+                });
+            });
         </script>
     </jsp:attribute>
 
@@ -35,9 +55,12 @@
                                 </spring:message>
                             </div>
                         </c:if>
+                        <fieldset>
+                            <legend>Select Payment Method</legend>
+                        </fieldset>
                         <form:form modelAttribute="cardAddForm">
                             <fieldset>
-                                <legend><spring:message code="card.pay_by_card"/></legend>
+                                <legend style="font-size: 18px;"><input value="card" type="radio" checked="" name="paymentMethod"/> <spring:message code="card.pay_by_card"/></legend>
                                 <div class="form-group row">
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                         <b><spring:message code="card.type"/></b>
@@ -132,11 +155,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group right">
-                                    <a href="<c:url value="${backUrl}"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
-                                    <button type="submit" class="btn btn-primary"><spring:message code="card.add"/></button>
-                                </div>
                             </fieldset>
+                                        <p>&nbsp;</p>
+                            <fieldset>
+                                <legend style="font-size: 18px;"><input value="account" type="radio" name="paymentMethod"/> Paye By Check(Lower processing fee)</legend>
+                            </fieldset>
+                            <div class="form-group right">
+                                <c:if test="${not empty param.returnUrl}">
+                                    <a href="${param.returnUrl}" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                </c:if>
+                                <c:if test="${empty param.returnUrl}">
+                                    <a href="<c:url value="${backUrl}"/>" class="btn btn-primary"><spring:message code="message.back"/></a>
+                                </c:if>
+                                <button type="submit" id="btnSubmit" class="btn btn-primary"><spring:message code="message.next"/></button>
+                            </div>
                         </form:form>
                     </div>
                 </div>

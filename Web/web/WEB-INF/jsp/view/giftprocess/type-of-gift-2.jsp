@@ -94,7 +94,8 @@
                                     // out
                                     return false;
                                 }
-                            });                            
+                            });
+                            alert(data.data.message);
                         }else{
                             // no exceed, remove error
                             $('#divError').remove();

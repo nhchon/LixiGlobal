@@ -7,6 +7,41 @@
         <script type="text/javascript">
             /** Page Script **/
             var CONFIRM_MESSAGE = "<spring:message code="gift.delete_confirm"/>";
+            var oldText = [];
+            var newText;
+            
+            $(document).ready(function () {
+                
+            });
+            
+            function changeHtml(id){
+                
+                oldText[id] = $('#quantity-text-'+id).text();
+                //alert(oldText[id]);
+                $('#quantity-text-'+id).html(generateQuantityHtmlBox(oldText[id], id));
+                // hide
+                $('#changeDeleteLine-'+id).hide();
+                // show
+                $('#saveDiscardLine-'+id).show();
+            }
+            
+            function discard(id){
+                
+                $('#quantity-text-'+id).html(oldText[id]);
+                // show
+                $('#changeDeleteLine-'+id).show();
+                // hide
+                $('#saveDiscardLine-'+id).hide();
+            }
+            
+            function generateQuantityHtmlBox(q, id){
+                var html = "<select class='form-control' id='quantity-"+id+"'>";
+                for(i=1;i<=5;i++){
+                    html += "<option value="+i + (i==q?" selected":"")+">"+i+"</option>";
+                }
+                html += "</select>";
+                return html;
+            }
             function confirmDeleteItem(id) {
 
                 if (confirm(CONFIRM_MESSAGE)) {
@@ -89,37 +124,48 @@
                                         <c:set var="total" value="0"/>
                                         <c:forEach items="${REC_GIFTS}" var="entry">
                                             <tr style="background-color: #f9f9f9;">
-                                                <td class="col-md-2"><strong>${entry.key.firstName}&nbsp;${entry.key.middleName}&nbsp;${entry.key.lastName}</strong></td>
+                                                <td class="col-md-5" colspan="2">
+                                                    <strong>${entry.key.firstName}&nbsp;${entry.key.middleName}&nbsp;${entry.key.lastName}</strong>
+                                                    <a href="<c:url value="/gifts/add-more/${entry.key.id}"/>" class="btn btn-sm btn-danger">Delete</a>
+                                                    <a href="<c:url value="/gifts/add-more/${entry.key.id}"/>" class="btn btn-sm btn-success">Buy More</a>
+                                                </td>
                                                 <td class="col-md-2"></td>
                                                 <td class="col-md-1"></td>
                                                 <td class="col-md-2" style="text-align: right;"></td>
                                                 <td class="col-md-2" style="text-align: right;"></td>
-                                                <td class="col-md-3" style="text-align: right;"><a href="<c:url value="/gifts/add-more/${entry.key.id}"/>" class="btn btn-sm btn-success">Add More</a></td>
+                                                <%--<td class="col-md-3" style="text-align: right;"></td>--%>
                                             </tr>
                                             <c:forEach items="${entry.value}" var="g">
                                                 <c:if test="${g.productId > 0}">
                                                 <tr>
                                                     <td class="col-md-2"></td>
                                                     <td class="col-md-2">${g.productName}</td>
-                                                    <td class="col-md-1">
+                                                    <td class="col-md-2">
+                                                        <%--
                                                         <select onchange="if(confirm('Update quatity of this product ?')){document.location.href='<c:url value="/gifts/update/"/>'+${g.id}+'/'+this.value}" class="form-control lixi-select" name="quantity-${g.id}" id="quantity-${g.id}">
                                                         <c:forEach var="i" begin="1" end="5">
                                                             <option value="${i}" <c:if test="${g.productQuantity == i}">selected</c:if>>${i}</option>
                                                         </c:forEach>
-                                                        </select>                                                        
+                                                        </select>
+                                                        --%>
+                                                        <span class="editableCss" style="font-weight: bold;" id="quantity-text-${g.id}">${g.productQuantity}</span><br/>
+                                                        <span id="changeDeleteLine-${g.id}"><a href="javascript:changeHtml(${g.id});" style="font-weight: normal;">Change</a>  - <a href="javascript:confirmDeleteItem(${g.id});" style="font-weight:normal;">Delete</a></span>
+                                                        <span id="saveDiscardLine-${g.id}" style="display: none;"><a href="javascript:updateQUantity(${g.id});" style="font-weight: normal;">Update</a>  - <a href="javascript:discard(${g.id})" style="font-weight:normal;">Delete</a></span>
                                                     </td>
-                                                    <td class="col-md-2" style="text-align: right;">
-                                                        <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND <br/>
+                                                    <td class="col-md-3" style="text-align: right;">
+                                                        <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND<br/>
                                                         <fmt:formatNumber value="${g.productPrice / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> USD
                                                     </td>
-                                                    <td class="col-md-2" style="text-align: right;">
-                                                        <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/> VND <br/>
+                                                    <td class="col-md-3" style="text-align: right;">
+                                                        <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/> VND<br/>
                                                         <fmt:formatNumber value="${g.productPrice / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> USD
                                                     </td>
+                                                    <%--
                                                     <td class="col-md-3" style="text-align: right;">
                                                         <a href="<c:url value="/gifts/change/${g.id}/${g.productId}/${g.productQuantity}"/>" class="btn btn-sm btn-primary">Change</a>
                                                         <a href="javascript:confirmDeleteItem(${g.id})" class="btn btn-sm btn-danger">Delete</a>
                                                     </td>
+                                                    --%>
                                                     <c:set var="total" value="${total + g.productPrice * g.productQuantity}"/>
                                                 </tr>
                                                 </c:if>
@@ -154,7 +200,7 @@
                         <p>Do you want to send a gift to another person?</p>
                         <div class="btns">
                             <a href="<c:url value="/gifts/recipient"/>" class="btn btn-primary">Yes, I do</a>
-                            <c:if test="${not empty REC_GIFTS}"><a href="<c:url value="/gifts/review"/>" class="btn btn-primary">No, thank you</a></c:if>
+                            <c:if test="${not empty REC_GIFTS}"><a href="<c:url value="/checkout/payment-method/change"/>" class="btn btn-primary">No, thank you</a></c:if>
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>

@@ -1,5 +1,5 @@
 {"data":{
-    "exceed": "${exceed}",
+    "error": "${error}",
     "EXCEEDED_VND": "${EXCEEDED_VND}",
     "EXCEEDED_USD":"${EXCEEDED_USD}",
     "CURRENT_PAYMENT_USD": "${CURRENT_PAYMENT_USD}",

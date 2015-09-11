@@ -413,7 +413,7 @@ public class GiftsController {
         //
         for(VatgiaProduct p : products){
             for(LixiOrderGift gift : order.getGifts()){
-                if((gift.getRecipient().getId() == rec.getId()) && p.getId() == gift.getProductId()){
+                if((gift.getRecipient().getId().equals(rec.getId())) && p.getId() == gift.getProductId()){
                     p.setSelected(Boolean.TRUE);
                     p.setQuantity(gift.getProductQuantity());
                     break;
@@ -1143,21 +1143,20 @@ public class GiftsController {
             // delete the order
         }
         // else
-        double currentPayment = LiXiUtils.calculateCurrentPayment(order);
-        currentPayment += ((lxogift.getProductPrice() * (quantity - lxogift.getProductQuantity())) / order.getLxExchangeRate().getBuy());
+        double buy = order.getLxExchangeRate().getBuy();
+        double currentPayment = LiXiUtils.calculateCurrentPayment(order, lxogift.getId()); // in VND
+        currentPayment += (lxogift.getProductPrice() * quantity);
 
         // maximum payment is over
-        if (currentPayment > u.getUserMoneyLevel().getMoneyLevel().getAmount()) {
+        if (currentPayment > u.getUserMoneyLevel().getMoneyLevel().getAmount() * buy) {
 
             Map<String, Object> model = new HashMap<>();
             
             // maximum payment is over
             model.put("exceed", 1);
             
-            double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
-            double exceededPaymentVND = exceededPaymentUSD * order.getLxExchangeRate().getBuy();
-            
-            log.info(exceededPaymentVND + " - " + exceededPaymentUSD);
+            double exceededPaymentVND = currentPayment - (u.getUserMoneyLevel().getMoneyLevel().getAmount() * buy);
+            double exceededPaymentUSD = (currentPayment/buy) - u.getUserMoneyLevel().getMoneyLevel().getAmount();
             
             model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
             

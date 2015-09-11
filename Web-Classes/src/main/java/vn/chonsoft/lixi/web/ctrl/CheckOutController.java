@@ -105,7 +105,7 @@ public class CheckOutController {
         if(cards == null || cards.isEmpty()){
             
             // back url
-            model.put("backUrl", "/gifts/review");
+            model.put("backUrl", "/gifts/more-recipient");
         }
         else{
             model.put("backUrl", "/checkout/cards/change");
@@ -183,6 +183,8 @@ public class CheckOutController {
             // update order, add card
             LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
             order.setCard(uc);
+            //remove bank account IF it has
+            order.setBankAccount(null);
             
             this.lxorderService.save(order);
             
@@ -389,11 +391,20 @@ public class CheckOutController {
 
         LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
         
-        model.put(LiXiConstants.ACCOUNTS, this.ubcService.findByUser(u));
-        model.put(LiXiConstants.CARDS, this.ucService.findByUser(u));
-        model.put(LiXiConstants.LIXI_ORDER, order);
+        List<UserBankAccount> accs = this.ubcService.findByUser(u);
+        List<UserCard> cards = this.ucService.findByUser(u);
         
-        return new ModelAndView("giftprocess/change-payment-method");
+        // no card and no bank account
+        if(accs.isEmpty() && cards.isEmpty()){
+            return new ModelAndView(new RedirectView("/checkout/cards/add", true, true));
+        }
+        else{
+            model.put(LiXiConstants.ACCOUNTS, accs);
+            model.put(LiXiConstants.CARDS, cards);
+            model.put(LiXiConstants.LIXI_ORDER, order);
+
+            return new ModelAndView("giftprocess/change-payment-method");
+        }
     }
     /**
      * 
@@ -766,38 +777,8 @@ public class CheckOutController {
         return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
     }
     
-    
-    
-    /**
-     * 
-     * 
-     * 
-     * @param model 
-     * @param request
-     * @return 
-     */
-    @RequestMapping(value = "place-order", method = RequestMethod.GET)
-    public ModelAndView placeOrder(Map<String, Object> model, HttpServletRequest request){
+    private void calculateFee(Map<String, Object> model, LixiOrder order){
         
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
-
-        LixiOrder order = null;
-        // order already created
-        Long orderId = (Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
-        if (orderId != null) {
-            
-            order = this.lxorderService.findById(orderId);
-        }
-        else{
-            
-            // order not exist, go to Choose recipient page
-            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
-        }
         LixiFee handlingFee = this.feeService.findByCode(LiXiConstants.LIXI_HANDLING_FEE);
         LixiFee cardProcessingFeeAddOn = this.feeService.findByCode(LiXiConstants.LIXI_CARD_PROCESSING_FEE_ADD_ON);
         
@@ -862,6 +843,83 @@ public class CheckOutController {
         model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, handlingFee.getFee() * recGifts.keySet().size());
         model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFeeNumber);
         
+    }
+    /**
+     * 
+     * Ajax call to re-calculate fee
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "place-order/calculateFee/{setting}", method = RequestMethod.GET)
+    public ModelAndView calculateFee(Map<String, Object> model, @PathVariable Integer setting, HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+        
+        LixiOrder order = null;
+        // order already created
+        Long orderId = (Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if (orderId != null) {
+            
+            order = this.lxorderService.findById(orderId);
+            // save setting
+            order.setSetting(setting);
+            
+            this.lxorderService.save(order);
+        }
+        else{
+            
+            // order not exist
+            model.put("error", 1);
+        }
+        //
+        model.put("error", 0);
+        
+        // calculate fee
+        calculateFee(model, order);
+        
+        return new ModelAndView("giftprocess/fees");
+    }
+    /**
+     * 
+     * 
+     * 
+     * @param model 
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "place-order", method = RequestMethod.GET)
+    public ModelAndView placeOrder(Map<String, Object> model, HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+
+        LixiOrder order = null;
+        // order already created
+        Long orderId = (Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if (orderId != null) {
+            
+            order = this.lxorderService.findById(orderId);
+        }
+        else{
+            
+            // order not exist, go to Choose recipient page
+            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+        }
+        
+        // calculate fee
+        calculateFee(model, order);
+        
         return new ModelAndView("giftprocess/place-order");
     }
     
@@ -873,6 +931,7 @@ public class CheckOutController {
      * @param request
      * @return 
      */
+    
     @RequestMapping(value = "place-order/settings/{setting}", method = RequestMethod.GET)
     public ModelAndView settings(@PathVariable Integer setting, HttpServletRequest request){
         
@@ -931,10 +990,12 @@ public class CheckOutController {
             
             // save setting
             order.setSetting(setting);
+            // modified date
+            order.setModifiedDate(Calendar.getInstance().getTime());
             
             this.lxorderService.save(order);
             
-            // jump
+            // jump to thank you page
             return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
         }
         else{
