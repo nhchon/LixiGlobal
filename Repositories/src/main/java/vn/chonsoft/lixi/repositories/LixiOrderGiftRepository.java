@@ -27,6 +27,8 @@ public interface LixiOrderGiftRepository extends JpaRepository<LixiOrderGift, Lo
     
     Long deleteByOrderAndProductId(LixiOrder order, int productId);
     
+    Long deleteByOrderAndRecipient(LixiOrder order, Recipient recipient);
+    
     List<LixiOrderGift> findByOrderAndRecipient(LixiOrder order, Recipient recipient);
     
     LixiOrderGift findByIdAndOrder(Long id, LixiOrder order);

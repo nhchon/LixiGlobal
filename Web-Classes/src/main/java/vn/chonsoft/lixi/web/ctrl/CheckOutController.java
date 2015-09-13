@@ -41,6 +41,7 @@ import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiFeeService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
@@ -61,6 +62,9 @@ public class CheckOutController {
     private static final Logger log = LogManager.getLogger(CheckOutController.class);
     
     @Inject
+    private RecipientService reciService;
+    
+    @Inject
     private UserService userService;
     
     @Inject
@@ -71,6 +75,9 @@ public class CheckOutController {
     
     @Inject
     private LixiOrderService lxorderService;
+
+    @Inject
+    private LixiOrderGiftService lxogiftService;
     
     @Inject
     private RecipientService recService;
@@ -923,6 +930,36 @@ public class CheckOutController {
         return new ModelAndView("giftprocess/place-order");
     }
     
+    @RequestMapping(value = "deleteReceiver/{recId}", method = RequestMethod.GET)
+    public ModelAndView placeOrder(Map<String, Object> model, @PathVariable Long recId, HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+        
+        LixiOrder order = null;
+        // order already created
+        Long orderId = (Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if (orderId != null) {
+            
+            order = this.lxorderService.findById(orderId);
+        }
+        else{
+            
+            // order not exist, go to Choose recipient page
+            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+        }
+        
+        Recipient rec = this.reciService.findById(recId);
+        // delete recipient
+        this.lxogiftService.deleteByOrderAndRecipient(order, rec);
+        
+        // jump
+        return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
+    }
     /**
      * 
      * Set setting: gift only or allow refund

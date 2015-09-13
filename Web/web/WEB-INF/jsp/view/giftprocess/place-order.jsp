@@ -96,7 +96,16 @@
                 });
             }
             
-            
+            /**
+             * 
+             * @param {type} recId
+             * @returns {undefined}
+             */
+            function deleteRecever(recId){
+                if(confirm('<spring:message code="message.delete_receiver"/>')){
+                    document.location.href = "<c:url value="/checkout/deleteReceiver/"/>" + recId;
+                }
+            }
         </script>
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/billingAddress.js"/>"></script>
     </jsp:attribute>
@@ -123,7 +132,7 @@
                                         <td style="max-width: 250px;"><spring:message code="order.send_to"/></td>
                                         <td>${entry.key.firstName}&nbsp;${entry.key.middleName}&nbsp;${entry.key.lastName}</td>
                                         <td style="text-align: right;">
-                                            <a href="<c:url value="/gifts/more-recipient"/>"><i class="fa fa-pencil"></i> Change</a>
+                                            <a href="javascript:deleteRecever(${entry.key.id})"><i class="fa fa-pencil"></i> Delete</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -163,8 +172,9 @@
                                                             ${g.productName}
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             ${g.productQuantity} x <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
+                                                            &nbsp;=&nbsp;<fmt:formatNumber value="${g.productQuantity * g.productPrice}" pattern="###,###.##"/> VND
                                                             <fmt:formatNumber var="itemInUSD"  value="${(g.productPrice * g.productQuantity) / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> 
-                                                            = ${itemInUSD} USD
+                                                            or ${itemInUSD} USD
                                                         </td>
                                                         <td style="text-align: right"><a href="<c:url value="/gifts/more-recipient"/>"><i class="fa fa-pencil"></i> Change</a></td>
                                                     </tr>
@@ -235,7 +245,7 @@
                                 </tr>
                             </table>
                         </div>
-                        </c:if>
+                        
                         <form action="${pageContext.request.contextPath}/checkout/place-order" method="post">
                         <div class="info-bound" style="padding-top:0px; padding-bottom: 0px;">
                             <table class="table" style="margin-bottom: 0px;">
@@ -275,6 +285,7 @@
                         </div>
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         </form>
+                        </c:if>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                 </div>

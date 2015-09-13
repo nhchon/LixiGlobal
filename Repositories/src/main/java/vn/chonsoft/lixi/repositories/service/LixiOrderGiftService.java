@@ -28,7 +28,9 @@ public interface LixiOrderGiftService {
     void delete(Long id);
     
     void deleteByOrderAndProductId(LixiOrder order, int productId);
-            
+    
+    Long deleteByOrderAndRecipient(LixiOrder order, Recipient recipient);
+    
     List<LixiOrderGift> findByOrderAndRecipient(LixiOrder order, Recipient recipient);
     
     LixiOrderGift findById(Long id);
