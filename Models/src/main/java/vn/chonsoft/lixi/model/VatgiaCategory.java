@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -34,6 +35,12 @@ public class VatgiaCategory implements Serializable {
     @Column(name = "title")
     private String title;
     
+    @Column(name = "activated")
+    private Integer activated;
+
+    @Column(name = "sort_order")
+    private Integer sortOrder;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vatgiaId", fetch = FetchType.EAGER)
     private List<LixiCategory> lixiCategories;
 
@@ -44,9 +51,11 @@ public class VatgiaCategory implements Serializable {
         this.id = id;
     }
 
-    public VatgiaCategory(Integer id, String title) {
+    public VatgiaCategory(Integer id, String title, Integer activated, Integer sortOrder) {
         this.id = id;
         this.title = title;
+        this.activated = activated;
+        this.sortOrder = sortOrder;
     }
 
     public Integer getId() {
@@ -63,6 +72,22 @@ public class VatgiaCategory implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Integer getActivated() {
+        return activated;
+    }
+
+    public void setActivated(Integer activated) {
+        this.activated = activated;
+    }
+
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public List<LixiCategory> getLixiCategories() {
@@ -98,4 +123,21 @@ public class VatgiaCategory implements Serializable {
         return "vn.chonsoft.lixi.model.VatgiaCategory[ id=" + id + " ]";
     }
     
+    /**
+     * 
+     */
+    public static Comparator<VatgiaCategory> VatgiaCategoryComparator = new Comparator<VatgiaCategory>(){
+        
+        @Override
+        public int compare(VatgiaCategory v1, VatgiaCategory v2){
+            
+            // order by activated desc and sort_order asc
+            if(v2.getActivated().compareTo(v1.getActivated()) == 0){
+                return v1.getSortOrder().compareTo(v2.getSortOrder());
+            }
+            else{
+                return v2.getActivated().compareTo(v1.getActivated());
+            }
+        }
+    };
 }

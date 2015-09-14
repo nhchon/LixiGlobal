@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.inject.Inject;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiCategory;
@@ -48,6 +49,19 @@ public class LixiCategoryServiceImpl implements LixiCategoryService{
     public List<LixiCategory> findByLocaleCode(String code){
         
         return this.lxcRepository.findByLocale_Code(code);
+        
+    }
+    
+    /**
+     * 
+     * @param code
+     * @param sort
+     * @return 
+     */
+    @Override
+    public List<LixiCategory> findByLocaleCode(String code, Sort sort){
+        
+        return this.lxcRepository.findByLocale_Code(code, sort);
         
     }
     

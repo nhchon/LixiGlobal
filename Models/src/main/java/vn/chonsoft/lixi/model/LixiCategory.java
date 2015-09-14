@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -41,6 +42,12 @@ public class LixiCategory implements Serializable {
     @Basic
     @Column(name = "icon")
     private String icon;
+    
+    @Column(name = "activated")
+    private Integer activated;
+
+    @Column(name = "sort_order")
+    private Integer sortOrder;
     
     @Basic(optional = false)
     @Column(name = "created_date")
@@ -102,6 +109,22 @@ public class LixiCategory implements Serializable {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public Integer getActivated() {
+        return activated;
+    }
+
+    public void setActivated(Integer activated) {
+        this.activated = activated;
+    }
+
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public Date getCreatedDate() {

@@ -12,6 +12,9 @@ public abstract class LiXiConstants {
     
     public static final String SYSTEM_AUTO = "SYSTEM_AUTO";
     
+    public static final int LIXI_NON_ACTIVATED = 0;
+    public static final int LIXI_ACTIVATED = 1;
+    
     public static final int LIXI_ORDER_UNFINISHED = -2;
     public static final int LIXI_ORDER_NOT_YET_SUBMITTED = -1;
     public static final int LIXI_ORDER_SUBMITTED = 0;

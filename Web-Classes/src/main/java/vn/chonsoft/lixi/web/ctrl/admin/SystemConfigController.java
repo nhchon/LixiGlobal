@@ -8,6 +8,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -208,7 +209,9 @@ public class SystemConfigController {
 
             }
         }
-
+        // sort vat gia category
+        Collections.sort(vgcs, VatgiaCategory.VatgiaCategoryComparator);
+        
         // 
         model.put("VATGIA_CATEGORIES", vgcs);
         model.put("SUPPORT_LOCALE", this.slService.findAll());
@@ -233,7 +236,9 @@ public class SystemConfigController {
         VatgiaCategory vgc = new VatgiaCategory();
         vgc.setId(Integer.parseInt(request.getParameter("vgId")));
         vgc.setTitle(request.getParameter("vgName"));
-
+        vgc.setActivated(LiXiConstants.LIXI_ACTIVATED);
+        Integer sortOrder = Integer.parseInt(request.getParameter("sortOrder"));
+        vgc.setSortOrder(sortOrder);
         //
         List<SupportLocale> sls = this.slService.findAll();
         List<LixiCategory> lixiCategories = new ArrayList<>();
@@ -257,6 +262,8 @@ public class SystemConfigController {
             
             lxc.setLocale(sl);
             lxc.setName(name);
+            lxc.setActivated(LiXiConstants.LIXI_ACTIVATED);
+            lxc.setSortOrder(sortOrder);
             
             // handle upload icon
             // gets absolute path of the web application
@@ -335,7 +342,16 @@ public class SystemConfigController {
     public ModelAndView deleteCategory(@PathVariable("id") Integer id){
         
         //
-        this.vgcService.delete(id);
+        VatgiaCategory vgc = this.vgcService.findOne(id);
+        
+        // update non activated status
+        vgc.setActivated(LiXiConstants.LIXI_NON_ACTIVATED);
+        
+        for(LixiCategory lxc : vgc.getLixiCategories()){
+            lxc.setActivated(LiXiConstants.LIXI_NON_ACTIVATED);
+        }
+        
+        this.vgcService.save(vgc);
         //
         return new ModelAndView(new RedirectView("/Administration/SystemConfig/categories", true, true));
     }

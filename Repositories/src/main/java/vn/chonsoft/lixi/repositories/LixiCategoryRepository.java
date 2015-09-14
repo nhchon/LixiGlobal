@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.repositories;
 
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +20,8 @@ import vn.chonsoft.lixi.model.LixiCategory;
 public interface LixiCategoryRepository extends JpaRepository<LixiCategory, Integer>{
     
     List<LixiCategory> findByLocale_Code(String code);
+    
+    List<LixiCategory> findByLocale_Code(String code, Sort sort);
     
     @Modifying
     @Transactional

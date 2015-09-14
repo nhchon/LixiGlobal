@@ -387,7 +387,9 @@ public class GiftsController {
         if(selectedCatId == null || selectedCatId <= 0){
             
             // selecte default category from database
-            List<LixiCategory> categories = this.lxcService.findByLocaleCode(LocaleContextHolder.getLocale().toString());
+            Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "activated"), 
+                                new Sort.Order(Sort.Direction.ASC, "sortOrder"));
+            List<LixiCategory> categories = this.lxcService.findByLocaleCode(LocaleContextHolder.getLocale().toString(), sort);
             // use the first category
             selectedCatId = categories.get(0).getId();
         }
@@ -442,8 +444,10 @@ public class GiftsController {
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
-
-        List<LixiCategory> categories = this.lxcService.findByLocaleCode(LocaleContextHolder.getLocale().toString());
+        // sort categories
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "activated"), 
+                            new Sort.Order(Sort.Direction.ASC, "sortOrder"));
+        List<LixiCategory> categories = this.lxcService.findByLocaleCode(LocaleContextHolder.getLocale().toString(), sort);
 
         log.info(categories.size());
 

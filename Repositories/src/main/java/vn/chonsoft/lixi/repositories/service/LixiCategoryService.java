@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.LixiCategory;
 
@@ -21,6 +22,8 @@ public interface LixiCategoryService {
     List<LixiCategory> findAll();
     
     List<LixiCategory> findByLocaleCode(String code);
+    
+    List<LixiCategory> findByLocaleCode(String code, Sort sort);
     
     LixiCategory findById(Integer id);
     

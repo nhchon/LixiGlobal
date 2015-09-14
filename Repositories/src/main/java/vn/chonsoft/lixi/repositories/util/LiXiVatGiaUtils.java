@@ -89,7 +89,7 @@ public class LiXiVatGiaUtils {
      */
     public VatgiaCategory convertFromPojo2Model(VatGiaCategoryPj vgcpojo){
         
-        return new VatgiaCategory(vgcpojo.getId(), vgcpojo.getTitle());
+        return new VatgiaCategory(vgcpojo.getId(), vgcpojo.getTitle(), 0, 9999);
         
     }
     
@@ -106,7 +106,7 @@ public class LiXiVatGiaUtils {
         
         for(VatGiaCategoryPj vgcpojo : vgcpojos.getData()){
             
-            VatgiaCategory vgc = new VatgiaCategory(vgcpojo.getId(), vgcpojo.getTitle());
+            VatgiaCategory vgc = new VatgiaCategory(vgcpojo.getId(), vgcpojo.getTitle(), 0, 9999);
             
             vgcs.add(vgc);
             

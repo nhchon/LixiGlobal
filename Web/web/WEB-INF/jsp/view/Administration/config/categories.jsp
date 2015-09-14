@@ -68,10 +68,11 @@
                             <tr>
                                 <th></th>
                                 <th><spring:message code="message.vat_gia_category_name"/></th>
-                                    <c:forEach items="${SUPPORT_LOCALE}" var="sl">
+                                <c:forEach items="${SUPPORT_LOCALE}" var="sl">
                                     <th>${sl.name}</th>
                                     <td></td>
-                                    </c:forEach>
+                                </c:forEach>
+                                <th>Sort Order</th>    
                                 <th><!-- Submit button --></th>
                             </tr>
                         </thead>
@@ -104,8 +105,9 @@
                                             </c:forEach>
                                                 
                                         </c:if>
+                                                <td><input type="number" class="form-control" value="${vg.sortOrder}" name="sortOrder"/></td>        
                                         <td><button class="btn btn-primary" type="submit" onclick="return validateCategoryName(${vg.id});">Save</button>
-                                            <c:if test="${not empty vg.lixiCategories}">
+                                            <c:if test="${vg.activated eq 1}">
                                                 <button class="btn btn-warning" type="button" onclick="deleteCategory(${vg.id});">Delete</button>
                                             </c:if>
                                         </td>    
