@@ -19,6 +19,9 @@ public abstract class LiXiConstants {
     public static final int LIXI_ORDER_NOT_YET_SUBMITTED = -1;
     public static final int LIXI_ORDER_SUBMITTED = 0;
     public static final int LIXI_ORDER_GIFT_NOT_SUBMITTED = -1;
+    
+    // MOBILE TOP UP
+    public static final String PHONE_COMPANIES = "PHONE_COMPANIES";
     // FEE
     public static final String LIXI_HANDLING_FEE_TOTAL = "LIXI_HANDLING_FEE_TOTAL";
     public static final String LIXI_HANDLING_FEE = "LIXI_HANDLING_FEE";

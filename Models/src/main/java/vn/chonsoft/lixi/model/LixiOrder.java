@@ -75,6 +75,12 @@ public class LixiOrder implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "order")
     private List<LixiOrderGift> gifts;
     
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    private List<BuyPhoneCard> buyPhoneCards;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    private List<TopUpMobilePhone> topUpMobilePhones;
+    
     public LixiOrder() {
     }
 
@@ -202,6 +208,22 @@ public class LixiOrder implements Serializable {
     @Override
     public String toString() {
         return "vn.chonsoft.lixi.model.LixiOrder[ id=" + id + " ]";
+    }
+
+    public List<BuyPhoneCard> getBuyPhoneCards() {
+        return buyPhoneCards;
+    }
+
+    public void setBuyPhoneCards(List<BuyPhoneCard> buyPhoneCards) {
+        this.buyPhoneCards = buyPhoneCards;
+    }
+
+    public List<TopUpMobilePhone> getTopUpMobilePhones() {
+        return topUpMobilePhones;
+    }
+
+    public void setTopUpMobilePhones(List<TopUpMobilePhone> topUpMobilePhones) {
+        this.topUpMobilePhones = topUpMobilePhones;
     }
     
 }

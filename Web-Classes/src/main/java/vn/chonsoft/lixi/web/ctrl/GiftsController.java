@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
@@ -444,12 +443,11 @@ public class GiftsController {
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
+        
         // sort categories
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "activated"), 
                             new Sort.Order(Sort.Direction.ASC, "sortOrder"));
         List<LixiCategory> categories = this.lxcService.findByLocaleCode(LocaleContextHolder.getLocale().toString(), sort);
-
-        log.info(categories.size());
 
         Map<String, Object> model = new HashMap<>();
 

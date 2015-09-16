@@ -150,7 +150,7 @@
                                     <ul class="list-group">
                                         <li class="list-group-item">
                                             <div class="radio" style="text-align: center;">
-                                                <a href="#">
+                                                <a href="<c:url value="/topUp"/>">
                                                     <img  width="125" height="161"  src="<c:url value="/resource/theme/assets/lixiglobal/img/mobile.minutes.jpg"/>" />
                                                     <br/>
                                                     Top up mobile minutes
