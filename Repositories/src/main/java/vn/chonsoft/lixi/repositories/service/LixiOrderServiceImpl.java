@@ -65,6 +65,12 @@ public class LixiOrderServiceImpl implements LixiOrderService{
             // make sure load gifts
             order.getGifts().size();
             
+            // top up
+            order.getTopUpMobilePhones().size();
+            
+            // phone card
+            order.getBuyPhoneCards().size();
+            
             // exchange rate
             order.getLxExchangeRate();
             

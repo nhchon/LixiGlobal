@@ -5,10 +5,18 @@
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/recipient.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
+            var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
+            var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
+            var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
+            var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
+            var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
+            var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>'
+            
             $(document).ready(function () {
-                
+
                 // default show/hide panels
                 $('#topUpPanel').show();
                 $('#buyCardPanel').hide();
@@ -16,17 +24,74 @@
                 $('#myTabs a').click(function (e) {
                     e.preventDefault()
                     $(this).tab('show')
-                    if($(this).attr('id') === 'buyCardTab'){
+                    if ($(this).attr('id') === 'buyCardTab') {
                         $('#buyCardPanel').show();
                         $('#topUpPanel').hide();
                     }
                     else
-                        if($(this).attr('id') === 'topUpTab'){
-                            $('#topUpPanel').show();
-                            $('#buyCardPanel').hide();
-                        }
+                    if ($(this).attr('id') === 'topUpTab') {
+                        $('#topUpPanel').show();
+                        $('#buyCardPanel').hide();
+                    }
                 })
+                // check exceed on amount topup
+                $('#amountTopUp').change(function(){
+                    checkTopUpExceed($(this).val());
+                });
             });
+
+            function checkTopUpExceed(amount){
+                if(amount === ''){
+                    $('#topUpInVND').val('');
+                }
+                else{
+                    $.ajax({
+                        url : '<c:url value="/topUp/checkTopUpExceed"/>' + '/'+amount,
+                        type: "get",
+                        dataType: 'json',
+                        success:function(data, textStatus, jqXHR) 
+                        {
+                            if(data.exceed == '1'){
+                                $('#divError').remove();
+                                $('#topUpPanelBody').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
+                                alert(data.message);
+                                // disable submit buttons
+                                disableTopUpSubmitButtons(true);
+                            }else{
+                                // no exceed, remove error
+                                $('#divError').remove();
+                                // update current payment
+                                $('#currentPaymentVND').html(data.CURRENT_PAYMENT_VND);
+                                $('#currentPaymentUSD').html(data.CURRENT_PAYMENT_USD);
+                                //
+                                disableTopUpSubmitButtons(false);
+                            }
+                            $('#topUpInVND').val(data.TOP_UP_IN_VND + " VND");
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) 
+                        { 
+                            //alert(errorThrown);
+                            //alert('Đã có lỗi, vui lòng thử lại !'); 
+                        }    
+                    });
+                }
+            }
+            
+            /**
+             * 
+             * @returns {undefined}             
+             *
+             */
+            function disableTopUpSubmitButtons(enable){
+                $('#btnTopUpKeepShooping').prop('disabled', enable);
+                $('#btnTopUpBuyNow').prop('disabled', enable);
+            }
+            
+            function editRecipient(){
+                $.get( '<c:url value="/topUp/editRecipient"/>', function( data ) {
+                    enableEditRecipientHtmlContent(data)               
+                });
+            }
 
         </script>
     </jsp:attribute>
@@ -76,16 +141,16 @@
                                         <div class="col-md-12">
                                             <%-- Top up mobile phone --%>
                                             <div id="topUpPanel" class="panel panel-default" style="border-top: none;">
-                                                <div class="panel-body">
+                                                <div class="panel-body" id="topUpPanelBody">
 
                                                     <form class="form-horizontal" role="form">
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="email">Amount you want to top up</label>
                                                             <div class="col-sm-7">
-                                                                
+
                                                                 <div class="row">
                                                                     <div class="col-lg-10" style="padding-right: 0px;">
-                                                                        <input type="number" min="10" class="form-control" value="10"/>
+                                                                        <input type="number" name="amountTopUp" id="amountTopUp" min="10" class="form-control" placeholder="10" title="Min is $10"/>
                                                                     </div>
                                                                     <div class="col-lg-2" style="padding-left: 0px;">
                                                                         <input type="text" class="form-control" value="USD" readonly=""/>
@@ -105,26 +170,22 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="pwd">Top up in VND</label>
                                                             <div class="col-sm-7"> 
-                                                                <input type="text" class="form-control" value="<fmt:formatNumber value="${10 * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> VND" readonly="">
+                                                                <input type="text" name="topUpInVND" id="topUpInVND" class="form-control" placeholder="<fmt:formatNumber value="${10 * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> VND" readonly="">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <div class="col-lg-5 col-md-5">
-                                                                <label class="control-label"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
-                                                            </div>
-                                                            <div class="col-lg-7 col-md-7">
+                                                            <label class="control-label col-sm-5"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
+                                                            <div class="col-sm-7">
                                                                 <div class="row">
-                                                                    <div class="col-lg-3" style="padding-right: 0px;">
-                                                                        <select class="form-control" id="iso2Code">
-                                                                            <option value="VN">VN</option>
-                                                                        </select>
+                                                                    <div class="col-sm-2" style="padding-right: 0px;">
+                                                                        <input type="text" name="recDialCode" class="form-control" value="${SELECTED_RECIPIENT.dialCode}" readonly="" style="padding: 6px;"/>
                                                                     </div>
-                                                                    <div class="col-lg-2" style="padding-left: 0px; padding-right: 0px;">
-                                                                        <input type="text" name="dialCode" class="form-control" value="+84" readonly="" style="padding: 6px;"/>
-                                                                    </div>
-                                                                    <div class="col-lg-7" style="padding-left: 0px;">
-                                                                        <input type="text" name="phone" class="form-control"/>
+                                                                    <div class="col-sm-7" style="padding-left: 0px;padding-right: 0px;">
+                                                                        <input type="text" id="recPhone" name="recPhone" class="form-control" readonly="" value="${SELECTED_RECIPIENT.phone}"/>
                                                                         <span class="help-block errors"></span>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <button type="button" class="btn btn-default" onclick="editRecipient();">Change</button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -134,14 +195,14 @@
                                                         </div>
                                                         <div class="form-group"> 
                                                             <div class="col-sm-offset-2 col-sm-10">
-                                                                <button type="submit" class="btn btn-primary">Keep Shopping</button>
-                                                                <button type="submit" class="btn btn-primary">Buy Now</button>
+                                                                <button id="btnTopUpKeepShooping" type="submit" class="btn btn-primary">Keep Shopping</button>
+                                                                <button id="btnTopUpBuyNow" type="submit" class="btn btn-primary">Buy Now</button>
                                                             </div>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
-                                            
+
                                             <%-- Buy Phone Card --%>
                                             <div id="buyCardPanel" class="panel panel-default" style="border-top: none;">
                                                 <div class="panel-body">
@@ -190,14 +251,11 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="pwd">Email of receiver of card</label>
-                                                            <div class="col-sm-7"> 
-                                                                <input type="text" class="form-control" value="timothy@gmail.com" readonly="">
+                                                            <div class="col-sm-5" style="padding-right: 0px;">
+                                                                <input type="text" class="form-control" value="timothy@gmail.com" readonly=""/>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label col-sm-5" for="pwd">Type in email again</label>
-                                                            <div class="col-sm-7"> 
-                                                                <input type="text" class="form-control" value="timothy@gmail.com">
+                                                            <div class="col-sm-2"> 
+                                                                <button type="button" class="btn btn-default" onclick="editRecipient();">&nbsp;Change&nbsp; </button>
                                                             </div>
                                                         </div>
                                                         <div class="form-group"> 
@@ -209,6 +267,27 @@
                                                     </form>
                                                 </div>
                                             </div>
+                                            
+                                            <%-- current payment --%>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="row">
+                                                        <div class="col-lg-8">Your maximum payment amount:</div>
+                                                        <div class="col-lg-4" style="padding-left: 0px;text-align: right;">
+                                                            <strong><fmt:formatNumber value="${USER_MAXIMUM_PAYMENT.amount * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/>&nbsp;VND</strong>
+                                                            <br/>
+                                                            <strong><fmt:formatNumber value="${USER_MAXIMUM_PAYMENT.amount}" pattern="###,###.##"/>&nbsp;${USER_MAXIMUM_PAYMENT.code}</strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="pull-right">
+                                                        Current payment: <strong><span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span> VND</strong>
+                                                        <br/>
+                                                        <div class="pull-right"><strong><span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT / LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></span> USD</strong></div>
+                                                    </div>
+                                                </div>
+                                            </div>                                        
                                         </div>
                                     </div>
                                 </div>
@@ -219,5 +298,12 @@
                 </div>
             </div>
         </section>
+        <!-- Billing Address Modal -->
+        <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" id="editRecipientContent">
+                </div>
+            </div>
+        </div>
     </jsp:body>
 </template:Client>

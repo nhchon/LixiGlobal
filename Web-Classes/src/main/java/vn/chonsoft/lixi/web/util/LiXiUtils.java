@@ -21,9 +21,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import vn.chonsoft.lixi.model.BuyPhoneCard;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.model.pojo.Exrate;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -108,6 +110,59 @@ public abstract class LiXiUtils {
         else
             return alreadyGift.getId();
     }
+
+    /**
+     * 
+     * Calculate total money, in VND, exclude specific id of the type of gift (gift,top up, card)
+     * 
+     * @param order
+     * @param excludeId
+     * @param type
+     * @return 
+     */
+    public static double calculateCurrentPayment(LixiOrder order, long excludeId, String type){
+        
+        if(order == null) return 0;
+        
+        double sum = 0;
+        // gift type
+        if(order.getGifts() != null){
+            for(LixiOrderGift gift : order.getGifts()){
+
+                if(LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() != excludeId){
+                    sum += (gift.getProductPrice() * gift.getProductQuantity());
+                }
+
+            }
+        }
+        // get exchange rate
+        double buy = order.getLxExchangeRate().getBuy();
+        
+        // top up mobile phone
+        if(order.getTopUpMobilePhones() != null){
+            for(TopUpMobilePhone topUp : order.getTopUpMobilePhones()){
+
+                if(LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() != excludeId){
+                    sum += (topUp.getAmount() * buy);
+                }
+
+            }
+        }
+        // buy phone card
+        if(order.getBuyPhoneCards() != null){
+            for(BuyPhoneCard card : order.getBuyPhoneCards()){
+
+                if(LiXiConstants.LIXI_PHONE_CARD_TYPE.equals(type) && card.getId() != excludeId){
+                    sum += (card.getNumOfCard() * card.getValueOfCard());
+                }
+
+            }
+        }
+        // return total
+        return sum;
+                
+    }
+    
     /**
      * 
      * sum order, in VND
@@ -118,20 +173,7 @@ public abstract class LiXiUtils {
      */
     public static double calculateCurrentPayment(LixiOrder order, long excludeOrderGift){
         
-        if(order == null) return 0;
-        
-        double sum = 0;
-        
-        if(order.getGifts() != null){
-            for(LixiOrderGift gift : order.getGifts()){
-
-                if(gift.getId() != excludeOrderGift){
-                    sum += (gift.getProductPrice() * gift.getProductQuantity());
-                }
-
-            }
-        }
-        return sum;
+        return calculateCurrentPayment(order, excludeOrderGift, LiXiConstants.LIXI_GIFT_TYPE);
                 
     }
     

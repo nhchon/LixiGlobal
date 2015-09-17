@@ -19,9 +19,14 @@ public abstract class LiXiConstants {
     public static final int LIXI_ORDER_NOT_YET_SUBMITTED = -1;
     public static final int LIXI_ORDER_SUBMITTED = 0;
     public static final int LIXI_ORDER_GIFT_NOT_SUBMITTED = -1;
-    
+    // TYPE
+    public static final String LIXI_GIFT_TYPE = "LIXI_GIFT_TYPE";
+    public static final String LIXI_TOP_UP_TYPE = "LIXI_TOP_UP_TYPE";
+    public static final String LIXI_PHONE_CARD_TYPE = "LIXI_PHONE_CARD_TYPE";
     // MOBILE TOP UP
     public static final String PHONE_COMPANIES = "PHONE_COMPANIES";
+    public static final String TOP_UP_IN_VND = "TOP_UP_IN_VND";
+    public static final String TOP_UP_AMOUNT = "TOP_UP_AMOUNT";
     // FEE
     public static final String LIXI_HANDLING_FEE_TOTAL = "LIXI_HANDLING_FEE_TOTAL";
     public static final String LIXI_HANDLING_FEE = "LIXI_HANDLING_FEE";
@@ -42,6 +47,7 @@ public abstract class LiXiConstants {
     public static final String CURRENT_PAYMENT_USD = "CURRENT_PAYMENT_USD";
     
     // current recipient
+    public static final String SELECTED_RECIPIENT = "SELECTED_RECIPIENT";
     public static final String SELECTED_RECIPIENT_ID = "SELECTED_RECIPIENT_ID";
     public static final String SELECTED_RECIPIENT_IDS = "SELECTED_RECIPIENT_IDS";
     public static final String SELECTED_RECIPIENT_NAME = "SELECTED_RECIPIENT_NAME";
