@@ -30,7 +30,7 @@ public class VtcServiceCode implements Serializable {
     private Long id;
     
     @Basic(optional = false)
-    @Column(name = "code")
+    @Column(name = "code", unique = true)
     private String code;
     
     @Column(name = "code_type")

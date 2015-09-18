@@ -129,7 +129,10 @@ public abstract class LiXiUtils {
         if(order.getGifts() != null){
             for(LixiOrderGift gift : order.getGifts()){
 
-                if(LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() != excludeId){
+                if(LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() == excludeId){
+                    // Nothing
+                }
+                else{
                     sum += (gift.getProductPrice() * gift.getProductQuantity());
                 }
 
@@ -142,7 +145,9 @@ public abstract class LiXiUtils {
         if(order.getTopUpMobilePhones() != null){
             for(TopUpMobilePhone topUp : order.getTopUpMobilePhones()){
 
-                if(LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() != excludeId){
+                if(LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() == excludeId){
+                }
+                else{
                     sum += (topUp.getAmount() * buy);
                 }
 
@@ -152,7 +157,10 @@ public abstract class LiXiUtils {
         if(order.getBuyPhoneCards() != null){
             for(BuyPhoneCard card : order.getBuyPhoneCards()){
 
-                if(LiXiConstants.LIXI_PHONE_CARD_TYPE.equals(type) && card.getId() != excludeId){
+                if(LiXiConstants.LIXI_PHONE_CARD_TYPE.equals(type) && card.getId() == excludeId){
+                    // nothing
+                }
+                else{
                     sum += (card.getNumOfCard() * card.getValueOfCard());
                 }
 

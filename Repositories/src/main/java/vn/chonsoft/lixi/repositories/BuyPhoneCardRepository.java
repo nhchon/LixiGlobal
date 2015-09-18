@@ -5,13 +5,12 @@
 package vn.chonsoft.lixi.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import vn.chonsoft.lixi.model.VtcServiceCode;
+import vn.chonsoft.lixi.model.BuyPhoneCard;
 
 /**
  *
  * @author chonnh
  */
-public interface VtcServiceCodeRepository  extends  JpaRepository<VtcServiceCode, Long>{
+public interface BuyPhoneCardRepository  extends JpaRepository<BuyPhoneCard, Long>{
     
-    VtcServiceCode findByCode(String code);
 }

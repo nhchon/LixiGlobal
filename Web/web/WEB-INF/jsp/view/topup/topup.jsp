@@ -18,8 +18,14 @@
             $(document).ready(function () {
 
                 // default show/hide panels
+                <c:if test="${empty TOPUP_ACTION or TOPUP_ACTION eq 'MOBILE_MINUTE'}">
                 $('#topUpPanel').show();
                 $('#buyCardPanel').hide();
+                </c:if>
+                <c:if test="${TOPUP_ACTION eq 'PHONE_CARD'}">
+                $('#topUpPanel').hide();
+                $('#buyCardPanel').show();
+                </c:if>
                 //
                 $('#myTabs a').click(function (e) {
                     e.preventDefault()
@@ -112,7 +118,7 @@
                                     <ul class="list-group">
                                         <li class="list-group-item active">
                                             <div class="radio" style="text-align: center;">
-                                                <a href="#">
+                                                <a href="<c:url value="/topUp"/>">
                                                     <img  width="125" height="161"  src="<c:url value="/resource/theme/assets/lixiglobal/img/mobile.minutes.jpg"/>" />
                                                     <br/>
                                                     Top up mobile minutes
@@ -134,16 +140,29 @@
                                 </div>
                                 <div class="col-md-9">
                                     <ul id="myTabs" class="nav nav-tabs">
-                                        <li role="presentation" class="active"><a id="topUpTab" href="#">Top Up Mobile Phone</a></li>
-                                        <li role="presentation"><a id="buyCardTab" href="#">Buy Phone Card</a></li>
+                                        <li role="presentation" <c:if test="${empty TOPUP_ACTION or TOPUP_ACTION eq 'MOBILE_MINUTE'}"> class="active"</c:if>><a id="topUpTab" href="#">Top Up Mobile Phone</a></li>
+                                        <li role="presentation" <c:if test="${TOPUP_ACTION eq 'PHONE_CARD'}"> class="active"</c:if>><a id="buyCardTab" href="#">Buy Phone Card</a></li>
                                     </ul>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <%-- Top up mobile phone --%>
                                             <div id="topUpPanel" class="panel panel-default" style="border-top: none;">
                                                 <div class="panel-body" id="topUpPanelBody">
-
-                                                    <form class="form-horizontal" role="form">
+                                                    <c:if test="${topUpExceed eq 1}">
+                                                        <div class="msg msg-error" id="divError">
+                                                            <spring:message code="validate.top_up_exceeded">
+                                                                <spring:argument value="${TOP_UP_AMOUNT}"/>
+                                                                <spring:argument value="${EXCEEDED_VND}"/>
+                                                                <spring:argument value="${EXCEEDED_USD}"/>
+                                                            </spring:message>
+                                                        </div>
+                                                    </c:if>
+                                                    <c:if test="${addSuccess eq 1}">
+                                                        <div class="alert alert-success" role="alert">
+                                                            Top Up Mobile Minute is success
+                                                        </div>
+                                                    </c:if>
+                                                    <form class="form-horizontal" role="form" method="post" action="${pageContext.request.contextPath}/topUp/topUpMobilePhone">
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="email">Amount you want to top up</label>
                                                             <div class="col-sm-7">
@@ -153,7 +172,7 @@
                                                                         <input type="number" name="amountTopUp" id="amountTopUp" min="10" class="form-control" placeholder="10" title="Min is $10"/>
                                                                     </div>
                                                                     <div class="col-lg-2" style="padding-left: 0px;">
-                                                                        <input type="text" class="form-control" value="USD" readonly=""/>
+                                                                        <input type="text" class="form-control" value="USD" readonly="" name="currency"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -195,6 +214,8 @@
                                                         </div>
                                                         <div class="form-group"> 
                                                             <div class="col-sm-offset-2 col-sm-10">
+                                                                <input type="hidden" value="" name="action"/>
+                                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                                                 <button id="btnTopUpKeepShooping" type="submit" class="btn btn-primary">Keep Shopping</button>
                                                                 <button id="btnTopUpBuyNow" type="submit" class="btn btn-primary">Buy Now</button>
                                                             </div>
@@ -206,11 +227,22 @@
                                             <%-- Buy Phone Card --%>
                                             <div id="buyCardPanel" class="panel panel-default" style="border-top: none;">
                                                 <div class="panel-body">
-                                                    <form class="form-horizontal" role="form">
+                                                    <c:if test="${phoneCardExceed eq 1}">
+                                                        <div class="msg msg-error" id="divError">
+                                                            Error ! Exceeded
+                                                        </div>
+                                                    </c:if>
+                                                    <c:if test="${buySuccess eq 1}">
+                                                        <div class="alert alert-success" role="alert">
+                                                            Buying Phone Card is successful
+                                                        </div>
+                                                    </c:if>
+                                                    
+                                                    <form class="form-horizontal" role="form" method="post"  action="${pageContext.request.contextPath}/topUp/buyPhoneCard">
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="email">Select mobile phone company</label>
                                                             <div class="col-sm-7">
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="phoneCompany">
                                                                     <c:forEach items="${PHONE_COMPANIES}" var="p">
                                                                         <option value="${p.code}">${p.name}</option>
                                                                     </c:forEach>
@@ -220,16 +252,17 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="pwd">Number of card</label>
                                                             <div class="col-sm-7"> 
-                                                                <input type="number" min="1" max="5" class="form-control" value="1">
+                                                                <input name="numOfCard" type="number" min="1" max="5" class="form-control" value="1">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="email">Value of card</label>
                                                             <div class="col-sm-7">
-                                                                <select class="form-control">
+                                                                <select class="form-control" name="valueOfCard">
                                                                     <option value="100000">100,000 đ</option>
                                                                     <option value="200000">200,000 đ</option>
                                                                     <option value="300000">300,000 đ</option>
+                                                                    <option value="400000">400,000 đ</option>
                                                                     <option value="500000">500,000 đ</option>
                                                                 </select>
                                                             </div>
@@ -260,6 +293,7 @@
                                                         </div>
                                                         <div class="form-group"> 
                                                             <div class="col-sm-offset-2 col-sm-10">
+                                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                                                 <button type="submit" class="btn btn-primary">Keep Shopping</button>
                                                                 <button type="submit" class="btn btn-primary">Buy Now</button>
                                                             </div>

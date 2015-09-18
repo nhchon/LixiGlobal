@@ -4,18 +4,15 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
-import java.util.List;
 import org.springframework.validation.annotation.Validated;
-import vn.chonsoft.lixi.model.VtcServiceCode;
+import vn.chonsoft.lixi.model.BuyPhoneCard;
 
 /**
  *
  * @author chonnh
  */
 @Validated
-public interface VtcServiceCodeService {
+public interface BuyPhoneCardService {
     
-    List<VtcServiceCode> findAll();
-    
-    VtcServiceCode findByCode(String code);
+    BuyPhoneCard save(BuyPhoneCard buyCard);
 }

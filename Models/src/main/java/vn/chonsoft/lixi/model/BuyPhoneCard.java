@@ -54,6 +54,10 @@ public class BuyPhoneCard implements Serializable {
     @ManyToOne(optional = false)
     private LixiOrder order;
 
+    @JoinColumn(name = "recipient", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Recipient recipient;
+    
     public BuyPhoneCard() {
     }
 
@@ -114,6 +118,14 @@ public class BuyPhoneCard implements Serializable {
 
     public void setOrder(LixiOrder order) {
         this.order = order;
+    }
+
+    public Recipient getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(Recipient recipient) {
+        this.recipient = recipient;
     }
 
     @Override

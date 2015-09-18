@@ -19,6 +19,17 @@ public class VtcServiceCodeServiceImpl implements VtcServiceCodeService{
     
     @Inject
     private VtcServiceCodeRepository vtcServiceCodeService;
+
+    /**
+     * 
+     * @param code
+     * @return 
+     */
+    @Override
+    public VtcServiceCode findByCode(String code) {
+        
+        return this.vtcServiceCodeService.findByCode(code);
+    }
     
     /**
      * 
