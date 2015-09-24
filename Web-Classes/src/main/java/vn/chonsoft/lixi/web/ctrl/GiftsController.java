@@ -37,6 +37,7 @@ import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
 import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
@@ -508,7 +509,10 @@ public class GiftsController {
         model.put(LiXiConstants.PAGES, vgps);
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
-        model.put(LiXiConstants.CURRENT_PAYMENT, LiXiUtils.calculateCurrentPayment(order));
+        //
+        double[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0]);
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[1]);
         
         return new ModelAndView("giftprocess/type-of-gift-2", model);
 
@@ -762,7 +766,8 @@ public class GiftsController {
             
         }
         
-        double currentPayment = LiXiUtils.calculateCurrentPayment(order, orderGiftId);
+        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order, orderGiftId);
+        double currentPayment = currentPayments[1];//usd
         currentPayment += ((price * quantity) / buy);
 
         if (currentPayment > u.getUserMoneyLevel().getMoneyLevel().getAmount()) {
@@ -926,7 +931,8 @@ public class GiftsController {
             buy = lxExch.getBuy();
         }
         
-        double currentPayment = LiXiUtils.calculateCurrentPayment(order, LiXiUtils.getOrderGiftId(alreadyGift)); // in VND
+        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order, LiXiUtils.getOrderGiftId(alreadyGift)); // in VND
+        double currentPayment = currentPayments[0];//VND
         currentPayment += (price * quantity);// in VND
 
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount() * buy)) {
@@ -1057,7 +1063,7 @@ public class GiftsController {
         
         LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
 
-        Map<Recipient, List<LixiOrderGift>> recGifts = LiXiUtils.genMapRecGifts(order);
+        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
 
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
         model.put(LiXiConstants.LIXI_ORDER, order);
@@ -1146,7 +1152,8 @@ public class GiftsController {
         }
         // else
         double buy = order.getLxExchangeRate().getBuy();
-        double currentPayment = LiXiUtils.calculateCurrentPayment(order, lxogift.getId()); // in VND
+        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order, lxogift.getId()); // in VND
+        double currentPayment = currentPayments[0];//vnd
         currentPayment += (lxogift.getProductPrice() * quantity);
 
         // maximum payment is over
@@ -1203,7 +1210,7 @@ public class GiftsController {
         order.setLxExchangeRate(lxexrate);
         order = this.lxorderService.save(order);
 
-        Map<Recipient, List<LixiOrderGift>> recGifts = LiXiUtils.genMapRecGifts(order);
+        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
 
         model.put(LiXiConstants.LIXI_ORDER, order);
         model.put(LiXiConstants.REC_GIFTS, recGifts);

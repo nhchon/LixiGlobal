@@ -96,6 +96,19 @@ public class BuyPhoneCard implements Serializable {
         this.valueOfCard = valueOfCard;
     }
 
+    /**
+     *  for calculate total USD
+     * 
+     * @param exchange
+     * @return 
+     */
+    public double getValueInUSD(double exchange){
+        
+        double inUsd = getValueOfCard()/exchange +0.005;
+        
+        return Math.round(inUsd * 100.0) / 100.0;
+    }
+    
     public Date getModifiedDate() {
         return modifiedDate;
     }

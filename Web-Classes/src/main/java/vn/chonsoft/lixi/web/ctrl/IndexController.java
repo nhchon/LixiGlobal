@@ -35,6 +35,17 @@ public class IndexController {
 
     private static final Logger log = LogManager.getLogger(IndexController.class);
     
+    /**
+     *
+     * for common header content
+     *
+     * @return
+     */
+    @RequestMapping(value = "/test-round-up", method = {RequestMethod.GET, RequestMethod.POST})
+    public String testRoundUp() {
+        return "test-round-up";
+    }
+    
     @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
     public String index() {
         return "index";

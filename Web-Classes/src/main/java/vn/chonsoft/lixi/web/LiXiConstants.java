@@ -23,6 +23,9 @@ public abstract class LiXiConstants {
     public static final String LIXI_GIFT_TYPE = "LIXI_GIFT_TYPE";
     public static final String LIXI_TOP_UP_TYPE = "LIXI_TOP_UP_TYPE";
     public static final String LIXI_PHONE_CARD_TYPE = "LIXI_PHONE_CARD_TYPE";
+    //
+    public static final String KEEP_SHOPPING = "KEEP_SHOPPING";
+    public static final String BUY_NOW = "BUY_NOW";
     // MOBILE TOP UP
     public static final String PHONE_COMPANIES = "PHONE_COMPANIES";
     public static final String TOP_UP_IN_VND = "TOP_UP_IN_VND";

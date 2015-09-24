@@ -133,6 +133,13 @@ public class LixiOrderGift implements Serializable {
         this.productPrice = productPrice;
     }
 
+    public double getPriceInUSD(double exchange){
+        
+        double inUsd = getProductPrice()/exchange +0.005;
+        
+        return Math.round(inUsd * 100.0) / 100.0;
+    }
+    
     public String getProductName() {
         return productName;
     }

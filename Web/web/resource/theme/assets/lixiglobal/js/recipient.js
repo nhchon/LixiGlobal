@@ -14,10 +14,6 @@ function enableEditRecipientHtmlContent(data){
     $('#editRecipientContent').html(data);
     $('#editRecipientModal').modal({show:true});
     
-    // focus on phone field
-    $('#editRecipientModal').on('shown.bs.modal', function () {
-        $('#phone').focus()
-    })
     // change dial code
     $('#iso2Code').change(function(){
        if($(this).val() === 'VN'){

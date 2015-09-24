@@ -130,25 +130,25 @@
                                     <tr>
                                         <td><b>${recCount.count}</b></td>
                                         <td style="max-width: 250px;"><spring:message code="order.send_to"/></td>
-                                        <td>${entry.key.firstName}&nbsp;${entry.key.middleName}&nbsp;${entry.key.lastName}</td>
+                                        <td>${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</td>
                                         <td style="text-align: right;">
-                                            <a href="javascript:deleteRecever(${entry.key.id})"><i class="fa fa-pencil"></i> Delete</a>
+                                            <a href="javascript:deleteRecever(${entry.recipient.id})"><i class="fa fa-pencil"></i> Delete</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td>Email Address</td>
-                                        <td id="email_${entry.key.id}">${entry.key.email}</td>
+                                        <td id="email_${recipient.recipient.id}">${entry.recipient.email}</td>
                                         <td style="text-align: right;">
-                                            <a title="Change this email" href="javascript:editEmailAddress(${entry.key.id});"><i class="fa fa-pencil"></i> Change</a>
+                                            <a title="Change this email" href="javascript:editEmailAddress(${entry.recipient.id});"><i class="fa fa-pencil"></i> Change</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td>Mobile Phone</td>
-                                        <td id="phone_${entry.key.id}">${entry.key.phone}</td>
+                                        <td id="phone_${entry.recipient.id}">${entry.recipient.phone}</td>
                                         <td style="text-align: right">
-                                            <a href="javascript:editMobilePhone(${entry.key.id});"><i class="fa fa-pencil"></i> Change</a>
+                                            <a href="javascript:editMobilePhone(${entry.recipient.id});"><i class="fa fa-pencil"></i> Change</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -158,7 +158,7 @@
                                         <td></td>
                                     </tr>
                                     <c:set var="recipientTotal" value="0"/>
-                                    <c:forEach items="${entry.value}" var="g"  varStatus="giftCount">
+                                    <c:forEach items="${entry.gifts}" var="g"  varStatus="giftCount">
                                         <tr>
                                             <td></td>
                                             <td colspan="3">
@@ -172,16 +172,17 @@
                                                             ${g.productName}
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             ${g.productQuantity} x <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
+                                                            <fmt:formatNumber var="itemInUSD" value="${g.productPrice / LIXI_ORDER.lxExchangeRate.buy + 0.05}" pattern="###,###.##" maxFractionDigits="2"/>
                                                             &nbsp;=&nbsp;<fmt:formatNumber value="${g.productQuantity * g.productPrice}" pattern="###,###.##"/> VND
-                                                            <fmt:formatNumber var="itemInUSD"  value="${(g.productPrice * g.productQuantity) / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> 
-                                                            or ${itemInUSD} USD
+                                                             
+                                                            or <fmt:formatNumber   value="${(g.productPrice * g.productQuantity)/ LIXI_ORDER.lxExchangeRate.buy + 0.05}" pattern="###,###.##"/> USD
                                                         </td>
                                                         <td style="text-align: right"><a href="<c:url value="/gifts/more-recipient"/>"><i class="fa fa-pencil"></i> Change</a></td>
                                                     </tr>
                                                 </table>
                                             </td>
                                         </tr>
-                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + itemInUSD}"/>
+                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + itemInUSD*g.productQuantity}"/>
                                     </c:forEach>
                                 </c:forEach>
                                 <tr>

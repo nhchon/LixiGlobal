@@ -9,9 +9,11 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +30,7 @@ import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.model.pojo.Exrate;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.web.LiXiConstants;
 
 /**
@@ -111,6 +114,10 @@ public abstract class LiXiUtils {
             return alreadyGift.getId();
     }
 
+    public static double round(double a){
+        
+        return Math.round((a + 0.005) * 100.0) / 100.0;
+    }
     /**
      * 
      * Calculate total money, in VND, exclude specific id of the type of gift (gift,top up, card)
@@ -120,11 +127,15 @@ public abstract class LiXiUtils {
      * @param type
      * @return 
      */
-    public static double calculateCurrentPayment(LixiOrder order, long excludeId, String type){
+    public static double[] calculateCurrentPayment(LixiOrder order, long excludeId, String type){
         
-        if(order == null) return 0;
+        if(order == null) return new double[]{0, 0};
         
-        double sum = 0;
+        double sumVND = 0;
+        double sumUSD = 0;
+        //
+        // get exchange rate
+        double buy = order.getLxExchangeRate().getBuy();
         // gift type
         if(order.getGifts() != null){
             for(LixiOrderGift gift : order.getGifts()){
@@ -133,14 +144,12 @@ public abstract class LiXiUtils {
                     // Nothing
                 }
                 else{
-                    sum += (gift.getProductPrice() * gift.getProductQuantity());
+                    sumVND += (gift.getProductPrice() * gift.getProductQuantity());
+                    sumUSD += (gift.getPriceInUSD(buy) * gift.getProductQuantity());
                 }
 
             }
         }
-        // get exchange rate
-        double buy = order.getLxExchangeRate().getBuy();
-        
         // top up mobile phone
         if(order.getTopUpMobilePhones() != null){
             for(TopUpMobilePhone topUp : order.getTopUpMobilePhones()){
@@ -148,7 +157,8 @@ public abstract class LiXiUtils {
                 if(LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() == excludeId){
                 }
                 else{
-                    sum += (topUp.getAmount() * buy);
+                    sumVND += (topUp.getAmount() * buy);
+                    sumUSD += topUp.getAmount();
                 }
 
             }
@@ -161,13 +171,14 @@ public abstract class LiXiUtils {
                     // nothing
                 }
                 else{
-                    sum += (card.getNumOfCard() * card.getValueOfCard());
+                    sumVND += (card.getNumOfCard() * card.getValueOfCard());
+                    sumUSD += (card.getValueInUSD(buy) * card.getNumOfCard());
                 }
 
             }
         }
         // return total
-        return sum;
+        return new double[]{sumVND, sumUSD};
                 
     }
     
@@ -179,7 +190,7 @@ public abstract class LiXiUtils {
      * @param excludeOrderGift Exclude this order gift id
      * @return 
      */
-    public static double calculateCurrentPayment(LixiOrder order, long excludeOrderGift){
+    public static double[] calculateCurrentPayment(LixiOrder order, long excludeOrderGift){
         
         return calculateCurrentPayment(order, excludeOrderGift, LiXiConstants.LIXI_GIFT_TYPE);
                 
@@ -190,7 +201,7 @@ public abstract class LiXiUtils {
      * @param order
      * @return 
      */
-    public static double calculateCurrentPayment(LixiOrder order){
+    public static double[] calculateCurrentPayment(LixiOrder order){
         
         return calculateCurrentPayment(order, -1);
                 
@@ -201,10 +212,15 @@ public abstract class LiXiUtils {
      * @param order
      * @return 
      */
-    public static Map<Recipient, List<LixiOrderGift>> genMapRecGifts(LixiOrder order){
+    public static List<RecipientInOrder> genMapRecGifts(LixiOrder order){
         
         Map<Recipient, List<LixiOrderGift>> recGifts = new HashMap<>();
+        Map<Recipient, List<BuyPhoneCard>> recPhoneCards = new HashMap<>();
+        Map<Recipient, List<TopUpMobilePhone>> recTopUps = new HashMap<>();
         
+        Set<Recipient> recSet = new HashSet<>();
+        List<RecipientInOrder> listRecInOrder = new ArrayList<>();
+        // gifts
         for(LixiOrderGift lxogift : order.getGifts()){
             
             if(recGifts.containsKey(lxogift.getRecipient())){
@@ -219,9 +235,73 @@ public abstract class LiXiUtils {
                 
                 recGifts.put(lxogift.getRecipient(), gifts);
             }
+            //
+            recSet.add(lxogift.getRecipient());
         }
-        
-        return recGifts;
+        // top up
+        for(TopUpMobilePhone topUp : order.getTopUpMobilePhones()){
+            
+            if(recTopUps.containsKey(topUp.getRecipient())){
+                
+                recTopUps.get(topUp.getRecipient()).add(topUp);
+                
+            }
+            else{
+                
+                List<TopUpMobilePhone> topUps = new ArrayList<>();
+                topUps.add(topUp);
+                
+                recTopUps.put(topUp.getRecipient(), topUps);
+            }
+            //
+            recSet.add(topUp.getRecipient());
+        }
+        // phone card
+        for(BuyPhoneCard phoneCard : order.getBuyPhoneCards()){
+            
+            if(recPhoneCards.containsKey(phoneCard.getRecipient())){
+                
+                recPhoneCards.get(phoneCard.getRecipient()).add(phoneCard);
+                
+            }
+            else{
+                
+                List<BuyPhoneCard> phoneCards = new ArrayList<>();
+                phoneCards.add(phoneCard);
+                
+                recPhoneCards.put(phoneCard.getRecipient(), phoneCards);
+            }
+            //
+            recSet.add(phoneCard.getRecipient());
+        }
+        // create RecipientInOrder
+        List<RecipientInOrder> recs = new ArrayList<>();
+        for(Recipient rec: recSet){
+            
+            RecipientInOrder recInOrder = new RecipientInOrder();
+            recInOrder.setOrderId(order.getId());
+            recInOrder.setRecipient(rec);
+            
+            if(recGifts.containsKey(rec)){
+                
+                recInOrder.setGifts(recGifts.get(rec));
+                
+            }            
+            if(recPhoneCards.containsKey(rec)){
+                
+                recInOrder.setBuyPhoneCards(recPhoneCards.get(rec));
+                
+            }            
+            if(recTopUps.containsKey(rec)){
+                
+                recInOrder.setTopUpMobilePhones(recTopUps.get(rec));
+                
+            }
+            //
+            recs.add(recInOrder);
+        }
+        listRecInOrder.addAll(recs);
+        return  listRecInOrder;
     }
     /**
      * 

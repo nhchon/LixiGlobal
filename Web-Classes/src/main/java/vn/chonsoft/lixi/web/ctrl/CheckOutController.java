@@ -38,6 +38,7 @@ import vn.chonsoft.lixi.model.form.BankAccountAddForm;
 import vn.chonsoft.lixi.model.form.BillingAddressForm;
 import vn.chonsoft.lixi.model.form.CardAddForm;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiFeeService;
@@ -790,22 +791,21 @@ public class CheckOutController {
         LixiFee cardProcessingFeeAddOn = this.feeService.findByCode(LiXiConstants.LIXI_CARD_PROCESSING_FEE_ADD_ON);
         
         
-        Map<Recipient, List<LixiOrderGift>> recGifts = LiXiUtils.genMapRecGifts(order);
+        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
         model.put(LiXiConstants.LIXI_ORDER, order);
         model.put(LiXiConstants.REC_GIFTS, recGifts);
         
         // calculate the total
         double finalTotal = 0;
-        double total = 0;
-        for (Map.Entry<Recipient, List<LixiOrderGift>> entry : recGifts.entrySet())
-        {
-            for(LixiOrderGift gift : entry.getValue()){
+        double[] totals = LiXiUtils.calculateCurrentPayment(order);
+        //for (Map.Entry<Recipient, List<LixiOrderGift>> entry : recGifts.entrySet())
+        //{
+            //for(LixiOrderGift gift : entry.getValue()){
                 
-                total += (gift.getProductPrice() * gift.getProductQuantity());
-            }
-        }
-        // convert to usd
-        total = total / order.getLxExchangeRate().getBuy();
+                //total += (gift.getProductPrice() * gift.getProductQuantity());
+            //}
+        //}
+        double total = totals[1];//usd
         
         // card processing fee
         double cardFeeNumber = 0;
@@ -842,12 +842,12 @@ public class CheckOutController {
         cardFeeNumber = Math.round(cardFeeNumber * 100.0) / 100.0f;
         
         // final total 
-        finalTotal = total + cardFeeNumber + (handlingFee.getFee() * recGifts.keySet().size());
+        finalTotal = total + cardFeeNumber + (handlingFee.getFee() * (order.getGifts().isEmpty()? 0 : order.getGifts().size()));
         
         // 
         model.put(LiXiConstants.LIXI_FINAL_TOTAL, finalTotal);
         model.put(LiXiConstants.LIXI_HANDLING_FEE, handlingFee);
-        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, handlingFee.getFee() * recGifts.keySet().size());
+        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, handlingFee.getFee() * order.getGifts().size());
         model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFeeNumber);
         
     }
@@ -931,7 +931,7 @@ public class CheckOutController {
     }
     
     @RequestMapping(value = "deleteReceiver/{recId}", method = RequestMethod.GET)
-    public ModelAndView placeOrder(Map<String, Object> model, @PathVariable Long recId, HttpServletRequest request){
+    public ModelAndView deleteReceiver(Map<String, Object> model, @PathVariable Long recId, HttpServletRequest request){
         
         // check login
         if (!LiXiUtils.isLoggined(request)) {

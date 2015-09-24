@@ -199,6 +199,7 @@ public class TopUpMobileController {
         }
         
         String amountTopUpStr = request.getParameter("amountTopUp");
+        String topUpAction = request.getParameter("topUpAction");
         
         Integer amountTopUp = 0;
         try{amountTopUp = Integer.parseInt(amountTopUpStr);}catch(Exception ex){};
@@ -265,6 +266,15 @@ public class TopUpMobileController {
             // save
             this.topUpService.save(topUp);
             
+        }
+        
+        if(LiXiConstants.BUY_NOW.equals(topUpAction)){
+            
+            // reivew order
+            return new ModelAndView(new RedirectView("/gifts/more-recipient", true, true));
+        }
+        else{
+            // keep shopping
             model.put("addSuccess", 1);
             model.put("TOPUP_ACTION", "MOBILE_MINUTE");
             return show(model, request);
@@ -477,7 +487,8 @@ public class TopUpMobileController {
         
         // check current payment <==> maximum payment
         
-        double currentPayment = LiXiUtils.calculateCurrentPayment(order); // in VND
+        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // in VND
+        double currentPayment = currentPayments[0];//vnd
         currentPayment += addedAmount;// in VND
 
         if (currentPayment > (userMoneyLevel * buy)) {
@@ -547,7 +558,8 @@ public class TopUpMobileController {
             buy = lxExch.getBuy();
         }
         
-        double currentPayment = LiXiUtils.calculateCurrentPayment(order); // in VND
+        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // in VND
+        double currentPayment = currentPayments[0];//vnd
         currentPayment += (amount * buy);// in VND
 
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount() * buy)) {

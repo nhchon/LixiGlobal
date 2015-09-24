@@ -14,6 +14,8 @@
             var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
             var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
             var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>'
+            var TOP_UP_EMPTY = '<spring:message code="validate.topup.no_empty"/>';
+            var NUM_OF_CARD = '<spring:message code="validate.buyphonecard.num_of_card"/>';
             
             $(document).ready(function () {
 
@@ -44,6 +46,35 @@
                 $('#amountTopUp').change(function(){
                     checkTopUpExceed($(this).val());
                 });
+                
+                // submit
+                $('#btnTopUpKeepShopping').click(function(){
+                    // set action
+                    $('#topUpAction').val('KEEP_SHOPPING');
+                    //
+                    return checkTopUpMobileForm();
+                });
+                
+                $('#btnTopUpBuyNow').click(function(){
+                    // set action
+                    $('#topUpAction').val('BUY_NOW');
+                    //
+                    return checkTopUpMobileForm();
+                });
+                
+                $('#btnPhoneCardKeepShopping').click(function(){
+                    // set action
+                    $('#phoneCardAction').val('KEEP_SHOPPING');
+                    //
+                    return checkBuyPhoneCardForm();
+                });
+                $('#btnPhoneCardBuyNow').click(function(){
+                    //set action
+                    $('#phoneCardAction').val('BUY_NOW');
+                    //
+                    return checkBuyPhoneCardForm();
+                });
+                
             });
 
             function checkTopUpExceed(amount){
@@ -89,16 +120,49 @@
              *
              */
             function disableTopUpSubmitButtons(enable){
-                $('#btnTopUpKeepShooping').prop('disabled', enable);
+                $('#btnTopUpKeepShopping').prop('disabled', enable);
                 $('#btnTopUpBuyNow').prop('disabled', enable);
             }
             
-            function editRecipient(){
+            function editRecipient(focusId){
                 $.get( '<c:url value="/topUp/editRecipient"/>', function( data ) {
-                    enableEditRecipientHtmlContent(data)               
+                    enableEditRecipientHtmlContent(data);
+                    // focus on phone field
+                    $('#editRecipientModal').on('shown.bs.modal', function () {
+                        $('#'+focusId).focus()
+                    })
+                    
                 });
             }
-
+            /**
+             * 
+             * @returns {Boolean}
+             */
+            function checkTopUpMobileForm(){
+                if($.trim($('#amountTopUp').val()) === ''){
+                    alert(TOP_UP_EMPTY);
+                    $('#amountTopUp').focus();
+                    return false;
+                }
+                else{
+                    return true
+                }
+            }
+            
+            /**
+             * 
+             * @returns {Boolean}
+             */
+            function checkBuyPhoneCardForm(){
+                if($.trim($('#numOfCard').val()) === '' || !$('#numOfCard').isInteger()){
+                    alert(NUM_OF_CARD);
+                    $('#numOfCard').focus();
+                    return false;
+                }
+                else{
+                    return true
+                }
+            }
         </script>
     </jsp:attribute>
 
@@ -169,7 +233,7 @@
 
                                                                 <div class="row">
                                                                     <div class="col-lg-10" style="padding-right: 0px;">
-                                                                        <input type="number" name="amountTopUp" id="amountTopUp" min="10" class="form-control" placeholder="10" title="Min is $10"/>
+                                                                        <input type="number" name="amountTopUp" id="amountTopUp" min="10" class="form-control" placeholder="ie. 10" title="Min is $10"/>
                                                                     </div>
                                                                     <div class="col-lg-2" style="padding-left: 0px;">
                                                                         <input type="text" class="form-control" value="USD" readonly="" name="currency"/>
@@ -204,7 +268,7 @@
                                                                         <span class="help-block errors"></span>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <button type="button" class="btn btn-default" onclick="editRecipient();">Change</button>
+                                                                        <button type="button" class="btn btn-default" onclick="editRecipient('phone');">Change</button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -214,9 +278,9 @@
                                                         </div>
                                                         <div class="form-group"> 
                                                             <div class="col-sm-offset-2 col-sm-10">
-                                                                <input type="hidden" value="" name="action"/>
+                                                                <input type="hidden" value="" id="topUpAction" name="topUpAction"/>
                                                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                                                <button id="btnTopUpKeepShooping" type="submit" class="btn btn-primary">Keep Shopping</button>
+                                                                <button id="btnTopUpKeepShopping" type="submit" class="btn btn-primary">Keep Shopping</button>
                                                                 <button id="btnTopUpBuyNow" type="submit" class="btn btn-primary">Buy Now</button>
                                                             </div>
                                                         </div>
@@ -252,7 +316,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="pwd">Number of card</label>
                                                             <div class="col-sm-7"> 
-                                                                <input name="numOfCard" type="number" min="1" max="5" class="form-control" value="1">
+                                                                <input id="numOfCard" name="numOfCard" type="number" min="1" max="5" class="form-control" placeholder="i.e. 1">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -262,7 +326,6 @@
                                                                     <option value="100000">100,000 đ</option>
                                                                     <option value="200000">200,000 đ</option>
                                                                     <option value="300000">300,000 đ</option>
-                                                                    <option value="400000">400,000 đ</option>
                                                                     <option value="500000">500,000 đ</option>
                                                                 </select>
                                                             </div>
@@ -288,14 +351,15 @@
                                                                 <input type="text" class="form-control" value="timothy@gmail.com" readonly=""/>
                                                             </div>
                                                             <div class="col-sm-2"> 
-                                                                <button type="button" class="btn btn-default" onclick="editRecipient();">&nbsp;Change&nbsp; </button>
+                                                                <button type="button" class="btn btn-default" onclick="editRecipient('email');">&nbsp;Change&nbsp; </button>
                                                             </div>
                                                         </div>
                                                         <div class="form-group"> 
                                                             <div class="col-sm-offset-2 col-sm-10">
+                                                                <input type="hidden" value="" id="phoneCardAction" name="phoneCardAction"/>
                                                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                                                <button type="submit" class="btn btn-primary">Keep Shopping</button>
-                                                                <button type="submit" class="btn btn-primary">Buy Now</button>
+                                                                <button id="btnPhoneCardKeepShopping" type="submit" class="btn btn-primary">Keep Shopping</button>
+                                                                <button id="btnPhoneCardBuyNow" type="submit" class="btn btn-primary">Buy Now</button>
                                                             </div>
                                                         </div>
                                                     </form>
