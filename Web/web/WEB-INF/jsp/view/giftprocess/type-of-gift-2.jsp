@@ -204,7 +204,8 @@
                                                                 <br />
                                                                 <a class="price"><fmt:formatNumber value="${p.price}" pattern="###,###.##"/> VND</a>
                                                                 <br />
-                                                                <a class="price"><fmt:formatNumber value="${p.price / LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> USD</a>
+                                                                <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
+                                                                <a class="price"><fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> USD</a>
                                                                 <br/>
                                                                 <label>
                                                                     <input type="checkbox" name="gift" value="${p.id}" <c:if test="${p.selected eq true}">checked</c:if>>

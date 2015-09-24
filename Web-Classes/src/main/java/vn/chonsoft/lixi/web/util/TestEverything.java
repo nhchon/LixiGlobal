@@ -45,8 +45,16 @@ public class TestEverything {
         double roundOff = Math.round(a * 100.0) / 100.0;
         
         DecimalFormat df = new DecimalFormat("###,###.##");
-        System.out.println(roundOff);
-        System.out.println(df.format(a));
-        System.out.println(df.format(b));
+        //System.out.println(roundOff);
+        //System.out.println(df.format(a));
+        //System.out.println(df.format(b));
+        
+        double rsl = ((700000 * 1) / 20500.0) + (1 * 0.005);
+        
+        System.out.println(Math.round(rsl * 100.0) / 100.0);
+        
+        double rsl1 = ((700000 * -1) / 20500.0) + (-1 * 0.005);
+        
+        System.out.println(Math.round(rsl1 * 100.0) / 100.0);
     }
 }

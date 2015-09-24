@@ -118,6 +118,20 @@ public abstract class LiXiUtils {
         
         return Math.round((a + 0.005) * 100.0) / 100.0;
     }
+    
+    /**
+     * 
+     * @param price, in VND
+     * @param quantity
+     * @param exchange
+     * @return 
+     */
+    public static double roundPriceQuantity(double price, int quantity, double exchange){
+        
+        double rsl = ((price * quantity) / exchange) + (quantity * 0.005);
+        
+        return Math.round(rsl * 100.0) / 100.0;
+    }
     /**
      * 
      * Calculate total money, in VND, exclude specific id of the type of gift (gift,top up, card)

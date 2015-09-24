@@ -127,6 +127,13 @@ public class VatgiaProduct implements Serializable {
         this.price = price;
     }
 
+    public double getPriceInUSD(double exchange){
+        
+        double inUsd = getPrice()/exchange +0.005;
+        
+        return Math.round(inUsd * 100.0) / 100.0;
+    }
+    
     public String getImageUrl() {
         return imageUrl;
     }

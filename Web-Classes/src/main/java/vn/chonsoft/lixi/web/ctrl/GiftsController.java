@@ -931,17 +931,29 @@ public class GiftsController {
             buy = lxExch.getBuy();
         }
         
-        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order, LiXiUtils.getOrderGiftId(alreadyGift)); // in VND
-        double currentPayment = currentPayments[0];//VND
-        currentPayment += (price * quantity);// in VND
-
-        if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount() * buy)) {
+        double[] currentPayments = new double[] {0, 0};
+        if(quantity > 0){
+            currentPayments = LiXiUtils.calculateCurrentPayment(order, LiXiUtils.getOrderGiftId(alreadyGift)); // in USD
+        }
+        else{
+            // remove the gift, count all and then minus out
+            currentPayments = LiXiUtils.calculateCurrentPayment(order);
+        }
+        double currentPayment = currentPayments[1];//USD
+        log.info("currentPayment:" + currentPayment);
+        currentPayment += LiXiUtils.roundPriceQuantity(price, quantity, buy);// in USD
+        log.info("roundPriceQuantity:" + LiXiUtils.roundPriceQuantity(price, quantity, buy));
+        log.info("price:" + price);
+        log.info("quantity:" + quantity);
+        log.info("buy:" + buy);
+        log.info("currentPayment after:" + currentPayment);
+        if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
 
             // maximum payment is over
             model.put("exceed", 1);
             
-            double exceededPaymentVND = currentPayment - (u.getUserMoneyLevel().getMoneyLevel().getAmount() * buy);
-            double exceededPaymentUSD = (currentPayment/buy) - u.getUserMoneyLevel().getMoneyLevel().getAmount();
+            double exceededPaymentVND = (currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount()) * buy;
+            double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
             
             model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
             
@@ -1029,8 +1041,9 @@ public class GiftsController {
             
         }
         // store current payment
-        model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment / buy));
-        model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment));
+        log.info("currentPayment 3: " + currentPayment);
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
         
         return new ModelAndView("giftprocess/exceed", model);
     }
