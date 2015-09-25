@@ -73,9 +73,9 @@
         </div>
     </div>
     <div class="col-lg-6">
-        <div class="pull-right">
+        <div  style="padding-left: 0px;text-align: right;">
             Current payment: <strong><span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span> VND</strong><br/>
-            <strong><span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT / LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></span> USD</strong>
+            <strong><span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span> USD</strong>
         </div>
     </div>
 </div>

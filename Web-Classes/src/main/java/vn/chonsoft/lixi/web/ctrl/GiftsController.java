@@ -251,13 +251,21 @@ public class GiftsController {
             if((form.getRecId()== null) || form.getRecId() <= 0){
                 rec = this.reciService.findByFirstNameAndMiddleNameAndLastNameAndPhone(form.getFirstName(), form.getMiddleName(), form.getLastName(), form.getPhone());
                 if(rec != null){
-
                     // duplicate recipient
                     model.put("duplicate", 1);
                     model.put("recipientName", StringUtils.join(new String[]{form.getFirstName(),form.getMiddleName(), form.getLastName()}, " "));
                     model.put("recipientPhone", form.getPhone());
 
-                    return recipient(model, request);
+                    return new ModelAndView("giftprocess/recipient", model);
+                }
+                //
+                rec = this.reciService.findByEmail(form.getEmail());
+                if(rec != null){
+                    // duplicate recipient
+                    model.put("duplicateEmail", 1);
+                    model.put("recipientEmail", form.getEmail());
+
+                    return new ModelAndView("giftprocess/recipient", model);
                 }
             }
             // save or update the recipient
@@ -326,7 +334,7 @@ public class GiftsController {
             model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxexrate);
 
             // store lixi exhange rate id into session
-            request.getSession().setAttribute(LiXiConstants.LIXI_EXCHANGE_RATE, lxexrate.getId());
+            //request.getSession().setAttribute(LiXiConstants.LIXI_EXCHANGE_RATE_ID, lxexrate.getId());
 
             // jump
             return new ModelAndView("giftprocess/value-of-gift", model);
@@ -415,7 +423,7 @@ public class GiftsController {
         //
         for(VatgiaProduct p : products){
             for(LixiOrderGift gift : order.getGifts()){
-                if((gift.getRecipient().getId().equals(rec.getId())) && p.getId() == gift.getProductId()){
+                if(gift.getRecipient().equals(rec) && p.getId().intValue() == gift.getProductId()){
                     p.setSelected(Boolean.TRUE);
                     p.setQuantity(gift.getProductQuantity());
                     break;
@@ -595,12 +603,14 @@ public class GiftsController {
         // check selected
         checkSelected(products, order, rec);
 
+        double[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
         
         model.put(LiXiConstants.PRODUCTS, products);
         model.put(LiXiConstants.PAGES, vgps);
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
-        model.put(LiXiConstants.CURRENT_PAYMENT, LiXiUtils.calculateCurrentPayment(order));
+        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0]);
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[1]);
         
         return new ModelAndView("giftprocess/type-of-gift-content", model);
         
@@ -940,13 +950,7 @@ public class GiftsController {
             currentPayments = LiXiUtils.calculateCurrentPayment(order);
         }
         double currentPayment = currentPayments[1];//USD
-        log.info("currentPayment:" + currentPayment);
-        currentPayment += LiXiUtils.roundPriceQuantity(price, quantity, buy);// in USD
-        log.info("roundPriceQuantity:" + LiXiUtils.roundPriceQuantity(price, quantity, buy));
-        log.info("price:" + price);
-        log.info("quantity:" + quantity);
-        log.info("buy:" + buy);
-        log.info("currentPayment after:" + currentPayment);
+        currentPayment += LiXiUtils.roundPriceQuantity2USD(price, quantity, buy);// in USD
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
 
             // maximum payment is over
@@ -1041,7 +1045,6 @@ public class GiftsController {
             
         }
         // store current payment
-        log.info("currentPayment 3: " + currentPayment);
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
         

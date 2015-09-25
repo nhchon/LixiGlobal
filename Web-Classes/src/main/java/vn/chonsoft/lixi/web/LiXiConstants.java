@@ -30,6 +30,10 @@ public abstract class LiXiConstants {
     public static final String PHONE_COMPANIES = "PHONE_COMPANIES";
     public static final String TOP_UP_IN_VND = "TOP_UP_IN_VND";
     public static final String TOP_UP_AMOUNT = "TOP_UP_AMOUNT";
+    public static final String NUM_OF_CARD = "NUM_OF_CARD";
+    public static final String VALUE_OF_CARD = "VALUE_OF_CARD";
+    public static final String BUY_PHONE_CARD_IN_VND = "BUY_PHONE_CARD_IN_VND";
+    public static final String BUY_PHONE_CARD_IN_USD = "BUY_PHONE_CARD_IN_USD";
     // FEE
     public static final String LIXI_HANDLING_FEE_TOTAL = "LIXI_HANDLING_FEE_TOTAL";
     public static final String LIXI_HANDLING_FEE = "LIXI_HANDLING_FEE";
@@ -64,6 +68,7 @@ public abstract class LiXiConstants {
     
     public static final String CURRENCIES = "CURRENCIES";
     public static final String LIXI_EXCHANGE_RATE = "LIXI_EXCHANGE_RATE";
+    public static final String LIXI_EXCHANGE_RATE_ID = "LIXI_EXCHANGE_RATE_ID";
     public static final String LIXI_CATEGORIES = "LIXI_CATEGORIES";
     public static final String LIXI_ORDERS = "LIXI_ORDERS";
     public static final String LIXI_ORDER = "LIXI_ORDER";

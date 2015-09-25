@@ -4,6 +4,10 @@
  */
 package vn.chonsoft.lixi.web.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -126,7 +130,7 @@ public abstract class LiXiUtils {
      * @param exchange
      * @return 
      */
-    public static double roundPriceQuantity(double price, int quantity, double exchange){
+    public static double roundPriceQuantity2USD(double price, int quantity, double exchange){
         
         double rsl = ((price * quantity) / exchange) + (quantity * 0.005);
         
@@ -367,6 +371,48 @@ public abstract class LiXiUtils {
         return str;
     }
 
+    /**
+     * 
+     * @param file
+     * @return
+     * @throws IOException 
+     */
+    public static byte[] readKeyBytesFromFile(File file) throws IOException {
+        InputStream is = new FileInputStream(file);
+
+        // Get the size of the file
+        long length = file.length();
+
+      // You cannot create an array using a long type.
+        // It needs to be an int type.
+        // Before converting to an int type, check
+        // to ensure that file is not larger than Integer.MAX_VALUE.
+        if (length > Integer.MAX_VALUE) {
+            // File is too large
+        }
+
+        // Create the byte array to hold the data
+        byte[] bytes = new byte[(int) length];
+
+        // Read in the bytes
+        int offset = 0;
+        int numRead = 0;
+        while (offset < bytes.length
+                && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+            offset += numRead;
+        }
+
+        // Ensure all the bytes have been read in
+        if (offset < bytes.length) {
+            throw new IOException("Key File Error: Could not completely read file " + file.getName());
+        }
+
+        // Close the input stream and return bytes
+        is.close();
+        return bytes;
+
+    }
+    
     /**
      *
      * @return

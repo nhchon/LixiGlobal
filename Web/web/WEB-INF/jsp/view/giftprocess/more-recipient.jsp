@@ -189,12 +189,12 @@
                                                     </td>
                                                     <td class="col-md-3" style="text-align: right;">
                                                         <c:set var="valueInUSD" value="${p.getValueInUSD(LIXI_ORDER.lxExchangeRate.buy)}"/>
-                                                        <fmt:formatNumber value="${p.numOfCard * p.valueOfCard}" pattern="###,###.##"/> VND<br/>
-                                                        <fmt:formatNumber value="${p.numOfCard * valueInUSD}" pattern="###,###.##"/> USD
+                                                        <fmt:formatNumber value="${p.valueOfCard}" pattern="###,###.##"/> VND<br/>
+                                                        <fmt:formatNumber value="${valueInUSD}" pattern="###,###.##"/> USD
                                                     </td>
                                                     <td class="col-md-3" style="text-align: right;">
                                                         <fmt:formatNumber value="${p.numOfCard * p.valueOfCard}" pattern="###,###.##"/> VND<br/>
-                                                        <fmt:formatNumber value="${(p.numOfCard * p.valueOfCard) / LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> USD
+                                                        <fmt:formatNumber value="${(valueInUSD * p.numOfCard)}" pattern="###,###.##"/> USD
                                                     </td>
                                                     <c:set var="total" value="${total + (p.numOfCard * p.valueOfCard)}"/>
                                                     <c:set var="totalInUSD" value="${totalInUSD + (valueInUSD * p.numOfCard)}"/>

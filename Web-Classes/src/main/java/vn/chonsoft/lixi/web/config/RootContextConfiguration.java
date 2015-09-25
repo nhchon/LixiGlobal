@@ -33,6 +33,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
@@ -54,6 +55,9 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import vn.chonsoft.lixi.web.util.LiXiSecurityManager;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
+import vn.chonsoft.lixi.web.util.TripleDES;
 
 /**
  *
@@ -247,6 +251,33 @@ public class RootContextConfiguration  implements
         return factory.createVelocityEngine();
     }
     
+    /**
+     * 
+     * @return
+     * @throws Exception 
+     */
+    @Bean
+    public LiXiSecurityManager securityManager() throws Exception{
+        
+        LiXiSecurityManager sm = new LiXiSecurityManager();
+        sm.setPrivateKeyBytes(LiXiUtils.readKeyBytesFromFile(new ClassPathResource(env.getProperty("rsa.private_key_file")).getFile()));
+        sm.setPublicKeyBytes(LiXiUtils.readKeyBytesFromFile(new ClassPathResource(env.getProperty("rsa.public_key_file")).getFile()));
+        sm.initializeKeys();
+        
+        return sm;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Bean
+    public TripleDES tripleDES(){
+        TripleDES tripleDES = new TripleDES();
+        tripleDES.setKey(env.getProperty("triple.des.key"));
+        
+        return tripleDES;
+    }
     /**
      * 
      * http://stackoverflow.com/questions/17097521/spring-3-2-value-annotation-

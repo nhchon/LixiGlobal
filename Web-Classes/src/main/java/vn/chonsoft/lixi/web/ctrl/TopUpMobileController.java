@@ -141,7 +141,10 @@ public class TopUpMobileController {
         model.put(LiXiConstants.PHONE_COMPANIES, this.vtcServiceCodeService.findAll());
         // maximum payment & current payment
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
-        model.put(LiXiConstants.CURRENT_PAYMENT, LiXiUtils.calculateCurrentPayment(order));
+        //
+        double[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0]);
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[1]);
         
         return new ModelAndView("topup/topup", model);
     }
@@ -232,7 +235,7 @@ public class TopUpMobileController {
             buy = lxExch.getBuy();
         }
         
-        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, amountTopUp*buy, buy);
+        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, amountTopUp, buy);
         // order is exceed
         if(exceed){
             
@@ -241,7 +244,7 @@ public class TopUpMobileController {
             
             //
             model.put("TOPUP_ACTION", "MOBILE_MINUTE");
-            return new ModelAndView("topup/topup", model);
+            return show(model, request);
         }
         else{
             
@@ -329,16 +332,15 @@ public class TopUpMobileController {
             buy = lxExch.getBuy();
         }
         
-        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, numOfCard * valueOfCard, buy);
+        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy), buy);
         // order is exceed
         if(exceed){
             
             model.put("phoneCardExceed", 1);
-            //model.put(LiXiConstants.TOP_UP_AMOUNT, amountTopUp);
             
             //
             model.put("TOPUP_ACTION", "PHONE_CARD");
-            return new ModelAndView("topup/topup", model);
+            return show(model, request);
         }
         else{
             
@@ -401,9 +403,10 @@ public class TopUpMobileController {
             log.info("firstName:" + form.getFirstName());
             log.info("firstName:" + LiXiUtils.fixEncode(form.getFirstName()));
             log.info("firstName:" + LiXiUtils.correctName(form.getFirstName()));
-            form.setFirstName(LiXiUtils.correctName(form.getFirstName()));
-            form.setMiddleName(LiXiUtils.correctName(form.getMiddleName()));
-            form.setLastName(LiXiUtils.correctName(form.getLastName()));
+            log.info("request.getCharacterEncoding(): "+request.getCharacterEncoding());
+            //form.setFirstName(LiXiUtils.correctName(form.getFirstName()));
+            //form.setMiddleName(LiXiUtils.correctName(form.getMiddleName()));
+            //form.setLastName(LiXiUtils.correctName(form.getLastName()));
             
             // save or update the recipient
             rec = new Recipient();
@@ -415,7 +418,7 @@ public class TopUpMobileController {
             rec.setEmail(form.getEmail());
             rec.setDialCode(form.getDialCode());
             rec.setPhone(form.getPhone());
-            rec.setNote(LiXiUtils.fixEncode(form.getNote()));// note
+            rec.setNote((form.getNote()));// LiXiUtils.fixEncode
             rec.setModifiedDate(Calendar.getInstance().getTime());
 
             rec = this.reciService.save(rec);
@@ -487,17 +490,17 @@ public class TopUpMobileController {
         
         // check current payment <==> maximum payment
         
-        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // in VND
-        double currentPayment = currentPayments[0];//vnd
+        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); 
+        double currentPayment = currentPayments[1];//USD
         currentPayment += addedAmount;// in VND
 
-        if (currentPayment > (userMoneyLevel * buy)) {
+        if (currentPayment > userMoneyLevel) {
 
             // maximum payment is over
             model.put("exceed", 1);
             
-            double exceededPaymentVND = currentPayment - (userMoneyLevel * buy);
-            double exceededPaymentUSD = (currentPayment/buy) - userMoneyLevel;
+            double exceededPaymentVND = (currentPayment - userMoneyLevel) * buy;
+            double exceededPaymentUSD = currentPayment - userMoneyLevel;
             
             model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
             
@@ -558,17 +561,17 @@ public class TopUpMobileController {
             buy = lxExch.getBuy();
         }
         
-        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // in VND
-        double currentPayment = currentPayments[0];//vnd
-        currentPayment += (amount * buy);// in VND
+        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // [VND, USD]
+        double currentPayment = currentPayments[1];//USD
+        currentPayment += amount;// in USD
 
-        if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount() * buy)) {
+        if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
 
             // maximum payment is over
             model.put("exceed", 1);
             
-            double exceededPaymentVND = currentPayment - (u.getUserMoneyLevel().getMoneyLevel().getAmount() * buy);
-            double exceededPaymentUSD = (currentPayment/buy) - u.getUserMoneyLevel().getMoneyLevel().getAmount();
+            double exceededPaymentVND = (currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount()) * buy;
+            double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
             
             model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
             
@@ -586,9 +589,82 @@ public class TopUpMobileController {
         model.put(LiXiConstants.TOP_UP_IN_VND, LiXiUtils.getNumberFormat().format(amount * buy));
         
         // store current payment
-        model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment / buy));
-        model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment));
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
         
         return new ModelAndView("topup/exceedTopUp", model);
+    }
+    
+    @RequestMapping(value = "checkBuyPhoneCardExceed/{numOfCard}/{valueOfCard}", method = RequestMethod.GET)
+    public ModelAndView checkBuyPhoneCardExceed(Map<String, Object> model, @PathVariable Integer numOfCard, @PathVariable Integer valueOfCard, HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+
+        // sender
+        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+        
+        LixiOrder order = null;
+        // check order already created
+        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
+
+            Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+
+            order = this.lxorderService.findById(orderId);
+
+        }
+        
+        // check current payment <==> maximum payment
+        LixiExchangeRate lxExch = null;
+        double buy = 0;
+        if(order != null){
+            // get buy from order
+            lxExch = order.getLxExchangeRate();
+            buy = lxExch.getBuy();
+        }
+        else{
+            // get current exchange rate
+            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+            buy = lxExch.getBuy();
+        }
+        
+        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // [VND, USD]
+        double currentPayment = currentPayments[1];//USD
+        currentPayment += LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy);// in USD
+
+        if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
+
+            // maximum payment is over
+            model.put("exceed", 1);
+            
+            double exceededPaymentVND = (currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount()) * buy;
+            double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
+            
+            model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
+            
+            model.put(LiXiConstants.EXCEEDED_USD, LiXiUtils.getNumberFormat().format(exceededPaymentUSD));
+         
+        }
+        else{
+            // the order is not exceeded
+            model.put("exceed", 0);
+        }
+        // forward 
+        model.put(LiXiConstants.NUM_OF_CARD, numOfCard);
+        model.put(LiXiConstants.VALUE_OF_CARD, valueOfCard);
+        
+        // topup in VND
+        model.put(LiXiConstants.BUY_PHONE_CARD_IN_USD, LiXiUtils.getNumberFormat().format(LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy)));
+        
+        // store current payment
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
+        
+        return new ModelAndView("topup/exceedPhoneCard", model);
     }
 }

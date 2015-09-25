@@ -47,6 +47,15 @@
                     checkTopUpExceed($(this).val());
                 });
                 
+                // check exceed on buy phone card
+                $('#numOfCard').change(function(){
+                    checkBuyPhoneCardExceed($(this).val(), $('#valueOfCard').val());
+                });
+                
+                $('#valueOfCard').change(function(){
+                    checkBuyPhoneCardExceed($('#numOfCard').val(), $('#valueOfCard').val());
+                });
+                
                 // submit
                 $('#btnTopUpKeepShopping').click(function(){
                     // set action
@@ -76,6 +85,43 @@
                 });
                 
             });
+
+            function checkBuyPhoneCardExceed(numOfCard, valueOfCard){
+                if(numOfCard === ''){
+                    $('#buyCardInUSD').val('');
+                }
+                else{
+                    $.ajax({
+                        url : '<c:url value="/topUp/checkBuyPhoneCardExceed"/>' + '/'+numOfCard + '/' + valueOfCard,
+                        type: "get",
+                        dataType: 'json',
+                        success:function(data, textStatus, jqXHR) 
+                        {
+                            if(data.exceed == '1'){
+                                $('#divError').remove();
+                                $('#buyCardPanelBody').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
+                                alert(data.message);
+                                // disable submit buttons
+                                disableBuyCardSubmitButtons(true);
+                            }else{
+                                // no exceed, remove error
+                                $('#divError').remove();
+                                // update current payment
+                                $('#currentPaymentVND').html(data.CURRENT_PAYMENT_VND);
+                                $('#currentPaymentUSD').html(data.CURRENT_PAYMENT_USD);
+                                //
+                                disableBuyCardSubmitButtons(false);
+                            }
+                            $('#buyCardInUSD').val(data.BUY_PHONE_CARD_IN_USD + " USD");
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) 
+                        { 
+                            //alert(errorThrown);
+                            //alert('Đã có lỗi, vui lòng thử lại !'); 
+                        }    
+                    });
+                }
+            }
 
             function checkTopUpExceed(amount){
                 if(amount === ''){
@@ -122,6 +168,11 @@
             function disableTopUpSubmitButtons(enable){
                 $('#btnTopUpKeepShopping').prop('disabled', enable);
                 $('#btnTopUpBuyNow').prop('disabled', enable);
+            }
+            
+            function disableBuyCardSubmitButtons(enable){
+                $('#btnPhoneCardKeepShopping').prop('disabled', enable);
+                $('#btnPhoneCardBuyNow').prop('disabled', enable);
             }
             
             function editRecipient(focusId){
@@ -290,10 +341,13 @@
 
                                             <%-- Buy Phone Card --%>
                                             <div id="buyCardPanel" class="panel panel-default" style="border-top: none;">
-                                                <div class="panel-body">
+                                                <div class="panel-body" id="buyCardPanelBody">
                                                     <c:if test="${phoneCardExceed eq 1}">
                                                         <div class="msg msg-error" id="divError">
-                                                            Error ! Exceeded
+                                                            <spring:message code="validate.phone_card_exceeded">
+                                                                <spring:argument value="${EXCEEDED_VND}"/>
+                                                                <spring:argument value="${EXCEEDED_USD}"/>
+                                                            </spring:message>
                                                         </div>
                                                     </c:if>
                                                     <c:if test="${buySuccess eq 1}">
@@ -306,7 +360,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="email">Select mobile phone company</label>
                                                             <div class="col-sm-7">
-                                                                <select class="form-control" name="phoneCompany">
+                                                                <select class="form-control" name="phoneCompany" id="phoneCompany">
                                                                     <c:forEach items="${PHONE_COMPANIES}" var="p">
                                                                         <option value="${p.code}">${p.name}</option>
                                                                     </c:forEach>
@@ -322,7 +376,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="email">Value of card</label>
                                                             <div class="col-sm-7">
-                                                                <select class="form-control" name="valueOfCard">
+                                                                <select class="form-control" name="valueOfCard" id="valueOfCard">
                                                                     <option value="100000">100,000 đ</option>
                                                                     <option value="200000">200,000 đ</option>
                                                                     <option value="300000">300,000 đ</option>
@@ -342,13 +396,13 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="pwd">Amount in USD</label>
                                                             <div class="col-sm-7"> 
-                                                                <input type="text" class="form-control" value="<fmt:formatNumber value="${100000 / LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> USD" readonly="">
+                                                                <input id="buyCardInUSD" name="buyCardInUSD" type="text" class="form-control" placeholder="i.e. <fmt:formatNumber value="${100000 / LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> USD" readonly="">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="control-label col-sm-5" for="pwd">Email of receiver of card</label>
                                                             <div class="col-sm-5" style="padding-right: 0px;">
-                                                                <input type="text" class="form-control" value="timothy@gmail.com" readonly=""/>
+                                                                <input name="recEmail" id="recEmail" type="text" class="form-control" value="${SELECTED_RECIPIENT.email}" readonly=""/>
                                                             </div>
                                                             <div class="col-sm-2"> 
                                                                 <button type="button" class="btn btn-default" onclick="editRecipient('email');">&nbsp;Change&nbsp; </button>
@@ -382,7 +436,7 @@
                                                     <div class="pull-right">
                                                         Current payment: <strong><span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span> VND</strong>
                                                         <br/>
-                                                        <div class="pull-right"><strong><span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT / LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></span> USD</strong></div>
+                                                        <div class="pull-right"><strong><span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span> USD</strong></div>
                                                     </div>
                                                 </div>
                                             </div>                                        

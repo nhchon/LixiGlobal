@@ -47,6 +47,7 @@ function enableEditRecipientHtmlContent(data){
                     $('#editRecipientModal').modal('hide');
                     // get new phone number
                     $('#recPhone').val($("#chooseRecipientForm #phone").val());
+                    $('#recEmail').val($("#chooseRecipientForm #email").val());
                 }
                 else{
                     alert(SOMETHING_WRONG_ERROR);

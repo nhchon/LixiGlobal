@@ -28,4 +28,6 @@ public interface RecipientRepository extends JpaRepository<Recipient, Long>{
     int updateEmail(@Param("email") String email, @Param("id") Long id);
 
     Recipient findByFirstNameAndMiddleNameAndLastNameAndPhone(String firstName, String middleName, String lastName, String phone);
+    
+    Recipient findByEmail(String email);
 }

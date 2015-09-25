@@ -25,7 +25,17 @@ public class RecipientServiceImpl implements RecipientService{
         return this.reciRepository.findOne(id);
         
     }
-
+    
+    /**
+     * 
+     * @param email
+     * @return 
+     */
+    @Override
+    public Recipient findByEmail(String email){
+        
+        return this.reciRepository.findByEmail(email);
+    }
     /**
      * 
      * Used for check unique recipient :D

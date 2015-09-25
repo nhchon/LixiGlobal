@@ -91,6 +91,13 @@
                                 </spring:message>    
                             </div>
                         </c:if>                        
+                        <c:if test="${duplicateEmail eq 1}">
+                            <div class="msg msg-error">
+                                <spring:message code="validate.dup_email_reci">
+                                    <spring:argument value="${recipientEmail}"/>
+                                </spring:message>    
+                            </div>
+                        </c:if>                        
                         
                         <form:form modelAttribute="chooseRecipientForm"  class="form-horizontal">
                             <c:if test="${not empty RECIPIENTS}">
