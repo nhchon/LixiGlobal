@@ -24,8 +24,8 @@ public abstract class LiXiConstants {
     public static final String LIXI_TOP_UP_TYPE = "LIXI_TOP_UP_TYPE";
     public static final String LIXI_PHONE_CARD_TYPE = "LIXI_PHONE_CARD_TYPE";
     //
-    public static final String KEEP_SHOPPING = "KEEP_SHOPPING";
-    public static final String BUY_NOW = "BUY_NOW";
+    public static final String KEEP_SHOPPING_ACTION = "KEEP_SHOPPING_ACTION";
+    public static final String BUY_NOW_ACTION = "BUY_NOW_ACTION";
     // MOBILE TOP UP
     public static final String PHONE_COMPANIES = "PHONE_COMPANIES";
     public static final String TOP_UP_IN_VND = "TOP_UP_IN_VND";
@@ -97,6 +97,8 @@ public abstract class LiXiConstants {
     public static final String LIXI_TOTAL_AMOUNT = "LIXI_TOTAL_AMOUNT";
     
     public static final String YHANNART_GMAIL = "yhannart@gmail.com";
+    
+    public static final String CHONNH_GMAIL = "chonnh@gmail.com";
     
     public static final String WEB_INF_FOLDER = "WEB-INF";
     // folder that contains category icon

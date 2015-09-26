@@ -159,6 +159,8 @@
                                     </tr>
                                     <c:set var="recipientTotal" value="0"/>
                                     <c:forEach items="${entry.gifts}" var="g"  varStatus="giftCount">
+                                        <c:set var="priceInUSD" value="${g.getPriceInUSD(LIXI_ORDER.lxExchangeRate.buy)}"/>
+                                        <c:set var="recGiftIndex" value="${giftCount.count}"/>
                                         <tr>
                                             <td></td>
                                             <td colspan="3">
@@ -172,17 +174,64 @@
                                                             ${g.productName}
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             ${g.productQuantity} x <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
-                                                            <fmt:formatNumber var="itemInUSD" value="${g.productPrice / LIXI_ORDER.lxExchangeRate.buy + 0.05}" pattern="###,###.##" maxFractionDigits="2"/>
                                                             &nbsp;=&nbsp;<fmt:formatNumber value="${g.productQuantity * g.productPrice}" pattern="###,###.##"/> VND
-                                                             
-                                                            or <fmt:formatNumber   value="${(g.productPrice * g.productQuantity)/ LIXI_ORDER.lxExchangeRate.buy + 0.05}" pattern="###,###.##"/> USD
+                                                            or <fmt:formatNumber   value="${priceInUSD * g.productQuantity}" pattern="###,###.##"/> USD
                                                         </td>
                                                         <td style="text-align: right"><a href="<c:url value="/gifts/more-recipient"/>"><i class="fa fa-pencil"></i> Change</a></td>
                                                     </tr>
                                                 </table>
                                             </td>
                                         </tr>
-                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + itemInUSD*g.productQuantity}"/>
+                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + priceInUSD*g.productQuantity}"/>
+                                    </c:forEach>
+                                    <c:forEach items="${entry.topUpMobilePhones}" var="t"  varStatus="tCount">
+                                        <c:set var="recGiftIndex" value="${recGiftIndex + tCount.count}"/>
+                                        <tr>
+                                            <td></td>
+                                            <td colspan="3">
+                                                <table>
+                                                    <tr>
+                                                        <td>${recGiftIndex}</td>
+                                                        <td class="col-md-1">Item</td>
+                                                        <td>
+                                                            Top Up
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> VND
+                                                            or <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> USD
+                                                        </td>
+                                                        <td style="text-align: right"><a href="<c:url value="/gifts/more-recipient"/>"><i class="fa fa-pencil"></i> Delete</a></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + t.amount}"/>
+                                    </c:forEach>
+                                    <c:forEach items="${entry.buyPhoneCards}" var="p"  varStatus="pCount">
+                                        <c:set var="recGiftIndex" value="${recGiftIndex + pCount.count}"/>
+                                        <c:set var="priceInUSD" value="${p.getValueInUSD(LIXI_ORDER.lxExchangeRate.buy)}"/>
+                                        <tr>
+                                            <td></td>
+                                            <td colspan="3">
+                                                <table>
+                                                    <tr>
+                                                        <td>${recGiftIndex}</td>
+                                                        <td class="col-md-1">Item</td>
+                                                        <td>
+                                                            Phone Card
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            ${p.numOfCard} x <fmt:formatNumber value="${p.valueOfCard}" pattern="###,###.##"/> VND
+                                                            or <fmt:formatNumber value="${priceInUSD * p.numOfCard}" pattern="###,###.##"/> USD
+                                                        </td>
+                                                        <td style="text-align: right"><a href="<c:url value="/gifts/more-recipient"/>"><i class="fa fa-pencil"></i> Delete</a></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + priceInUSD}"/>
                                     </c:forEach>
                                 </c:forEach>
                                 <tr>

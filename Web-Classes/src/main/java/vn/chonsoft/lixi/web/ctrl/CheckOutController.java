@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -11,19 +12,34 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import javax.mail.internet.MimeMessage;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiCardFee;
@@ -31,6 +47,7 @@ import vn.chonsoft.lixi.model.LixiFee;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
@@ -49,8 +66,13 @@ import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
+import vn.chonsoft.lixi.web.VtcPayClient;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.util.LiXiSecurityManager;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
+import vn.chonsoft.lixi.web.util.TripleDES;
+import vn.vtc.pay.RequestData;
+import vn.vtc.pay.RequestTransactionResponse;
 
 /**
  *
@@ -91,6 +113,22 @@ public class CheckOutController {
     
     @Inject
     private LixiCardFeeService cardFeeService;
+    
+    @Inject
+    private LiXiSecurityManager securityManager;
+    
+    @Inject
+    private TripleDES tripleDES;
+    
+    @Inject
+    private VtcPayClient vtcClient;
+    
+    @Inject
+    private JavaMailSender mailSender;
+    
+    @Inject
+    private VelocityEngine velocityEngine;
+    
     /**
      * Add a card
      * 
@@ -785,6 +823,11 @@ public class CheckOutController {
         return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
     }
     
+    /**
+     * 
+     * @param model
+     * @param order 
+     */
     private void calculateFee(Map<String, Object> model, LixiOrder order){
         
         LixiFee handlingFee = this.feeService.findByCode(LiXiConstants.LIXI_HANDLING_FEE);
@@ -798,13 +841,6 @@ public class CheckOutController {
         // calculate the total
         double finalTotal = 0;
         double[] totals = LiXiUtils.calculateCurrentPayment(order);
-        //for (Map.Entry<Recipient, List<LixiOrderGift>> entry : recGifts.entrySet())
-        //{
-            //for(LixiOrderGift gift : entry.getValue()){
-                
-                //total += (gift.getProductPrice() * gift.getProductQuantity());
-            //}
-        //}
         double total = totals[1];//usd
         
         // card processing fee
@@ -839,7 +875,7 @@ public class CheckOutController {
         // LIXI_CARD_PROCESSING_FEE_ADD_ON
         cardFeeNumber += cardProcessingFeeAddOn.getFee();
         // round two decimals
-        cardFeeNumber = Math.round(cardFeeNumber * 100.0) / 100.0f;
+        cardFeeNumber = Math.round(cardFeeNumber * 100.0) / 100.0;
         
         // final total 
         finalTotal = total + cardFeeNumber + (handlingFee.getFee() * (order.getGifts().isEmpty()? 0 : order.getGifts().size()));
@@ -847,10 +883,46 @@ public class CheckOutController {
         // 
         model.put(LiXiConstants.LIXI_FINAL_TOTAL, finalTotal);
         model.put(LiXiConstants.LIXI_HANDLING_FEE, handlingFee);
-        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, handlingFee.getFee() * order.getGifts().size());
+        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, handlingFee.getFee() * recGifts.size());
         model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFeeNumber);
-        
     }
+    /**
+     * 
+     * 
+     * 
+     * @param model 
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "place-order", method = RequestMethod.GET)
+    public ModelAndView placeOrder(Map<String, Object> model, HttpServletRequest request){
+        
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+
+        }
+
+        LixiOrder order = null;
+        // order already created
+        Long orderId = (Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if (orderId != null) {
+            
+            order = this.lxorderService.findById(orderId);
+        }
+        else{
+            
+            // order not exist, go to Choose recipient page
+            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+        }
+        
+        // calculate fee
+        calculateFee(model, order);
+        
+        return new ModelAndView("giftprocess/place-order");
+    }
+    
     /**
      * 
      * Ajax call to re-calculate fee
@@ -893,43 +965,14 @@ public class CheckOutController {
         
         return new ModelAndView("giftprocess/fees");
     }
+    
     /**
      * 
-     * 
-     * 
-     * @param model 
+     * @param model
+     * @param recId
      * @param request
      * @return 
      */
-    @RequestMapping(value = "place-order", method = RequestMethod.GET)
-    public ModelAndView placeOrder(Map<String, Object> model, HttpServletRequest request){
-        
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
-
-        LixiOrder order = null;
-        // order already created
-        Long orderId = (Long)request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
-        if (orderId != null) {
-            
-            order = this.lxorderService.findById(orderId);
-        }
-        else{
-            
-            // order not exist, go to Choose recipient page
-            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
-        }
-        
-        // calculate fee
-        calculateFee(model, order);
-        
-        return new ModelAndView("giftprocess/place-order");
-    }
-    
     @RequestMapping(value = "deleteReceiver/{recId}", method = RequestMethod.GET)
     public ModelAndView deleteReceiver(Map<String, Object> model, @PathVariable Long recId, HttpServletRequest request){
         
@@ -998,6 +1041,13 @@ public class CheckOutController {
         
     }
     
+    private String gen(){
+        Random randomGenerator = new Random();
+        int randomInt = randomGenerator.nextInt(1000000);
+        String rndStr = randomInt + "";
+        
+        return org.apache.commons.lang3.StringUtils.leftPad(rndStr, 6, '0');
+    }
     /**
      * 
      * submit order
@@ -1008,7 +1058,7 @@ public class CheckOutController {
      * @return 
      */
     @RequestMapping(value = "place-order", method = RequestMethod.POST)
-    public ModelAndView placeOrder(@RequestParam Integer setting, HttpServletRequest request){
+    public ModelAndView placeOrder(@RequestParam Integer setting, HttpServletRequest request) throws Exception{
         
         // check login
         if (!LiXiUtils.isLoggined(request)) {
@@ -1016,7 +1066,7 @@ public class CheckOutController {
             return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
 
         }
-        
+        User u = this.userService.findByEmail((String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL));        
         
         LixiOrder order = null;
         // order already created
@@ -1031,7 +1081,101 @@ public class CheckOutController {
             order.setModifiedDate(Calendar.getInstance().getTime());
             
             this.lxorderService.save(order);
-            
+            ///////////////////////////////////////////////////////////////////
+            // suppose The order is paid, top up mobile
+            if(order.getTopUpMobilePhones()!= null && !order.getTopUpMobilePhones().isEmpty()){
+                
+                for(TopUpMobilePhone topUp : order.getTopUpMobilePhones()){
+                    
+                    Recipient rec = topUp.getRecipient();
+                    String amount = "10000"; // topUp.getAmount();
+                    
+                    //////////////////////// SAMPLE CODE ///////////////////////
+                    /////////////////////// NEED TO BE RE-ORGANIZED /////////////
+                    XmlMapper xmlMapper = new XmlMapper();
+                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+                    String serviceCode = "VTC0056";
+                    String account = rec.getPhone();
+                    String partnerCode = "yhannart";
+                    String transDate = format.format(Calendar.getInstance().getTime());//yyyyMMddHHmmss
+                    String orgTransID = "LG" + gen();
+                    //
+                    String dataSign = StringUtils.join(new String[] {serviceCode, account, amount.toString(), partnerCode, transDate, orgTransID}, '-');
+                    System.out.println("dataSign: "+dataSign);
+                    byte[] dataSigned = securityManager.signData(dataSign.getBytes());
+                    //
+                    System.out.println("Verify: " + securityManager.verifySignature(dataSigned, dataSign.getBytes()));
+
+                    RequestData r = new RequestData();
+                    r.setAccount(account);
+                    r.setAmount(amount);
+                    r.setOrgTransID(orgTransID);
+                    r.setQuantity("1");
+                    r.setServiceCode(serviceCode);
+                    r.setTransDate(transDate);
+                    r.setDataSign(Base64.encodeBase64String(dataSigned));//new String(dataSigned)
+
+                    String requestData = xmlMapper.writeValueAsString(r);
+
+                    requestData = requestData.replaceAll(" xmlns=\"\"", "");
+                    requestData = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestData;
+                    System.out.println(requestData);
+                    
+                    RequestTransactionResponse response = vtcClient.topupTelco(requestData);
+                    
+                    String vtcReturned = response.getRequestTransactionResult();
+                    
+                    System.out.println(vtcReturned);
+                    log.info(vtcReturned);
+                    
+                    if(vtcReturned.startsWith("1|")){
+                        
+                        // send email
+                        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+                            @SuppressWarnings({ "rawtypes", "unchecked" })
+                            @Override
+                            public void prepare(MimeMessage mimeMessage) throws Exception {
+
+                                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                                message.setTo(rec.getEmail());
+                                message.setCc(LiXiConstants.CHONNH_GMAIL);
+                                message.setFrom("support@lixi.global");
+                                message.setSubject("LiXi.Global - Top Up Mobile Minute Alert");
+                                message.setSentDate(Calendar.getInstance().getTime());
+
+                                Map model = new HashMap();	             
+                                model.put("rec", rec);
+                                model.put("sender", u);
+                                model.put("amount", topUp.getAmount());
+
+                                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                   velocityEngine, "emails/topup-confirmation.vm", "UTF-8", model);
+                                message.setText(text, true);
+
+                              }
+
+                           };        
+
+                        // send oldEmail
+                        ExecutorService executor = Executors.newSingleThreadExecutor();
+                        executor.execute(() -> mailSender.send(preparator));
+                        
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    ////////////////////////////////////////////////////////////
+                }
+            }
             // jump to thank you page
             return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
         }

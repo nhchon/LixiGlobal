@@ -13,7 +13,7 @@
             var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
             var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
             var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
-            var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>'
+            var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
             var TOP_UP_EMPTY = '<spring:message code="validate.topup.no_empty"/>';
             var NUM_OF_CARD = '<spring:message code="validate.buyphonecard.num_of_card"/>';
             
@@ -59,27 +59,27 @@
                 // submit
                 $('#btnTopUpKeepShopping').click(function(){
                     // set action
-                    $('#topUpAction').val('KEEP_SHOPPING');
+                    $('#topUpAction').val('KEEP_SHOPPING_ACTION');
                     //
                     return checkTopUpMobileForm();
                 });
                 
                 $('#btnTopUpBuyNow').click(function(){
                     // set action
-                    $('#topUpAction').val('BUY_NOW');
+                    $('#topUpAction').val('BUY_NOW_ACTION');
                     //
                     return checkTopUpMobileForm();
                 });
                 
                 $('#btnPhoneCardKeepShopping').click(function(){
                     // set action
-                    $('#phoneCardAction').val('KEEP_SHOPPING');
+                    $('#phoneCardAction').val('KEEP_SHOPPING_ACTION');
                     //
                     return checkBuyPhoneCardForm();
                 });
                 $('#btnPhoneCardBuyNow').click(function(){
                     //set action
-                    $('#phoneCardAction').val('BUY_NOW');
+                    $('#phoneCardAction').val('BUY_NOW_ACTION');
                     //
                     return checkBuyPhoneCardForm();
                 });

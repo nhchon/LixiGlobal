@@ -1,0 +1,18 @@
+<html>
+    <body>
+        <h5>Hi ${rec.firstName} ${rec.middleName} ${rec.lastName} !</h5>
+        
+        <div>
+            <p>
+            ${sender.firstName} ${sender.middleName} ${sender.lastName} top up ${amount} USD to mobile number ${rec.phone}
+            </p>
+        </div>
+        
+        <div><p>Please enjoy !</p></div>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

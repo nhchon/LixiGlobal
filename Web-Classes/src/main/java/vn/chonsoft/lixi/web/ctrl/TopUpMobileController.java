@@ -50,64 +50,56 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
 @WebController
 @RequestMapping("topUp")
 public class TopUpMobileController {
-    
+
     private static final Logger log = LogManager.getLogger(TopUpMobileController.class);
 
     @Inject
     private UserService userService;
-    
+
     @Inject
     private RecipientService reciService;
 
     @Inject
     private LixiOrderService lxorderService;
-    
+
     @Inject
     private LixiExchangeRateService lxexrateService;
 
     @Inject
     private LixiCategoryService lxcService;
-    
+
     @Inject
     private VtcServiceCodeService vtcServiceCodeService;
-    
+
     @Inject
     private TopUpMobilePhoneService topUpService;
-    
+
     @Inject
     private BuyPhoneCardService buyPhoneCardService;
+
     /**
-     * 
+     *
      * @param model
      * @param request
-     * @return 
+     * @return
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ModelAndView show(Map<String, Object> model, HttpServletRequest request){
-        
+    public ModelAndView show(Map<String, Object> model, HttpServletRequest request) {
+
         // check login
         if (!LiXiUtils.isLoggined(request)) {
 
             return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
 
         }
-        
-        // for debug: what is in model
-        //if(model.isEmpty()){
-            //System.out.println("Wow ! It's empty");
-        //}
-        //for (Map.Entry<String, Object> entry : model.entrySet())
-        //{
-            //System.out.println(entry.getKey() + "/" + entry.getValue());
-        //}
-        
+
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
-        
+
         // sort categories
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "activated"), 
-                            new Sort.Order(Sort.Direction.ASC, "sortOrder"));
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "activated"),
+                new Sort.Order(Sort.Direction.ASC, "sortOrder"));
         List<LixiCategory> categories = this.lxcService.findByLocaleCode(LocaleContextHolder.getLocale().toString(), sort);
         // get exchange rate
         LixiOrder order = null;
@@ -119,23 +111,22 @@ public class TopUpMobileController {
             order = this.lxorderService.findById(orderId);
 
         }
-        
+
         // check current payment <==> maximum payment
         LixiExchangeRate lxExch = null;
         //double buy = lxExch.getBuy();
-        if(order != null){
-            
+        if (order != null) {
+
             // get buy from order
             lxExch = order.getLxExchangeRate();
-        }
-        else{
+        } else {
             // get latest from database
             lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
         }
         /* get recipient */
         Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
         model.put(LiXiConstants.SELECTED_RECIPIENT, rec);
-        
+
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
         model.put(LiXiConstants.LIXI_CATEGORIES, categories);
         model.put(LiXiConstants.PHONE_COMPANIES, this.vtcServiceCodeService.findAll());
@@ -145,30 +136,223 @@ public class TopUpMobileController {
         double[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
         model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0]);
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[1]);
-        
+
         return new ModelAndView("topup/topup", model);
     }
-    
+
     /**
-     * 
+     *
      * @param model
      * @param request
-     * @return 
+     * @return
+     */
+    @RequestMapping(value = "topUpMobilePhone", method = RequestMethod.POST)
+    public ModelAndView topUpMobilePhone(Map<String, Object> model, HttpServletRequest request) {
+
+        // check login
+        if (!LiXiUtils.isLoggined(request)) {
+
+            model.put("signInFailed", 1);
+            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
+
+        }
+
+        String amountTopUpStr = request.getParameter("amountTopUp");
+        String topUpAction = request.getParameter("topUpAction");
+
+        Integer amountTopUp = 0;
+        try {
+            amountTopUp = Integer.parseInt(amountTopUpStr);
+        } catch (Exception ex) {
+        };
+
+        // sender
+        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+        double userMoneyLevelAmount = u.getUserMoneyLevel().getMoneyLevel().getAmount();
+
+        LixiOrder order = null;
+        // check order already created
+        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
+
+            Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+
+            order = this.lxorderService.findById(orderId);
+
+        }
+
+        LixiExchangeRate lxExch = null;
+        double buy = 0;
+        if (order != null) {
+            // get buy from order
+            lxExch = order.getLxExchangeRate();
+            buy = lxExch.getBuy();
+        } else {
+            // get current exchange rate
+            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+            buy = lxExch.getBuy();
+        }
+
+        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, amountTopUp, buy);
+        // order is exceed
+        if (exceed) {
+
+            model.put("topUpExceed", 1);
+            model.put(LiXiConstants.TOP_UP_AMOUNT, amountTopUp);
+
+            //
+            model.put("TOPUP_ACTION", "MOBILE_MINUTE");
+            return show(model, request);
+        } else {
+
+            if (order == null) {
+
+                order = createOrder(u, lxExch);
+                //
+                request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
+            }
+            //
+            String currency = request.getParameter("currency");
+            String recPhone = request.getParameter("recPhone");
+
+            TopUpMobilePhone topUp = new TopUpMobilePhone();
+            topUp.setAmount(amountTopUp);
+            topUp.setCurrency(currency);
+            topUp.setPhone(recPhone);
+            topUp.setOrder(order);
+            topUp.setRecipient(this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID)));
+            topUp.setModifiedDate(Calendar.getInstance().getTime());
+
+            // save
+            this.topUpService.save(topUp);
+
+        }
+
+        if (LiXiConstants.BUY_NOW_ACTION.equals(topUpAction)) {
+
+            // reivew order
+            return new ModelAndView(new RedirectView("/gifts/more-recipient", true, true));
+        } else {
+            // keep shopping
+            model.put("addSuccess", 1);
+            model.put("TOPUP_ACTION", "MOBILE_MINUTE");
+            return show(model, request);
+        }
+    }
+
+    /**
+     *
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "buyPhoneCard", method = RequestMethod.POST)
+    public ModelAndView buyPhoneCard(Map<String, Object> model, HttpServletRequest request) {
+
+        String phoneCompany = request.getParameter("phoneCompany");
+        String numOfCardStr = request.getParameter("numOfCard");
+        String valueOfCardStr = request.getParameter("valueOfCard");
+        String phoneCardAction = request.getParameter("phoneCardAction");
+        Integer valueOfCard = 0;
+        Integer numOfCard = 0;
+        try {
+            valueOfCard = Integer.parseInt(valueOfCardStr);
+            numOfCard = Integer.parseInt(numOfCardStr);
+        } catch (Exception e) {
+        }
+
+        //
+        // sender
+        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        User u = this.userService.findByEmail(email);
+        double userMoneyLevelAmount = u.getUserMoneyLevel().getMoneyLevel().getAmount();
+
+        LixiOrder order = null;
+        // check order already created
+        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
+
+            Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+
+            order = this.lxorderService.findById(orderId);
+
+        }
+
+        LixiExchangeRate lxExch = null;
+        double buy = 0;
+        if (order != null) {
+            // get buy from order
+            lxExch = order.getLxExchangeRate();
+            buy = lxExch.getBuy();
+        } else {
+            // get current exchange rate
+            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+            buy = lxExch.getBuy();
+        }
+
+        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy), buy);
+        // order is exceed
+        if (exceed) {
+
+            model.put("phoneCardExceed", 1);
+
+            //
+            model.put("TOPUP_ACTION", "PHONE_CARD");
+            return show(model, request);
+        } else {
+
+            if (order == null) {
+
+                order = createOrder(u, lxExch);
+                //
+                request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
+            }
+            //
+
+            BuyPhoneCard phoneCard = new BuyPhoneCard();
+            phoneCard.setNumOfCard(numOfCard);
+            phoneCard.setValueOfCard(valueOfCard);
+            phoneCard.setVtcCode(this.vtcServiceCodeService.findByCode(phoneCompany));
+            phoneCard.setOrder(order);
+            phoneCard.setRecipient(this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID)));
+            phoneCard.setModifiedDate(Calendar.getInstance().getTime());
+
+            // save
+            this.buyPhoneCardService.save(phoneCard);
+
+            if (LiXiConstants.BUY_NOW_ACTION.equals(phoneCardAction)) {
+
+                // reivew order
+                return new ModelAndView(new RedirectView("/gifts/more-recipient", true, true));
+            } else {
+                // keep shopping
+                model.put("buySuccess", 1);
+                model.put("TOPUP_ACTION", "PHONE_CARD");
+                return show(model, request);
+            }
+
+        }
+    }
+
+    /**
+     *
+     * @param model
+     * @param request
+     * @return
      */
     @RequestMapping(value = "editRecipient", method = RequestMethod.GET)
-    public ModelAndView editRecipient(Map<String, Object> model, HttpServletRequest request){
-        
+    public ModelAndView editRecipient(Map<String, Object> model, HttpServletRequest request) {
+
         // check login
         if (!LiXiUtils.isLoggined(request)) {
 
             return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
 
         }
-        
+
         /* get recipient */
         Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
         ChooseRecipientForm form = new ChooseRecipientForm();
-        if(rec != null){
+        if (rec != null) {
             form.setFirstName(rec.getFirstName());
             form.setMiddleName(rec.getMiddleName());
             form.setLastName(rec.getLastName());
@@ -178,203 +362,19 @@ public class TopUpMobileController {
             form.setNote(rec.getNote());
             form.setRecId(rec.getId());
         }
-        
+
         model.put("chooseRecipientForm", form);
-        
+
         return new ModelAndView("topup/editRecipientModal", model);
     }
-    
+
     /**
-     * 
-     * @param model
-     * @param request
-     * @return 
-     */
-    @RequestMapping(value = "topUpMobilePhone", method = RequestMethod.POST)
-    public ModelAndView topUpMobilePhone(Map<String, Object> model, HttpServletRequest request){
-        
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-
-        }
-        
-        String amountTopUpStr = request.getParameter("amountTopUp");
-        String topUpAction = request.getParameter("topUpAction");
-        
-        Integer amountTopUp = 0;
-        try{amountTopUp = Integer.parseInt(amountTopUpStr);}catch(Exception ex){};
-        
-        // sender
-        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
-        User u = this.userService.findByEmail(email);
-        double userMoneyLevelAmount = u.getUserMoneyLevel().getMoneyLevel().getAmount();
-        
-        LixiOrder order = null;
-        // check order already created
-        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
-
-            Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
-
-            order = this.lxorderService.findById(orderId);
-
-        }
-        
-        LixiExchangeRate lxExch = null;
-        double buy = 0;
-        if(order != null){
-            // get buy from order
-            lxExch = order.getLxExchangeRate();
-            buy = lxExch.getBuy();
-        }
-        else{
-            // get current exchange rate
-            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
-            buy = lxExch.getBuy();
-        }
-        
-        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, amountTopUp, buy);
-        // order is exceed
-        if(exceed){
-            
-            model.put("topUpExceed", 1);
-            model.put(LiXiConstants.TOP_UP_AMOUNT, amountTopUp);
-            
-            //
-            model.put("TOPUP_ACTION", "MOBILE_MINUTE");
-            return show(model, request);
-        }
-        else{
-            
-            if(order == null){
-                
-                order = createOrder(u, lxExch);
-                //
-                request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
-            }
-            //
-            String currency = request.getParameter("currency");
-            String recPhone = request.getParameter("recPhone");
-            
-            TopUpMobilePhone topUp = new TopUpMobilePhone();
-            topUp.setAmount(amountTopUp);
-            topUp.setCurrency(currency);
-            topUp.setPhone(recPhone);
-            topUp.setOrder(order);
-            topUp.setRecipient(this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID)));
-            topUp.setModifiedDate(Calendar.getInstance().getTime());
-            
-            // save
-            this.topUpService.save(topUp);
-            
-        }
-        
-        if(LiXiConstants.BUY_NOW.equals(topUpAction)){
-            
-            // reivew order
-            return new ModelAndView(new RedirectView("/gifts/more-recipient", true, true));
-        }
-        else{
-            // keep shopping
-            model.put("addSuccess", 1);
-            model.put("TOPUP_ACTION", "MOBILE_MINUTE");
-            return show(model, request);
-        }
-    }
-    
-    /**
-     * 
-     * @param model
-     * @param request
-     * @return 
-     */
-    @RequestMapping(value = "buyPhoneCard", method = RequestMethod.POST)
-    public ModelAndView buyPhoneCard(Map<String, Object> model, HttpServletRequest request){
-        
-        String phoneCompany = request.getParameter("phoneCompany");
-        String numOfCardStr = request.getParameter("numOfCard");
-        String valueOfCardStr = request.getParameter("valueOfCard");
-        Integer valueOfCard = 0;
-        Integer numOfCard = 0;
-        try { 
-            valueOfCard = Integer.parseInt(valueOfCardStr);
-            numOfCard = Integer.parseInt(numOfCardStr);
-        } catch (Exception e) {}
-        
-        //
-        // sender
-        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
-        User u = this.userService.findByEmail(email);
-        double userMoneyLevelAmount = u.getUserMoneyLevel().getMoneyLevel().getAmount();
-        
-        LixiOrder order = null;
-        // check order already created
-        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
-
-            Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
-
-            order = this.lxorderService.findById(orderId);
-
-        }
-        
-        LixiExchangeRate lxExch = null;
-        double buy = 0;
-        if(order != null){
-            // get buy from order
-            lxExch = order.getLxExchangeRate();
-            buy = lxExch.getBuy();
-        }
-        else{
-            // get current exchange rate
-            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
-            buy = lxExch.getBuy();
-        }
-        
-        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy), buy);
-        // order is exceed
-        if(exceed){
-            
-            model.put("phoneCardExceed", 1);
-            
-            //
-            model.put("TOPUP_ACTION", "PHONE_CARD");
-            return show(model, request);
-        }
-        else{
-            
-            if(order == null){
-                
-                order = createOrder(u, lxExch);
-                //
-                request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
-            }
-            //
-            
-            BuyPhoneCard phoneCard = new BuyPhoneCard();
-            phoneCard.setNumOfCard(numOfCard);
-            phoneCard.setValueOfCard(valueOfCard);
-            phoneCard.setVtcCode(this.vtcServiceCodeService.findByCode(phoneCompany));
-            phoneCard.setOrder(order);
-            phoneCard.setRecipient(this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID)));
-            phoneCard.setModifiedDate(Calendar.getInstance().getTime());
-            
-            // save
-            this.buyPhoneCardService.save(phoneCard);
-            
-            model.put("buySuccess", 1);
-            model.put("TOPUP_ACTION", "PHONE_CARD");
-            return show(model, request);
-        }
-    }
-    /**
-     * 
+     *
      * @param model
      * @param form
      * @param errors
      * @param request
-     * @return 
+     * @return
      */
     @RequestMapping(value = "editRecipient", method = RequestMethod.POST)
     public ModelAndView editRecipient(Map<String, Object> model,
@@ -398,16 +398,16 @@ public class TopUpMobileController {
 
         try {
             Recipient rec = null;
-            
+
             // correct name, fix encode, capitalize
             log.info("firstName:" + form.getFirstName());
             log.info("firstName:" + LiXiUtils.fixEncode(form.getFirstName()));
             log.info("firstName:" + LiXiUtils.correctName(form.getFirstName()));
-            log.info("request.getCharacterEncoding(): "+request.getCharacterEncoding());
+            log.info("request.getCharacterEncoding(): " + request.getCharacterEncoding());
             //form.setFirstName(LiXiUtils.correctName(form.getFirstName()));
             //form.setMiddleName(LiXiUtils.correctName(form.getMiddleName()));
             //form.setLastName(LiXiUtils.correctName(form.getLastName()));
-            
+
             // save or update the recipient
             rec = new Recipient();
             rec.setId((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
@@ -442,15 +442,15 @@ public class TopUpMobileController {
         }
 
     }
-    
+
     /**
-     * 
+     *
      * @param u
      * @param lxExch
-     * @return 
+     * @return
      */
-    private LixiOrder createOrder(User u, LixiExchangeRate lxExch){
-        
+    private LixiOrder createOrder(User u, LixiExchangeRate lxExch) {
+
         // create order
         LixiOrder order = new LixiOrder();
         order.setSender(u);
@@ -464,7 +464,7 @@ public class TopUpMobileController {
         // set card and billing address from last order
         LixiOrder lastOrder = this.lxorderService.findLastOrder(u);
         // last user's order
-        if(lastOrder != null){
+        if (lastOrder != null) {
             // use the last payment method
             order.setCard(lastOrder.getCard());
             order.setBankAccount(lastOrder.getBankAccount());
@@ -476,21 +476,21 @@ public class TopUpMobileController {
         // store ID into session
         //request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
     }
+
     /**
-     * 
+     *
      * check exceed
-     * 
+     *
      * @param model
      * @param order
      * @param userMoneyLevel
      * @param addedAmount
-     * @return 
+     * @return
      */
-    private boolean checkExceed(Map<String, Object> model, LixiOrder order, double userMoneyLevel, double addedAmount, double buy){
-        
+    private boolean checkExceed(Map<String, Object> model, LixiOrder order, double userMoneyLevel, double addedAmount, double buy) {
+
         // check current payment <==> maximum payment
-        
-        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); 
+        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order);
         double currentPayment = currentPayments[1];//USD
         currentPayment += addedAmount;// in VND
 
@@ -498,34 +498,34 @@ public class TopUpMobileController {
 
             // maximum payment is over
             model.put("exceed", 1);
-            
+
             double exceededPaymentVND = (currentPayment - userMoneyLevel) * buy;
             double exceededPaymentUSD = currentPayment - userMoneyLevel;
-            
+
             model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
-            
+
             model.put(LiXiConstants.EXCEEDED_USD, LiXiUtils.getNumberFormat().format(exceededPaymentUSD));
-            
+
             return true;
-        }
-        else{
+        } else {
             // the order is not exceeded
             model.put("exceed", 0);
             return false;
         }
     }
+
     /**
-     * 
+     *
      * Check topup exceed
-     * 
+     *
      * @param model
      * @param amount
      * @param request
-     * @return 
+     * @return
      */
     @RequestMapping(value = "checkTopUpExceed/{amount}", method = RequestMethod.GET)
-    public ModelAndView checkTopUpExceed(Map<String, Object> model, @PathVariable Integer amount, HttpServletRequest request){
-        
+    public ModelAndView checkTopUpExceed(Map<String, Object> model, @PathVariable Integer amount, HttpServletRequest request) {
+
         // check login
         if (!LiXiUtils.isLoggined(request)) {
 
@@ -536,7 +536,7 @@ public class TopUpMobileController {
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
-        
+
         LixiOrder order = null;
         // check order already created
         if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
@@ -546,21 +546,20 @@ public class TopUpMobileController {
             order = this.lxorderService.findById(orderId);
 
         }
-        
+
         // check current payment <==> maximum payment
         LixiExchangeRate lxExch = null;
         double buy = 0;
-        if(order != null){
+        if (order != null) {
             // get buy from order
             lxExch = order.getLxExchangeRate();
             buy = lxExch.getBuy();
-        }
-        else{
+        } else {
             // get current exchange rate
             lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
             buy = lxExch.getBuy();
         }
-        
+
         double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // [VND, USD]
         double currentPayment = currentPayments[1];//USD
         currentPayment += amount;// in USD
@@ -569,35 +568,34 @@ public class TopUpMobileController {
 
             // maximum payment is over
             model.put("exceed", 1);
-            
+
             double exceededPaymentVND = (currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount()) * buy;
             double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
-            
+
             model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
-            
+
             model.put(LiXiConstants.EXCEEDED_USD, LiXiUtils.getNumberFormat().format(exceededPaymentUSD));
-         
-        }
-        else{
+
+        } else {
             // the order is not exceeded
             model.put("exceed", 0);
         }
         // forward topup amount
         model.put(LiXiConstants.TOP_UP_AMOUNT, amount);
-        
+
         // topup in VND
         model.put(LiXiConstants.TOP_UP_IN_VND, LiXiUtils.getNumberFormat().format(amount * buy));
-        
+
         // store current payment
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
-        
+
         return new ModelAndView("topup/exceedTopUp", model);
     }
-    
+
     @RequestMapping(value = "checkBuyPhoneCardExceed/{numOfCard}/{valueOfCard}", method = RequestMethod.GET)
-    public ModelAndView checkBuyPhoneCardExceed(Map<String, Object> model, @PathVariable Integer numOfCard, @PathVariable Integer valueOfCard, HttpServletRequest request){
-        
+    public ModelAndView checkBuyPhoneCardExceed(Map<String, Object> model, @PathVariable Integer numOfCard, @PathVariable Integer valueOfCard, HttpServletRequest request) {
+
         // check login
         if (!LiXiUtils.isLoggined(request)) {
 
@@ -608,7 +606,7 @@ public class TopUpMobileController {
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
-        
+
         LixiOrder order = null;
         // check order already created
         if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
@@ -618,21 +616,20 @@ public class TopUpMobileController {
             order = this.lxorderService.findById(orderId);
 
         }
-        
+
         // check current payment <==> maximum payment
         LixiExchangeRate lxExch = null;
         double buy = 0;
-        if(order != null){
+        if (order != null) {
             // get buy from order
             lxExch = order.getLxExchangeRate();
             buy = lxExch.getBuy();
-        }
-        else{
+        } else {
             // get current exchange rate
             lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
             buy = lxExch.getBuy();
         }
-        
+
         double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // [VND, USD]
         double currentPayment = currentPayments[1];//USD
         currentPayment += LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy);// in USD
@@ -641,30 +638,29 @@ public class TopUpMobileController {
 
             // maximum payment is over
             model.put("exceed", 1);
-            
+
             double exceededPaymentVND = (currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount()) * buy;
             double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
-            
+
             model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
-            
+
             model.put(LiXiConstants.EXCEEDED_USD, LiXiUtils.getNumberFormat().format(exceededPaymentUSD));
-         
-        }
-        else{
+
+        } else {
             // the order is not exceeded
             model.put("exceed", 0);
         }
         // forward 
         model.put(LiXiConstants.NUM_OF_CARD, numOfCard);
         model.put(LiXiConstants.VALUE_OF_CARD, valueOfCard);
-        
+
         // topup in VND
         model.put(LiXiConstants.BUY_PHONE_CARD_IN_USD, LiXiUtils.getNumberFormat().format(LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy)));
-        
+
         // store current payment
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
-        
+
         return new ModelAndView("topup/exceedPhoneCard", model);
     }
 }

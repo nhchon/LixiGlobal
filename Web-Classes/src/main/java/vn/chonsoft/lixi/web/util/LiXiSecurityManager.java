@@ -14,7 +14,6 @@ package vn.chonsoft.lixi.web.util;
 
 import java.security.*;
 import java.security.spec.*;
-import java.io.*;
 import org.apache.commons.codec.binary.*;
 
 public class LiXiSecurityManager {

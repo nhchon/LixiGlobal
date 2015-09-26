@@ -26,7 +26,6 @@ import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -55,6 +54,7 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import vn.chonsoft.lixi.web.VtcPayClient;
 import vn.chonsoft.lixi.web.util.LiXiSecurityManager;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.web.util.TripleDES;
@@ -140,7 +140,7 @@ public class RootContextConfiguration  implements
     public Jaxb2Marshaller jaxb2Marshaller()
     {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setPackagesToScan(new String[] { "vn.chonsoft.lixi" });
+        marshaller.setPackagesToScan(new String[] { "vn.vtc.pay", "vn.chonsoft.lixi" });
         return marshaller;
     }
 
@@ -277,6 +277,21 @@ public class RootContextConfiguration  implements
         tripleDES.setKey(env.getProperty("triple.des.key"));
         
         return tripleDES;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Bean
+    public VtcPayClient vtcClient(){
+    
+        VtcPayClient vtcClient = new VtcPayClient();
+        vtcClient.setDefaultUri("https://pay.vtc.vn/WS/GoodsPaygate.asmx?WSDL");//env.getProperty(?) ?
+        vtcClient.setMarshaller(jaxb2Marshaller());
+        vtcClient.setUnmarshaller(jaxb2Marshaller());
+     
+        return vtcClient;
     }
     /**
      * 

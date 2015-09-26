@@ -17,7 +17,7 @@
             var MIN_VND = 200000;
             var MAX_VND = 2000000;
             var STEP_VND = 50000;
-            var DEFAULT_VALUE = 25;
+            var DEFAULT_VALUE = 10;
             var RECIPIENT_NAME = "${SELECTED_RECIPIENT_NAME}";
             var LAST_AMOUNT = '${SELECTED_AMOUNT}';
             var LAST_AMOUNT_CURRENCY = '${SELECTED_AMOUNT_CURRENCY}';
