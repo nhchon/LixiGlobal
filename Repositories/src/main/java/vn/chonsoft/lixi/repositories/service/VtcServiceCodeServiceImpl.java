@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.repositories.service;
 import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import vn.chonsoft.lixi.model.Network;
 import vn.chonsoft.lixi.model.VtcServiceCode;
 import vn.chonsoft.lixi.repositories.VtcServiceCodeRepository;
 
@@ -29,6 +30,18 @@ public class VtcServiceCodeServiceImpl implements VtcServiceCodeService{
     public VtcServiceCode findByCode(String code) {
         
         return this.vtcServiceCodeService.findByCode(code);
+    }
+    
+    /**
+     * 
+     * @param network
+     * @param lxChucNang
+     * @return 
+     */
+    @Override
+    public VtcServiceCode findByNetworkAndLxChucNang(Network network, String lxChucNang){
+        
+        return this.vtcServiceCodeService.findByNetworkAndLxChucNang(network, lxChucNang);
     }
     
     /**

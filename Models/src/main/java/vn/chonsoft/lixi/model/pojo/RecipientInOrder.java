@@ -5,7 +5,7 @@
 package vn.chonsoft.lixi.model.pojo;
 
 import java.util.List;
-import vn.chonsoft.lixi.model.BuyPhoneCard;
+import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
@@ -23,7 +23,7 @@ public class RecipientInOrder {
     
     private List<LixiOrderGift> gifts;
     
-    private List<BuyPhoneCard> buyPhoneCards;
+    private List<BuyCard> buyPhoneCards;
     
     private List<TopUpMobilePhone> topUpMobilePhones;
 
@@ -51,11 +51,11 @@ public class RecipientInOrder {
         this.gifts = gifts;
     }
 
-    public List<BuyPhoneCard> getBuyPhoneCards() {
+    public List<BuyCard> getBuyPhoneCards() {
         return buyPhoneCards;
     }
 
-    public void setBuyPhoneCards(List<BuyPhoneCard> buyPhoneCards) {
+    public void setBuyPhoneCards(List<BuyCard> buyPhoneCards) {
         this.buyPhoneCards = buyPhoneCards;
     }
 

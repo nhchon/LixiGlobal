@@ -5,12 +5,12 @@
 package vn.chonsoft.lixi.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import vn.chonsoft.lixi.model.BuyPhoneCard;
+import vn.chonsoft.lixi.model.BuyCard;
 
 /**
  *
  * @author chonnh
  */
-public interface BuyPhoneCardRepository  extends JpaRepository<BuyPhoneCard, Long>{
+public interface BuyCardRepository  extends JpaRepository<BuyCard, Long>{
     
 }

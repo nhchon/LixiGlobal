@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
+import vn.chonsoft.lixi.model.Network;
 import vn.chonsoft.lixi.model.VtcServiceCode;
 
 /**
@@ -18,4 +19,6 @@ public interface VtcServiceCodeService {
     List<VtcServiceCode> findAll();
     
     VtcServiceCode findByCode(String code);
+    
+    VtcServiceCode findByNetworkAndLxChucNang(Network network, String lxChucNang);
 }

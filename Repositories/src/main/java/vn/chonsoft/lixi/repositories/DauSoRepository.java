@@ -4,17 +4,18 @@
  */
 package vn.chonsoft.lixi.repositories;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import vn.chonsoft.lixi.model.DauSo;
 import vn.chonsoft.lixi.model.Network;
-import vn.chonsoft.lixi.model.VtcServiceCode;
 
 /**
  *
  * @author chonnh
  */
-public interface VtcServiceCodeRepository  extends  JpaRepository<VtcServiceCode, Long>{
+public interface DauSoRepository  extends  JpaRepository<DauSo, Long>{
     
-    VtcServiceCode findByCode(String code);
+    List<DauSo> findByCode(String code);
     
-    VtcServiceCode findByNetworkAndLxChucNang(Network network, String lxChucNang);
+    List<DauSo> findByNetwork(Network network);
 }

@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -18,8 +20,8 @@ import javax.persistence.Table;
  * @author chonnh
  */
 @Entity
-@Table(name = "vtc_response_code")
-public class VtcResponseCode implements Serializable {
+@Table(name = "dau_so")
+public class DauSo implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
@@ -31,26 +33,23 @@ public class VtcResponseCode implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "code")
-    private int code;
+    private String code;
     
-    @Basic(optional = false)
-    @Column(name = "description")
-    private String description;
+    @JoinColumn(name = "network", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Network network;
     
-    @Column(name = "comment")
-    private String comment;
-
-    public VtcResponseCode() {
+    public DauSo() {
     }
 
-    public VtcResponseCode(Long id) {
+    public DauSo(Long id) {
         this.id = id;
     }
 
-    public VtcResponseCode(Long id, int code, String description) {
+    public DauSo(Long id, String code, Network network) {
         this.id = id;
         this.code = code;
-        this.description = description;
+        this.network = network;
     }
 
     public Long getId() {
@@ -61,28 +60,20 @@ public class VtcResponseCode implements Serializable {
         this.id = id;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public String getDescription() {
-        return description;
+    public Network getNetwork() {
+        return network;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setNetwork(Network network) {
+        this.network = network;
     }
 
     @Override
@@ -95,10 +86,10 @@ public class VtcResponseCode implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof VtcResponseCode)) {
+        if (!(object instanceof DauSo)) {
             return false;
         }
-        VtcResponseCode other = (VtcResponseCode) object;
+        DauSo other = (DauSo) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -107,7 +98,7 @@ public class VtcResponseCode implements Serializable {
 
     @Override
     public String toString() {
-        return "[ " + code + ", " + description + ", " + comment + " ]";
+        return "vn.chonsoft.lixi.model.DauSo[ id=" + id + " ]";
     }
     
 }

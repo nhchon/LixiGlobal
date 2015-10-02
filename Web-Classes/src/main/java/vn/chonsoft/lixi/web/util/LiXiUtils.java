@@ -27,7 +27,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-import vn.chonsoft.lixi.model.BuyPhoneCard;
+import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
@@ -182,8 +182,8 @@ public abstract class LiXiUtils {
             }
         }
         // buy phone card
-        if(order.getBuyPhoneCards() != null){
-            for(BuyPhoneCard card : order.getBuyPhoneCards()){
+        if(order.getBuyCards() != null){
+            for(BuyCard card : order.getBuyCards()){
 
                 if(LiXiConstants.LIXI_PHONE_CARD_TYPE.equals(type) && card.getId() == excludeId){
                     // nothing
@@ -233,7 +233,7 @@ public abstract class LiXiUtils {
     public static List<RecipientInOrder> genMapRecGifts(LixiOrder order){
         
         Map<Recipient, List<LixiOrderGift>> recGifts = new HashMap<>();
-        Map<Recipient, List<BuyPhoneCard>> recPhoneCards = new HashMap<>();
+        Map<Recipient, List<BuyCard>> recPhoneCards = new HashMap<>();
         Map<Recipient, List<TopUpMobilePhone>> recTopUps = new HashMap<>();
         
         Set<Recipient> recSet = new HashSet<>();
@@ -275,7 +275,7 @@ public abstract class LiXiUtils {
             recSet.add(topUp.getRecipient());
         }
         // phone card
-        for(BuyPhoneCard phoneCard : order.getBuyPhoneCards()){
+        for(BuyCard phoneCard : order.getBuyCards()){
             
             if(recPhoneCards.containsKey(phoneCard.getRecipient())){
                 
@@ -284,7 +284,7 @@ public abstract class LiXiUtils {
             }
             else{
                 
-                List<BuyPhoneCard> phoneCards = new ArrayList<>();
+                List<BuyCard> phoneCards = new ArrayList<>();
                 phoneCards.add(phoneCard);
                 
                 recPhoneCards.put(phoneCard.getRecipient(), phoneCards);

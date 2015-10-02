@@ -10,7 +10,14 @@ package vn.chonsoft.lixi.web;
  */
 public abstract class LiXiConstants {
     
+    private LiXiConstants(){}
+    
     public static final String SYSTEM_AUTO = "SYSTEM_AUTO";
+    
+    public static final String VTC_OK = "1";
+            
+    public static final String LIXI_GLOBAL_TOP_UP_CODE = "LG-TU-";
+    public static final String LIXI_GLOBAL_BUY_CARD_CODE = "LG-BC-";
     
     public static final int LIXI_NON_ACTIVATED = 0;
     public static final int LIXI_ACTIVATED = 1;
@@ -34,6 +41,8 @@ public abstract class LiXiConstants {
     public static final String VALUE_OF_CARD = "VALUE_OF_CARD";
     public static final String BUY_PHONE_CARD_IN_VND = "BUY_PHONE_CARD_IN_VND";
     public static final String BUY_PHONE_CARD_IN_USD = "BUY_PHONE_CARD_IN_USD";
+    public static final String NAP_TIEN_TRA_TRUOC = "NAP_TIEN_TRA_TRUOC";
+    public static final String MUA_LAY_THE_CAO = "MUA_LAY_THE_CAO";
     // FEE
     public static final String LIXI_HANDLING_FEE_TOTAL = "LIXI_HANDLING_FEE_TOTAL";
     public static final String LIXI_HANDLING_FEE = "LIXI_HANDLING_FEE";

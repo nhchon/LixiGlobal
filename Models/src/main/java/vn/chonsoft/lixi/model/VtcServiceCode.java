@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -33,15 +35,25 @@ public class VtcServiceCode implements Serializable {
     @Column(name = "code", unique = true)
     private String code;
     
-    @Column(name = "code_type")
-    private String codeType;
-    
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
+
+    @Column(name = "menh_gia")
+    private String menhGia;
+
+    @Column(name = "lx_chuc_nang")
+    private String lxChucNang;
+    
+    @Column(name = "chuc_nang")
+    private String chucNang;
     
     @Column(name = "description")
     private String description;
+    
+    @JoinColumn(name = "network", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Network network;
     
     public VtcServiceCode() {
     }
@@ -50,11 +62,10 @@ public class VtcServiceCode implements Serializable {
         this.id = id;
     }
 
-    public VtcServiceCode(Long id, String code, String name, String description) {
+    public VtcServiceCode(Long id, String code, String name) {
         this.id = id;
         this.code = code;
         this.name = name;
-        this.description = description;
     }
 
     public Long getId() {
@@ -71,14 +82,6 @@ public class VtcServiceCode implements Serializable {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getCodeType() {
-        return codeType;
-    }
-
-    public void setCodeType(String codeType) {
-        this.codeType = codeType;
     }
 
     public String getName() {
@@ -120,6 +123,38 @@ public class VtcServiceCode implements Serializable {
     @Override
     public String toString() {
         return "vn.chonsoft.lixi.model.VtcServiceCode[ id=" + id + " ]";
+    }
+
+    public Network getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(Network network) {
+        this.network = network;
+    }
+
+    public String getMenhGia() {
+        return menhGia;
+    }
+
+    public void setMenhGia(String menhGia) {
+        this.menhGia = menhGia;
+    }
+
+    public String getChucNang() {
+        return chucNang;
+    }
+
+    public void setChucNang(String chucNang) {
+        this.chucNang = chucNang;
+    }
+
+    public String getLxChucNang() {
+        return lxChucNang;
+    }
+
+    public void setLxChucNang(String lxChucNang) {
+        this.lxChucNang = lxChucNang;
     }
     
 }

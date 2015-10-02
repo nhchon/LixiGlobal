@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,10 +24,11 @@ import javax.persistence.TemporalType;
  * @author chonnh
  */
 @Entity
-@Table(name = "buy_phone_card")
-public class BuyPhoneCard implements Serializable {
+@Table(name = "top_up_result")
+public class TopUpResult implements Serializable {
     
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -34,41 +36,35 @@ public class BuyPhoneCard implements Serializable {
     private Long id;
     
     @Basic(optional = false)
-    @Column(name = "num_of_card")
-    private int numOfCard;
+    @Lob
+    @Column(name = "request_data")
+    private String requestData;
     
     @Basic(optional = false)
-    @Column(name = "value_of_card")
-    private int valueOfCard;
+    @Lob
+    @Column(name = "response_data")
+    private String responseData;
     
     @Basic(optional = false)
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
     
-    @JoinColumn(name = "vtc_code", referencedColumnName = "code")
+    @JoinColumn(name = "top_up_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private VtcServiceCode vtcCode;
-    
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private LixiOrder order;
+    private TopUpMobilePhone topUp;
 
-    @JoinColumn(name = "recipient", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Recipient recipient;
-    
-    public BuyPhoneCard() {
+    public TopUpResult() {
     }
 
-    public BuyPhoneCard(Long id) {
+    public TopUpResult(Long id) {
         this.id = id;
     }
 
-    public BuyPhoneCard(Long id, int numOfCard, int valueOfCard, Date modifiedDate) {
+    public TopUpResult(Long id, String requestData, String responseData, Date modifiedDate) {
         this.id = id;
-        this.numOfCard = numOfCard;
-        this.valueOfCard = valueOfCard;
+        this.requestData = requestData;
+        this.responseData = responseData;
         this.modifiedDate = modifiedDate;
     }
 
@@ -80,35 +76,22 @@ public class BuyPhoneCard implements Serializable {
         this.id = id;
     }
 
-    public int getNumOfCard() {
-        return numOfCard;
+    public String getRequestData() {
+        return requestData;
     }
 
-    public void setNumOfCard(int numOfCard) {
-        this.numOfCard = numOfCard;
+    public void setRequestData(String requestData) {
+        this.requestData = requestData;
     }
 
-    public int getValueOfCard() {
-        return valueOfCard;
+    public String getResponseData() {
+        return responseData;
     }
 
-    public void setValueOfCard(int valueOfCard) {
-        this.valueOfCard = valueOfCard;
+    public void setResponseData(String responseData) {
+        this.responseData = responseData;
     }
 
-    /**
-     *  for calculate total USD
-     * 
-     * @param exchange
-     * @return 
-     */
-    public double getValueInUSD(double exchange){
-        
-        double inUsd = getValueOfCard()/exchange +0.005;
-        
-        return Math.round(inUsd * 100.0) / 100.0;
-    }
-    
     public Date getModifiedDate() {
         return modifiedDate;
     }
@@ -117,28 +100,12 @@ public class BuyPhoneCard implements Serializable {
         this.modifiedDate = modifiedDate;
     }
 
-    public VtcServiceCode getVtcCode() {
-        return vtcCode;
+    public TopUpMobilePhone getTopUp() {
+        return topUp;
     }
 
-    public void setVtcCode(VtcServiceCode vtcCode) {
-        this.vtcCode = vtcCode;
-    }
-
-    public LixiOrder getOrder() {
-        return order;
-    }
-
-    public void setOrder(LixiOrder order) {
-        this.order = order;
-    }
-
-    public Recipient getRecipient() {
-        return recipient;
-    }
-
-    public void setRecipient(Recipient recipient) {
-        this.recipient = recipient;
+    public void setTopUp(TopUpMobilePhone topUp) {
+        this.topUp = topUp;
     }
 
     @Override
@@ -151,10 +118,10 @@ public class BuyPhoneCard implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof BuyPhoneCard)) {
+        if (!(object instanceof TopUpResult)) {
             return false;
         }
-        BuyPhoneCard other = (BuyPhoneCard) object;
+        TopUpResult other = (TopUpResult) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -163,7 +130,7 @@ public class BuyPhoneCard implements Serializable {
 
     @Override
     public String toString() {
-        return "vn.chonsoft.lixi.model.BuyPhoneCard[ id=" + id + " ]";
+        return "vn.chonsoft.lixi.model.TopUpResult[ id=" + id + " ]";
     }
     
 }

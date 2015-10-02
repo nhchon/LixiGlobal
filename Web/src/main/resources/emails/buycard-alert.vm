@@ -1,0 +1,31 @@
+<html>
+    <body>
+        <h5>Hi ${rec.firstName} ${rec.middleName} ${rec.lastName} !</h5>
+        
+        <div>
+            <p>
+            ${sender.firstName} ${sender.middleName} ${sender.lastName} give you ${numOfCard}
+
+            #if ($numOfCard > 1)
+                  cards
+            #else
+                  card
+            #end
+            
+            of ${valueOfCard} VND
+            </p>
+        </div>
+        <p>Card code : Card Serial : ExpireDate</p>
+
+        #foreach ($card in $cards)
+            $card
+        #end
+
+        <div><p>Please enjoy !</p></div>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

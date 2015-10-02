@@ -199,6 +199,7 @@ public class UserController {
         // send oldEmail
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> mailSender.send(preparator));
+        executor.shutdown();
         
         model.put("email", form.getEmail());
         return new ModelAndView("user/signUpComplete", model);
@@ -323,7 +324,7 @@ public class UserController {
                 // send oldEmail
                 ExecutorService executor = Executors.newSingleThreadExecutor();
                 executor.execute(() -> mailSender.send(preparator));
-
+                executor.shutdown();
                 // return page
                 model.put("email", u.getEmail());
                 return new ModelAndView("user/signUpComplete", model);
@@ -420,7 +421,7 @@ public class UserController {
                 // send oldEmail
                 ExecutorService executor = Executors.newSingleThreadExecutor();
                 executor.execute(() -> mailSender.send(preparator));
-                
+                executor.shutdown();
                 // complete
                 model.put("email", email);
                 
@@ -891,7 +892,7 @@ public class UserController {
                     // send oldEmail
                     ExecutorService executor = Executors.newSingleThreadExecutor();
                     executor.execute(() -> mailSender.send(preparator));
-                    
+                    executor.shutdown();
                     // return your account page
                     model.put("editSuccess", 1);
                     return new ModelAndView(new RedirectView("/user/yourAccount", true, true), model);

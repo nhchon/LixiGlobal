@@ -7,18 +7,18 @@ package vn.chonsoft.lixi.repositories.service;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.chonsoft.lixi.model.BuyPhoneCard;
-import vn.chonsoft.lixi.repositories.BuyPhoneCardRepository;
+import vn.chonsoft.lixi.model.BuyCard;
+import vn.chonsoft.lixi.repositories.BuyCardRepository;
 
 /**
  *
  * @author chonnh
  */
 @Service
-public class BuyPhoneCardServiceImpl implements BuyPhoneCardService{
+public class BuyCardServiceImpl implements BuyCardService{
     
     @Inject
-    private BuyPhoneCardRepository buyPhoneCardRepository;
+    private BuyCardRepository buyPhoneCardRepository;
 
     /**
      * 
@@ -27,7 +27,7 @@ public class BuyPhoneCardServiceImpl implements BuyPhoneCardService{
      */
     @Override
     @Transactional
-    public BuyPhoneCard save(BuyPhoneCard buyCard) {
+    public BuyCard save(BuyCard buyCard) {
         
         return this.buyPhoneCardRepository.save(buyCard);
     }

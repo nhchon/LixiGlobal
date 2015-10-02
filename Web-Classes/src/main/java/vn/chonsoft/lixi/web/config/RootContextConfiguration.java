@@ -290,7 +290,9 @@ public class RootContextConfiguration  implements
         vtcClient.setDefaultUri("https://pay.vtc.vn/WS/GoodsPaygate.asmx?WSDL");//env.getProperty(?) ?
         vtcClient.setMarshaller(jaxb2Marshaller());
         vtcClient.setUnmarshaller(jaxb2Marshaller());
-     
+        //
+        vtcClient.setVtcPartnerCode(env.getProperty("vtc.partner.code"));
+        
         return vtcClient;
     }
     /**

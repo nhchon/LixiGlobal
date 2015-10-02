@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import vn.chonsoft.lixi.model.BuyPhoneCard;
+import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -31,7 +31,7 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
-import vn.chonsoft.lixi.repositories.service.BuyPhoneCardService;
+import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
@@ -75,7 +75,7 @@ public class TopUpMobileController {
     private TopUpMobilePhoneService topUpService;
 
     @Inject
-    private BuyPhoneCardService buyPhoneCardService;
+    private BuyCardService buyPhoneCardService;
 
     /**
      *
@@ -308,7 +308,7 @@ public class TopUpMobileController {
             }
             //
 
-            BuyPhoneCard phoneCard = new BuyPhoneCard();
+            BuyCard phoneCard = new BuyCard();
             phoneCard.setNumOfCard(numOfCard);
             phoneCard.setValueOfCard(valueOfCard);
             phoneCard.setVtcCode(this.vtcServiceCodeService.findByCode(phoneCompany));

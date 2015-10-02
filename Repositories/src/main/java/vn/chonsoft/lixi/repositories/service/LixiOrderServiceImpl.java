@@ -69,7 +69,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
             order.getTopUpMobilePhones().size();
             
             // phone card
-            order.getBuyPhoneCards().size();
+            order.getBuyCards().size();
             
             // exchange rate
             order.getLxExchangeRate();

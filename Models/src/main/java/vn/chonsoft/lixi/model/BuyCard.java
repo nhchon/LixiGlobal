@@ -26,11 +26,10 @@ import javax.persistence.TemporalType;
  * @author chonnh
  */
 @Entity
-@Table(name = "top_up_mobile_phone")
-public class TopUpMobilePhone implements Serializable {
+@Table(name = "buy_card")
+public class BuyCard implements Serializable {
     
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -38,22 +37,12 @@ public class TopUpMobilePhone implements Serializable {
     private Long id;
     
     @Basic(optional = false)
-    @Column(name = "amount")
-    private double amount;
+    @Column(name = "num_of_card")
+    private int numOfCard;
     
     @Basic(optional = false)
-    @Column(name = "currency")
-    private String currency;
-    
-    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
-    @Basic(optional = false)
-    @Column(name = "phone")
-    private String phone;
-    
-    @Basic(optional = false)
-    @Column(name = "modified_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedDate;
+    @Column(name = "value_of_card")
+    private int valueOfCard;
     
     @Column(name = "is_submitted")
     private Integer isSubmitted;
@@ -64,9 +53,14 @@ public class TopUpMobilePhone implements Serializable {
     @Column(name = "response_message")
     private String responseMessage;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "topUp")
-    private List<TopUpResult> results;
+    @Basic(optional = false)
+    @Column(name = "modified_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifiedDate;
     
+    @JoinColumn(name = "vtc_code", referencedColumnName = "code")
+    @ManyToOne(optional = false)
+    private VtcServiceCode vtcCode;
     
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -76,18 +70,20 @@ public class TopUpMobilePhone implements Serializable {
     @ManyToOne(optional = false)
     private Recipient recipient;
     
-    public TopUpMobilePhone() {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyCard")
+    private List<BuyCardResult> results;
+    
+    public BuyCard() {
     }
 
-    public TopUpMobilePhone(Long id) {
+    public BuyCard(Long id) {
         this.id = id;
     }
 
-    public TopUpMobilePhone(Long id, double amount, String currency, String phone, Date modifiedDate) {
+    public BuyCard(Long id, int numOfCard, int valueOfCard, Date modifiedDate) {
         this.id = id;
-        this.amount = amount;
-        this.currency = currency;
-        this.phone = phone;
+        this.numOfCard = numOfCard;
+        this.valueOfCard = valueOfCard;
         this.modifiedDate = modifiedDate;
     }
 
@@ -99,36 +95,73 @@ public class TopUpMobilePhone implements Serializable {
         this.id = id;
     }
 
-    public double getAmount() {
-        return amount;
+    public int getNumOfCard() {
+        return numOfCard;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setNumOfCard(int numOfCard) {
+        this.numOfCard = numOfCard;
     }
 
-    public String getCurrency() {
-        return currency;
+    public int getValueOfCard() {
+        return valueOfCard;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public void setValueOfCard(int valueOfCard) {
+        this.valueOfCard = valueOfCard;
     }
 
-    public String getPhone() {
-        return phone;
+    /**
+     *  for calculate total USD
+     * 
+     * @param exchange
+     * @return 
+     */
+    public double getValueInUSD(double exchange){
+        
+        double inUsd = getValueOfCard()/exchange +0.005;
+        
+        return Math.round(inUsd * 100.0) / 100.0;
     }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
+    
     public Date getModifiedDate() {
         return modifiedDate;
     }
 
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public Integer getIsSubmitted() {
+        return isSubmitted;
+    }
+
+    public void setIsSubmitted(Integer isSubmitted) {
+        this.isSubmitted = isSubmitted;
+    }
+
+    public Integer getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(Integer responseCode) {
+        this.responseCode = responseCode;
+    }
+
+    public String getResponseMessage() {
+        return responseMessage;
+    }
+
+    public void setResponseMessage(String responseMessage) {
+        this.responseMessage = responseMessage;
+    }
+
+    public VtcServiceCode getVtcCode() {
+        return vtcCode;
+    }
+
+    public void setVtcCode(VtcServiceCode vtcCode) {
+        this.vtcCode = vtcCode;
     }
 
     public LixiOrder getOrder() {
@@ -157,10 +190,10 @@ public class TopUpMobilePhone implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TopUpMobilePhone)) {
+        if (!(object instanceof BuyCard)) {
             return false;
         }
-        TopUpMobilePhone other = (TopUpMobilePhone) object;
+        BuyCard other = (BuyCard) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -169,38 +202,14 @@ public class TopUpMobilePhone implements Serializable {
 
     @Override
     public String toString() {
-        return "vn.chonsoft.lixi.model.TopUpMobilePhone[ id=" + id + " ]";
+        return "vn.chonsoft.lixi.model.BuyPhoneCard[ id=" + id + " ]";
     }
 
-    public Integer getIsSubmitted() {
-        return isSubmitted;
-    }
-
-    public void setIsSubmitted(Integer isSubmitted) {
-        this.isSubmitted = isSubmitted;
-    }
-
-    public Integer getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(Integer responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
-    }
-
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-    public List<TopUpResult> getResults() {
+    public List<BuyCardResult> getResults() {
         return results;
     }
 
-    public void setResults(List<TopUpResult> results) {
+    public void setResults(List<BuyCardResult> results) {
         this.results = results;
     }
     
