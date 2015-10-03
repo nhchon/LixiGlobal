@@ -6,6 +6,9 @@ package vn.chonsoft.lixi.web.util;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -35,7 +38,32 @@ public class TestEverything {
         System.out.println(MoneyCalculation.divide(mul, new BigDecimal("20500.0")));
     }
 
+    public static boolean find(String[] s, int begin, int to, String key){
+        
+        for(int i=begin;i<to; i++){
+            if(key.equals(s[i])) return true;
+        }
+        
+        return false;
+    }
+    
     public static void main(String[] args) {
+        
+        String[] input = new String[] {"a11", "b22", "c33", "d44", "e55"};
+        String[] output = new String[] {"a11", "c33", "d44", "b22", "e55"};
+        List<String> viPham = new ArrayList<>();
+        
+        for(int o=0; o< output.length; o++){
+            
+            if(find(input, 0, o, output[o])){
+                // ignore
+            }else{
+                if(!output[o].equals(input[o])){
+                    viPham.add(output[o]);
+                }
+            }
+        }
+        viPham.forEach(x -> System.out.println(x));
 
         //TestEverything e = new TestEverything();
         //e.testBigDecimal(new BigDecimal("800000"), new BigDecimal("20500.0"));
@@ -66,5 +94,6 @@ public class TestEverything {
         
         System.out.println(StringUtils.substring("0967007869", 0, 3));
         System.out.println(StringUtils.substring("0967007869", 0, 4));
+        
     }
 }

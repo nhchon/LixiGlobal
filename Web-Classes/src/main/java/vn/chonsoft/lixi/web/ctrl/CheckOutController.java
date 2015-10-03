@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.ws.client.WebServiceIOException;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.BuyCardResult;
@@ -1118,75 +1119,92 @@ public class CheckOutController {
                 VtcServiceCode serviceCode = this.vtcServiceCodeService.findByNetworkAndLxChucNang(dauSo.getNetwork(), LiXiConstants.NAP_TIEN_TRA_TRUOC);
 
                 String requestData = vtcClient.topUpRequestData(topUp.getId(), serviceCode.getCode(), account, amount);
-
-                // call vtc's service
-                RequestTransactionResponse response = vtcClient.topupTelco(requestData);
-
-                // <ResponseCode>|<OrgTransID>|<PartnerBalance>|<DataSign>
-                String vtcReturned = response.getRequestTransactionResult();
-                log.info(vtcReturned);
-
-                // save result into database
-                TopUpResult tur = new TopUpResult();
-                tur.setTopUp(topUp);
-                tur.setRequestData(requestData);
-                tur.setResponseData(vtcReturned);
-                tur.setTopUp(topUp);
-                tur.setModifiedDate(Calendar.getInstance().getTime());
-
-                this.turService.save(tur);
-
-                // parse result
-                String[] results = vtcReturned.split("\\|");
-                if (LiXiConstants.VTC_OK.equals(results[0])) {
+                
+                RequestTransactionResponse response = null;
+                try {
+                    // call vtc's service
+                    response = vtcClient.topupTelco(requestData);
+                    
+                } catch (WebServiceIOException e) {
+                    log.info(e.getMessage(), e);
+                    /* handle exception */
                     // update topup
-                    topUp.setIsSubmitted(1);
-                    topUp.setResponseCode(1);//OK
-                    topUp.setResponseMessage("OK");
+                    topUp.setIsSubmitted(-1);
+                    topUp.setResponseCode(-1);
+                    topUp.setResponseMessage(e.getMessage());
                     
                     this.topUpService.save(topUp);
                     
-                    // send email
-                    MimeMessagePreparator preparator = new MimeMessagePreparator() {
-                        @SuppressWarnings({"rawtypes", "unchecked"})
-                        @Override
-                        public void prepare(MimeMessage mimeMessage) throws Exception {
-                            MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                            message.setTo(rec.getEmail());
-                            message.setCc(LiXiConstants.CHONNH_GMAIL);
-                            message.setFrom("support@lixi.global");
-                            message.setSubject("LiXi.Global - Top Up Mobile Minutes Alert");
-                            message.setSentDate(Calendar.getInstance().getTime());
-
-                            Map model = new HashMap();
-                            model.put("rec", rec);
-                            model.put("sender", u);
-                            model.put("amount", topUp.getAmount());
-
-                            String text = VelocityEngineUtils.mergeTemplateIntoString(
-                                    velocityEngine, "emails/topup-confirmation.vm", "UTF-8", model);
-                            message.setText(text, true);
-                        }
-                    };
-                    // send oldEmail
-                    ExecutorService executor = Executors.newSingleThreadExecutor();
-                    executor.execute(() -> mailSender.send(preparator));
-                    executor.shutdown();
-                }// enf if TOP UP is OK
-                else {
-
-                    // what to do if VTC TOP UP is failed ???
+                    // email to sender, receiver, admin
                     
-                    // update topup
-                    VtcResponseCode vtcResponse = this.responseCodeService.findByCode(Integer.parseInt(results[0]));
-                    
-                    topUp.setIsSubmitted(1);
-                    topUp.setResponseCode(vtcResponse.getCode());//OK
-                    topUp.setResponseMessage(vtcResponse.getDescription());
-                    
-                    this.topUpService.save(topUp);
                 }
-                //}
+                
+                if(response != null){
+                    // <ResponseCode>|<OrgTransID>|<PartnerBalance>|<DataSign>
+                    String vtcReturned = response.getRequestTransactionResult();
+                    log.info(vtcReturned);
+
+                    // save result into database
+                    TopUpResult tur = new TopUpResult();
+                    tur.setTopUp(topUp);
+                    tur.setRequestData(requestData);
+                    tur.setResponseData(vtcReturned);
+                    tur.setTopUp(topUp);
+                    tur.setModifiedDate(Calendar.getInstance().getTime());
+
+                    this.turService.save(tur);
+
+                    // parse result
+                    String[] results = vtcReturned.split("\\|");
+                    if (LiXiConstants.VTC_OK.equals(results[0])) {
+                        // update topup
+                        topUp.setIsSubmitted(1);
+                        topUp.setResponseCode(1);//OK
+                        topUp.setResponseMessage("OK");
+
+                        this.topUpService.save(topUp);
+
+                        // send email
+                        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+                            @SuppressWarnings({"rawtypes", "unchecked"})
+                            @Override
+                            public void prepare(MimeMessage mimeMessage) throws Exception {
+                                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                                message.setTo(rec.getEmail());
+                                message.setCc(LiXiConstants.CHONNH_GMAIL);
+                                message.setFrom("support@lixi.global");
+                                message.setSubject("LiXi.Global - Top Up Mobile Minutes Alert");
+                                message.setSentDate(Calendar.getInstance().getTime());
+
+                                Map model = new HashMap();
+                                model.put("rec", rec);
+                                model.put("sender", u);
+                                model.put("amount", topUp.getAmount());
+
+                                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                        velocityEngine, "emails/topup-confirmation.vm", "UTF-8", model);
+                                message.setText(text, true);
+                            }
+                        };
+                        // send oldEmail
+                        ExecutorService executor = Executors.newSingleThreadExecutor();
+                        executor.execute(() -> mailSender.send(preparator));
+                        executor.shutdown();
+                    }// enf if TOP UP is OK
+                    else {
+
+                        // what to do if VTC TOP UP is failed ???
+
+                        // update topup
+                        VtcResponseCode vtcResponse = this.responseCodeService.findByCode(Integer.parseInt(results[0]));
+
+                        topUp.setIsSubmitted(1);
+                        topUp.setResponseCode(vtcResponse.getCode());//OK
+                        topUp.setResponseMessage(vtcResponse.getDescription());
+
+                        this.topUpService.save(topUp);
+                    }
+                }
             }// forEach topUps
 
             // Buy cards
