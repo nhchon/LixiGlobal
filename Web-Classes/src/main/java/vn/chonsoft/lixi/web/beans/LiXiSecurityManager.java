@@ -10,7 +10,7 @@
  * @author Shaheryar
  * @version 1.0
  */
-package vn.chonsoft.lixi.web.util;
+package vn.chonsoft.lixi.web.beans;
 
 import java.security.*;
 import java.security.spec.*;

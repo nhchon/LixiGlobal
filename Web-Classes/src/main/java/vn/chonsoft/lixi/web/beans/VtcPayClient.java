@@ -2,7 +2,7 @@
  * Lixi is a Vietnamese word for small gift of money
  * 2015 @ Lixi Global
  */
-package vn.chonsoft.lixi.web;
+package vn.chonsoft.lixi.web.beans;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.text.SimpleDateFormat;
@@ -16,8 +16,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
-import vn.chonsoft.lixi.web.util.LiXiSecurityManager;
-import vn.chonsoft.lixi.web.util.TripleDES;
+import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.vtc.pay.RequestData;
 import vn.vtc.pay.RequestDataGetCard;
 import vn.vtc.pay.RequestTransaction;

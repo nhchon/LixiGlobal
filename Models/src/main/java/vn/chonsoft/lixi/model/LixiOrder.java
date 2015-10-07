@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -51,6 +52,10 @@ public class LixiOrder implements Serializable {
     @Column(name = "setting")
     private Integer setting;
     
+    @Basic
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount;
+    
     @Basic(optional = false)
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -80,6 +85,9 @@ public class LixiOrder implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<TopUpMobilePhone> topUpMobilePhones;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    private List<LixiOrderPayment> lixiOrderPayments;
     
     public LixiOrder() {
     }
@@ -134,6 +142,14 @@ public class LixiOrder implements Serializable {
         
         return EnumLixiOrderSetting.findByValue(setting).toString();
         
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
     }
     
     public Date getModifiedDate() {
@@ -224,6 +240,14 @@ public class LixiOrder implements Serializable {
 
     public void setTopUpMobilePhones(List<TopUpMobilePhone> topUpMobilePhones) {
         this.topUpMobilePhones = topUpMobilePhones;
+    }
+
+    public List<LixiOrderPayment> getLixiOrderPayments() {
+        return lixiOrderPayments;
+    }
+
+    public void setLixiOrderPayments(List<LixiOrderPayment> lixiOrderPayments) {
+        this.lixiOrderPayments = lixiOrderPayments;
     }
     
 }

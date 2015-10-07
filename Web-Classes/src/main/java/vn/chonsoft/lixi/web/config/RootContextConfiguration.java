@@ -54,10 +54,11 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import vn.chonsoft.lixi.web.VtcPayClient;
-import vn.chonsoft.lixi.web.util.LiXiSecurityManager;
+import vn.chonsoft.lixi.web.beans.CreditCardProcesses;
+import vn.chonsoft.lixi.web.beans.VtcPayClient;
+import vn.chonsoft.lixi.web.beans.LiXiSecurityManager;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
-import vn.chonsoft.lixi.web.util.TripleDES;
+import vn.chonsoft.lixi.web.beans.TripleDES;
 
 /**
  *
@@ -294,6 +295,21 @@ public class RootContextConfiguration  implements
         vtcClient.setVtcPartnerCode(env.getProperty("vtc.partner.code"));
         
         return vtcClient;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Bean
+    public CreditCardProcesses creditCardProcesses(){
+        
+        CreditCardProcesses processes = new CreditCardProcesses();
+        processes.setApiLoginId(env.getProperty("authorize.net.api_login_id"));
+        processes.setTransactionKey(env.getProperty("authorize.net.transaction_key"));
+        processes.setRunMode(env.getProperty("authorize.net.run_mode"));
+        
+        return processes;
     }
     /**
      * 

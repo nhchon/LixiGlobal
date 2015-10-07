@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -19,6 +20,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,127 +45,155 @@ import vn.chonsoft.lixi.web.LiXiConstants;
  *
  * @author chonnh
  */
-public abstract class LiXiUtils {
+public class LiXiUtils {
 
     //
     private static final Logger log = LogManager.getLogger(LiXiUtils.class);
 
     // always use Locale.US for  number format
-    private static DecimalFormat df = (DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
-    static{
+    private static DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
+
+    static {
         df.applyPattern("###,###.##");
     }
+
     /**
-     * 
+     *
      * Check user is loggined or not
-     * 
+     *
      * @param request
-     * @return 
+     * @return
      */
-    public static boolean isLoggined(HttpServletRequest request){
-        
+    public static boolean isLoggined(HttpServletRequest request) {
+
         return request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL) != null;
-        
+
     }
-    
+
     /**
-     * 
-     * fix encode and capitalize fully
-     * 
-     * @param name
-     * @return 
+     *
+     * @param object
+     * @return
      */
-    public static String correctName(String name){
-        
-        return WordUtils.capitalizeFully(fixEncode(name));
-        
+    public static <T> String marshal(T object) {
+        try {
+            StringWriter stringWriter = new StringWriter();
+            JAXBContext context = JAXBContext.newInstance(object.getClass());
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(object, stringWriter);
+            return stringWriter.toString();
+        } catch (JAXBException e) {
+            System.err.println(String.format("Exception while marshalling: %s", e.getMessage()));
+        }
+        return null;
     }
+
     /**
-     * 
+     *
+     * fix encode and capitalize fully
+     *
+     * @param name
+     * @return
+     */
+    public static String correctName(String name) {
+
+        return WordUtils.capitalizeFully(fixEncode(name));
+
+    }
+
+    /**
+     *
      * @param month
      * @param year
-     * @return 
+     * @return
      */
-    public static boolean checkMonthYearGreaterThanCurrent(int month, int year){
-        
+    public static boolean checkMonthYearGreaterThanCurrent(int month, int year) {
+
         Calendar cal = Calendar.getInstance();
         int cyear = cal.get(cal.YEAR);
-        int cmonth = cal.get(cal.MONTH)+1; //zero-based
-        
-        if(year < cyear){
+        int cmonth = cal.get(cal.MONTH) + 1; //zero-based
+
+        if (year < cyear) {
             return false;
-        }
-        else{
-            if(month < cmonth)
+        } else {
+            if (month < cmonth) {
                 return false;
+            }
         }
         //
         return true;
     }
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
-    public static DecimalFormat getNumberFormat(){
+    public static DecimalFormat getNumberFormat() {
         return df;
     }
-    
+
     /**
-     * 
+     *
      * @param alreadyGift
-     * @return 
+     * @return
      */
-    public static Long getOrderGiftId(LixiOrderGift alreadyGift){
-        
-        if(alreadyGift == null) return -1L;
-        else
+    public static Long getOrderGiftId(LixiOrderGift alreadyGift) {
+
+        if (alreadyGift == null) {
+            return -1L;
+        } else {
             return alreadyGift.getId();
+        }
     }
 
-    public static double round(double a){
-        
+    public static double round(double a) {
+
         return Math.round((a + 0.005) * 100.0) / 100.0;
     }
-    
+
     /**
-     * 
+     *
      * @param price, in VND
      * @param quantity
      * @param exchange
-     * @return 
+     * @return
      */
-    public static double roundPriceQuantity2USD(double price, int quantity, double exchange){
-        
+    public static double roundPriceQuantity2USD(double price, int quantity, double exchange) {
+
         double rsl = ((price * quantity) / exchange) + (quantity * 0.005);
-        
+
         return Math.round(rsl * 100.0) / 100.0;
     }
+
     /**
-     * 
-     * Calculate total money, in VND, exclude specific id of the type of gift (gift,top up, card)
-     * 
+     *
+     * Calculate total money, in VND, exclude specific id of the type of gift
+     * (gift,top up, card)
+     *
      * @param order
      * @param excludeId
      * @param type
-     * @return 
+     * @return
      */
-    public static double[] calculateCurrentPayment(LixiOrder order, long excludeId, String type){
-        
-        if(order == null) return new double[]{0, 0};
-        
+    public static double[] calculateCurrentPayment(LixiOrder order, long excludeId, String type) {
+
+        if (order == null) {
+            return new double[]{0, 0};
+        }
+
         double sumVND = 0;
         double sumUSD = 0;
         //
         // get exchange rate
         double buy = order.getLxExchangeRate().getBuy();
         // gift type
-        if(order.getGifts() != null){
-            for(LixiOrderGift gift : order.getGifts()){
+        if (order.getGifts() != null) {
+            for (LixiOrderGift gift : order.getGifts()) {
 
-                if(LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() == excludeId){
+                if (LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() == excludeId) {
                     // Nothing
-                }
-                else{
+                } else {
                     sumVND += (gift.getProductPrice() * gift.getProductQuantity());
                     sumUSD += (gift.getPriceInUSD(buy) * gift.getProductQuantity());
                 }
@@ -169,12 +201,11 @@ public abstract class LiXiUtils {
             }
         }
         // top up mobile phone
-        if(order.getTopUpMobilePhones() != null){
-            for(TopUpMobilePhone topUp : order.getTopUpMobilePhones()){
+        if (order.getTopUpMobilePhones() != null) {
+            for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
 
-                if(LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() == excludeId){
-                }
-                else{
+                if (LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() == excludeId) {
+                } else {
                     sumVND += (topUp.getAmount() * buy);
                     sumUSD += topUp.getAmount();
                 }
@@ -182,13 +213,12 @@ public abstract class LiXiUtils {
             }
         }
         // buy phone card
-        if(order.getBuyCards() != null){
-            for(BuyCard card : order.getBuyCards()){
+        if (order.getBuyCards() != null) {
+            for (BuyCard card : order.getBuyCards()) {
 
-                if(LiXiConstants.LIXI_PHONE_CARD_TYPE.equals(type) && card.getId() == excludeId){
+                if (LiXiConstants.LIXI_PHONE_CARD_TYPE.equals(type) && card.getId() == excludeId) {
                     // nothing
-                }
-                else{
+                } else {
                     sumVND += (card.getNumOfCard() * card.getValueOfCard());
                     sumUSD += (card.getValueInUSD(buy) * card.getNumOfCard());
                 }
@@ -197,96 +227,94 @@ public abstract class LiXiUtils {
         }
         // return total
         return new double[]{sumVND, sumUSD};
-                
+
     }
-    
+
     /**
-     * 
+     *
      * sum order, in VND
-     * 
+     *
      * @param order
      * @param excludeOrderGift Exclude this order gift id
-     * @return 
+     * @return
      */
-    public static double[] calculateCurrentPayment(LixiOrder order, long excludeOrderGift){
-        
+    public static double[] calculateCurrentPayment(LixiOrder order, long excludeOrderGift) {
+
         return calculateCurrentPayment(order, excludeOrderGift, LiXiConstants.LIXI_GIFT_TYPE);
-                
+
     }
-    
+
     /**
-     * 
+     *
      * @param order
-     * @return 
+     * @return
      */
-    public static double[] calculateCurrentPayment(LixiOrder order){
-        
+    public static double[] calculateCurrentPayment(LixiOrder order) {
+
         return calculateCurrentPayment(order, -1);
-                
+
     }
+
     /**
-     * 
-     * 
+     *
+     *
      * @param order
-     * @return 
+     * @return
      */
-    public static List<RecipientInOrder> genMapRecGifts(LixiOrder order){
-        
+    public static List<RecipientInOrder> genMapRecGifts(LixiOrder order) {
+
         Map<Recipient, List<LixiOrderGift>> recGifts = new HashMap<>();
         Map<Recipient, List<BuyCard>> recPhoneCards = new HashMap<>();
         Map<Recipient, List<TopUpMobilePhone>> recTopUps = new HashMap<>();
-        
+
         Set<Recipient> recSet = new HashSet<>();
         List<RecipientInOrder> listRecInOrder = new ArrayList<>();
         // gifts
-        for(LixiOrderGift lxogift : order.getGifts()){
-            
-            if(recGifts.containsKey(lxogift.getRecipient())){
-                
+        for (LixiOrderGift lxogift : order.getGifts()) {
+
+            if (recGifts.containsKey(lxogift.getRecipient())) {
+
                 recGifts.get(lxogift.getRecipient()).add(lxogift);
-                
-            }
-            else{
-                
+
+            } else {
+
                 List<LixiOrderGift> gifts = new ArrayList<>();
                 gifts.add(lxogift);
-                
+
                 recGifts.put(lxogift.getRecipient(), gifts);
             }
             //
             recSet.add(lxogift.getRecipient());
         }
         // top up
-        for(TopUpMobilePhone topUp : order.getTopUpMobilePhones()){
-            
-            if(recTopUps.containsKey(topUp.getRecipient())){
-                
+        for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
+
+            if (recTopUps.containsKey(topUp.getRecipient())) {
+
                 recTopUps.get(topUp.getRecipient()).add(topUp);
-                
-            }
-            else{
-                
+
+            } else {
+
                 List<TopUpMobilePhone> topUps = new ArrayList<>();
                 topUps.add(topUp);
-                
+
                 recTopUps.put(topUp.getRecipient(), topUps);
             }
             //
             recSet.add(topUp.getRecipient());
         }
         // phone card
-        for(BuyCard phoneCard : order.getBuyCards()){
-            
-            if(recPhoneCards.containsKey(phoneCard.getRecipient())){
-                
+        for (BuyCard phoneCard : order.getBuyCards()) {
+
+            if (recPhoneCards.containsKey(phoneCard.getRecipient())) {
+
                 recPhoneCards.get(phoneCard.getRecipient()).add(phoneCard);
-                
-            }
-            else{
-                
+
+            } else {
+
                 List<BuyCard> phoneCards = new ArrayList<>();
                 phoneCards.add(phoneCard);
-                
+
                 recPhoneCards.put(phoneCard.getRecipient(), phoneCards);
             }
             //
@@ -294,88 +322,92 @@ public abstract class LiXiUtils {
         }
         // create RecipientInOrder
         List<RecipientInOrder> recs = new ArrayList<>();
-        for(Recipient rec: recSet){
-            
+        for (Recipient rec : recSet) {
+
             RecipientInOrder recInOrder = new RecipientInOrder();
             recInOrder.setOrderId(order.getId());
             recInOrder.setRecipient(rec);
-            
-            if(recGifts.containsKey(rec)){
-                
+
+            if (recGifts.containsKey(rec)) {
+
                 recInOrder.setGifts(recGifts.get(rec));
-                
-            }            
-            if(recPhoneCards.containsKey(rec)){
-                
+
+            }
+            if (recPhoneCards.containsKey(rec)) {
+
                 recInOrder.setBuyPhoneCards(recPhoneCards.get(rec));
-                
-            }            
-            if(recTopUps.containsKey(rec)){
-                
+
+            }
+            if (recTopUps.containsKey(rec)) {
+
                 recInOrder.setTopUpMobilePhones(recTopUps.get(rec));
-                
+
             }
             //
             recs.add(recInOrder);
         }
         listRecInOrder.addAll(recs);
-        return  listRecInOrder;
+        return listRecInOrder;
     }
+
     /**
-     * 
+     *
      * @param amountCode
      * @param amount
      * @param giftInValue
-     * @return 
+     * @return
      */
-    public static String getAmountInVnd(String amountCode, String amount, String giftInValue){
-        
-        return LiXiConstants.VND.equals(amountCode)?amount:giftInValue;
-        
+    public static String getAmountInVnd(String amountCode, String amount, String giftInValue) {
+
+        return LiXiConstants.VND.equals(amountCode) ? amount : giftInValue;
+
     }
-    
+
     /**
-     * 
+     *
      * remove part ":8080" in path, but not "localhost:8080"
-     * 
+     *
      * @param path
-     * @return 
+     * @return
      */
-    public static String remove8080(String path){
-        
-        if(path == null || "".equals(path) || path.contains("localhost:8080"))
+    public static String remove8080(String path) {
+
+        if (path == null || "".equals(path) || path.contains("localhost:8080")) {
             return path;
-        
+        }
+
         return path.replaceFirst(":8080", "");
     }
+
     /**
-     * the system is set default encode iso-8859-1
-     * Convert to UTF-8
-     * 
+     * the system is set default encode iso-8859-1 Convert to UTF-8
+     *
      * @param str
-     * @return 
+     * @return
      */
-    public static String fixEncode(String str){
-        
-        if(str == null || "".equals(str)) return str;
+    public static String fixEncode(String str) {
+
+        if (str == null || "".equals(str)) {
+            return str;
+        }
         //
         try {
-            
+
             return new String(str.getBytes("ISO-8859-1"), "UTF-8");
-            
+
         } catch (Exception e) {
-            
+
             log.info(e.getMessage(), e);
         }
-        
+
         return str;
     }
 
     /**
-     * 
+     *
      * @param file
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     public static byte[] readKeyBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
@@ -383,7 +415,7 @@ public abstract class LiXiUtils {
         // Get the size of the file
         long length = file.length();
 
-      // You cannot create an array using a long type.
+        // You cannot create an array using a long type.
         // It needs to be an int type.
         // Before converting to an int type, check
         // to ensure that file is not larger than Integer.MAX_VALUE.
@@ -412,7 +444,7 @@ public abstract class LiXiUtils {
         return bytes;
 
     }
-    
+
     /**
      *
      * @return

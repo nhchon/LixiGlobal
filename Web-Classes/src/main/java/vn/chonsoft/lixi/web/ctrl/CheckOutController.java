@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -36,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.ws.client.WebServiceIOException;
+import org.springframework.ws.WebServiceException;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.BuyCardResult;
@@ -74,11 +75,11 @@ import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VtcResponseCodeService;
 import vn.chonsoft.lixi.repositories.service.VtcServiceCodeService;
 import vn.chonsoft.lixi.web.LiXiConstants;
-import vn.chonsoft.lixi.web.VtcPayClient;
+import vn.chonsoft.lixi.web.beans.VtcPayClient;
 import vn.chonsoft.lixi.web.annotation.WebController;
-import vn.chonsoft.lixi.web.util.LiXiSecurityManager;
+import vn.chonsoft.lixi.web.beans.LiXiSecurityManager;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
-import vn.chonsoft.lixi.web.util.TripleDES;
+import vn.chonsoft.lixi.web.beans.TripleDES;
 import vn.vtc.pay.RequestTransactionResponse;
 
 /**
@@ -894,8 +895,12 @@ public class CheckOutController {
         cardFeeNumber = Math.round(cardFeeNumber * 100.0) / 100.0;
 
         // final total 
-        finalTotal = total + cardFeeNumber + (handlingFee.getFee() * (order.getGifts().isEmpty() ? 0 : order.getGifts().size()));
+        finalTotal = total + cardFeeNumber + (handlingFee.getFee() * (recGifts.isEmpty() ? 0 : recGifts.size()));
 
+        // update final total into db
+        order.setTotalAmount(new BigDecimal(String.valueOf(finalTotal)));
+        
+        order = this.lxorderService.save(order);
         // 
         model.put(LiXiConstants.LIXI_FINAL_TOTAL, finalTotal);
         model.put(LiXiConstants.LIXI_HANDLING_FEE, handlingFee);
@@ -1125,7 +1130,7 @@ public class CheckOutController {
                     // call vtc's service
                     response = vtcClient.topupTelco(requestData);
                     
-                } catch (WebServiceIOException e) {
+                } catch (WebServiceException e) {
                     log.info(e.getMessage(), e);
                     /* handle exception */
                     // update topup

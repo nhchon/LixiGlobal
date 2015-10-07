@@ -42,6 +42,22 @@
         </dependency>
         
         <dependency>
+          <groupId>net.authorize</groupId>
+          <artifactId>anet-java-sdk</artifactId>
+          <version>1.8.4</version>
+          <exclusions>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpcore</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.7</version>
