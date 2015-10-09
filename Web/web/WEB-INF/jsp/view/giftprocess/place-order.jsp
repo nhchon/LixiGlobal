@@ -125,7 +125,6 @@
                         <c:if test="${not empty REC_GIFTS}">
                         <div class="info-bound">
                             <table class="recipient">
-                                <c:set var="allRecipientTotal" value="0"/>
                                 <c:forEach items="${REC_GIFTS}" var="entry" varStatus="recCount">
                                     <tr>
                                         <td><b>${recCount.count}</b></td>
@@ -157,7 +156,6 @@
                                         <td></td>
                                         <td></td>
                                     </tr>
-                                    <c:set var="recipientTotal" value="0"/>
                                     <c:forEach items="${entry.gifts}" var="g"  varStatus="giftCount">
                                         <c:set var="priceInUSD" value="${g.getPriceInUSD(LIXI_ORDER.lxExchangeRate.buy)}"/>
                                         <c:set var="recGiftIndex" value="${giftCount.count}"/>
@@ -182,7 +180,6 @@
                                                 </table>
                                             </td>
                                         </tr>
-                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + priceInUSD*g.productQuantity}"/>
                                     </c:forEach>
                                     <c:forEach items="${entry.topUpMobilePhones}" var="t"  varStatus="tCount">
                                         <c:set var="recGiftIndex" value="${recGiftIndex + tCount.count}"/>
@@ -206,7 +203,6 @@
                                                 </table>
                                             </td>
                                         </tr>
-                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + t.amount}"/>
                                     </c:forEach>
                                     <c:forEach items="${entry.buyPhoneCards}" var="p"  varStatus="pCount">
                                         <c:set var="recGiftIndex" value="${recGiftIndex + pCount.count}"/>
@@ -231,13 +227,12 @@
                                                 </table>
                                             </td>
                                         </tr>
-                                        <c:set var="allRecipientTotal" value="${allRecipientTotal + priceInUSD}"/>
                                     </c:forEach>
                                 </c:forEach>
                                 <tr>
                                     <td></td>
                                     <td><b>Gift Price:</b></td>
-                                    <td><b>$<fmt:formatNumber value="${allRecipientTotal}" pattern="###,###.##"/></b></td>
+                                    <td><b>$<fmt:formatNumber value="${LIXI_ALL_TOTAL[0].usd}" pattern="###,###.##"/></b></td>
                                     <td></td>
                                 </tr>
                                 <c:if test="${not empty CARD_PROCESSING_FEE_THIRD_PARTY}">

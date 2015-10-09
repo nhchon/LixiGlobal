@@ -1,0 +1,132 @@
+<html>
+    <body>
+        <h5>Hi ${sender.firstName} ${sender.middleName} ${sender.lastName} !</h5>
+        
+        <h2>Thank you for your payment</h2>
+        
+        <h3>Your order id: ${LIXI_ORDER.id}</h3>
+
+        <div>
+            <table class="recipient">
+                #foreach ($entry in $REC_GIFTS)
+                    ## ${velocityCount} ${foreach.index}
+                    <tr>
+                        <td><b>${foreach.count}</b></td>
+                        <td style="max-width: 250px;">Send to</td>
+                        <td>${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</td>
+                        <td style="text-align: right;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Email Address</td>
+                        <td>${entry.recipient.email}</td>
+                        <td style="text-align: right;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Mobile Phone</td>
+                        <td>${entry.recipient.phone}</td>
+                        <td style="text-align: right">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><b>Order Summary</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><b>Order Summary</b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    #foreach ($g in $entry.gifts)
+                        #set ($String = "abc")
+                        #set ($recGiftIndex = $foreach.count)
+                        #set ($priceInUSD = $g.getPriceInUSD($LIXI_ORDER.lxExchangeRate.buy))
+                        #set ($totalVnd = $g.productPrice * $g.productQuantity)
+                        #set ($totalUsd = $priceInUSD * $g.productQuantity)
+                        <tr>
+                            <td></td>
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td>${foreach.count}</td>
+                                        <td class="col-md-1">Item</td>
+                                        <td>
+                                            ${g.category.name}
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            ${g.productName}
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            ${g.productQuantity} x ${String.format("%.2f", $g.productPrice)} VND
+                                            &nbsp;=&nbsp;${String.format("%.2f", ${totalVnd})} VND
+                                            or ${String.format("%.2f", ${totalUsd})} USD
+                                        </td>
+                                        <td style="text-align: right"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    #end
+                    #foreach ($t in $entry.topUpMobilePhones)
+                        #set ($recGiftIndex = $recGiftIndex + $foreach.count)
+                        #set ($totalVnd = $t.amount * $LIXI_ORDER.lxExchangeRate.buy)
+                        <tr>
+                            <td></td>
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td>${recGiftIndex}</td>
+                                        <td class="col-md-1">Item</td>
+                                        <td>
+                                            Top Up
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            ${String.format("%.2f", ${totalVnd})} VND
+                                            or ${String.format("%.2f", ${t.amount})} USD
+                                        </td>
+                                        <td style="text-align: right"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    #end
+                    #foreach ($p in $entry.buyPhoneCards)
+                        #set ($recGiftIndex = $recGiftIndex + $foreach.count)
+                        #set ($priceInUSD = $p.getValueInUSD($LIXI_ORDER.lxExchangeRate.buy))
+                        #set ($totalUsd = $priceInUSD * $p.numOfCard)
+                        <tr>
+                            <td></td>
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td>${recGiftIndex}</td>
+                                        <td class="col-md-1">Item</td>
+                                        <td>
+                                            Phone Card
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            ${p.numOfCard} x ${String.format("%.2f", ${p.valueOfCard})} VND
+                                            or ${String.format("%.2f", ${p.totalUsd})} USD
+                                        </td>
+                                        <td style="text-align: right"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    #end
+                #end
+            </div>
+        <div><p>Please enjoy !</p></div>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

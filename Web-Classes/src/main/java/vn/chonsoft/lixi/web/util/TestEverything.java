@@ -26,6 +26,7 @@ public class TestEverything {
         b.setAuthor("XYZ");
         
         System.out.println(LiXiUtils.marshal(b));
+        System.out.println(String.valueOf(18.99));
 //        Queue<String> input = new LinkedList(Arrays.asList("a11", "b22", "c33", "d44", "e55"));
 //        Queue<String> output = new LinkedList(Arrays.asList("a11", "c33", "d44", "b22", "e55"));
 //        List<String> checkedList = new ArrayList<>();

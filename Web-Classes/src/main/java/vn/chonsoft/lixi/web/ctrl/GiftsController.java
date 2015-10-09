@@ -38,6 +38,7 @@ import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
+import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
 import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
@@ -518,9 +519,9 @@ public class GiftsController {
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
         //
-        double[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
-        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0]);
-        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[1]);
+        SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
         
         return new ModelAndView("giftprocess/type-of-gift-2", model);
 
@@ -603,14 +604,14 @@ public class GiftsController {
         // check selected
         checkSelected(products, order, rec);
 
-        double[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
         
         model.put(LiXiConstants.PRODUCTS, products);
         model.put(LiXiConstants.PAGES, vgps);
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
-        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0]);
-        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[1]);
+        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
         
         return new ModelAndView("giftprocess/type-of-gift-content", model);
         
@@ -776,8 +777,8 @@ public class GiftsController {
             
         }
         
-        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order, orderGiftId);
-        double currentPayment = currentPayments[1];//usd
+        SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order, orderGiftId);
+        double currentPayment = currentPayments[0].getUsd();//usd
         currentPayment += ((price * quantity) / buy);
 
         if (currentPayment > u.getUserMoneyLevel().getMoneyLevel().getAmount()) {
@@ -941,7 +942,7 @@ public class GiftsController {
             buy = lxExch.getBuy();
         }
         
-        double[] currentPayments = new double[] {0, 0};
+        SumVndUsd[] currentPayments;
         if(quantity > 0){
             currentPayments = LiXiUtils.calculateCurrentPayment(order, LiXiUtils.getOrderGiftId(alreadyGift)); // in USD
         }
@@ -949,7 +950,7 @@ public class GiftsController {
             // remove the gift, count all and then minus out
             currentPayments = LiXiUtils.calculateCurrentPayment(order);
         }
-        double currentPayment = currentPayments[1];//USD
+        double currentPayment = currentPayments[0].getUsd();//USD
         currentPayment += LiXiUtils.roundPriceQuantity2USD(price, quantity, buy);// in USD
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
 
@@ -1168,8 +1169,8 @@ public class GiftsController {
         }
         // else
         double buy = order.getLxExchangeRate().getBuy();
-        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order, lxogift.getId()); // in VND
-        double currentPayment = currentPayments[0];//vnd
+        SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order, lxogift.getId()); // in VND
+        double currentPayment = currentPayments[0].getVnd();
         currentPayment += (lxogift.getProductPrice() * quantity);
 
         // maximum payment is over

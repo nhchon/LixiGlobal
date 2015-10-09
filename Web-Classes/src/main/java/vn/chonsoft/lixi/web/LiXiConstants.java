@@ -10,8 +10,6 @@ package vn.chonsoft.lixi.web;
  */
 public abstract class LiXiConstants {
     
-    private LiXiConstants(){}
-    
     public static final String SYSTEM_AUTO = "SYSTEM_AUTO";
     
     public static final String VTC_OK = "1";
@@ -27,6 +25,7 @@ public abstract class LiXiConstants {
     public static final int LIXI_ORDER_SUBMITTED = 0;
     public static final int LIXI_ORDER_GIFT_NOT_SUBMITTED = -1;
     // TYPE
+    public static final String TOTAL_ALL_TYPE = "TOTAL_ALL_TYPE";
     public static final String LIXI_GIFT_TYPE = "LIXI_GIFT_TYPE";
     public static final String LIXI_TOP_UP_TYPE = "LIXI_TOP_UP_TYPE";
     public static final String LIXI_PHONE_CARD_TYPE = "LIXI_PHONE_CARD_TYPE";
@@ -51,6 +50,7 @@ public abstract class LiXiConstants {
     public static final String LIXI_ECHECK_FEE_GIFT_ONLY = "LIXI_ECHECK_FEE_GIFT_ONLY";
     public static final String LIXI_ECHECK_FEE_ALLOW_REFUND = "LIXI_ECHECK_FEE_ALLOW_REFUND";
     public static final String LIXI_FINAL_TOTAL = "LIXI_FINAL_TOTAL";
+    public static final String LIXI_ALL_TOTAL = "LIXI_ALL_TOTAL";
     
     public static final String VND = "VND";
     public static final String USD = "USD";

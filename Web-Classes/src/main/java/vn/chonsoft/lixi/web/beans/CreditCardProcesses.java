@@ -12,12 +12,14 @@ import net.authorize.Environment;
 import net.authorize.api.contract.v1.*;
 import net.authorize.api.controller.base.ApiOperationBase;
 import net.authorize.api.controller.CreateTransactionController;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderPayment;
+import vn.chonsoft.lixi.model.UserBankAccount;
+import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.repositories.service.LixiOrderPaymentService;
-import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 /**
  *
@@ -31,9 +33,6 @@ public class CreditCardProcesses {
     private String transactionKey;
 
     private String runMode = "SANDBOX";
-    
-    @Inject
-    private LixiOrderService orderService;
     
     @Inject
     private LixiOrderPaymentService paymentService;
@@ -81,13 +80,10 @@ public class CreditCardProcesses {
     
     /**
      * 
-     * @param order 
-     * @param cardNumber
-     * @param expirationDate
-     * @param amount
+     * @param order
      * @return 
      */
-    public boolean chargeCreditCard(LixiOrder order, String cardNumber, String expirationDate, BigDecimal amount){
+    public boolean charge(LixiOrder order){
         
         //Common code to set for all requests
         ApiOperationBase.setEnvironment(getEnvironment());
@@ -99,16 +95,43 @@ public class CreditCardProcesses {
 
         // Populate the payment data
         PaymentType paymentType = new PaymentType();
-        CreditCardType creditCard = new CreditCardType();
-        creditCard.setCardNumber(cardNumber);
-        creditCard.setExpirationDate(expirationDate);
-        paymentType.setCreditCard(creditCard);
-
-        // Create the payment transaction request
         TransactionRequestType txnRequest = new TransactionRequestType();
-        txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
-        txnRequest.setPayment(paymentType);
-        txnRequest.setAmount(amount);
+        if(order.getCard() != null){
+            // get credit card
+            UserCard card = order.getCard();
+            String expireMonth = StringUtils.leftPad(card.getExpMonth()+"", 2, "0");
+            String expireYear = StringUtils.leftPad(card.getExpYear()+"", 2, "0");
+            
+            CreditCardType creditCard = new CreditCardType();
+            creditCard.setCardNumber(card.getCardNumber()); // 4242424242424242
+            creditCard.setExpirationDate(expireMonth + expireYear); // // 0822
+            paymentType.setCreditCard(creditCard);
+
+            // Create the payment transaction request
+            txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
+            txnRequest.setPayment(paymentType);
+            txnRequest.setAmount(new BigDecimal(String.valueOf(order.getTotalAmount())));
+        }
+        else{
+            // paid by banking account
+            if(order.getBankAccount() != null){
+                
+                // get bank account
+                UserBankAccount uba = order.getBankAccount();
+                //
+                BankAccountType bankAccountType = new BankAccountType();
+                bankAccountType.setAccountType(BankAccountTypeEnum.CHECKING);
+                bankAccountType.setRoutingNumber(uba.getBankRounting());//"125000024"
+                bankAccountType.setAccountNumber(uba.getCheckingAccount());//"12345678"
+                bankAccountType.setNameOnAccount(uba.getName());//"John Doe"
+                paymentType.setBankAccount(bankAccountType);
+
+                // Create the payment transaction request
+                txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
+                txnRequest.setPayment(paymentType);
+                txnRequest.setAmount(new BigDecimal(500.00));
+            }
+        }
 
         // Make the API Request
         CreateTransactionRequest apiRequest = new CreateTransactionRequest();
@@ -135,7 +158,7 @@ public class CreditCardProcesses {
                 TransactionResponse result = response.getTransactionResponse();
                 
                 payment.setResponseCode(result.getResponseCode());
-                payment.setResponseText(LiXiUtils.marshal(result));
+                payment.setResponseText(LiXiUtils.marshalWithoutRootElement(result));
                 // log
                 if (result.getResponseCode().equals("1")) {
                     log.info(result.getResponseCode());
@@ -147,7 +170,7 @@ public class CreditCardProcesses {
                 }
                 else
                 {
-                    log.info("Failed Transaction"+result.getResponseCode());
+                    log.info("Failed TransactionResponse: "+result.getResponseCode());
                 }
                 log.info("###############################################");
             }
@@ -155,7 +178,7 @@ public class CreditCardProcesses {
             {
                 log.info("Failed Transaction:  "+response.getMessages().getResultCode());
                 payment.setResponseCode(response.getMessages().getResultCode().value());
-                payment.setResponseText("Failed Transaction");
+                payment.setResponseText(LiXiUtils.marshal(response));
             }
         }
         else{

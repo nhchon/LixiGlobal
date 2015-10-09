@@ -31,6 +31,7 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
@@ -133,9 +134,9 @@ public class TopUpMobileController {
         // maximum payment & current payment
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
         //
-        double[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
-        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0]);
-        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[1]);
+        SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
 
         return new ModelAndView("topup/topup", model);
     }
@@ -490,8 +491,8 @@ public class TopUpMobileController {
     private boolean checkExceed(Map<String, Object> model, LixiOrder order, double userMoneyLevel, double addedAmount, double buy) {
 
         // check current payment <==> maximum payment
-        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order);
-        double currentPayment = currentPayments[1];//USD
+        SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order);
+        double currentPayment = currentPayments[0].getUsd();//USD
         currentPayment += addedAmount;// in VND
 
         if (currentPayment > userMoneyLevel) {
@@ -560,8 +561,8 @@ public class TopUpMobileController {
             buy = lxExch.getBuy();
         }
 
-        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // [VND, USD]
-        double currentPayment = currentPayments[1];//USD
+        SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // [VND, USD]
+        double currentPayment = currentPayments[0].getUsd();//USD
         currentPayment += amount;// in USD
 
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
@@ -630,8 +631,8 @@ public class TopUpMobileController {
             buy = lxExch.getBuy();
         }
 
-        double[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // [VND, USD]
-        double currentPayment = currentPayments[1];//USD
+        SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // [VND, USD]
+        double currentPayment = currentPayments[0].getUsd();//USD
         currentPayment += LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy);// in USD
 
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {

@@ -21,8 +21,10 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +41,7 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.model.pojo.Exrate;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
+import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.web.LiXiConstants;
 
 /**
@@ -82,13 +85,32 @@ public class LiXiUtils {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(object, stringWriter);
+            //marshaller.marshal( new JAXBElement(new QName("uri","local"), object.getClass(), object ), stringWriter);
             return stringWriter.toString();
         } catch (JAXBException e) {
-            System.err.println(String.format("Exception while marshalling: %s", e.getMessage()));
+            //
+            log.info(e.getMessage(), e);
+            //
+            return (String.format("Exception while marshalling: %s", e.getMessage()));
         }
-        return null;
     }
 
+    public static <T> String marshalWithoutRootElement(T object) {
+        try {
+            StringWriter stringWriter = new StringWriter();
+            JAXBContext context = JAXBContext.newInstance(object.getClass());
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            //marshaller.marshal(object, stringWriter);
+            marshaller.marshal( new JAXBElement(new QName("uri","local"), object.getClass(), object ), stringWriter);
+            return stringWriter.toString();
+        } catch (JAXBException e) {
+            //
+            log.info(e.getMessage(), e);
+            //
+            return (String.format("Exception while marshalling: %s", e.getMessage()));
+        }
+    }
     /**
      *
      * fix encode and capitalize fully
@@ -176,57 +198,87 @@ public class LiXiUtils {
      * @param type
      * @return
      */
-    public static double[] calculateCurrentPayment(LixiOrder order, long excludeId, String type) {
+    public static SumVndUsd[] calculateCurrentPayment(LixiOrder order, long excludeId, String type) {
 
+        SumVndUsd[] returnAllSum = new SumVndUsd[]{new SumVndUsd(), new SumVndUsd(), new SumVndUsd(), new SumVndUsd()};
         if (order == null) {
-            return new double[]{0, 0};
+            return returnAllSum;
         }
-
-        double sumVND = 0;
-        double sumUSD = 0;
+        
+        double totalVND = 0;
+        double totalUSD = 0;
         //
         // get exchange rate
         double buy = order.getLxExchangeRate().getBuy();
         // gift type
+        double sumGiftVND = 0;
+        double sumGiftUSD = 0;
         if (order.getGifts() != null) {
             for (LixiOrderGift gift : order.getGifts()) {
 
                 if (LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() == excludeId) {
                     // Nothing
                 } else {
-                    sumVND += (gift.getProductPrice() * gift.getProductQuantity());
-                    sumUSD += (gift.getPriceInUSD(buy) * gift.getProductQuantity());
+                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
+                    sumGiftUSD += (gift.getPriceInUSD(buy) * gift.getProductQuantity());
                 }
 
             }
         }
+        // plus to total
+        totalVND += sumGiftVND;
+        totalUSD += sumGiftUSD;
+        
+        // index 1
+        returnAllSum[1] = new SumVndUsd(LiXiConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
+        
         // top up mobile phone
+        double sumTopUpVND = 0;
+        double sumTopUpUSD = 0;
         if (order.getTopUpMobilePhones() != null) {
             for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
 
                 if (LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() == excludeId) {
                 } else {
-                    sumVND += (topUp.getAmount() * buy);
-                    sumUSD += topUp.getAmount();
+                    sumTopUpVND += (topUp.getAmount() * buy);
+                    sumTopUpUSD += topUp.getAmount();
                 }
 
             }
         }
+        // plus to total
+        totalVND += sumTopUpVND;
+        totalUSD += sumTopUpUSD;
+        // index 2
+        returnAllSum[2] = new SumVndUsd(LiXiConstants.LIXI_TOP_UP_TYPE, sumGiftVND, sumGiftUSD);
+        
         // buy phone card
+        double sumBuyCardVND = 0;
+        double sumBuyCardUSD = 0;
         if (order.getBuyCards() != null) {
             for (BuyCard card : order.getBuyCards()) {
 
                 if (LiXiConstants.LIXI_PHONE_CARD_TYPE.equals(type) && card.getId() == excludeId) {
                     // nothing
                 } else {
-                    sumVND += (card.getNumOfCard() * card.getValueOfCard());
-                    sumUSD += (card.getValueInUSD(buy) * card.getNumOfCard());
+                    sumBuyCardVND += (card.getNumOfCard() * card.getValueOfCard());
+                    sumBuyCardUSD += (card.getValueInUSD(buy) * card.getNumOfCard());
                 }
 
             }
         }
+        // plus to total
+        totalVND += sumBuyCardVND;
+        totalUSD += sumBuyCardUSD;
+        
+        // index 3
+        returnAllSum[3] = new SumVndUsd(LiXiConstants.LIXI_PHONE_CARD_TYPE, sumGiftVND, sumGiftUSD);
+
+        // index 0
+        returnAllSum[0] = new SumVndUsd(LiXiConstants.TOTAL_ALL_TYPE, totalVND, totalUSD);
+        
         // return total
-        return new double[]{sumVND, sumUSD};
+        return returnAllSum;
 
     }
 
@@ -238,7 +290,7 @@ public class LiXiUtils {
      * @param excludeOrderGift Exclude this order gift id
      * @return
      */
-    public static double[] calculateCurrentPayment(LixiOrder order, long excludeOrderGift) {
+    public static SumVndUsd[] calculateCurrentPayment(LixiOrder order, long excludeOrderGift) {
 
         return calculateCurrentPayment(order, excludeOrderGift, LiXiConstants.LIXI_GIFT_TYPE);
 
@@ -249,7 +301,7 @@ public class LiXiUtils {
      * @param order
      * @return
      */
-    public static double[] calculateCurrentPayment(LixiOrder order) {
+    public static SumVndUsd[] calculateCurrentPayment(LixiOrder order) {
 
         return calculateCurrentPayment(order, -1);
 

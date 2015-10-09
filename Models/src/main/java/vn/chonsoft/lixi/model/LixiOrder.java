@@ -56,6 +56,10 @@ public class LixiOrder implements Serializable {
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
     
+    @Basic
+    @Column(name = "is_paid")
+    private Boolean isPaid;
+    
     @Basic(optional = false)
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -150,6 +154,14 @@ public class LixiOrder implements Serializable {
 
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public Boolean getIsPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(Boolean isPaid) {
+        this.isPaid = isPaid;
     }
     
     public Date getModifiedDate() {

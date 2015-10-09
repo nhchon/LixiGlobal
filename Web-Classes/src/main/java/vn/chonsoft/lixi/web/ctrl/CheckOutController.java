@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.mail.internet.MimeMessage;
@@ -58,6 +59,7 @@ import vn.chonsoft.lixi.model.form.BillingAddressForm;
 import vn.chonsoft.lixi.model.form.CardAddForm;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
+import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.BuyCardResultService;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
@@ -77,6 +79,7 @@ import vn.chonsoft.lixi.repositories.service.VtcServiceCodeService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.beans.VtcPayClient;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.beans.CreditCardProcesses;
 import vn.chonsoft.lixi.web.beans.LiXiSecurityManager;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.web.beans.TripleDES;
@@ -158,6 +161,8 @@ public class CheckOutController {
     @Inject
     private VtcResponseCodeService responseCodeService;
     
+    @Inject
+    private CreditCardProcesses creaditCardProcesses;
     /**
      * Add a card
      *
@@ -860,8 +865,8 @@ public class CheckOutController {
 
         // calculate the total
         double finalTotal = 0;
-        double[] totals = LiXiUtils.calculateCurrentPayment(order);
-        double total = totals[1];//usd
+        SumVndUsd[] totals = LiXiUtils.calculateCurrentPayment(order);
+        double total = totals[0].getUsd();//usd
 
         // card processing fee
         double cardFeeNumber = 0;
@@ -898,10 +903,11 @@ public class CheckOutController {
         finalTotal = total + cardFeeNumber + (handlingFee.getFee() * (recGifts.isEmpty() ? 0 : recGifts.size()));
 
         // update final total into db
-        order.setTotalAmount(new BigDecimal(String.valueOf(finalTotal)));
+        order.setTotalAmount(new BigDecimal(LiXiUtils.getNumberFormat().format(finalTotal)));
         
-        order = this.lxorderService.save(order);
-        // 
+        this.lxorderService.save(order);
+        //
+        model.put(LiXiConstants.LIXI_ALL_TOTAL, totals);
         model.put(LiXiConstants.LIXI_FINAL_TOTAL, finalTotal);
         model.put(LiXiConstants.LIXI_HANDLING_FEE, handlingFee);
         model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, handlingFee.getFee() * recGifts.size());
@@ -1060,6 +1066,11 @@ public class CheckOutController {
 
     }
 
+    /**
+     * 
+     * @param phone
+     * @return 
+     */
     private DauSo getDauSo(String phone) {
 
         // check phone number belongs to which networks ?
@@ -1108,10 +1119,49 @@ public class CheckOutController {
             order.setModifiedDate(Calendar.getInstance().getTime());
 
             this.lxorderService.save(order);
-            ///////////////////////////////////////////////////////////////////
-            // suppose The order is paid, top up mobile
-            //if(order.getTopUpMobilePhones()!= null && !order.getTopUpMobilePhones().isEmpty()){
+            //////////////////////// CHARGE CREDIT CARD ////////////////////////
+            boolean chargeResult = creaditCardProcesses.charge(order);
+            if(chargeResult == false){
+                return new ModelAndView(new RedirectView("/checkout/payment-method/change?wrong=1", true, true));
+            }
+            else{
+                // already paid
+                order.setIsPaid(Boolean.TRUE);
+                this.lxorderService.save(order);
+                
+                // send mail to sender
+                final String emailSender = order.getSender().getEmail();
+                final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
+                final LixiOrder refOrder = order;
+                MimeMessagePreparator preparator = new MimeMessagePreparator() {
+                    @SuppressWarnings({"rawtypes", "unchecked"})
+                    @Override
+                    public void prepare(MimeMessage mimeMessage) throws Exception {
+                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                        message.setTo(emailSender);
+                        message.setCc(LiXiConstants.YHANNART_GMAIL);
+                        message.setFrom("support@lixi.global");
+                        message.setSubject("LiXi.Global - Invoice Alert");
+                        message.setSentDate(Calendar.getInstance().getTime());
 
+                        Map model = new HashMap();
+                        model.put("sender", u);
+                        model.put("LIXI_ORDER", refOrder);
+                        model.put("REC_GIFTS", recGifts);
+
+                        String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                velocityEngine, "emails/paid-order-alert.vm", "UTF-8", model);
+                        message.setText(text, true);
+                    }
+                };
+                // send oldEmail
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> mailSender.send(preparator));
+                executor.shutdown();
+                
+            }
+            ////////////////////////////////////////////////////////////////////
+            // The order is paid, top up mobile
             for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
 
                 Recipient rec = topUp.getRecipient();
@@ -1213,37 +1263,24 @@ public class CheckOutController {
             }// forEach topUps
 
             // Buy cards
-            log.info("buyCard:" + order.getBuyCards().isEmpty());
+            log.info("buyCard is empty:" + order.getBuyCards().isEmpty());
             for (BuyCard bc : order.getBuyCards()) {
-
                 Long id = bc.getId();
                 Recipient rec = bc.getRecipient();
-                String amount = "10000"; // new Integer(bc.getValueOfCard()).toString();
-                String quantity = "1"; // new Integer(bc.getNumOfCard()).toString();
-                // nhan dien mang
+                String amount = "10000";
+                String quantity = "1";
                 DauSo dauSo = getDauSo(rec.getPhone());
-                // lay vtc's service code
                 VtcServiceCode serviceCode = this.vtcServiceCodeService.findByNetworkAndLxChucNang(dauSo.getNetwork(), LiXiConstants.MUA_LAY_THE_CAO);
-                // generate request data
                 String requestData = vtcClient.buyCardRequestData(id, serviceCode.getCode(), amount, quantity);
-
-                // cal vtc's buy card service
                 RequestTransactionResponse response = vtcClient.buyCard(requestData);
-                    // Là một chuỗi string có dạng sau:
-                //<ResponseCode>|<OrgTransID>|<VTCTransID>|<PartnerBalance>|<dataSign>
                 String vtcReturned = response.getRequestTransactionResult();
                 log.info("buyCard: " + vtcReturned);
-
-                // store result into DB
                 BuyCardResult bcr = new BuyCardResult();
                 bcr.setBuyCard(bc);
                 bcr.setBuyRequest(requestData);
                 bcr.setBuyResponse(vtcReturned);
                 bcr.setModifiedDate(Calendar.getInstance().getTime());
-
                 bcr = this.bcrService.save(bcr);
-
-                // parse the response for getCard
                 String[] rs = vtcReturned.split("\\|");
                 if (LiXiConstants.VTC_OK.equals(rs[0])) {
 
