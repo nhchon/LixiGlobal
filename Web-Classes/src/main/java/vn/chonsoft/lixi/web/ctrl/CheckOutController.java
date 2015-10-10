@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.mail.internet.MimeMessage;
@@ -1128,7 +1127,7 @@ public class CheckOutController {
                 // already paid
                 order.setIsPaid(Boolean.TRUE);
                 this.lxorderService.save(order);
-                
+               
                 // send mail to sender
                 final String emailSender = order.getSender().getEmail();
                 final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
@@ -1144,10 +1143,11 @@ public class CheckOutController {
                         message.setSubject("LiXi.Global - Invoice Alert");
                         message.setSentDate(Calendar.getInstance().getTime());
 
-                        Map model = new HashMap();
+                        Map<String, Object> model = new HashMap<>();
                         model.put("sender", u);
                         model.put("LIXI_ORDER", refOrder);
                         model.put("REC_GIFTS", recGifts);
+                        calculateFee(model, refOrder);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
                                 velocityEngine, "emails/paid-order-alert.vm", "UTF-8", model);
@@ -1413,9 +1413,17 @@ public class CheckOutController {
             return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
 
         }
-
+        
+        log.info("update lixiStatus");
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        LixiOrder order = this.lxorderService.findById(orderId);
+        log.info("orderId: " + orderId);
+        log.info("LIXI_ORDER_NOT_YET_SUBMITTED: " + LiXiConstants.LIXI_ORDER_NOT_YET_SUBMITTED);
         // update finished status
-        this.lxorderService.updateStatus(LiXiConstants.LIXI_ORDER_NOT_YET_SUBMITTED, (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        log.info("order.getLixiStatus: " + order.getLixiStatus());
+        order.setLixiStatus(LiXiConstants.LIXI_ORDER_NOT_YET_SUBMITTED);
+        order = this.lxorderService.save(order);
+        log.info("update result: " +order.getLixiStatus());
 
         // remove Lixi order id
         request.getSession().removeAttribute(LiXiConstants.LIXI_ORDER_ID);

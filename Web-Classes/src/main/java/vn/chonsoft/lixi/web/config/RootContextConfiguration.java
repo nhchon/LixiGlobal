@@ -247,6 +247,10 @@ public class RootContextConfiguration  implements
         Properties velocityProperties = new Properties();
         velocityProperties.put("resource.loader", "class");
         velocityProperties.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        velocityProperties.put("input.encoding", "UTF-8");
+        velocityProperties.put("output.encoding", "UTF-8");
+        velocityProperties.put("spring.velocity.properties.input.encoding", "UTF-8");
+        velocityProperties.put("spring.velocity.properties.output.encoding", "UTF-8");
         
         factory.setVelocityProperties(velocityProperties);
         return factory.createVelocityEngine();

@@ -37,12 +37,6 @@
                         <td></td>
                         <td></td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td><b>Order Summary</b></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
                     #foreach ($g in $entry.gifts)
                         #set ($String = "abc")
                         #set ($recGiftIndex = $foreach.count)
@@ -121,6 +115,45 @@
                         </tr>
                     #end
                 #end
+                <tr>
+                    <td></td>
+                    <td><b>Gift Price:</b></td>
+                    <td><b>$${String.format("%.2f", ${LIXI_ALL_TOTAL[0].usd})}</b></td>
+                    <td></td>
+                </tr>
+                #if ($CARD_PROCESSING_FEE_THIRD_PARTY)
+                    <tr>
+                        <td></td>
+                        <td>
+                            <b>
+                            #if ($LIXI_ORDER.card)
+                                Card Processing Fee:
+                            #end        
+                            #if ($LIXI_ORDER.bankAccount)
+                                eCheck Processing Fee:
+                            #end    
+                            </b>
+                        </td>
+                        <td>
+                            <b>$<span>${String.format("%.2f", ${CARD_PROCESSING_FEE_THIRD_PARTY})}</span></b>
+                        </td>
+                        <td></td>
+                    </tr>
+                #end
+                <tr>
+                    <td></td>
+                    <td><b>Lixi Handling Fee:</b></td>
+                    <td><b>$<span>${LIXI_HANDLING_FEE_TOTAL}</span></b> ($${LIXI_HANDLING_FEE.fee} per person)<br/>
+
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><b>TOTAL:</b></td>
+                    <td><b>$<span>${String.format("%.2f", ${LIXI_FINAL_TOTAL})}</span></b></td>
+                    <td></td>
+                </tr>
             </div>
         <div><p>Please enjoy !</p></div>
 
