@@ -228,11 +228,13 @@ public class RootContextConfiguration  implements
         mailSenderImpl.setProtocol(env.getProperty("smtp.protocol"));
         mailSenderImpl.setUsername(env.getProperty("smtp.username"));
         mailSenderImpl.setPassword(env.getProperty("smtp.password"));
-
+        mailSenderImpl.setDefaultEncoding("UTF-8");
+        
         Properties javaMailProps = new Properties();
         javaMailProps.put("mail.smtp.auth", true);
         javaMailProps.put("mail.smtp.starttls.enable", true);
         javaMailProps.put("mail.debug", true);
+        javaMailProps.put("mail.mime.charset", "UTF-8");
 
         mailSenderImpl.setJavaMailProperties(javaMailProps);
 

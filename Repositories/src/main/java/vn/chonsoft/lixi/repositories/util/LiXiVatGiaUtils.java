@@ -235,6 +235,7 @@ public class LiXiVatGiaUtils {
      * 
      * @param order
      * @param orderService 
+     * @param orderGiftService 
      */
     public void submitOrdersToBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService){
         
@@ -279,20 +280,20 @@ public class LiXiVatGiaUtils {
                     vars.add("receiver_adress", "xxx");// TODO: add address to recipient
                     vars.add("message", gift.getRecipient().getNote());
                     //
-                    System.out.println("///////////////////////////////////////////////////");
-                    System.out.println("order_id:"+ gift.getId().toString());
-                    System.out.println("sender_name:"+ senderName);
-                    System.out.println("sender_email:"+ senderEmail);
-                    System.out.println("sender_phone:"+ senderPhone);
-                    System.out.println("product_id:"+ gift.getProductId()+"");
-                    System.out.println("price:"+ gift.getProductPrice()+"");
-                    System.out.println("quantity:"+ gift.getProductQuantity()+"");
-                    System.out.println("receiver_name:"+ receiverName);
-                    System.out.println("receiver_email:"+ emptyIfNull(gift.getRecipient().getEmail()));
-                    System.out.println("receiver_phone:"+ emptyIfNull(gift.getRecipient().getPhone()));
-                    System.out.println("receiver_adress:"+ "xxx");
-                    System.out.println("message:"+ gift.getRecipient().getNote());
-                    System.out.println("///////////////////////////////////////////////////");
+                    log.info("///////////////////////////////////////////////////");
+                    log.info("order_id:"+ gift.getId().toString());
+                    log.info("sender_name:"+ senderName);
+                    log.info("sender_email:"+ senderEmail);
+                    log.info("sender_phone:"+ senderPhone);
+                    log.info("product_id:"+ gift.getProductId()+"");
+                    log.info("price:"+ gift.getProductPrice()+"");
+                    log.info("quantity:"+ gift.getProductQuantity()+"");
+                    log.info("receiver_name:"+ receiverName);
+                    log.info("receiver_email:"+ emptyIfNull(gift.getRecipient().getEmail()));
+                    log.info("receiver_phone:"+ emptyIfNull(gift.getRecipient().getPhone()));
+                    log.info("receiver_adress:"+ "xxx");
+                    log.info("message:"+ gift.getRecipient().getNote());
+                    log.info("///////////////////////////////////////////////////");
                     LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
                     
                     gift.setBkStatus(EnumLixiOrderStatus.PROCESSING.getValue());
@@ -318,7 +319,7 @@ public class LiXiVatGiaUtils {
             if(updateOrderStatus){
                 
                 order.setLixiStatus(EnumLixiOrderStatus.PROCESSING.getValue());
-                order.setLixiMessage("Order is processing");
+                order.setLixiMessage("The Order already sent to BaoKim Service");
                 
                 orderService.save(order);
                 

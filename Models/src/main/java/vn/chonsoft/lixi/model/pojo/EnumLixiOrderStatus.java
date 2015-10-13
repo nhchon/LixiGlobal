@@ -9,7 +9,8 @@ package vn.chonsoft.lixi.model.pojo;
  * @author chonnh
  */
 public enum EnumLixiOrderStatus {
-
+    
+    UNFINISHED(-2),
     NOT_YET_SUBMITTED(-1),
     PROCESSING(0),
     COMPLETED(1),

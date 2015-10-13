@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -83,6 +84,9 @@ public class UserController {
     
     @Inject
     private LixiOrderService lxorderService;
+    
+    @Inject
+    private ThreadPoolTaskScheduler taskScheduler;
     /**
      * 
      * @param model
@@ -197,9 +201,7 @@ public class UserController {
            };        
         
         // send oldEmail
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> mailSender.send(preparator));
-        executor.shutdown();
+        taskScheduler.execute(() -> mailSender.send(preparator));        
         
         model.put("email", form.getEmail());
         return new ModelAndView("user/signUpComplete", model);
@@ -322,9 +324,7 @@ public class UserController {
                    };        
 
                 // send oldEmail
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.execute(() -> mailSender.send(preparator));
-                executor.shutdown();
+                taskScheduler.execute(() -> mailSender.send(preparator));        
                 // return page
                 model.put("email", u.getEmail());
                 return new ModelAndView("user/signUpComplete", model);
@@ -419,9 +419,7 @@ public class UserController {
                    };        
 
                 // send oldEmail
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.execute(() -> mailSender.send(preparator));
-                executor.shutdown();
+                taskScheduler.execute(() -> mailSender.send(preparator));        
                 // complete
                 model.put("email", email);
                 
@@ -890,9 +888,8 @@ public class UserController {
                     };        
 
                     // send oldEmail
-                    ExecutorService executor = Executors.newSingleThreadExecutor();
-                    executor.execute(() -> mailSender.send(preparator));
-                    executor.shutdown();
+                    taskScheduler.execute(() -> mailSender.send(preparator));
+                    
                     // return your account page
                     model.put("editSuccess", 1);
                     return new ModelAndView(new RedirectView("/user/yourAccount", true, true), model);
