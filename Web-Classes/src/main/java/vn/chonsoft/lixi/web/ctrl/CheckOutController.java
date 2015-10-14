@@ -115,15 +115,6 @@ public class CheckOutController {
     private LixiCardFeeService cardFeeService;
 
     @Inject
-    private LiXiSecurityManager securityManager;
-
-    @Inject
-    private TripleDES tripleDES;
-
-    @Inject
-    private VtcPayClient vtcClient;
-
-    @Inject
     private JavaMailSender mailSender;
 
     @Inject
@@ -131,27 +122,6 @@ public class CheckOutController {
 
     @Inject
     private VelocityEngine velocityEngine;
-
-    @Inject
-    private DauSoService dauSoService;
-
-    @Inject
-    private VtcServiceCodeService vtcServiceCodeService;
-
-    @Inject
-    private TopUpResultService turService;
-
-    @Inject
-    private BuyCardService bcService;
-
-    @Inject
-    private BuyCardResultService bcrService;
-
-    @Inject
-    private TopUpMobilePhoneService topUpService;
-
-    @Inject
-    private VtcResponseCodeService responseCodeService;
 
     @Inject
     private CreditCardProcesses creaditCardProcesses;
@@ -1097,7 +1067,8 @@ public class CheckOutController {
             boolean chargeResult = creaditCardProcesses.charge(order);
             if (chargeResult == false) {
                 return new ModelAndView(new RedirectView("/checkout/payment-method/change?wrong=1", true, true));
-            } else {
+            } 
+            else {
                 // already paid
                 order.setIsPaid(Boolean.TRUE);
                 order.setLixiStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
@@ -1142,11 +1113,12 @@ public class CheckOutController {
             // Buy Cards
             //lxAsyncMethods.processBuyCardItems(order);
             
-            //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ////////////////////
+            //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
             log.info("submitOrdersToBaoKim");
             lxAsyncMethods.submitOrdersToBaoKim(order);
             ////////////////////////////////////////////////////////////////////
             log.info("END OF Call Async methods");
+            
             // jump to thank you page
             return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
         } else {
