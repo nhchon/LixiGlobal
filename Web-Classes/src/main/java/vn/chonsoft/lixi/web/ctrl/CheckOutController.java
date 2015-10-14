@@ -5,7 +5,6 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.HashMap;
 import javax.mail.internet.MimeMessage;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
@@ -36,22 +34,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.ws.WebServiceException;
 import vn.chonsoft.lixi.model.BillingAddress;
-import vn.chonsoft.lixi.model.BuyCard;
-import vn.chonsoft.lixi.model.BuyCardResult;
-import vn.chonsoft.lixi.model.DauSo;
 import vn.chonsoft.lixi.model.LixiCardFee;
 import vn.chonsoft.lixi.model.LixiFee;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.Recipient;
-import vn.chonsoft.lixi.model.TopUpMobilePhone;
-import vn.chonsoft.lixi.model.TopUpResult;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
-import vn.chonsoft.lixi.model.VtcResponseCode;
-import vn.chonsoft.lixi.model.VtcServiceCode;
 import vn.chonsoft.lixi.model.form.BankAccountAddForm;
 import vn.chonsoft.lixi.model.form.BillingAddressForm;
 import vn.chonsoft.lixi.model.form.CardAddForm;
@@ -83,7 +73,6 @@ import vn.chonsoft.lixi.web.beans.CreditCardProcesses;
 import vn.chonsoft.lixi.web.beans.LiXiSecurityManager;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.web.beans.TripleDES;
-import vn.vtc.pay.RequestTransactionResponse;
 
 /**
  *
