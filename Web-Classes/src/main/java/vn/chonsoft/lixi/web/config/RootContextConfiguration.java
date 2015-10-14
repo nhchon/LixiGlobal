@@ -57,6 +57,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import vn.chonsoft.lixi.web.beans.CreditCardProcesses;
 import vn.chonsoft.lixi.web.beans.VtcPayClient;
 import vn.chonsoft.lixi.web.beans.LiXiSecurityManager;
+import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
+import vn.chonsoft.lixi.web.beans.LixiAsyncMethodsImpl;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.web.beans.TripleDES;
 
@@ -316,6 +318,16 @@ public class RootContextConfiguration  implements
         processes.setRunMode(env.getProperty("authorize.net.run_mode"));
         
         return processes;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Bean
+    public LixiAsyncMethods lxAsyncMethods(){
+        
+        return new LixiAsyncMethodsImpl();
     }
     /**
      * 
