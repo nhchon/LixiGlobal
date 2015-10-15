@@ -1,16 +1,17 @@
-<%@tag description="Front-end Template for LiXi's Projects" body-content="scriptless" dynamic-attributes="dynamicAttributes" trimDirectiveWhitespaces="true" pageEncoding="UTF-8"%>
+<%@tag pageEncoding="UTF-8" description="Front-end Template for LiXi's Projects" body-content="scriptless" dynamic-attributes="dynamicAttributes" trimDirectiveWhitespaces="true" %>
 <%-- The list of normal or fragment attributes can be specified here: --%>
 <%@attribute name="htmlTitle" type="java.lang.String" rtexprvalue="true" required="true"%>
 <%@attribute name="headContent" fragment="true" required="false" %>
 <%@attribute name="topbarContent" fragment="true" required="false" %>
 <%@attribute name="bottombarContent" fragment="true" required="false" %>
 <%@attribute name="javascriptContent" fragment="true" required="false" %>
-<%@ include file="/WEB-INF/jsp/base.jspf" %>
+<%@include file="/WEB-INF/jsp/base.jspf" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8" />
         <title><c:out value="${fn:trim(htmlTitle)}" /></title>
+        <meta charset="UTF-8"/>
+        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <link rel="shortcut icon" href="<c:url value="/resource/theme/assets/lixiglobal/favicon.ico"/>" />
         <!--[if lt IE 9]>

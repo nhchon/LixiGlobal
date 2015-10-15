@@ -1,3 +1,4 @@
+<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <template:Client htmlTitle="LiXi Global - Choose Recipient">
 
     <jsp:attribute name="extraHeadContent">

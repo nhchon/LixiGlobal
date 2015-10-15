@@ -1,8 +1,8 @@
-<%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" %>
-<%@ attribute name="htmlTitle" type="java.lang.String" rtexprvalue="true" required="true" %>
-<%@ attribute name="extraHeadContent" fragment="true" required="false" %>
+<%@tag pageEncoding="UTF-8" body-content="scriptless" trimDirectiveWhitespaces="true" %>
+<%@attribute name="htmlTitle" type="java.lang.String" rtexprvalue="true" required="true" %>
+<%@attribute name="extraHeadContent" fragment="true" required="false" %>
 <%@attribute name="extraJavascriptContent" fragment="true" required="false" %>
-<%@ include file="/WEB-INF/jsp/base.jspf" %>
+<%@include file="/WEB-INF/jsp/base.jspf" %>
 <template:CoreClient htmlTitle="${htmlTitle}">
     <jsp:attribute name="headContent">
         <jsp:invoke fragment="extraHeadContent" />
