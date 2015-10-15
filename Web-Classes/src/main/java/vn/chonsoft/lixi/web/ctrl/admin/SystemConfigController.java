@@ -245,7 +245,7 @@ public class SystemConfigController {
         for (SupportLocale sl : sls) {
 
             String code = sl.getCode();
-            String name = LiXiUtils.fixEncode(request.getParameter(code));
+            String name = request.getParameter(code);
             // if name is empty, we do nothing
             if(name == null || "".equals(name)){
                 

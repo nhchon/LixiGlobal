@@ -400,15 +400,6 @@ public class TopUpMobileController {
         try {
             Recipient rec = null;
 
-            // correct name, fix encode, capitalize
-            log.info("firstName:" + form.getFirstName());
-            log.info("firstName:" + LiXiUtils.fixEncode(form.getFirstName()));
-            log.info("firstName:" + LiXiUtils.correctName(form.getFirstName()));
-            log.info("request.getCharacterEncoding(): " + request.getCharacterEncoding());
-            //form.setFirstName(LiXiUtils.correctName(form.getFirstName()));
-            //form.setMiddleName(LiXiUtils.correctName(form.getMiddleName()));
-            //form.setLastName(LiXiUtils.correctName(form.getLastName()));
-
             // save or update the recipient
             rec = new Recipient();
             rec.setId((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));

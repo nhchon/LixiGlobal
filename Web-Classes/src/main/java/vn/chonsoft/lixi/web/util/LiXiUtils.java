@@ -451,30 +451,6 @@ public class LiXiUtils {
     }
     
     /**
-     * the system is set default encode iso-8859-1 Convert to UTF-8
-     *
-     * @param str
-     * @return
-     */
-    public static String fixEncode(String str) {
-
-        if (str == null || "".equals(str)) {
-            return str;
-        }
-        //
-        try {
-
-            return new String(str.getBytes("ISO-8859-1"), "UTF-8");
-
-        } catch (Exception e) {
-
-            log.info(e.getMessage(), e);
-        }
-
-        return str;
-    }
-
-    /**
      *
      * @param file
      * @return

@@ -1305,8 +1305,7 @@ public class GiftsController {
 
         }
 
-        String note = LiXiUtils.fixEncode(request.getParameter("note"));
-        rec.setNote(note);
+        rec.setNote(request.getParameter("note"));
 
         // save note
         this.reciService.save(rec);
