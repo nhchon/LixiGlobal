@@ -270,6 +270,11 @@ public class GiftsController {
                 }
             }
             // save or update the recipient
+            //log.info("request.getCharacterEncoding(): "+request.getCharacterEncoding());
+            //log.info("guessEncoding: " + LiXiUtils.guessEncoding(form.getNote().getBytes()));
+            //log.info(form.getNote());
+            //log.info(LiXiUtils.fixEncode(form.getNote()));
+            //
             rec = new Recipient();
             rec.setId(form.getRecId());
             rec.setSender(u);
@@ -279,7 +284,7 @@ public class GiftsController {
             rec.setEmail(form.getEmail());
             rec.setDialCode(form.getDialCode());
             rec.setPhone(form.getPhone());
-            rec.setNote(LiXiUtils.fixEncode(form.getNote()));// note
+            rec.setNote(form.getNote());// note
             rec.setModifiedDate(Calendar.getInstance().getTime());
 
             rec = this.reciService.save(rec);

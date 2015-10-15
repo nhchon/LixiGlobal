@@ -43,7 +43,7 @@ import vn.chonsoft.lixi.model.pojo.Exrate;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.web.LiXiConstants;
-
+import org.mozilla.universalchardet.UniversalDetector;
 /**
  *
  * @author chonnh
@@ -120,7 +120,7 @@ public class LiXiUtils {
      */
     public static String correctName(String name) {
 
-        return WordUtils.capitalizeFully(fixEncode(name));
+        return WordUtils.capitalizeFully(name);
 
     }
 
@@ -431,6 +431,25 @@ public class LiXiUtils {
         return path.replaceFirst(":8080", "");
     }
 
+    /**
+     * 
+     * @param bytes
+     * @return 
+     */
+    public static String guessEncoding(byte[] bytes) {
+        String DEFAULT_ENCODING = "UTF-8";
+        UniversalDetector detector =
+            new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        if (encoding == null) {
+            encoding = DEFAULT_ENCODING;
+        }
+        return encoding;
+    }
+    
     /**
      * the system is set default encode iso-8859-1 Convert to UTF-8
      *

@@ -55,7 +55,7 @@ public class Bootstrap implements WebApplicationInitializer{
         /* encoding filter*/
         FilterRegistration.Dynamic fr = container.addFilter("encodingFilter",
                 new CharacterEncodingFilter());
-        fr.setInitParameter("encoding", "ISO-8859-1");
+        fr.setInitParameter("encoding", "UTF-8");
         fr.setInitParameter("forceEncoding", "true");
         fr.addMappingForUrlPatterns(null, false, "/*");
         
