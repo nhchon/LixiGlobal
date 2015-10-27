@@ -26,8 +26,11 @@ import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
@@ -54,11 +57,14 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.context.WebApplicationContext;
+import vn.chonsoft.lixi.web.beans.CheckLoginedUserAspectJ;
 import vn.chonsoft.lixi.web.beans.CreditCardProcesses;
 import vn.chonsoft.lixi.web.beans.VtcPayClient;
 import vn.chonsoft.lixi.web.beans.LiXiSecurityManager;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethodsImpl;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.web.beans.TripleDES;
 
@@ -329,6 +335,15 @@ public class RootContextConfiguration  implements
         
         return new LixiAsyncMethodsImpl();
     }
+    
+    //@Bean
+    //@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    //public LoginedUser loginedUser(){
+        
+        //return new LoginedUser();
+        
+    //}
+    
     /**
      * 
      * http://stackoverflow.com/questions/17097521/spring-3-2-value-annotation-

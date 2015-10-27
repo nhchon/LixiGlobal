@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -18,15 +20,38 @@ import org.apache.commons.lang3.StringUtils;
  * @author chonnh
  */
 public class TestEverything {
-
+    
+    public static final String MU = "Manchester United";
+    
+    public static void thangHoaThua(int f, int s, int[] r){
+        int no = f > s ? r[0]++ : (f == s ? r[1]++ : r[2]++);
+    }
+    
     public static void main(String[] args) {
-        
-        Book b = new Book();
-        b.setTitle("ABC");
-        b.setAuthor("XYZ");
-        
-        System.out.println(LiXiUtils.marshal(b));
-        System.out.println(String.valueOf(18.99));
+        String result = "Manchester United 1 Chelsea 0, Manchester United 2 Liverpool 0, Manchester United 1 Totemham 1, Asernal 4 Manchester United 2";
+        String[] arrs = result.split(",");
+        // [Thang, Hoa, Thua]
+        int[] muResult = {0, 0, 0};
+        for (String m  : arrs) {
+            Pattern pattern = Pattern.compile("\\d+");
+            String[] players = pattern.split(m);
+            Matcher matcher = pattern.matcher(m);
+            // Get scores
+            matcher.find(); int firstScore = Integer.parseInt(matcher.group());
+            matcher.find(); int secondScore = Integer.parseInt(matcher.group());
+            if(MU.equals(players[0].trim())){
+                thangHoaThua(firstScore, secondScore, muResult);
+            }
+            if(MU.equals(players[1].trim())){
+                thangHoaThua(secondScore, firstScore, muResult);
+            }
+        }
+        System.out.println(Arrays.toString(muResult));
+        //Book b = new Book();
+        //b.setTitle("ABC");
+        //b.setAuthor("XYZ");
+        //System.out.println(LiXiUtils.marshal(b));
+        //System.out.println(String.valueOf(18.99));
 //        Queue<String> input = new LinkedList(Arrays.asList("a11", "b22", "c33", "d44", "e55"));
 //        Queue<String> output = new LinkedList(Arrays.asList("a11", "c33", "d44", "b22", "e55"));
 //        List<String> checkedList = new ArrayList<>();
@@ -47,7 +72,6 @@ public class TestEverything {
 //            checkedList.add(i);
 //        }
 //        viPham.forEach(x -> System.out.println(x));
-
         //TestEverything e = new TestEverything();
         //e.testBigDecimal(new BigDecimal("800000"), new BigDecimal("20500.0"));
         //e.testBigDecimal(new BigDecimal("1600000"), new BigDecimal("20500.0"));
@@ -77,6 +101,5 @@ public class TestEverything {
 //        
 //        System.out.println(StringUtils.substring("0967007869", 0, 3));
 //        System.out.println(StringUtils.substring("0967007869", 0, 4));
-        
     }
 }

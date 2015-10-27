@@ -16,6 +16,7 @@ import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -53,15 +54,17 @@ import org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.beans.CheckLoginedUserAspectJ;
 
 /**
  *
  * @author chonnh
  */
 @Configuration
+@EnableAspectJAutoProxy
 @EnableWebMvc
 @ComponentScan(
-        basePackages = "vn.chonsoft.lixi.web.ctrl",
+        basePackages = {"vn.chonsoft.lixi.web.ctrl", "vn.chonsoft.lixi.web.beans"},
         useDefaultFilters = false,
         includeFilters = @ComponentScan.Filter(WebController.class)
 )
@@ -187,4 +190,11 @@ public class WebServletContextConfiguration  extends WebMvcConfigurerAdapter{
     public MultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
     }
+    
+    @Bean
+    public CheckLoginedUserAspectJ checkLoginedUser(){
+        
+        return new CheckLoginedUserAspectJ();
+    }
+    
 }

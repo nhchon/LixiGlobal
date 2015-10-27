@@ -53,6 +53,7 @@ import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
 
 /**
  *
@@ -64,6 +65,9 @@ public class GiftsController {
 
     private static final Logger log = LogManager.getLogger(GiftsController.class);
 
+    //@Inject
+    //private LoginedUser loginedUser;
+    
     @Inject
     private UserService userService;
 

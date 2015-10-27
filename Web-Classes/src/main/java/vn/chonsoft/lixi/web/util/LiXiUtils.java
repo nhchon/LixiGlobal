@@ -38,11 +38,13 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
+import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.model.pojo.Exrate;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.web.LiXiConstants;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
 /**
  *
  * @author chonnh
@@ -59,6 +61,23 @@ public class LiXiUtils {
         df.applyPattern("###,###.##");
     }
 
+    public static void setLoginedUser(LoginedUser l, User u){
+    
+        l.setId(u.getId());
+        l.setFirstName(u.getFirstName());
+        l.setMiddleName(u.getMiddleName());
+        l.setLastName(u.getLastName());
+        l.setEmail(u.getEmail());
+        l.setPhone(u.getPhone());
+        l.setAccountNonExpired(u.getAccountNonExpired());
+        l.setAccountNonLocked(u.getAccountNonLocked());
+        l.setCredentialsNonExpired(u.getCredentialsNonExpired());
+        l.setEnabled(u.getEnabled());
+        l.setActivated(u.getActivated());
+        // login date
+        l.setLoginedDate(Calendar.getInstance().getTime());
+        
+    }
     /**
      *
      * Check user is loggined or not
