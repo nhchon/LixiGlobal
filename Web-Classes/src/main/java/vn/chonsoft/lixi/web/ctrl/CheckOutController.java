@@ -50,29 +50,19 @@ import vn.chonsoft.lixi.model.pojo.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
-import vn.chonsoft.lixi.repositories.service.BuyCardResultService;
-import vn.chonsoft.lixi.repositories.service.BuyCardService;
-import vn.chonsoft.lixi.repositories.service.DauSoService;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
-import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
-import vn.chonsoft.lixi.repositories.service.TopUpResultService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
-import vn.chonsoft.lixi.repositories.service.VtcResponseCodeService;
-import vn.chonsoft.lixi.repositories.service.VtcServiceCodeService;
 import vn.chonsoft.lixi.web.LiXiConstants;
-import vn.chonsoft.lixi.web.beans.VtcPayClient;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.CreditCardProcesses;
-import vn.chonsoft.lixi.web.beans.LiXiSecurityManager;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
-import vn.chonsoft.lixi.web.beans.TripleDES;
 
 /**
  *
@@ -136,15 +126,10 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "cards/add", method = RequestMethod.GET)
     public ModelAndView addACard(Map<String, Object> model, HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
         List<UserCard> cards = this.ucService.findByUser(u);
@@ -175,16 +160,10 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "cards/add", method = RequestMethod.POST)
     public ModelAndView addACard(Map<String, Object> model,
             @Valid CardAddForm form, Errors errors, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         if (errors.hasErrors()) {
 
@@ -263,15 +242,10 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "cards/change", method = RequestMethod.GET)
     public ModelAndView cards(Map<String, Object> model, HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
 
@@ -302,15 +276,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "pay-by-bank-account/change", method = RequestMethod.GET)
     public ModelAndView payByBankAccount(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
@@ -342,15 +310,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "pay-by-bank-account/add", method = RequestMethod.GET)
     public ModelAndView addBankAccount(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         model.put("bankAccountAddForm", new BankAccountAddForm());
 
@@ -367,16 +329,10 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "pay-by-bank-account/add", method = RequestMethod.POST)
     public ModelAndView payByBankAccount(Map<String, Object> model,
             @Valid BankAccountAddForm form, Errors errors, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         if (errors.hasErrors()) {
 
@@ -419,14 +375,15 @@ public class CheckOutController {
     }
 
     /////////////////////////
+    /**
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
     @RequestMapping(value = "payment-method/change", method = RequestMethod.GET)
     public ModelAndView changePaymentMethod(Map<String, Object> model, HttpServletRequest request) {
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
@@ -455,15 +412,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "payment-method/change", method = RequestMethod.POST)
     public ModelAndView changePaymentMethod(HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         String cardIdStr = request.getParameter("cardId");
         String accIdStr = request.getParameter("accId");
@@ -514,15 +465,10 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "choose-billing-address", method = RequestMethod.GET)
     public ModelAndView chooseBillingAddress(Map<String, Object> model, @PageableDefault(value = 6) Pageable page, HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         //Pageable just2rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
@@ -547,15 +493,10 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "choose-billing-address-modal", method = RequestMethod.GET)
     public ModelAndView chooseBillingAddressModal(Map<String, Object> model, @PageableDefault(value = 6) Pageable page, HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         //Pageable just2rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
@@ -576,15 +517,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "billing-address-modal", method = RequestMethod.GET)
     public ModelAndView billingAddressModal(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         model.put("billingAddressForm", new BillingAddressForm());
 
@@ -617,15 +552,10 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "billing-address/{baId}", method = RequestMethod.GET)
     public ModelAndView billingAddress(@PathVariable Long baId, HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         // login user
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
@@ -672,15 +602,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "billing-address", method = RequestMethod.GET)
     public ModelAndView billingAddress(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         model.put("billingAddressForm", new BillingAddressForm());
 
@@ -698,16 +622,10 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "billing-address", method = RequestMethod.POST)
     public ModelAndView billingAddress(Map<String, Object> model,
             @Valid BillingAddressForm form, Errors errors, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         if (errors.hasErrors()) {
 
@@ -772,15 +690,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "edit-rec-phone", method = RequestMethod.POST)
     public ModelAndView editRecMobilePhone(HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         String recId = request.getParameter("recId");
         String phone = request.getParameter("mobilePhone");
@@ -797,15 +709,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "edit-email", method = RequestMethod.POST)
     public ModelAndView editRecEmail(HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         String recId = request.getParameter("recId");
         String email = request.getParameter("emailAddress");
@@ -888,15 +794,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "place-order", method = RequestMethod.GET)
     public ModelAndView placeOrder(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         LixiOrder order = null;
         // order already created
@@ -924,15 +824,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "place-order/calculateFee/{setting}", method = RequestMethod.GET)
     public ModelAndView calculateFee(Map<String, Object> model, @PathVariable Integer setting, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         LixiOrder order = null;
         // order already created
@@ -965,15 +859,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "deleteReceiver/{recId}", method = RequestMethod.GET)
     public ModelAndView deleteReceiver(Map<String, Object> model, @PathVariable Long recId, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         LixiOrder order = null;
         // order already created
@@ -1003,15 +891,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "place-order/settings/{setting}", method = RequestMethod.GET)
     public ModelAndView settings(@PathVariable Integer setting, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         LixiOrder order = null;
         // order already created
@@ -1039,15 +921,10 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "place-order", method = RequestMethod.POST)
     public ModelAndView placeOrder(@RequestParam Integer setting, HttpServletRequest request) throws Exception {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         User u = this.userService.findByEmail((String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL));
 
         LixiOrder order = null;
@@ -1136,18 +1013,9 @@ public class CheckOutController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "thank-you", method = RequestMethod.GET)
     public ModelAndView thankYou(HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
-
-        //Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
-        //this.lxorderService.updateStatus(LiXiConstants.LIXI_ORDER_NOT_YET_SUBMITTED, orderId);
 
         // remove Lixi order id
         request.getSession().removeAttribute(LiXiConstants.LIXI_ORDER_ID);

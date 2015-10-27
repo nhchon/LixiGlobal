@@ -55,7 +55,7 @@ public class LiXiUtils {
     private static final Logger log = LogManager.getLogger(LiXiUtils.class);
 
     // always use Locale.US for  number format
-    private static DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
+    private final static DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
 
     static {
         df.applyPattern("###,###.##");

@@ -56,12 +56,12 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
  */
 @WebController
 @RequestMapping("user")
-public class UserController {
+public class UserGeneralController {
     
-    private static final Logger log = LogManager.getLogger(UserController.class);
+    private static final Logger log = LogManager.getLogger(UserGeneralController.class);
     
-    //@Autowired
-    //private LoginedUser loginedUser;
+    @Autowired
+    private LoginedUser loginedUser;
     
     @Autowired
     private JavaMailSender mailSender;
@@ -585,6 +585,9 @@ public class UserController {
                 
                 // change session id
                 request.changeSessionId();
+                
+                //
+                LiXiUtils.setLoginedUser(loginedUser, u);
                 
                 // check the order that unfinished
                 LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, LiXiConstants.LIXI_ORDER_UNFINISHED);

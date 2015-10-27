@@ -5,10 +5,13 @@
 package vn.chonsoft.lixi.web.beans;
 
 import javax.servlet.http.HttpServletRequest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -20,16 +23,25 @@ import vn.chonsoft.lixi.web.LiXiConstants;
 @Aspect
 public class CheckLoginedUserAspectJ {
     
-    @Pointcut("execution(public * vn.chonsoft.lixi.web.ctrl.UserManagementController.*(..))")
-    public void loginedUser(){}
+    private static final Logger log = LogManager.getLogger(CheckLoginedUserAspectJ.class);
     
-    @Around("loginedUser()")
+    @Autowired
+    private LoginedUser loginedUser;
+    
+    @Pointcut("execution(public * vn.chonsoft.lixi.web.ctrl.*.*(..))")
+    public void anyPublicMethod() {}
+    
+    @Pointcut("@annotation(vn.chonsoft.lixi.web.ctrl.UserSecurityAnnotation)")
+    public void annotatedUserSecurityAnnotation(){}
+    
+    @Around(value = "anyPublicMethod() && annotatedUserSecurityAnnotation()")
     public Object doCheckLoginedUser(ProceedingJoinPoint jp){
         
-        System.out.println("Start check login user ===========================");
+        log.info("Start check login user on " + jp.getSignature().toLongString());
         
         try {
             
+            /*
             Object[] args = jp.getArgs();
             
             if(args != null){
@@ -47,13 +59,28 @@ public class CheckLoginedUserAspectJ {
                     }
                 }
             }
-            else{
+            // we don't have HttpServletRequest in param list
+            // Let execute function
+            return jp.proceed();
+            */
+            
+            if("".equals(loginedUser.getEmail()) || loginedUser.getEmail() == null){
+                
                 return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+                
+            }
+            else{
+                
+                return jp.proceed();
+                
             }
             
         } catch (Throwable e) {
-            e.printStackTrace();
+            
+            log.info(e.getMessage(), e);
+            
         }
+        
         //
         return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
     }

@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
@@ -61,23 +60,16 @@ public class UserManagementController {
     
     @Autowired
     private CheckLoginedUserAspectJ checkLoginedUser;
+    
     /**
      * 
      * @param model
      * @param request 
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "yourAccount", method = RequestMethod.GET)
     public ModelAndView yourAccount(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        //HttpSession session = request.getSession();
-        //if(session.getAttribute(LiXiConstants.USER_LOGIN_EMAIL) == null){
-            
-            //model.put("signInFailed", 1);
-            //return new ModelAndView(new RedirectView("/user/signIn", true, true));
-            
-        //}
 
         return new ModelAndView("user/yourAccount", model);
     }
@@ -90,19 +82,11 @@ public class UserManagementController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editName", method = RequestMethod.GET)
     public ModelAndView editName(Map<String, Object> model, HttpServletRequest request) {
         
-        // check login
-        HttpSession session = request.getSession();
-        String email = (String)session.getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
-        if(email == null){
-            
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-            
-        }
-        
+        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         // Already login
         User u = this.userService.findByEmail(email);
         
@@ -124,6 +108,7 @@ public class UserManagementController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editName", method = RequestMethod.POST)
     public ModelAndView editName(Map<String, Object> model,
             @Valid UserEditNameForm form, Errors errors, HttpServletRequest request) {
@@ -163,22 +148,13 @@ public class UserManagementController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editPassword", method = RequestMethod.GET)
     public ModelAndView editPassword(Map<String, Object> model, HttpServletRequest request) {
         
-        // check login
-        HttpSession session = request.getSession();
-        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
-        if(email == null){
-            
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-            
-        }
-        
-        //
         model.put("userEditPasswordForm", new UserEditPasswordForm());
         return new ModelAndView("user/editPassword", model);
+        
     }
     
     /**
@@ -189,6 +165,7 @@ public class UserManagementController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editPassword", method = RequestMethod.POST)
     public ModelAndView editPassword(Map<String, Object> model,
             @Valid UserEditPasswordForm form, Errors errors, HttpServletRequest request) {
@@ -237,22 +214,13 @@ public class UserManagementController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editEmail", method = RequestMethod.GET)
     public ModelAndView editEmail(Map<String, Object> model, HttpServletRequest request) {
-        
-        // check login
-        HttpSession session = request.getSession();
-        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
-        if(email == null){
-            
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-            
-        }
-        
-        //
+
         model.put("userEditEmailForm", new UserEditEmailForm());
         return new ModelAndView("user/editEmail", model);
+        
     }
     
     /**
@@ -263,6 +231,7 @@ public class UserManagementController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editEmail", method = RequestMethod.POST)
     public ModelAndView editEmail(Map<String, Object> model,
             @Valid UserEditEmailForm form, Errors errors, HttpServletRequest request) {
@@ -357,19 +326,11 @@ public class UserManagementController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editPhoneNumber", method = RequestMethod.GET)
     public ModelAndView editPhoneNumber(Map<String, Object> model, HttpServletRequest request) {
         
-        // check login
-        HttpSession session = request.getSession();
         String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
-        if(email == null){
-            
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-            
-        }
-        
         // get user
         User u = this.userService.findByEmail(email);
         // get current phone number
@@ -382,6 +343,7 @@ public class UserManagementController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editPhoneNumber", method = RequestMethod.POST)
     public ModelAndView editPhoneNumber(HttpServletRequest request) {
         

@@ -84,15 +84,9 @@ public class TopUpMobileController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView show(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
@@ -147,16 +141,9 @@ public class TopUpMobileController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "topUpMobilePhone", method = RequestMethod.POST)
     public ModelAndView topUpMobilePhone(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-
-        }
 
         String amountTopUpStr = request.getParameter("amountTopUp");
         String topUpAction = request.getParameter("topUpAction");
@@ -247,6 +234,7 @@ public class TopUpMobileController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "buyPhoneCard", method = RequestMethod.POST)
     public ModelAndView buyPhoneCard(Map<String, Object> model, HttpServletRequest request) {
 
@@ -340,15 +328,9 @@ public class TopUpMobileController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editRecipient", method = RequestMethod.GET)
     public ModelAndView editRecipient(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         /* get recipient */
         Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
@@ -377,18 +359,11 @@ public class TopUpMobileController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editRecipient", method = RequestMethod.POST)
     public ModelAndView editRecipient(Map<String, Object> model,
             @Valid ChooseRecipientForm form, Errors errors, HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-
-        }
-        //
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
 
@@ -515,15 +490,9 @@ public class TopUpMobileController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "checkTopUpExceed/{amount}", method = RequestMethod.GET)
     public ModelAndView checkTopUpExceed(Map<String, Object> model, @PathVariable Integer amount, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
@@ -585,15 +554,17 @@ public class TopUpMobileController {
         return new ModelAndView("topup/exceedTopUp", model);
     }
 
+    /**
+     * 
+     * @param model
+     * @param numOfCard
+     * @param valueOfCard
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
     @RequestMapping(value = "checkBuyPhoneCardExceed/{numOfCard}/{valueOfCard}", method = RequestMethod.GET)
     public ModelAndView checkBuyPhoneCardExceed(Map<String, Object> model, @PathVariable Integer numOfCard, @PathVariable Integer valueOfCard, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);

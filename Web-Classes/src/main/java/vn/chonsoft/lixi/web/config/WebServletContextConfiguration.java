@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,6 +40,7 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -55,6 +58,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.CheckLoginedUserAspectJ;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
 
 /**
  *
@@ -64,7 +68,7 @@ import vn.chonsoft.lixi.web.beans.CheckLoginedUserAspectJ;
 @EnableAspectJAutoProxy
 @EnableWebMvc
 @ComponentScan(
-        basePackages = {"vn.chonsoft.lixi.web.ctrl", "vn.chonsoft.lixi.web.beans"},
+        basePackages = {"vn.chonsoft.lixi.web.ctrl"},
         useDefaultFilters = false,
         includeFilters = @ComponentScan.Filter(WebController.class)
 )
@@ -178,6 +182,7 @@ public class WebServletContextConfiguration  extends WebMvcConfigurerAdapter{
         resolver.setViewClass(JstlView.class);
         resolver.setPrefix("/WEB-INF/jsp/view/");
         resolver.setSuffix(".jsp");
+        resolver.setContentType("text/html;charset=UTF-8");
         return resolver;
     }
 
@@ -191,6 +196,22 @@ public class WebServletContextConfiguration  extends WebMvcConfigurerAdapter{
         return new StandardServletMultipartResolver();
     }
     
+    /**
+     * 
+     * @return 
+     */
+    @Bean
+    @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public LoginedUser loginedUser(){
+        
+        return new LoginedUser();
+        
+    }
+    
+    /**
+     * 
+     * @return 
+     */
     @Bean
     public CheckLoginedUserAspectJ checkLoginedUser(){
         

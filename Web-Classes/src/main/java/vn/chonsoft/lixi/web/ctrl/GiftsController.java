@@ -53,7 +53,6 @@ import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
-import vn.chonsoft.lixi.web.beans.LoginedUser;
 
 /**
  *
@@ -65,9 +64,6 @@ public class GiftsController {
 
     private static final Logger log = LogManager.getLogger(GiftsController.class);
 
-    //@Inject
-    //private LoginedUser loginedUser;
-    
     @Inject
     private UserService userService;
 
@@ -105,16 +101,9 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "recipient", method = RequestMethod.GET)
     public ModelAndView recipient(Map<String, Object> model, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-
-        }
 
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
 
@@ -172,18 +161,11 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "chooseRecipient/{recId}", method = RequestMethod.GET)
     public ModelAndView chooseRecipient(@PathVariable Long recId, HttpServletRequest request) {
 
         Map<String, Object> model = new HashMap<>();
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-
-        }
 
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
 
@@ -222,18 +204,11 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = {"recipient", "chooseRecipient/{recId}"}, method = RequestMethod.POST)
     public ModelAndView chooseRecipient(Map<String, Object> model,
             @Valid ChooseRecipientForm form, Errors errors, HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            model.put("signInFailed", 1);
-            return new ModelAndView(new RedirectView("/user/signIn", true, true), model);
-
-        }
-        //
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
         // select recipients of user
@@ -246,11 +221,6 @@ public class GiftsController {
 
         try {
             Recipient rec = null;
-            
-            // correct name, fix encode, capitalize
-            form.setFirstName(LiXiUtils.correctName(form.getFirstName()));
-            form.setMiddleName(LiXiUtils.correctName(form.getMiddleName()));
-            form.setLastName(LiXiUtils.correctName(form.getLastName()));
             
             // check unique recipient
             if((form.getRecId()== null) || form.getRecId() <= 0){
@@ -274,7 +244,7 @@ public class GiftsController {
                 }
             }
             // save or update the recipient
-            //log.info("request.getCharacterEncoding(): "+request.getCharacterEncoding());
+            log.info("request.getCharacterEncoding(): "+request.getCharacterEncoding());
             //log.info("guessEncoding: " + LiXiUtils.guessEncoding(form.getNote().getBytes()));
             //log.info(form.getNote());
             //log.info(LiXiUtils.fixEncode(form.getNote()));
@@ -319,16 +289,10 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "value", method = RequestMethod.GET)
     public ModelAndView value(HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
-        //
         if (request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID) == null) {
 
             return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
@@ -358,6 +322,7 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "value", method = RequestMethod.POST)
     public ModelAndView saveValue(HttpServletRequest request) {
 
@@ -389,15 +354,9 @@ public class GiftsController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "type", method = RequestMethod.GET)
     public ModelAndView typeOfGift(HttpServletRequest request){
-        
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         
         //get from session
         Integer selectedCatId = (Integer)request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID);
@@ -450,15 +409,10 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "type/{selectedCatId}", method = RequestMethod.GET)
     public ModelAndView typeOfGift(@PathVariable Integer selectedCatId, @PageableDefault(sort = {"price"}, value = 6) Pageable page,  HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
@@ -545,15 +499,9 @@ public class GiftsController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "ajax/products/{selectedCatId}/{pageNum}", method = RequestMethod.GET)
     public ModelAndView getProducts(@PathVariable Integer selectedCatId, @PathVariable Integer pageNum,  HttpServletRequest request) {
-        
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
@@ -656,15 +604,10 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "choose/{category}", method = RequestMethod.GET)
     public ModelAndView chooseGift(@PathVariable Integer category, Map<String, Object> model, HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
@@ -722,16 +665,10 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "choose", method = RequestMethod.POST)
     public ModelAndView saveTheGift(HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
-        //
         Map<String, Object> model = new HashMap<>();
 
         String giftIdStr = request.getParameter("gift");
@@ -906,15 +843,9 @@ public class GiftsController {
      * @param request
      * @return 
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "checkExceed/{recId}/{productId}/{quantity}", method = RequestMethod.GET)
     public ModelAndView checkExceed(Map<String, Object> model, @PathVariable Long recId, @PathVariable Integer productId, @PathVariable Integer quantity, HttpServletRequest request){
-        
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
@@ -1066,15 +997,10 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "more-recipient", method = RequestMethod.GET)
     public ModelAndView moreRecipient(Map<String, Object> model, HttpServletRequest request) {
 
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         User u = this.userService.findByEmail(email);
@@ -1103,15 +1029,9 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "delete", method = RequestMethod.GET)
     public ModelAndView delete(HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         // get lixi order gift id
         String giftStr = request.getParameter("gift");
@@ -1142,15 +1062,9 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "update/{orderGiftId}/{quantity}", method = RequestMethod.GET)
     public ModelAndView update(@PathVariable Long orderGiftId, @PathVariable Integer quantity, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         // sender
         String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
@@ -1216,15 +1130,9 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "review", method = RequestMethod.GET)
     public ModelAndView review(HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         Map<String, Object> model = new HashMap<>();
 
@@ -1252,15 +1160,9 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "add-more/{recId}", method = RequestMethod.GET)
     public ModelAndView addMore(@PathVariable Long recId, HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         // check the recipient belong to current order
         LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
@@ -1286,15 +1188,9 @@ public class GiftsController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "editNote", method = RequestMethod.POST)
     public ModelAndView editNote(HttpServletRequest request) {
-
-        // check login
-        if (!LiXiUtils.isLoggined(request)) {
-
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-
-        }
 
         String recIdStr = request.getParameter("recId");
         // check the recipient belong to current order

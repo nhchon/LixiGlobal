@@ -100,7 +100,7 @@
                             </div>
                         </c:if>                        
                         
-                        <form:form modelAttribute="chooseRecipientForm"  class="form-horizontal">
+                        <form:form modelAttribute="chooseRecipientForm"  class="form-horizontal" accept-charset="utf-8">
                             <c:if test="${not empty RECIPIENTS}">
                                 <fieldset>
                                 <legend></legend>
