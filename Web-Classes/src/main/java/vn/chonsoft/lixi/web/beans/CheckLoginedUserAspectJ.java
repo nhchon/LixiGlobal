@@ -28,13 +28,13 @@ public class CheckLoginedUserAspectJ {
     @Autowired
     private LoginedUser loginedUser;
     
-    @Pointcut("execution(public * vn.chonsoft.lixi.web.ctrl.*.*(..))")
-    public void anyPublicMethod() {}
+    //@Pointcut("execution(public * vn.chonsoft.lixi.web.ctrl.*.*(..))")
+    //public void anyPublicMethod() {}
     
     @Pointcut("@annotation(vn.chonsoft.lixi.web.ctrl.UserSecurityAnnotation)")
     public void annotatedUserSecurityAnnotation(){}
     
-    @Around(value = "anyPublicMethod() && annotatedUserSecurityAnnotation()")
+    @Around(value = "annotatedUserSecurityAnnotation()")
     public Object doCheckLoginedUser(ProceedingJoinPoint jp){
         
         log.info("Start check login user on " + jp.getSignature().toLongString());
