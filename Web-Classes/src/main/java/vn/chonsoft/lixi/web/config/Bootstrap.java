@@ -53,11 +53,11 @@ public class Bootstrap implements WebApplicationInitializer{
         dispatcher.addMapping("/services/Rest/*");
         
         /* encoding filter*/
-        //FilterRegistration.Dynamic fr = container.addFilter("encodingFilter",
-        //        new CharacterEncodingFilter());
-        //fr.setInitParameter("encoding", "UTF-8");
-        //fr.setInitParameter("forceEncoding", "true");
-        //fr.addMappingForUrlPatterns(null, true, "/*");
+        FilterRegistration.Dynamic fr = container.addFilter("encodingFilter",
+                new CharacterEncodingFilter());
+        fr.setInitParameter("encoding", "UTF-8");
+        fr.setInitParameter("forceEncoding", "true");
+        fr.addMappingForUrlPatterns(null, false, "/*");
         
     }
 }

@@ -23,6 +23,8 @@ public interface UserService {
     
     User findByEmail(@NotNull(message = "{validate.user.email}") String email);
     
+    User findByEmailAndEnabled(String email, boolean enabled);
+    
     int updateEnaled(Boolean enabled, Long id);
 
     int updateActivated(Boolean activated, Long id);

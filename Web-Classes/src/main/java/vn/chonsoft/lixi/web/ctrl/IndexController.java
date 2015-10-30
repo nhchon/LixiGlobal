@@ -10,7 +10,6 @@ import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -110,7 +109,7 @@ public class IndexController {
         // add spaces to enough width
         String captchaDraw = captcha.replace("", " ").trim();
 
-        request.getSession().setAttribute("captcha", captcha);
+        request.getSession().setAttribute("captcha", captcha.toLowerCase());
 
         g2d.drawString(captchaDraw, 5, 30);
 

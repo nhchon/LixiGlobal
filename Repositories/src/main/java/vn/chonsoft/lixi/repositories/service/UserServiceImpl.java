@@ -66,6 +66,12 @@ public class UserServiceImpl implements UserService{
     }
     
     @Override
+    public User findByEmailAndEnabled(String email, boolean enabled){
+        
+        return this.userRepository.findByEmailAndEnabled(email, enabled);
+    }
+    
+    @Override
     public int updateEnaled(Boolean enabled, Long id){
         
         return this.userRepository.updateEnaled(enabled, id);

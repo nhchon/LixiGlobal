@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
@@ -40,6 +42,7 @@ import vn.chonsoft.lixi.model.UserSecretCode;
 import vn.chonsoft.lixi.model.form.UserResetPasswordForm;
 import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
+import vn.chonsoft.lixi.model.form.UserSignUpWithOutEmailForm;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.MoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserMoneyLevelService;
@@ -137,9 +140,18 @@ public class UserGeneralController {
         String activeCode = UUID.randomUUID().toString();
 
         try {
-            // check unique oldEmail
-            // exceptions will be thrown if the oldEmail is not unique
-            User temp = this.userService.checkUniqueEmail(u.getEmail());
+            
+            // check if email already in use
+            User temp = this.userService.findByEmailAndEnabled(u.getEmail(), Boolean.TRUE);
+            
+            // Email address already in use
+            if(temp != null){
+                
+                model.put("inUseEmail", form.getEmail());
+                //
+                return new ModelAndView("user/email-in-use");
+                
+            }
             if(temp == null){
                 
                 // get id returned
@@ -618,5 +630,138 @@ public class UserGeneralController {
         session.invalidate();
         //
         return new ModelAndView(new RedirectView("/", true, true));
+    }
+    
+    /**
+     * 
+     * verify the email
+     * 
+     * @param inUseEmail 
+     * @param request 
+     * @return 
+     */
+    @RequestMapping(value = "verifyThisEmail", method = RequestMethod.POST)
+    public ModelAndView verifyThisEmail(@RequestParam String inUseEmail , HttpServletRequest request){
+        
+        //MapUtils.debugPrint(System.out, "model", model);
+        
+        // put into session
+        request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL, inUseEmail);
+        
+        //
+        Map<String, Object> model = new HashMap<>();
+        model.put("inUseEmail", inUseEmail);
+        //
+        return new ModelAndView("user/verify-email", model);
+    }
+    
+    /**
+     * 
+     * Send verification email
+     * 
+     * @param model
+     * @param captcha
+     * @param request 
+     * @return 
+     */
+    @RequestMapping(value = "verify/sendEmail", method = RequestMethod.POST)
+    public ModelAndView verifyThisEmail(Map<String, Object> model, @RequestParam String captcha, HttpServletRequest request){
+        
+        String inUseEmail = (String)request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
+        
+        if(captcha != null && captcha.equals((String)request.getSession().getAttribute("captcha"))){
+            
+            // captcha is correct
+            User u = this.userService.findByEmailAndEnabled(inUseEmail, Boolean.TRUE);
+            
+            /* store secret code into database */
+            String activeCode = UUID.randomUUID().toString();
+            Date currentDate = Calendar.getInstance().getTime();
+            // inser activate code
+            UserSecretCode usc = new UserSecretCode();
+            usc.setUserId(u);
+            usc.setCode(activeCode);
+            usc.setCreatedDate(currentDate);
+            // activate code is expired after one day
+            usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
+
+            this.uscService.save(usc);
+            
+            //
+            MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+                @SuppressWarnings({ "rawtypes", "unchecked" })
+                @Override
+                public void prepare(MimeMessage mimeMessage) throws Exception {
+
+                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                    message.setTo(u.getEmail());
+                    message.setCc(LiXiConstants.YHANNART_GMAIL);
+                    message.addCc(LiXiConstants.CHONNH_GMAIL);
+                    message.setFrom("support@lixi.global");
+                    message.setSubject("LiXi.Global - Verify your email");
+                    message.setSentDate(Calendar.getInstance().getTime());
+
+                    Map model = new HashMap();	             
+                    model.put("user", u);
+                    // built the path
+                    String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/verifyEmail/"+activeCode).build().toUriString());
+                    model.put("newAccountPath", resetPasswordPath);
+
+                    String text = VelocityEngineUtils.mergeTemplateIntoString(
+                       velocityEngine, "emails/newaccount-oldemail.vm", "UTF-8", model);
+                    message.setText(text, true);
+
+                  }
+
+               };        
+
+            // send oldEmail
+            taskScheduler.execute(() -> mailSender.send(preparator));        
+            
+        }
+        else{
+            
+            return verifyThisEmail(inUseEmail, request);
+        }
+        // remove LIXI_IN_USE_EMAIL in session
+        request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
+        
+        //
+        model.put("inUseEmail", inUseEmail);
+        return new ModelAndView("user/alert-verify-email", model);
+    }
+    
+    /**
+     * 
+     * 
+     * @param model 
+     * @param code 
+     * 
+     * @return 
+     */
+    @RequestMapping(value = "verifyEmail/{code}", method = RequestMethod.GET)
+    public ModelAndView createNewAccount(Map<String, Object> model, @PathVariable String code){
+        
+        Date currentDate = Calendar.getInstance().getTime();
+        UserSecretCode usc = this.uscService.findByCode(code);
+        if(usc == null || usc.getExpiredDate().before(currentDate)){
+
+            // show error message
+            model.put("wrongSecretCode", 1);
+
+            return new ModelAndView("user/verify-email-failed");
+
+        }
+        else{
+            UserSignUpWithOutEmailForm form = new UserSignUpWithOutEmailForm();
+            
+            form.setEmail(usc.getUserId().getEmail());
+            form.setConfEmail(usc.getUserId().getEmail());
+            
+            model.put("userSignUpWithOutEmailForm", form);
+
+            return new ModelAndView("user/signUpWithOutEmail");
+        }        
     }
 }

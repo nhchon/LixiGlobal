@@ -1,0 +1,19 @@
+<html>
+    <body>
+        <h5>Dear ${user.firstName} ${user.middleName} ${user.lastName} !</h5>
+        
+        <div>Someone has requested to create new account on Lixi.Global with your email.</div>
+        
+        <p><b>If NOT YOU, Please ignore this email !</b></p>
+
+        <p>If it was you, Please click the link below to create your new account.<p>
+            <p>
+            <a href="${newAccountPath}" target="_blank">${newAccountPath}</a>
+            </p>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

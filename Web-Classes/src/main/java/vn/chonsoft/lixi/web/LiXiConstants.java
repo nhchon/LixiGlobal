@@ -17,6 +17,8 @@ public abstract class LiXiConstants {
     public static final String LIXI_GLOBAL_TOP_UP_CODE = "LG-TU-";
     public static final String LIXI_GLOBAL_BUY_CARD_CODE = "LG-BC-";
     
+    public static final String LIXI_IN_USE_EMAIL = "LIXI_IN_USE_EMAIL";
+    
     public static final int LIXI_NON_ACTIVATED = 0;
     public static final int LIXI_ACTIVATED = 1;
     
