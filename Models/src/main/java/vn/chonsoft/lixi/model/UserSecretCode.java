@@ -38,6 +38,10 @@ public class UserSecretCode implements Serializable {
     @Column(name = "code", unique = true)
     private String code;
     
+    @Basic
+    @Column(name = "description")
+    private String description;
+    
     @Basic(optional = false)
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -80,6 +84,14 @@ public class UserSecretCode implements Serializable {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getCreatedDate() {

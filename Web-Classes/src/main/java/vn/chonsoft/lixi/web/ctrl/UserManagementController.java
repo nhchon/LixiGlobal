@@ -258,10 +258,7 @@ public class UserManagementController {
             // check password
             if(BCrypt.checkpw(form.getPassword(), u.getPassword())){
                 
-                // currentPassword is OK
-                // check unique oldEmail
-                // exceptions will be thrown if the oldEmail is not unique
-                User temp = this.userService.checkUniqueEmail(form.getEmail());
+                User temp = this.userService.findByEmail(form.getEmail());
                 if(temp == null){
                     
                     // update oldEmail
@@ -294,9 +291,7 @@ public class UserManagementController {
                             String text = VelocityEngineUtils.mergeTemplateIntoString(
                                velocityEngine, "emails/user-edit-email.vm", "UTF-8", model);
                             message.setText(text, true);
-
                           }
-
                     };        
 
                     // send oldEmail
@@ -306,7 +301,11 @@ public class UserManagementController {
                     model.put("editSuccess", 1);
                     return new ModelAndView(new RedirectView("/user/yourAccount", true, true), model);
                 }
-                
+                else{
+                    // email already in use
+                    model.put("reUseEmail", 1);
+                    return new ModelAndView("user/editEmail", model);
+                }
             }
             // wrong password
             model.put("editSuccess", 0);

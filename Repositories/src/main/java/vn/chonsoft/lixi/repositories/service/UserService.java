@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import org.springframework.validation.annotation.Validated;
@@ -18,12 +19,11 @@ public interface UserService {
     
     User save(@NotNull(message = "{validate.userService.save.user}") User user);
     
-    @Null(message = "{validate.email.inuse}")
-    User checkUniqueEmail(@NotNull(message = "{validate.user.email}") String email);
-    
-    User findByEmail(@NotNull(message = "{validate.user.email}") String email);
+    List<User> findAllByEmail(String email);
     
     User findByEmailAndEnabled(String email, boolean enabled);
+    
+    User findByEmail(String email);
     
     int updateEnaled(Boolean enabled, Long id);
 

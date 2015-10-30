@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -283,7 +282,7 @@ public class UserGeneralController {
         
         try {
             
-            User u = this.userService.findByEmail(email);
+            User u = this.userService.findByEmailAndEnabled(email, Boolean.TRUE);
             
             // if user already activated
             if(u.getActivated()){
@@ -385,7 +384,7 @@ public class UserGeneralController {
             String email = request.getParameter("email");
             try {
                 
-                User u = this.userService.findByEmail(email);
+                User u = this.userService.findByEmailAndEnabled(email, Boolean.TRUE);
                 
                 /* user is not null. Send oldEmail */
                 // update new active code
@@ -681,6 +680,7 @@ public class UserGeneralController {
             UserSecretCode usc = new UserSecretCode();
             usc.setUserId(u);
             usc.setCode(activeCode);
+            usc.setDescription("Create new account with the in use email");
             usc.setCreatedDate(currentDate);
             // activate code is expired after one day
             usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
@@ -722,7 +722,7 @@ public class UserGeneralController {
         }
         else{
             
-            return verifyThisEmail(inUseEmail, request);
+            return new ModelAndView("user/verify-email", model);
         }
         // remove LIXI_IN_USE_EMAIL in session
         request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
@@ -737,11 +737,12 @@ public class UserGeneralController {
      * 
      * @param model 
      * @param code 
+     * @param request 
      * 
      * @return 
      */
     @RequestMapping(value = "verifyEmail/{code}", method = RequestMethod.GET)
-    public ModelAndView createNewAccount(Map<String, Object> model, @PathVariable String code){
+    public ModelAndView verifyTheCode(Map<String, Object> model, @PathVariable String code, HttpServletRequest request){
         
         Date currentDate = Calendar.getInstance().getTime();
         UserSecretCode usc = this.uscService.findByCode(code);
@@ -754,14 +755,106 @@ public class UserGeneralController {
 
         }
         else{
-            UserSignUpWithOutEmailForm form = new UserSignUpWithOutEmailForm();
             
-            form.setEmail(usc.getUserId().getEmail());
-            form.setConfEmail(usc.getUserId().getEmail());
+            // disable the current user
+            this.userService.updateEnaled(Boolean.FALSE, usc.getUserId().getId());
             
-            model.put("userSignUpWithOutEmailForm", form);
-
-            return new ModelAndView("user/signUpWithOutEmail");
+            // delete secret code
+            // ???
+            
+            // store 
+            request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL, usc.getUserId().getEmail());
+            
+            return new ModelAndView(new RedirectView("/user/signUpWithExistingEmail", true, true));
         }        
     }
+    
+    /**
+     * 
+     * @param model
+     * @param request 
+     * @return 
+     */
+    @RequestMapping(value = "signUpWithExistingEmail", method = RequestMethod.GET)
+    public ModelAndView signUpWithExistingEmail(Map<String, Object> model, HttpServletRequest request) {
+
+        // get email from session
+        String inUseEmail = (String)request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
+        
+        UserSignUpWithOutEmailForm form = new UserSignUpWithOutEmailForm();
+
+        form.setEmail(inUseEmail);
+        form.setConfEmail(inUseEmail);
+
+        model.put("userSignUpWithOutEmailForm", form);
+
+        return new ModelAndView("user/signUpWithOutEmail");
+    }
+    
+    /**
+     * 
+     * 
+     * 
+     * @param model
+     * @param form
+     * @param errors
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "signUpWithExistingEmail", method = RequestMethod.POST)
+    public ModelAndView signUpWithExistingEmail(Map<String, Object> model,
+            @Valid UserSignUpWithOutEmailForm form, Errors errors, HttpServletRequest request) {
+        
+        if (errors.hasErrors()) {
+            return new ModelAndView("user/signUp");
+        }
+        
+        // get email from session
+        String inUseEmail = (String)request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
+        
+        User u = new User();
+        u.setFirstName(form.getFirstName());
+        u.setMiddleName(form.getMiddleName());
+        u.setLastName(form.getLastName());
+        u.setEmail(inUseEmail);
+        u.setPassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()));
+        u.setPhone(form.getPhone());
+        u.setAccountNonExpired(true);
+        u.setAccountNonLocked(true);
+        u.setCredentialsNonExpired(true);
+        u.setEnabled(true);// enable
+        u.setActivated(true);// active
+        
+        // created date and by
+        Date currentDate = Calendar.getInstance().getTime();
+        u.setCreatedDate(currentDate);
+        u.setCreatedBy(u.getEmail());
+
+        try {
+                
+            u = this.userService.save(u);
+
+            // inser default money level
+            UserMoneyLevel uml = new UserMoneyLevel();
+            uml.setUser(u);
+            uml.setMoneyLevel(this.mlService.findByIsDefault());
+            uml.setModifiedDate(currentDate);
+            uml.setModifiedBy(LiXiConstants.SYSTEM_AUTO);
+
+            this.umlService.save(uml);
+                
+        } catch (ConstraintViolationException e) {
+            
+            model.put("validationErrors", e.getConstraintViolations());
+            return new ModelAndView("user/signUpWithOutEmail");
+            
+        }
+        
+        // remove session
+        request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
+        
+        //
+        return new ModelAndView("user/signUpWithOutEmailComplete", model);
+    }
+    
 }

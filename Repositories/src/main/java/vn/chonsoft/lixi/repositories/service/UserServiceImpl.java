@@ -5,6 +5,7 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +34,6 @@ public class UserServiceImpl implements UserService{
         
     }
     
-    @Override
-    @Transactional
-    public User checkUniqueEmail(String email){
-        return this.userRepository.findByEmail(email);
-    }
-    
     /**
      * 
      * @param email
@@ -46,11 +41,11 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     @Transactional
-    public User findByEmail(String email){
+    public List<User> findAllByEmail(String email){
         
-        User u = this.userRepository.findByEmail(email);
-        if(u != null){
-            
+        List<User> us = this.userRepository.findByEmail(email);
+        
+        us.forEach(u -> {
             // make sure recipients is loaded;
             u.getRecipients().size();
             
@@ -59,9 +54,9 @@ public class UserServiceImpl implements UserService{
             
             //
             u.getAddresses().size();
-        }
+        });
         
-        return u;
+        return us;
         
     }
     
@@ -69,6 +64,18 @@ public class UserServiceImpl implements UserService{
     public User findByEmailAndEnabled(String email, boolean enabled){
         
         return this.userRepository.findByEmailAndEnabled(email, enabled);
+    }
+    
+    /**
+     * 
+     * @param email
+     * @return 
+     */
+    @Override
+    public User findByEmail(String email){
+        
+        return this.findByEmailAndEnabled(email, Boolean.TRUE);
+        
     }
     
     @Override
