@@ -15,4 +15,5 @@ public interface UserSecretCodeRepository extends JpaRepository<UserSecretCode, 
     
     UserSecretCode findByCode(String code);
     
+    void deleteByCode(String code);
 }

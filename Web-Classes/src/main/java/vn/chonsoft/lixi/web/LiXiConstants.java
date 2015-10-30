@@ -19,6 +19,8 @@ public abstract class LiXiConstants {
     
     public static final String LIXI_IN_USE_EMAIL = "LIXI_IN_USE_EMAIL";
     
+    public static final String LIXI_IN_USE_EMAIL_SECRET_CODE = "LIXI_IN_USE_EMAIL_SECRET_CODE";
+    
     public static final int LIXI_NON_ACTIVATED = 0;
     public static final int LIXI_ACTIVATED = 1;
     

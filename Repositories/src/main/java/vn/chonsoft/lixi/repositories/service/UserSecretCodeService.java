@@ -19,5 +19,7 @@ public interface UserSecretCodeService {
     
     void delete(Long id);
     
+    void deleteByCode(String code);
+            
     UserSecretCode findByCode(String code);
 }

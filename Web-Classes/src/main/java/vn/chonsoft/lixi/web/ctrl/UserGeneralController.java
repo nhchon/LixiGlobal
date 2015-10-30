@@ -759,11 +759,8 @@ public class UserGeneralController {
             // disable the current user
             this.userService.updateEnaled(Boolean.FALSE, usc.getUserId().getId());
             
-            // delete secret code
-            // ???
-            
-            // store 
-            request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL, usc.getUserId().getEmail());
+            // store secret code into session and delete after user created account
+            request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE, code);
             
             return new ModelAndView(new RedirectView("/user/signUpWithExistingEmail", true, true));
         }        
@@ -850,8 +847,12 @@ public class UserGeneralController {
             
         }
         
+        // delete secret code
+        this.uscService.deleteByCode((String)request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE));
+        
         // remove session
         request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
+        request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE);
         
         //
         return new ModelAndView("user/signUpWithOutEmailComplete", model);

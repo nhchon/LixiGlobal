@@ -43,6 +43,20 @@ public class UserSecretCodeServiceImpl implements UserSecretCodeService{
 
     /**
      * 
+     * @param code 
+     */
+    @Override
+    public void deleteByCode(String code){
+        
+        try {
+            this.uscRepository.deleteByCode(code);
+        } catch (Exception e) {
+            // Nothing todo
+        }
+        
+    }
+    /**
+     * 
      * @param code
      * @return 
      */

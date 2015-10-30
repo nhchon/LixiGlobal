@@ -61,9 +61,21 @@ public class UserServiceImpl implements UserService{
     }
     
     @Override
+    @Transactional
     public User findByEmailAndEnabled(String email, boolean enabled){
         
-        return this.userRepository.findByEmailAndEnabled(email, enabled);
+        User u = this.userRepository.findByEmailAndEnabled(email, enabled);
+        if(u != null){
+            // make sure recipients is loaded;
+            u.getRecipients().size();
+            
+            // maximum payment amount
+            u.getUserMoneyLevel().getMoneyLevel();
+            
+            //
+            u.getAddresses().size();
+        }
+        return u;
     }
     
     /**
@@ -72,9 +84,21 @@ public class UserServiceImpl implements UserService{
      * @return 
      */
     @Override
+    @Transactional
     public User findByEmail(String email){
         
-        return this.findByEmailAndEnabled(email, Boolean.TRUE);
+        User u = this.findByEmailAndEnabled(email, Boolean.TRUE);
+        if(u != null){
+            // make sure recipients is loaded;
+            u.getRecipients().size();
+            
+            // maximum payment amount
+            u.getUserMoneyLevel().getMoneyLevel();
+            
+            //
+            u.getAddresses().size();
+        }
+        return u;
         
     }
     
