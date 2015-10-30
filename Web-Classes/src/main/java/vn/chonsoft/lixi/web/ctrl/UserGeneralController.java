@@ -759,6 +759,9 @@ public class UserGeneralController {
             // disable the current user
             this.userService.updateEnaled(Boolean.FALSE, usc.getUserId().getId());
             
+            // store email
+            request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL, usc.getUserId().getEmail());
+            
             // store secret code into session and delete after user created account
             request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE, code);
             

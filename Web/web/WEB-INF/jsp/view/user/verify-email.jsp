@@ -51,7 +51,7 @@
                         
                         <div>Type character</div>
                         <div>
-                            <input type="text" name="captcha" id="captcha"/>
+                            <input type="text" name="captcha" id="captcha" class="form-control"/>
                         </div>
                         <br/>
                         <div>
