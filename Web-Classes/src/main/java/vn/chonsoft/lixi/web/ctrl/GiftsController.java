@@ -40,10 +40,8 @@ import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
-import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
-import vn.chonsoft.lixi.repositories.service.LixiFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
@@ -88,11 +86,12 @@ public class GiftsController {
     @Inject
     private VatgiaProductService vgpService;
     
-    @Inject
-    private LixiFeeService feeService;
+    //@Inject
+    //private LixiFeeService feeService;
     
-    @Inject
-    private LixiCardFeeService cardFeeService;
+    //@Inject
+    //private LixiCardFeeService cardFeeService;
+    
     /**
      *
      * select one of ready recipients or create a new recipients
@@ -224,7 +223,7 @@ public class GiftsController {
             
             // check unique recipient
             if((form.getRecId()== null) || form.getRecId() <= 0){
-                rec = this.reciService.findByFirstNameAndMiddleNameAndLastNameAndPhone(form.getFirstName(), form.getMiddleName(), form.getLastName(), form.getPhone());
+                rec = this.reciService.findByNameAndPhone(u, form.getFirstName(), form.getMiddleName(), form.getLastName(), form.getPhone());
                 if(rec != null){
                     // duplicate recipient
                     model.put("duplicate", 1);
@@ -234,7 +233,7 @@ public class GiftsController {
                     return new ModelAndView("giftprocess/recipient", model);
                 }
                 //
-                rec = this.reciService.findByEmail(form.getEmail());
+                rec = this.reciService.findByEmail(u, form.getEmail());
                 if(rec != null){
                     // duplicate recipient
                     model.put("duplicateEmail", 1);

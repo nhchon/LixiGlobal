@@ -36,7 +36,7 @@ function enableEditRecipientHtmlContent(data){
             url : formURL,
             type: "POST",
             data : postData,
-            contentType: "application/x-www-form-urlencoded;charset=ISO-8859-1",
+            //contentType: "application/x-www-form-urlencoded;charset=ISO-8859-1",
             dataType: 'json',
             success:function(data, textStatus, jqXHR) 
             {

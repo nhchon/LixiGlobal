@@ -132,10 +132,20 @@ public class CreditCardProcesses {
                 txnRequest.setAmount(new BigDecimal(500.00));
             }
         }
-
+        // Order
+        OrderType invoice = new OrderType();
+        invoice.setInvoiceNumber(order.getId().toString());
+        invoice.setDescription("[" + order.getSender().getId()+", "+
+                order.getSender().getFullName() + ", " + 
+                order.getSender().getEmail() + ", " + 
+                order.getId()+"]");
+        //
+        txnRequest.setOrder(invoice);
+        
         // Make the API Request
         CreateTransactionRequest apiRequest = new CreateTransactionRequest();
         apiRequest.setTransactionRequest(txnRequest);
+        apiRequest.setRefId("LG"+System.currentTimeMillis());
         CreateTransactionController controller = new CreateTransactionController(apiRequest);
         controller.execute();
 

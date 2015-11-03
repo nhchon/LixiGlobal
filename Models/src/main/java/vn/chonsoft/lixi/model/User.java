@@ -20,6 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -127,6 +128,12 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
+    @Transient
+    public String getFullName(){
+        
+        return this.getFirstName()+ (this.getMiddleName()==null?" ":" " + this.getMiddleName()) + this.getLastName();
+    }
+    
     @Basic(optional = false)
     @Column(name = "email")
     public String getEmail() {

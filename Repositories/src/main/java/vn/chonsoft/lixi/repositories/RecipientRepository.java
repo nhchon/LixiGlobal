@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.User;
 
 /**
  *
@@ -27,7 +28,7 @@ public interface RecipientRepository extends JpaRepository<Recipient, Long>{
     @Query("update Recipient r set r.email = :email where r.id = :id")
     int updateEmail(@Param("email") String email, @Param("id") Long id);
 
-    Recipient findByFirstNameAndMiddleNameAndLastNameAndPhone(String firstName, String middleName, String lastName, String phone);
+    Recipient findBySenderAndFirstNameAndMiddleNameAndLastNameAndPhone(User sender, String firstName, String middleName, String lastName, String phone);
     
-    Recipient findByEmail(String email);
+    Recipient findBySenderAndEmail(User sender, String email);
 }

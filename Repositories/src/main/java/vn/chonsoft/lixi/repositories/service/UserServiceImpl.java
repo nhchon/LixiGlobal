@@ -60,9 +60,15 @@ public class UserServiceImpl implements UserService{
         
     }
     
+    /**
+     * 
+     * @param email
+     * @param enabled
+     * @return 
+     */
     @Override
     @Transactional
-    public User findByEmailAndEnabled(String email, boolean enabled){
+    public User findByEmail(String email, boolean enabled){
         
         User u = this.userRepository.findByEmailAndEnabled(email, enabled);
         if(u != null){
@@ -87,18 +93,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public User findByEmail(String email){
         
-        User u = this.findByEmailAndEnabled(email, Boolean.TRUE);
-        if(u != null){
-            // make sure recipients is loaded;
-            u.getRecipients().size();
-            
-            // maximum payment amount
-            u.getUserMoneyLevel().getMoneyLevel();
-            
-            //
-            u.getAddresses().size();
-        }
-        return u;
+        return findByEmail(email, Boolean.TRUE);
         
     }
     

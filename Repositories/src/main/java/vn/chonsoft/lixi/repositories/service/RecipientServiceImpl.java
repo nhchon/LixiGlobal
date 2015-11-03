@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.repositories.RecipientRepository;
 
 /**
@@ -28,18 +29,20 @@ public class RecipientServiceImpl implements RecipientService{
     
     /**
      * 
+     * @param sender 
      * @param email
      * @return 
      */
     @Override
-    public Recipient findByEmail(String email){
+    public Recipient findByEmail(User sender, String email){
         
-        return this.reciRepository.findByEmail(email);
+        return this.reciRepository.findBySenderAndEmail(sender, email);
     }
     /**
      * 
      * Used for check unique recipient :D
      * 
+     * @param sender 
      * @param firstName
      * @param middleName
      * @param lastName
@@ -47,9 +50,9 @@ public class RecipientServiceImpl implements RecipientService{
      * @return 
      */
     @Override
-    public Recipient findByFirstNameAndMiddleNameAndLastNameAndPhone(String firstName, String middleName, String lastName, String phone){
+    public Recipient findByNameAndPhone(User sender, String firstName, String middleName, String lastName, String phone){
         
-        return this.reciRepository.findByFirstNameAndMiddleNameAndLastNameAndPhone(firstName, middleName, lastName, phone);
+        return this.reciRepository.findBySenderAndFirstNameAndMiddleNameAndLastNameAndPhone(sender, firstName, middleName, lastName, phone);
         
     }
     /**

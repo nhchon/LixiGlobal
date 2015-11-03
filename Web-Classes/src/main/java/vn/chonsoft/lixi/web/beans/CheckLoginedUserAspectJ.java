@@ -37,7 +37,7 @@ public class CheckLoginedUserAspectJ {
     @Around(value = "annotatedUserSecurityAnnotation()")
     public Object doCheckLoginedUser(ProceedingJoinPoint jp){
         
-        log.info("Start check login user on " + jp.getSignature().toLongString());
+        log.info("Check login user on " + jp.getSignature().toLongString());
         
         try {
             

@@ -141,7 +141,7 @@ public class UserGeneralController {
         try {
             
             // check if email already in use
-            User temp = this.userService.findByEmailAndEnabled(u.getEmail(), Boolean.TRUE);
+            User temp = this.userService.findByEmail(u.getEmail(), Boolean.TRUE);
             
             // Email address already in use
             if(temp != null){
@@ -282,7 +282,7 @@ public class UserGeneralController {
         
         try {
             
-            User u = this.userService.findByEmailAndEnabled(email, Boolean.TRUE);
+            User u = this.userService.findByEmail(email, Boolean.TRUE);
             
             // if user already activated
             if(u.getActivated()){
@@ -384,7 +384,7 @@ public class UserGeneralController {
             String email = request.getParameter("email");
             try {
                 
-                User u = this.userService.findByEmailAndEnabled(email, Boolean.TRUE);
+                User u = this.userService.findByEmail(email, Boolean.TRUE);
                 
                 /* user is not null. Send oldEmail */
                 // update new active code
@@ -671,7 +671,7 @@ public class UserGeneralController {
         if(captcha != null && captcha.equals((String)request.getSession().getAttribute("captcha"))){
             
             // captcha is correct
-            User u = this.userService.findByEmailAndEnabled(inUseEmail, Boolean.TRUE);
+            User u = this.userService.findByEmail(inUseEmail, Boolean.TRUE);
             
             /* store secret code into database */
             String activeCode = UUID.randomUUID().toString();

@@ -6,7 +6,6 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.User;
 
@@ -21,7 +20,7 @@ public interface UserService {
     
     List<User> findAllByEmail(String email);
     
-    User findByEmailAndEnabled(String email, boolean enabled);
+    User findByEmail(String email, boolean enabled);
     
     User findByEmail(String email);
     

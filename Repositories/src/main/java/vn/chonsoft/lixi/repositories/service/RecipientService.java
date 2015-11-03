@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.User;
 
 /**
  *
@@ -18,9 +19,9 @@ public interface RecipientService {
     
     Recipient findById(Long id);
     
-    Recipient findByEmail(String email);
+    Recipient findByEmail(User sender, String email);
     
-    Recipient findByFirstNameAndMiddleNameAndLastNameAndPhone(String firstName, String middleName, String lastName, String phone);
+    Recipient findByNameAndPhone(User sender, String firstName, String middleName, String lastName, String phone);
     
     int updatePhone(String phone, Long id);
     
