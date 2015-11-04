@@ -24,7 +24,8 @@
                             </div></c:if>
                         <%-- place holder message --%>
                         <%-- // End place holder message --%>
-                        <form class="form-horizontal" method="post" action="${pageContext.request.contextPath}/user/editPhoneNumber">
+                        <c:url value="/user/editPhoneNumber" var="formEditPhoneNumberUrl"/>
+                        <form class="form-horizontal" method="post" action="${formEditPhoneNumberUrl}">
                             <fieldset>
                                 <legend><spring:message code="message.change_mobile_number"/></legend>
                                 <div class="form-group">

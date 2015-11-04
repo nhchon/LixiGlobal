@@ -57,7 +57,8 @@
                                 There is something wrong with your email/captcha code. Please try again !
                             </div>
                         </c:if>
-                        <form onsubmit="return validPassAssistanceForm();" class="form-horizontal" method="post" action="${pageContext.request.contextPath}/user/passwordAssistance">
+                        <c:url value="/user/passwordAssistance" var="passwordAssistanceUrl"/>
+                        <form onsubmit="return validPassAssistanceForm();" class="form-horizontal" method="post" action="${passwordAssistanceUrl}">
                             <fieldset>
                                 <legend>Password Assistance</legend>
                                 <div class="desc">
