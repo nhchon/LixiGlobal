@@ -14,6 +14,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.HashMap;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
@@ -202,6 +203,13 @@ public class CheckOutController {
             uc.setCardCvv(form.getCvv());
             uc.setModifiedDate(Calendar.getInstance().getTime());
 
+            this.creaditCardProcesses.createCustomerProfile(u, uc);
+            
+            /* Don't store full card information */
+            uc.setCardNumber(StringUtils.right(email, 4));
+            uc.setExpMonth(0);
+            uc.setExpYear(0);
+            uc.setCardCvv(0);
             uc = this.ucService.save(uc);
 
             // update order, add card

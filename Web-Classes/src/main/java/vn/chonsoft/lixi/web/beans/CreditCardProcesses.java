@@ -10,15 +10,20 @@ import javax.inject.Inject;
 
 import net.authorize.Environment;
 import net.authorize.api.contract.v1.*;
+import net.authorize.api.controller.CreateCustomerProfileController;
 import net.authorize.api.controller.base.ApiOperationBase;
 import net.authorize.api.controller.CreateTransactionController;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import vn.chonsoft.lixi.model.AuthorizeCustomerResult;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderPayment;
+import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
+import vn.chonsoft.lixi.repositories.service.AuthorizeCustomerResultService;
+import vn.chonsoft.lixi.repositories.service.AuthorizePaymentResultService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderPaymentService;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 /**
@@ -36,6 +41,12 @@ public class CreditCardProcesses {
     
     @Inject
     private LixiOrderPaymentService paymentService;
+    
+    @Inject
+    private AuthorizeCustomerResultService customerResultService;
+    
+    @Inject
+    private AuthorizePaymentResultService paymentResultService;
     
     public void setApiLoginId(String apiLoginId) {
         this.apiLoginId = apiLoginId;
@@ -76,6 +87,97 @@ public class CreditCardProcesses {
             default:
                 return Environment.SANDBOX;
         }
+    }
+    
+    /**
+     * 
+     * @param u
+     * @param card
+     * @return 
+     */
+    public boolean createCustomerProfile(User u, UserCard card){
+        
+        //Common code to set for all requests
+        ApiOperationBase.setEnvironment(getEnvironment());
+        
+        MerchantAuthenticationType merchantAuthenticationType  = new MerchantAuthenticationType() ;
+        merchantAuthenticationType.setName(apiLoginId);
+        merchantAuthenticationType.setTransactionKey(transactionKey);
+        ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
+
+        CreditCardType creditCard = new CreditCardType();
+        //creditCard.set
+        creditCard.setCardNumber(card.getCardNumber());
+        String expireMonth = StringUtils.leftPad(card.getExpMonth()+"", 2, "0");
+        String expireYear = StringUtils.leftPad(card.getExpYear()+"", 2, "0");
+        creditCard.setExpirationDate(expireMonth + expireYear);
+        PaymentType paymentType = new PaymentType();
+        paymentType.setCreditCard(creditCard);
+        
+        CustomerPaymentProfileType customerPaymentProfileType = new CustomerPaymentProfileType();
+        customerPaymentProfileType.setCustomerType(CustomerTypeEnum.INDIVIDUAL);
+        customerPaymentProfileType.setPayment(paymentType);
+        
+        CustomerProfileType customerProfileType = new CustomerProfileType();
+        customerProfileType.setMerchantCustomerId(u.getId().toString());
+        customerProfileType.setDescription("[" + u.getFullName() + " , " + u.getPhone() + " , " + u.getEmail() + "]");
+        customerProfileType.setEmail(u.getEmail());
+        customerProfileType.getPaymentProfiles().add(customerPaymentProfileType);
+        
+        CreateCustomerProfileRequest apiRequest = new CreateCustomerProfileRequest();
+        apiRequest.setProfile(customerProfileType);
+        apiRequest.setValidationMode(ValidationModeEnum.LIVE_MODE);
+        apiRequest.setRefId(System.currentTimeMillis()+"");
+        
+        CreateCustomerProfileController controller = new CreateCustomerProfileController(apiRequest);
+        controller.execute();
+        // 
+        CreateCustomerProfileResponse response = controller.getApiResponse();
+        AuthorizeCustomerResult cus = new AuthorizeCustomerResult();
+        cus.setUser(u);
+        boolean returned = false;
+        if (response != null) {
+            
+            String resultCode = response.getMessages().getResultCode().value();
+            String resultText = LiXiUtils.marshalWithoutRootElement(response.getMessages());
+            
+            cus.setResponseCode(resultCode);
+            cus.setResponseText(resultText);
+            cus.setCreatedDate(Calendar.getInstance().getTime());
+            
+            if (response.getMessages().getResultCode() == MessageTypeEnum.OK) {
+                
+                System.out.println(response.getCustomerProfileId());
+                for(String s : response.getCustomerPaymentProfileIdList().getNumericString()){
+                    System.out.println(s);
+                }
+                System.out.println(response.getCustomerPaymentProfileIdList().getNumericString().get(0));
+                System.out.println(response.getCustomerShippingAddressIdList().getNumericString().get(0));
+                System.out.println(response.getValidationDirectResponseList().getString().get(0));
+                
+                //
+                returned = true;
+            } else {
+                
+                System.out.println("Failed to create customer profile:  " + response.getMessages().getResultCode());
+                for(MessagesType.Message m : response.getMessages().getMessage()){
+                    System.out.println(m.getCode() + " : " + m.getText());
+                }
+            }
+        }
+        else{
+            
+            cus.setResponseCode("-999");
+            cus.setResponseText("CAN NOT CREATE CreateCustomerProfileResponse");
+            
+        }
+        
+        // save
+        cus.setCreatedDate(Calendar.getInstance().getTime());
+        this.customerResultService.save(cus);
+        
+        // return
+        return returned;
     }
     
     /**
@@ -141,6 +243,7 @@ public class CreditCardProcesses {
                 order.getId()+"]");
         //
         txnRequest.setOrder(invoice);
+        txnRequest.setRefTransId(order.getId().toString());
         
         // Make the API Request
         CreateTransactionRequest apiRequest = new CreateTransactionRequest();
@@ -193,7 +296,7 @@ public class CreditCardProcesses {
         }
         else{
             
-            payment.setResponseCode("-1");
+            payment.setResponseCode("-999");
             payment.setResponseText("Can not create CreateTransactionResponse");
         }
         //

@@ -157,7 +157,7 @@ public class LiXiUtils {
         if (year < cyear) {
             return false;
         } else {
-            if (month < cmonth) {
+            if ((year == cyear) && (month < cmonth)) {
                 return false;
             }
         }

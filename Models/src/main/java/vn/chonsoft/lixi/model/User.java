@@ -35,6 +35,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private Long id;
+    private String authorizeProfileId;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -68,8 +69,9 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public User(Long id, String firstName, String middleName, String lastName, String email, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled, boolean activated, Date createdDate, String createdBy, Date modifiedDate, String modifiedBy) {
+    public User(Long id, String authorizeProfileId, String firstName, String middleName, String lastName, String email, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled, boolean activated, Date createdDate, String createdBy, Date modifiedDate, String modifiedBy) {
         this.id = id;
+        this.authorizeProfileId = authorizeProfileId;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -96,6 +98,16 @@ public class User implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Basic
+    @Column(name = "authorize_profile_id")
+    public String getAuthorizeProfileId() {
+        return authorizeProfileId;
+    }
+
+    public void setAuthorizeProfileId(String authorizeProfileId) {
+        this.authorizeProfileId = authorizeProfileId;
     }
     
     @Basic(optional = false)

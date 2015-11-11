@@ -28,11 +28,16 @@ import vn.chonsoft.lixi.model.pojo.EnumCard;
 public class UserCard implements Serializable {
     
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
+    
+    @Basic
+    @Column(name = "authorize_payment_id")
+    private String authorizePaymentId;
     
     @Basic(optional = false)
     @Column(name = "card_type")
@@ -72,14 +77,30 @@ public class UserCard implements Serializable {
     private User user;
 
     public UserCard() {
+        
+        this.cardName = "John Smith";
+        this.cardNumber = "XXXX1111";
+        this.expMonth = 0;
+        this.expYear = 0;
+        this.cardCvv = 0;
+        
     }
 
     public UserCard(Long id) {
+        
         this.id = id;
+        //
+        this.cardName = "John Smith";
+        this.cardNumber = "XXXX1111";
+        this.expMonth = 0;
+        this.expYear = 0;
+        this.cardCvv = 0;
+        
     }
 
-    public UserCard(Long id, int cardType, String cardName, String cardNumber, int expMonth, int expYear, int cardCvv, Date modifiedDate) {
+    public UserCard(Long id, String authorizePaymentId, int cardType, String cardName, String cardNumber, int expMonth, int expYear, int cardCvv, Date modifiedDate) {
         this.id = id;
+        this.authorizePaymentId = authorizePaymentId;
         this.cardType = cardType;
         this.cardName = cardName;
         this.cardNumber = cardNumber;
@@ -95,6 +116,14 @@ public class UserCard implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAuthorizePaymentId() {
+        return authorizePaymentId;
+    }
+
+    public void setAuthorizePaymentId(String authorizePaymentId) {
+        this.authorizePaymentId = authorizePaymentId;
     }
 
     public String getCardTypeName() {
