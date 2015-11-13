@@ -6,6 +6,10 @@ package vn.chonsoft.lixi.repositories;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserCard;
 
@@ -28,4 +32,16 @@ public interface UserCardRepository  extends JpaRepository<UserCard, Long>{
     UserCard findByIdAndUser(Long id, User u);
     
     UserCard findByCardNumber(String cardNumber);
+    
+    /**
+     * 
+     * @param paymentId
+     * @param id
+     * @return 
+     */
+    @Modifying
+    @Transactional
+    @Query("update UserCard c set c.authorizePaymentId = :paymentId where c.id = :id")
+    int updateAuthorizeProfileId(@Param("paymentId") String paymentId, @Param("id") Long id);
+    
 }

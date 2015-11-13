@@ -131,4 +131,16 @@ public class UserServiceImpl implements UserService{
         
     }
     
+    /**
+     * 
+     * @param profileId
+     * @param id
+     * @return 
+     */
+    @Override
+    @Transactional
+    public int updateAuthorizeProfileId(String profileId, Long id){
+        
+        return this.userRepository.updateAuthorizeProfileId(profileId, id);
+    }
 }

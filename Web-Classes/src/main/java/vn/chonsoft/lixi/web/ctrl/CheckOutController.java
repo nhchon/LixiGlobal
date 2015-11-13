@@ -181,13 +181,13 @@ public class CheckOutController {
             }
 
             // check card number
-            UserCard lastUC = this.ucService.findByCardNumber(form.getCardNumber());
-            if (lastUC != null) {
+            //UserCard lastUC = this.ucService.findByCardNumber(form.getCardNumber());
+            //if (lastUC != null) {
 
-                model.put("card_number_failed", 1);
+                //model.put("card_number_failed", 1);
 
-                return new ModelAndView("giftprocess/add-a-card", model);
-            }
+                //return new ModelAndView("giftprocess/add-a-card", model);
+            //}
 
             String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
             User u = this.userService.findByEmail(email);
@@ -197,21 +197,30 @@ public class CheckOutController {
             uc.setUser(u);
             uc.setCardType(form.getCardType());
             uc.setCardName(form.getCardName());
+            /* Don't store full card information */
+            uc.setCardNumber("XXXX"+StringUtils.right(form.getCardNumber(), 4));
+            uc.setExpMonth(0);
+            uc.setExpYear(0);
+            uc.setCardCvv(0);
+            uc.setModifiedDate(Calendar.getInstance().getTime());
+            
+            uc = this.ucService.save(uc);
+            
+            // pass real information
             uc.setCardNumber(form.getCardNumber());
             uc.setExpMonth(form.getExpMonth());
             uc.setExpYear(form.getExpYear());
             uc.setCardCvv(form.getCvv());
-            uc.setModifiedDate(Calendar.getInstance().getTime());
-
-            this.creaditCardProcesses.createCustomerProfile(u, uc);
             
-            /* Don't store full card information */
-            uc.setCardNumber(StringUtils.right(email, 4));
-            uc.setExpMonth(0);
-            uc.setExpYear(0);
-            uc.setCardCvv(0);
-            uc = this.ucService.save(uc);
-
+            log.info(form.getCardNumber());
+            /* Create authorize.net profile */
+            if(StringUtils.isEmpty(u.getAuthorizeProfileId())){
+                this.creaditCardProcesses.createCustomerProfile(u, uc);
+            }
+            else{
+                this.creaditCardProcesses.createPaymentProfile(uc);
+            }
+            
             // update order, add card
             LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
             order.setCard(uc);
@@ -949,7 +958,7 @@ public class CheckOutController {
 
             this.lxorderService.save(order);
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
-            boolean chargeResult = creaditCardProcesses.charge(order);
+            boolean chargeResult = creaditCardProcesses.chargeByCustomerProfile(order);
             if (chargeResult == false) {
                 return new ModelAndView(new RedirectView("/checkout/payment-method/change?wrong=1", true, true));
             } 

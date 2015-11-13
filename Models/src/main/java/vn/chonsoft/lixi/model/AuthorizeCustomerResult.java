@@ -49,9 +49,9 @@ public class AuthorizeCustomerResult implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private User user;
+    @Basic
+    @Column(name = "user_id")
+    private Long userId;
     
     public AuthorizeCustomerResult() {
     }
@@ -99,12 +99,12 @@ public class AuthorizeCustomerResult implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override

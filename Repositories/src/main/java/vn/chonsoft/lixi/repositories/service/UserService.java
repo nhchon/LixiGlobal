@@ -33,4 +33,6 @@ public interface UserService {
     int updateEmail(String email, Long id);
     
     int updatePhoneNumber(String phoneNumber, Long id);
+    
+    int updateAuthorizeProfileId(String profileId, Long id);
 }

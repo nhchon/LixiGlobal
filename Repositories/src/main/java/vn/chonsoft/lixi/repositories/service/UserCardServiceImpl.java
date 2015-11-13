@@ -91,4 +91,11 @@ public class UserCardServiceImpl implements UserCardService{
         
         return this.ucRepository.findByCardNumber(cardNumber);
     }
+    
+    @Override
+    @Transactional
+    public int updateAuthorizeProfileId(String paymentId, Long id){
+        
+        return this.ucRepository.updateAuthorizeProfileId(paymentId, id);
+    }
 }

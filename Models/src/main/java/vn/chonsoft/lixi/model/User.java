@@ -143,7 +143,7 @@ public class User implements Serializable {
     @Transient
     public String getFullName(){
         
-        return this.getFirstName()+ (this.getMiddleName()==null?" ":" " + this.getMiddleName()) + this.getLastName();
+        return this.getFirstName()+ (this.getMiddleName()==null?" ":" " + this.getMiddleName() + " ") + this.getLastName();
     }
     
     @Basic(optional = false)

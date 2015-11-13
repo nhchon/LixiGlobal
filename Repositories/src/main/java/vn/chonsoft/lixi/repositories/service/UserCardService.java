@@ -25,4 +25,6 @@ public interface UserCardService {
     UserCard findByIdAndUser(Long id, User u);
     
     UserCard findByCardNumber(String cardNumber);
+    
+    int updateAuthorizeProfileId(String paymentId, Long id);
 }

@@ -49,9 +49,9 @@ public class LixiOrderPayment implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
     
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private LixiOrder order;
+    @Basic(optional = false)
+    @Column(name = "order_id")
+    private Long order;
 
     public LixiOrderPayment() {
     }
@@ -99,11 +99,11 @@ public class LixiOrderPayment implements Serializable {
         this.modifiedDate = modifiedDate;
     }
 
-    public LixiOrder getOrder() {
+    public Long getOrder() {
         return order;
     }
 
-    public void setOrder(LixiOrder order) {
+    public void setOrder(Long order) {
         this.order = order;
     }
 
