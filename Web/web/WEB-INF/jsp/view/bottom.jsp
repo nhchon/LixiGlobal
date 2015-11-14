@@ -8,7 +8,7 @@
                     <a href="javascript:void(0);">About us</a>
                     <br class="visible-xs" />
                     <span class="hidden-xs">|</span>
-                    <a href="javascript:void(0);">Terms & Privacy</a>
+                    <a href="<c:url value="/support/show"/>">Terms & Privacy</a>
                     <span>|</span>
                     <a href="javascript:void(0);">Contact</a>
                     <span>|</span>

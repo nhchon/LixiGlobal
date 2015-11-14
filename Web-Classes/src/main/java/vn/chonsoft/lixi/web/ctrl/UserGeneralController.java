@@ -623,6 +623,11 @@ public class UserGeneralController {
         return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
     }
     
+    /**
+     * 
+     * @param session
+     * @return 
+     */
     @RequestMapping(value = "signOut", method = RequestMethod.GET)
     public ModelAndView signOut(HttpSession session) {
 
