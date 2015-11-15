@@ -51,6 +51,12 @@ public class CustomerSubject implements Serializable {
         this.id = id;
     }
 
+    public CustomerSubject(String subject, Date createdDate) {
+        
+        this.subject = subject;
+        this.createdDate = createdDate;
+    }
+
     public CustomerSubject(Long id, String subject, Date createdDate) {
         this.id = id;
         this.subject = subject;

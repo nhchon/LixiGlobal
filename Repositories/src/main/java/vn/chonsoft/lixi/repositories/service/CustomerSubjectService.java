@@ -13,6 +13,10 @@ import vn.chonsoft.lixi.model.support.CustomerSubject;
  */
 public interface CustomerSubjectService {
     
+    CustomerSubject save(CustomerSubject sub);
+    
+    CustomerSubject findOne(Long id);
+    
     List<CustomerSubject> findAll();
     
 }
