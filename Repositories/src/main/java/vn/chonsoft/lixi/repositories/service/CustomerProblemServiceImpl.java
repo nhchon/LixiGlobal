@@ -40,9 +40,14 @@ public class CustomerProblemServiceImpl implements CustomerProblemService{
      * @return 
      */
     @Override
+    @Transactional
     public CustomerProblem findOne(Long id){
         
-        return this.repository.findOne(id);
+        CustomerProblem prob = this.repository.findOne(id);
+        /* load comments*/
+        prob.getComments().size();
+        
+        return prob;
         
     }
     /**
@@ -50,8 +55,13 @@ public class CustomerProblemServiceImpl implements CustomerProblemService{
      * @return 
      */
     @Override
+    @Transactional
     public List<CustomerProblem> findAll(){
         
-        return this.repository.findAll();
+        List<CustomerProblem> list = this.repository.findAll();
+        /* load comments */
+        list.forEach(x -> {x.getComments().size();});
+        
+        return list;
     }
 }

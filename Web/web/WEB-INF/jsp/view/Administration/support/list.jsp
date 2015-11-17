@@ -48,7 +48,25 @@
                                     <td>${iss.orderId}</td>
                                     <td>${iss.contactData}</td>
                                     <td>${iss.createdDate}</td>
-                                    <td>${iss.status}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${iss.status eq 0}">
+                                               Open
+                                            </c:when>
+                                            <c:when test="${iss.status eq 1}">
+                                                In Process
+                                            </c:when>
+                                            <c:when test="${iss.status eq 2}">
+                                                Cancel
+                                            </c:when>
+                                            <c:when test="${iss.status eq 3}">
+                                                Closed
+                                            </c:when>
+                                            <c:when test="${iss.status eq 4}">
+                                                Re-Open
+                                            </c:when>
+                                        </c:choose>                                        
+                                    </td>
                                     <td>
                                         <c:if test="${empty iss.handledBy}">
                                             <a href="<c:url value="/Administration/SystemSupport/handle/${iss.id}"/>">Handle this</a>

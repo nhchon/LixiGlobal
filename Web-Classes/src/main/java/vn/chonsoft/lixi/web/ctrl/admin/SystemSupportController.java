@@ -11,8 +11,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.model.support.CustomerComment;
 import vn.chonsoft.lixi.model.support.CustomerProblem;
+import vn.chonsoft.lixi.repositories.service.CustomerCommentService;
 import vn.chonsoft.lixi.repositories.service.CustomerProblemService;
 import vn.chonsoft.lixi.web.annotation.WebController;
 
@@ -26,6 +30,9 @@ public class SystemSupportController {
     
     @Inject
     private CustomerProblemService probService;
+    
+    @Inject
+    private CustomerCommentService commentService;
     
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public ModelAndView detail(Map<String, Object> model, @PathVariable Long id){
@@ -62,6 +69,8 @@ public class SystemSupportController {
         String loginedUser = SecurityContextHolder.getContext().getAuthentication().getName();
         
         CustomerProblem prob = this.probService.findOne(id);
+        /* */
+        prob.setStatus(1); // in process
         /* who handle this issue*/
         prob.setHandledBy(loginedUser);
         prob.setHandledDate(Calendar.getInstance().getTime());
@@ -73,4 +82,50 @@ public class SystemSupportController {
         return listIssue(model);
     }
     
+    /**
+     * 
+     * @param model
+     * @param probId
+     * @param status
+     * @return 
+     */
+    @RequestMapping(value = "changeStatus", method = RequestMethod.POST)
+    public ModelAndView changeStatus(Map<String, Object> model, @RequestParam Long probId, @RequestParam Integer status){
+        
+        /* load problem */
+        CustomerProblem prob = this.probService.findOne(probId);
+
+        if(prob.getStatus() != status.intValue()){
+            /* update status*/
+            prob.setStatus(status);
+            
+            this.probService.save(prob);
+        }
+        
+        return new ModelAndView(new RedirectView("/Administration/SystemSupport/detail/"+probId, true, true));
+    }
+    /**
+     * 
+     * @param model
+     * @param probId 
+     * @param comment
+     * @return 
+     */
+    @RequestMapping(value = "addAComment", method = RequestMethod.POST)
+    public ModelAndView addComment(Map<String, Object> model, @RequestParam Long probId, @RequestParam String comment){
+        
+        String loginedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        /* load problem */
+        CustomerProblem prob = this.probService.findOne(probId);
+        
+        CustomerComment c = new CustomerComment();
+        c.setContent(comment);
+        c.setProblem(prob);
+        c.setCreatedBy(loginedUser);
+        c.setCreatedDate(Calendar.getInstance().getTime());
+        
+        this.commentService.save(c);
+        
+        return new ModelAndView(new RedirectView("/Administration/SystemSupport/detail/"+probId, true, true));
+    }
 }
