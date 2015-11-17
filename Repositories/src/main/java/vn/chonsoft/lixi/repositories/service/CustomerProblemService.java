@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.support.CustomerProblem;
 
@@ -16,4 +17,7 @@ public interface CustomerProblemService {
     @Transactional
     CustomerProblem save(CustomerProblem problem);
     
+    CustomerProblem findOne(Long id);
+    
+    List<CustomerProblem> findAll();
 }

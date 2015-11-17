@@ -39,6 +39,15 @@
                 <li><a href="<c:url value="/Administration/SystemUser/add"/>"><span class="text">Add New</span></a></li>
             </ul>
         </li>
+        <li>
+            <a href="#" class="js-sub-menu-toggle">
+                <i class="fa fa-dashboard fa-fw"></i><span class="text">Customer Service</span>
+                <i class="toggle-icon fa fa-angle-left"></i>
+            </a>
+            <ul class="sub-menu open">
+                <li><a href="<c:url value="/Administration/SystemSupport/list"/>"><span class="text">Issue List</span></a></li>
+            </ul>
+        </li>
         <!--
         <li class="active">
             <a href="#" class="js-sub-menu-toggle">

@@ -16,15 +16,15 @@ public class CustomerProblemForm {
     
     private String otherSubject;
     
-    @NotBlank(message = "validate.support.content_require")
+    @NotBlank(message = "{validate.support.content_require}")
     private String content;
     
     private Long orderId;
     
-    @NotBlank(message = "validate.not_null")
+    @NotBlank(message = "{validate.not_null}")
     private String contactMethod;
     
-    @NotBlank(message = "validate.not_null")
+    @NotBlank(message = "{validate.not_null}")
     private String contactData;
 
     public Long getSubject() {

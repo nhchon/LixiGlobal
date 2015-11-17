@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,5 +34,24 @@ public class CustomerProblemServiceImpl implements CustomerProblemService{
         
     }
     
-    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public CustomerProblem findOne(Long id){
+        
+        return this.repository.findOne(id);
+        
+    }
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public List<CustomerProblem> findAll(){
+        
+        return this.repository.findAll();
+    }
 }

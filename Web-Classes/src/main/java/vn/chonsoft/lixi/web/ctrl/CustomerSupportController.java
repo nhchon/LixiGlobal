@@ -18,7 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.chonsoft.lixi.model.form.support.CustomerProblemForm;
 import vn.chonsoft.lixi.model.support.CustomerProblem;
 import vn.chonsoft.lixi.model.support.CustomerSubject;
+import vn.chonsoft.lixi.repositories.service.CustomerProblemService;
 import vn.chonsoft.lixi.repositories.service.CustomerSubjectService;
+import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 
 /**
@@ -31,6 +33,9 @@ public class CustomerSupportController {
     
     @Inject
     private CustomerSubjectService subjectService;
+    
+    @Inject
+    private CustomerProblemService probService;
     
     /**
      * 
@@ -68,8 +73,10 @@ public class CustomerSupportController {
         }
         
         try {
+            /* Login user */
+            String loginedEmail = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
             
-            CustomerSubject cus = null;
+            CustomerSubject cus;
             if(form.getSubject() == -1){
                 /* new subject */
                 cus = this.subjectService.save(new CustomerSubject(form.getOtherSubject(), Calendar.getInstance().getTime()));
@@ -82,6 +89,18 @@ public class CustomerSupportController {
             /* create customer problem */
             CustomerProblem prob = new CustomerProblem();
             prob.setSubject(cus);
+            /* order id*/
+            prob.setOrderId(form.getOrderId());
+            prob.setContent(form.getContent());
+            prob.setContactMethod(form.getContactMethod());
+            prob.setContactData(form.getContactData());
+            /* created date */
+            prob.setCreatedDate(Calendar.getInstance().getTime());
+            /* created by*/
+            prob.setCreatedBy(loginedEmail);
+            
+            /* save*/
+            this.probService.save(prob);
             
         } catch (ConstraintViolationException e) {
             

@@ -17,7 +17,6 @@
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
                         <h1>Thank you</h1>
-                        <p><spring:message code="signup.an_email_was_sent" arguments="${email}"/></p>
                         <p>Thank you for your information.</p>
                         <p>
                             We will contact you as soon as possible.

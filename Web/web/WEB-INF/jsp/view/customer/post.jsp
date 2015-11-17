@@ -50,6 +50,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <form:textarea path="content"  cssClass="form-control" rows="6"/>
+                                    <span class="help-block errors"><form:errors path="content" /></span>
                                 </div>
                             </div>
                         </div>
@@ -74,6 +75,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <form:input path="contactData" cssClass="form-control"/>
+                                    <span class="help-block errors"><form:errors path="contactData" /></span>
                                 </div>
                             </div>
                         </div>
