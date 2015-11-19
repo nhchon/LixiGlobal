@@ -47,7 +47,6 @@
     </jsp:attribute>
     <jsp:body>
         <!-- content-wrapper -->
-        <div class="col-md-10 content-wrapper" style="background-color: #ffffff">
             <div class="row">
                 <div class="col-lg-4 ">
                     <ul class="breadcrumb">
@@ -58,11 +57,8 @@
             </div>
 
             <!-- main -->
-            <div class="content">
-                <div class="main-header">
-                    <h2 style="border-right:none;"><spring:message code="message.categories"/></h2>
-                </div>
-                <div class="main-content">
+                    <h2 class="sub-header"><spring:message code="message.categories"/></h2>
+                <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -117,10 +113,7 @@
                         </tbody>
                     </table>    
                 </div>
-                <!-- /main-content -->
-            </div>
             <!-- /main -->
-        </div>
         <!-- /content-wrapper -->
     </jsp:body>
 </template:Admin>

@@ -4,49 +4,45 @@
         <!-- Javascript -->
         <script type="text/javascript">
             $(document).ready(function () {
-                $( "input[name='orderId']" ).change(function() {
+                $("input[name='orderId']").change(function () {
                     // Check input( $( this ).val() ) for validity here
                     //alert($(this).val())
-                    $("input[name='gifts-"+$(this).val()+"']").prop("checked", $(this).is(':checked'));
+                    $("input[name='gifts-" + $(this).val() + "']").prop("checked", $(this).is(':checked'));
                 });
             });
         </script>    
     </jsp:attribute>
     <jsp:body>
         <!-- content-wrapper -->
-        <div class="col-md-10 content-wrapper" style="background-color: #ffffff">
-            <div class="row">
-                <div class="col-lg-4 ">
-                    <ul class="breadcrumb">
-                        <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-                        <li><a href="<c:url value="/Administration/Orders/newOrders"/>">Not Submitted</a></li>
-                    </ul>
-                </div>
+        <div class="row">
+            <div class="col-lg-4 ">
+                <ul class="breadcrumb">
+                    <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
+                    <li><a href="<c:url value="/Administration/Orders/newOrders"/>">Not Submitted</a></li>
+                </ul>
             </div>
+        </div>
 
-            <!-- main -->
-            <div class="content">
-                <div class="main-header">
-                    <h2 style="border-right:none;">Orders Not Submitted Yet</h2>
-                </div>
-                <div class="main-content">
-                    <form action="${pageContext.request.contextPath}/Administration/Orders/sendToBaoKim" method="post">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th class="col-md-1"><button class="btn btn-primary">Submit to BaoKim</button></th>
-                                <th>Sender</th>
-                                <th>Exchange</th>
-                                <th>Payment method</th>
-                                <th>Setting</th>
-                                <th>Status</th>
-                                <th>Message</th>
-                                <th>Created date</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
-                            <c:forEach items="${LIXI_ORDERS.content}" var="o">
+        <!-- main -->
+        <h2 class="sub-header">Orders Not Submitted Yet</h2>
+        <div class="table-responsive">
+            <form action="${pageContext.request.contextPath}/Administration/Orders/sendToBaoKim" method="post">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1"><button class="btn btn-primary">Submit to BaoKim</button></th>
+                            <th>Sender</th>
+                            <th>Exchange</th>
+                            <th>Payment method</th>
+                            <th>Setting</th>
+                            <th>Status</th>
+                            <th>Message</th>
+                            <th>Created date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <c:forEach items="${LIXI_ORDERS.content}" var="o">
                             <tr>
                                 <td style="text-align: center;"><input type="checkbox" name="orderId" value="${o.id}"/></td>
                                 <td>${o.sender.firstName}&nbsp;<c:if test="${not empty o.sender.middleName}">${o.sender.middleName}&nbsp;</c:if>${o.sender.lastName}</td>
@@ -88,27 +84,24 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td><input type="checkbox" disabled="" value="${g.id}" name="gifts-${o.id}"/></td>
-                                                <td>${g.recipient.firstName}&nbsp;<c:if test="${not empty g.recipient.middleName}">${g.recipient.middleName}&nbsp;</c:if>${g.recipient.lastName}</td> 
-                                                <td>${g.productName}</td> 
-                                                <td>${g.productQuantity} x <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND = <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></td> 
-                                            </tr>
+                                                <tr>
+                                                    <td><input type="checkbox" disabled="" value="${g.id}" name="gifts-${o.id}"/></td>
+                                                    <td>${g.recipient.firstName}&nbsp;<c:if test="${not empty g.recipient.middleName}">${g.recipient.middleName}&nbsp;</c:if>${g.recipient.lastName}</td> 
+                                                    <td>${g.productName}</td> 
+                                                    <td>${g.productQuantity} x <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND = <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></td> 
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </td>
                                 </tr>
                             </c:forEach>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                    </form>
-                </div>
-                <!-- /main-content -->
-            </div>
-            <!-- /main -->
+                        </c:forEach>
+                    </tbody>
+                </table>
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+            </form>
         </div>
+        <!-- /main -->
         <!-- /content-wrapper -->
     </jsp:body>
 </template:Admin>

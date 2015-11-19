@@ -9,7 +9,7 @@
 <%-- // --%>
 <%@attribute name="extraJavascriptContent" fragment="true" required="false" %>
 <%@ include file="/WEB-INF/jsp/base.jspf" %>
-<template:CoreAdmin htmlTitle="${htmlTitle}">
+<template:CoreAdmin2 htmlTitle="${htmlTitle}">
     <jsp:attribute name="headContent">
         <jsp:invoke fragment="extraHeadContent" />
     </jsp:attribute>
@@ -38,4 +38,4 @@
         <jsp:doBody />
     </jsp:body>
     
-</template:CoreAdmin>
+</template:CoreAdmin2>
