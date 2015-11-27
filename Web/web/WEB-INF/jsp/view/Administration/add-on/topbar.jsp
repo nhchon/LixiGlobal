@@ -1,5 +1,13 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
+<!-- Static navbar -->
+<c:set var="m01" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/Dashboard')}"/>
+<c:set var="m02" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/Orders/newOrders')}"/>
+<c:set var="m03" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/SystemConfig/categories')}"/>
+<c:set var="m03" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/SystemConfig/lixiExchangeRate')}"/>
+<c:set var="m05" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/SystemUser/list')}"/>
+<c:set var="m05" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/SystemUser/add')}"/>
+<c:set var="m07" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/SystemSupport/list')}"/>
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -10,15 +18,65 @@
             <a class="navbar-brand" href="#">Lixi.Global</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Help</a></li>
+            <ul class="nav navbar-nav">
+                <li id="m01" <c:if test="${m01 eq true}">class="active"</c:if>><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
+                <li><a href="javascript:void(0);">Financial</a></li>
+                <li id="m07" class="dropdown<c:if test="${m07 eq true}"> active</c:if>">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customer Support <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<c:url value="/Administration/SystemSupport/list"/>">Issue List</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="<c:url value="/Administration/SystemSupport/management/self"/>">Management List</a></li>
+                    </ul>
+                </li>
+                <li id="m02" class="dropdown<c:if test="${m02 eq true}"> active</c:if>">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Orders <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<c:url value="/Administration/Orders/newOrders"/>">New Orders</a></li>
+                        <!--
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                        -->
+                    </ul>
+                </li>
+                <li id="m03" class="dropdown <c:if test="${m03 eq true}">active</c:if>">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">System Config <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<c:url value="/Administration/SystemConfig/categories"/>">Categories</a></li>
+                        <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">LiXi Exchange Rate</a></li>
+                        <!--
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                        -->
+                    </ul>
+                </li>
+                <li id="m05" class="dropdown <c:if test="${m05 eq true}">active</c:if> ">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">System User <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<c:url value="/Administration/SystemUser/list"/>">User List</a></li>
+                        <li><a href="<c:url value="/Administration/SystemUser/add"/>">Add New</a></li>
+                        <!--
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                        -->
+                    </ul>
+                </li>
             </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
-        </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="javascript:void(0);">Help</a></li>
+                <li class="active"><a href="javascript:void(0);">Profile<span class="sr-only">(current)</span></a></li>
+                <li><a href="javascript:void(0);">Log Out</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
     </div>
 </nav>

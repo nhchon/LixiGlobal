@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -91,6 +92,7 @@ public class CustomerSupportController {
             }
             
             /* create customer problem */
+            Date curDate = Calendar.getInstance().getTime();
             CustomerProblem prob = new CustomerProblem();
             prob.setSubject(cus);
             /* order id*/
@@ -100,8 +102,9 @@ public class CustomerSupportController {
             prob.setContactData(form.getContactData());
             /* status */
             prob.setStatus(this.statusService.findByCode(EnumCustomerProblemStatus.OPEN.getValue()));//Open
+            prob.setStatusDate(curDate);
             /* created date */
-            prob.setCreatedDate(Calendar.getInstance().getTime());
+            prob.setCreatedDate(curDate);
             /* created by*/
             prob.setCreatedBy(loginedEmail);
             

@@ -12,11 +12,10 @@ public enum EnumCustomerProblemStatus {
 
     OPEN(0),
     IN_PROCESS(1),
-    CANCEL(2),
+    RESOLVED(2),
     RE_OPEN(3),
-    MANAGEMENT(4),
-    CLOSED(5),
-    ;
+    RE_ASSIGNED(4),
+    CANCEL(5);
 
     private final int value;
 

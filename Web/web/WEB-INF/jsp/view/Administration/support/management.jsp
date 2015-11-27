@@ -11,22 +11,30 @@
         <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-            <li><a href="<c:url value="/Administration/SystemSupport/list"/>">Issue List</a></li>
+            <li><a href="<c:url value="/Administration/SystemSupport/management/self"/>">Management List</a></li>
         </ul>
 
         <!-- main -->
-        <h2 class="sub-header">Issue List</h2>
+        <h2 class="sub-header">Management List</h2>
         <div class="row">
             <div class="col-sm-12">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <c:forEach items="${statuses}" var="s" varStatus="theCount">
-                        <li <c:if test="${s.code eq status}">class="active"</c:if>>
-                            <a href="<c:url value="/Administration/SystemSupport/list/${s.code}"/>" role="tab">
-                                <i class="fa fa-home"></i> ${s.description}
-                            </a>
-                        </li>
-                    </c:forEach>
+                    <li <c:if test="${(action eq 'all') or (empty action)}">class="active"</c:if>>
+                        <a href="<c:url value="/Administration/SystemSupport/management/all"/>" role="tab">
+                            <i class="fa fa-home"></i> All
+                        </a>
+                    </li>
+                    <li <c:if test="${action eq 'self'}">class="active"</c:if>>
+                        <a href="<c:url value="/Administration/SystemSupport/management/self"/>" role="tab">
+                            <i class="fa fa-home"></i> Assigned
+                        </a>
+                    </li>
+                    <li <c:if test="${action eq 'resolved'}">class="active"</c:if>>
+                        <a href="<c:url value="/Administration/SystemSupport/management/resolved"/>" role="tab">
+                            <i class="fa fa-home"></i> Resolved
+                        </a>
+                    </li>
                 </ul>
 
                 <!-- Tab panes -->
@@ -36,45 +44,47 @@
                             <table class="table table-hover table-responsive">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Subject</th>
-                                        <th>Order ID</th>
-                                        <th>Contact</th>
-                                        <th>Created Date</th>
-                                        <th>Status</th>
-                                        <th>Handled By</th>
-                                        <th>Handled Date</th>
-                                        <th>Closed Date</th>
+                                        <th nowrap="">#</th>
+                                        <th nowrap="">Subject</th>
+                                        <th nowrap="">Order ID</th>
+                                        <th nowrap="">Contact</th>
+                                        <th nowrap="">Created Date</th>
+                                        <th nowrap="">Status</th>
+                                        <th nowrap="">Handled By</th>
+                                        <th nowrap="">Handled Date</th>
+                                        <th nowrap="">Assigned By</th>
+                                        <th nowrap="">Resolved Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <c:forEach items="${issues.content}" var="iss">
                                         <tr>
-                                            <td>${iss.id}</td>
+                                            <td>${iss.problem.id}</td>
                                             <td>
-                                                <a href="<c:url value="/Administration/SystemSupport/detail/${iss.id}"/>">${iss.subject.subject}</a>
+                                                <a href="<c:url value="/Administration/SystemSupport/detail/${iss.problem.id}"/>">${iss.problem.subject.subject}</a>
                                             </td>
-                                            <td>${iss.orderId}</td>
-                                            <td>${iss.contactData}</td>
-                                            <td>${iss.createdDate}</td>
-                                            <td>${iss.status.description}
+                                            <td>${iss.problem.orderId}</td>
+                                            <td>${iss.problem.contactData}</td>
+                                            <td>${iss.problem.createdDate}</td>
+                                            <td>${iss.problem.status.description}
                                             </td>
                                             <td>
                                                 <c:if test="${empty iss.handledBy}">
-                                                    <a href="<c:url value="/Administration/SystemSupport/handle/${iss.id}"/>">Handle this</a>
+                                                    <a href="<c:url value="/Administration/SystemSupport/management/handle/${iss.id}"/>">Handle this</a>
                                                 </c:if>
                                                 <c:if test="${not empty iss.handledBy}">   
                                                     ${iss.handledBy}
                                                 </c:if> 
                                             </td>
                                             <td>${iss.handledDate}</td>
-                                            <td>${iss.closedDate}</td>
+                                            <td nowrap="">${iss.problem.handledBy} <br/> ${iss.problem.handledDate}</td>
+                                            <td>${iss.problem.closedDate}</td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="9">
+                                        <td colspan="10">
                                             <%-- Paging --%>
                                             <nav>
                                             <ul class="pagination pull-right">

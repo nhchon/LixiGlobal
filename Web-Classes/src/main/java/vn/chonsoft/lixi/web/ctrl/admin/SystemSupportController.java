@@ -6,7 +6,8 @@ package vn.chonsoft.lixi.web.ctrl.admin;
 
 import java.util.Calendar;
 import java.util.Map;
-import javax.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,7 +22,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.pojo.EnumCustomerProblemStatus;
 import vn.chonsoft.lixi.model.support.CustomerComment;
 import vn.chonsoft.lixi.model.support.CustomerProblem;
+import vn.chonsoft.lixi.model.support.CustomerProblemManagement;
 import vn.chonsoft.lixi.repositories.service.CustomerCommentService;
+import vn.chonsoft.lixi.repositories.service.CustomerProblemManagementService;
 import vn.chonsoft.lixi.repositories.service.CustomerProblemService;
 import vn.chonsoft.lixi.repositories.service.CustomerProblemStatusService;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -34,14 +37,17 @@ import vn.chonsoft.lixi.web.annotation.WebController;
 @RequestMapping(value = "/Administration/SystemSupport")
 public class SystemSupportController {
     
-    @Inject
+    @Autowired
     private CustomerProblemService probService;
     
-    @Inject
+    @Autowired
     private CustomerCommentService commentService;
     
-    @Inject
+    @Autowired
     private CustomerProblemStatusService statusService;
+    
+    @Autowired
+    private CustomerProblemManagementService managementService;
     
     /**
      * 
@@ -102,6 +108,68 @@ public class SystemSupportController {
     /**
      * 
      * @param model
+     * @param action
+     * @param page
+     * @return 
+     */
+    @RequestMapping(value = "management/{action}", method = RequestMethod.GET)
+    public ModelAndView management(Map<String, Object> model, @PathVariable String action, @PageableDefault(sort = {"id"}, value = 50, direction = Sort.Direction.ASC) Pageable page){
+        
+        /* logined user */
+        String loginedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        
+        // pass forward action
+        model.put("action", action);
+        
+        /* */
+        switch (action) {
+            
+            case "self":
+                model.put("issues", this.managementService.findByHandler(loginedUser, page));
+                break;
+                
+            case "all":
+                model.put("issues", this.managementService.findByStatusAndHandler(this.statusService.findByCode(EnumCustomerProblemStatus.RE_ASSIGNED.getValue()), null, page));
+                break;
+            
+            case "resolved":
+                model.put("issues", this.managementService.findByStatusAndHandler(this.statusService.findByCode(EnumCustomerProblemStatus.RESOLVED.getValue()), loginedUser, page));
+                break;
+                
+            default:
+                model.put("issues", this.managementService.findByHandler(loginedUser, page));
+        }
+        
+        return new ModelAndView("Administration/support/management");
+        
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param id
+     * @return 
+     */
+    @RequestMapping(value = "management/handle/{id}", method = RequestMethod.GET)
+    public ModelAndView management(Map<String, Object> model, @PathVariable Long id){
+        
+        /* logined user */
+        String loginedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        
+        CustomerProblemManagement cpm = this.managementService.find(id);
+        cpm.setHandledBy(loginedUser);
+        cpm.setHandledDate(Calendar.getInstance().getTime());
+        
+        /**/
+        this.managementService.save(cpm);
+        
+        /**/
+        return new ModelAndView(new RedirectView("/Administration/SystemSupport/management/self", true, true));
+    }
+    
+    /**
+     * 
+     * @param model
      * @param id
      * @return 
      */
@@ -140,8 +208,18 @@ public class SystemSupportController {
         if(prob.getStatus().getCode() != status){
             /* update status*/
             prob.setStatus(this.statusService.findByCode(status));
+            prob.setStatusDate(Calendar.getInstance().getTime());
             
             this.probService.save(prob);
+        }
+        
+        /* Assign to management */
+        if(status == EnumCustomerProblemStatus.RE_ASSIGNED.getValue()){
+            
+            CustomerProblemManagement cpm = new CustomerProblemManagement();
+            cpm.setProblem(prob);
+
+            this.managementService.save(cpm);
         }
         
         return new ModelAndView(new RedirectView("/Administration/SystemSupport/detail/"+probId, true, true));

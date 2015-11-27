@@ -58,6 +58,10 @@ public class CustomerProblem implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     
+    @Column(name = "status_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date statusDate;
+    
     @Column(name = "handled_by")
     private String handledBy;
     
@@ -147,6 +151,14 @@ public class CustomerProblem implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Date getStatusDate() {
+        return statusDate;
+    }
+
+    public void setStatusDate(Date statusDate) {
+        this.statusDate = statusDate;
     }
 
     public CustomerProblemStatus getStatus() {
