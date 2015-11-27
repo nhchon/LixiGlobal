@@ -58,10 +58,6 @@ public class CustomerProblem implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     
-    @Basic(optional = false)
-    @Column(name = "status")
-    private int status;
-    
     @Column(name = "handled_by")
     private String handledBy;
     
@@ -76,6 +72,10 @@ public class CustomerProblem implements Serializable {
     @JoinColumn(name = "subject_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private CustomerSubject subject;
+
+    @JoinColumn(name = "status", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private CustomerProblemStatus status;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "problem")
     private List<CustomerComment> comments;
@@ -87,7 +87,7 @@ public class CustomerProblem implements Serializable {
         this.id = id;
     }
 
-    public CustomerProblem(Long id, Date createdDate, int status) {
+    public CustomerProblem(Long id, Date createdDate, CustomerProblemStatus status) {
         this.id = id;
         this.createdDate = createdDate;
         this.status = status;
@@ -149,11 +149,11 @@ public class CustomerProblem implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public int getStatus() {
+    public CustomerProblemStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(CustomerProblemStatus status) {
         this.status = status;
     }
 

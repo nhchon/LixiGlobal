@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import vn.chonsoft.lixi.model.form.support.CustomerProblemForm;
+import vn.chonsoft.lixi.model.pojo.EnumCustomerProblemStatus;
 import vn.chonsoft.lixi.model.support.CustomerProblem;
 import vn.chonsoft.lixi.model.support.CustomerSubject;
 import vn.chonsoft.lixi.repositories.service.CustomerProblemService;
+import vn.chonsoft.lixi.repositories.service.CustomerProblemStatusService;
 import vn.chonsoft.lixi.repositories.service.CustomerSubjectService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -37,6 +39,8 @@ public class CustomerSupportController {
     @Inject
     private CustomerProblemService probService;
     
+    @Inject
+    private CustomerProblemStatusService statusService;
     /**
      * 
      * @return 
@@ -94,13 +98,18 @@ public class CustomerSupportController {
             prob.setContent(form.getContent());
             prob.setContactMethod(form.getContactMethod());
             prob.setContactData(form.getContactData());
+            /* status */
+            prob.setStatus(this.statusService.findByCode(EnumCustomerProblemStatus.OPEN.getValue()));//Open
             /* created date */
             prob.setCreatedDate(Calendar.getInstance().getTime());
             /* created by*/
             prob.setCreatedBy(loginedEmail);
             
             /* save*/
-            this.probService.save(prob);
+            //for(int i=0; i<1030; i++){
+                //prob.setId(null);
+                this.probService.save(prob);
+            //}
             
         } catch (ConstraintViolationException e) {
             

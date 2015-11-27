@@ -6,9 +6,12 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.inject.Inject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.support.CustomerProblem;
+import vn.chonsoft.lixi.model.support.CustomerProblemStatus;
 import vn.chonsoft.lixi.repositories.CustomerProblemRepository;
 
 /**
@@ -63,5 +66,28 @@ public class CustomerProblemServiceImpl implements CustomerProblemService{
         list.forEach(x -> {x.getComments().size();});
         
         return list;
+    }
+    
+    /**
+     * 
+     * @param status
+     * @param page
+     * @return 
+     */
+    @Override
+    public Page<CustomerProblem> findByStatus(CustomerProblemStatus status, Pageable page){
+        
+        return this.repository.findByStatus(status, page);
+    }
+    
+    /**
+     * 
+     * @param status
+     * @return 
+     */
+    @Override
+    public List<CustomerProblem> findByStatus(CustomerProblemStatus status){
+        
+        return this.repository.findByStatus(status);
     }
 }

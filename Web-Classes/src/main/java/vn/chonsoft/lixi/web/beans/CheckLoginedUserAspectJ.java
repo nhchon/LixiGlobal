@@ -31,7 +31,7 @@ public class CheckLoginedUserAspectJ {
     //@Pointcut("execution(public * vn.chonsoft.lixi.web.ctrl.*.*(..))")
     //public void anyPublicMethod() {}
     
-    @Pointcut("@annotation(vn.chonsoft.lixi.web.ctrl.UserSecurityAnnotation)")
+    @Pointcut("@annotation(vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation)")
     public void annotatedUserSecurityAnnotation(){}
     
     @Around(value = "annotatedUserSecurityAnnotation()")

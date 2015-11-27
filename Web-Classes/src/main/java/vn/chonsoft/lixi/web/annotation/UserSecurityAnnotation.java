@@ -2,7 +2,7 @@
  * Lixi is a Vietnamese word for small gift of money
  * 2015 @ Lixi Global
  */
-package vn.chonsoft.lixi.web.ctrl;
+package vn.chonsoft.lixi.web.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
