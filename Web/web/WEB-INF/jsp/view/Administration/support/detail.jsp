@@ -11,7 +11,14 @@
             <div class="col-sm-12 ">
                 <ul class="breadcrumb">
                     <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-                    <li><a href="<c:url value="/Administration/SystemSupport/list"/>">Issue List</a></li>
+                    <li>
+                        <c:if test="${rl eq 'list'}">
+                        <a href="<c:url value="/Administration/SystemSupport/list"/>">Issue List</a>
+                        </c:if>    
+                        <c:if test="${rl eq 'management'}">
+                        <a href="<c:url value="/Administration/SystemSupport/management/self"/>">Management List</a>
+                        </c:if>    
+                    </li>
                 </ul>
             </div>
         </div>
@@ -83,14 +90,14 @@
                         <div class="col-sm-2">Status</div>
                         <div class="col-sm-2">
                             <security:authentication property="principal.username" var="loginedUser"/>
-                            <select name="status" class="form-control" <c:if test="${issue.handledBy ne loginedUser}">disabled=""</c:if>>
+                            <select name="status" class="form-control">
                                 <c:forEach items="${statuses}" var="s" varStatus="theCount">
                                     <option value="${s.code}" <c:if test="${issue.status.code eq s.code}">selected=""</c:if>>${s.description}</option>
                                 </c:forEach>
                             </select>
                         </div>
                         <div class="col-sm-2">
-                            <c:if test="${issue.handledBy eq loginedUser}">
+                            <c:if test="${(issue.handledBy eq loginedUser) or (management.handledBy eq loginedUser)}">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                 <input type="hidden" name="probId" value="${issue.id}"/>
                                 <button type="submit" class="btn btn-primary">Change</button>
@@ -114,6 +121,22 @@
                             ${issue.handledDate}
                         </div>
                     </div>
+                    
+                    <!-- Management  -->
+                    <c:if test="${not empty management}">
+                    <div class="form-group">
+                        <div class="col-sm-2">Management By</div>
+                        <div class="col-sm-10">
+                            ${management.handledBy}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">Management Date</div>
+                        <div class="col-sm-10">
+                            ${management.handledDate}
+                        </div>
+                    </div>
+                    </c:if>
                     <div class="form-group">
                         <div class="col-sm-2">Closed Date</div>
                         <div class="col-sm-10">
@@ -138,6 +161,7 @@
                     </div>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <input type="hidden" name="probId" value="${issue.id}"/>
+                    <input type="hidden" name="rl" value="${rl}"/>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div></div>

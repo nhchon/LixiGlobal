@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.repositories;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import vn.chonsoft.lixi.model.support.CustomerProblem;
 import vn.chonsoft.lixi.model.support.CustomerProblemManagement;
 import vn.chonsoft.lixi.model.support.CustomerProblemStatus;
 
@@ -15,6 +16,8 @@ import vn.chonsoft.lixi.model.support.CustomerProblemStatus;
  * @author chonnh
  */
 public interface CustomerProblemManagementRepository extends JpaRepository<CustomerProblemManagement, Long> {
+    
+    CustomerProblemManagement findByProblem(CustomerProblem problem);
     
     Page<CustomerProblemManagement> findByHandledBy(String handleBy, Pageable page);
     

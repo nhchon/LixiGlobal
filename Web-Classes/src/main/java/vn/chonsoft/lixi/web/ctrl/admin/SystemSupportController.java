@@ -52,16 +52,22 @@ public class SystemSupportController {
     /**
      * 
      * @param model
+     * @param rl
      * @param id
      * @return 
      */
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    public ModelAndView detail(Map<String, Object> model, @PathVariable Long id){
+    public ModelAndView detail(Map<String, Object> model, @RequestParam String rl, @PathVariable Long id){
         
         /* list status of problem */
         model.put("statuses", this.statusService.findAll());
         
-        model.put("issue", this.probService.findOne(id));
+        /* return list page*/
+        model.put("rl", rl);
+        
+        CustomerProblem prob = this.probService.findOne(id);
+        model.put("issue", prob);
+        model.put("management", this.managementService.findByProblem(prob));
         
         return new ModelAndView("Administration/support/detail");
         
@@ -229,10 +235,11 @@ public class SystemSupportController {
      * @param model
      * @param probId 
      * @param comment
+     * @param rl
      * @return 
      */
     @RequestMapping(value = "addAComment", method = RequestMethod.POST)
-    public ModelAndView addComment(Map<String, Object> model, @RequestParam Long probId, @RequestParam String comment){
+    public ModelAndView addComment(Map<String, Object> model, @RequestParam Long probId, @RequestParam String comment, @RequestParam String rl){
         
         String loginedUser = SecurityContextHolder.getContext().getAuthentication().getName();
         /* load problem */
@@ -246,6 +253,6 @@ public class SystemSupportController {
         
         this.commentService.save(c);
         
-        return new ModelAndView(new RedirectView("/Administration/SystemSupport/detail/"+probId, true, true));
+        return new ModelAndView(new RedirectView("/Administration/SystemSupport/detail/"+probId+"?rl="+rl, true, true));
     }
 }

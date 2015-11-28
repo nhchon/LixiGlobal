@@ -92,6 +92,8 @@
              */
             function resetBuyByPercentage() {
                 $('#buy').val(BUY[$("#currency option:selected").text()] + (BUY[$("#currency option:selected").text()] * parseFloat($('#buyPercentage').val()) / 100.0));
+                /* round to floor hundress */
+                $('#roundBuy').val(Math.floor(parseFloat($('#buy').val()/100))*100);
             }
             ;
 
@@ -100,6 +102,8 @@
              */
             function resetSellByPercentage() {
                 $('#sell').val(SELL[$("#currency option:selected").text()] + (SELL[$("#currency option:selected").text()] * parseFloat($('#sellPercentage').val()) / 100.0));
+                /* round to floor hundress */
+                $('#roundSell').val(Math.floor(parseFloat($('#sell').val()/100))*100);
             }
             ;
         </script>
@@ -200,22 +204,24 @@
                 <div class="col-sm-1">
                         <label for="buyPercentage">%</label>
                         <form:input type="number" step="0.25" path="buyPercentage" class="form-control" value="-5" style="padding:6px 3px;"/>
-                        <ul class="parsley-errors-list filled"><li class="parsley-required"><form:errors path="buyPercentage" /></li></ul>
+                        <span class="help-block errors"><form:errors path="buyPercentage" /></span>
                 </div>
                 <div class="col-sm-4">
                         <label for="buy"><spring:message code="message.buy"/></label>
                         <form:input path="buy" class="form-control"/>
-                        <ul class="parsley-errors-list filled"><li class="parsley-required"><form:errors path="buy" /></li></ul>
+                        <span class="help-block errors"><form:errors path="buy" /></span>
+                        <input type="text" name="roundBuy" id="roundBuy" class="form-control" readonly=""/>
                 </div>
                 <div class="col-sm-1">
                         <label for="sellPercentage">%</label>
                         <form:input type="number" step="0.25" path="sellPercentage" class="form-control" value="5" style="padding:6px 3px;"/>
-                        <ul class="parsley-errors-list filled"><li class="parsley-required"><form:errors path="sellPercentage" /></li></ul>
+                        <span class="help-block errors"><form:errors path="sellPercentage" /></span>
                 </div>
                 <div class="col-sm-4">
                         <label for="sell"><spring:message code="message.sell"/></label>
                         <form:input path="sell" class="form-control"/>
-                        <ul class="parsley-errors-list filled"><li class="parsley-required"><form:errors path="sell" /></li></ul>
+                        <span class="help-block errors"><form:errors path="sell" /></span>
+                        <input type="text" name="roundSell" id="roundSell" class="form-control" readonly=""/>
                 </div>
             </div>
             <div class="form-group">

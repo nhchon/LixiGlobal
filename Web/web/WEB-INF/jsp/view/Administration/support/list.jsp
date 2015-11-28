@@ -52,7 +52,7 @@
                                         <tr>
                                             <td>${iss.id}</td>
                                             <td>
-                                                <a href="<c:url value="/Administration/SystemSupport/detail/${iss.id}"/>">${iss.subject.subject}</a>
+                                                <a href="<c:url value="/Administration/SystemSupport/detail/${iss.id}?rl=list"/>">${iss.subject.subject}</a>
                                             </td>
                                             <td>${iss.orderId}</td>
                                             <td>${iss.contactData}</td>

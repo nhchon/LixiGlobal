@@ -36,11 +36,20 @@ public class LiXiExchangeRateForm {
     @NotNull(message = "{validate.not_null}")
     @NumberFormat
     private Double buy;
+    
+    /* round to floor hundress*/
+    @NumberFormat
+    private Double roundBuy;
+    
     /* */
     @NotNull(message = "{validate.not_null}")
     @NumberFormat
     private Double sell;
 
+    /* round to floor hundress*/
+    @NumberFormat
+    private Double roundSell;
+    
     public Long getCurrency() {
         return currency;
     }
@@ -79,6 +88,22 @@ public class LiXiExchangeRateForm {
 
     public void setSell(Double sell) {
         this.sell = sell;
+    }
+    
+    public Double getRoundBuy() {
+        return roundBuy;
+    }
+
+    public void setRoundBuy(Double roundBuy) {
+        this.roundBuy = roundBuy;
+    }
+
+    public Double getRoundSell() {
+        return roundSell;
+    }
+
+    public void setRoundSell(Double roundSell) {
+        this.roundSell = roundSell;
     }
 
     public Double getBuyPercentage() {

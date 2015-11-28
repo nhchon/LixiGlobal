@@ -156,8 +156,8 @@ public class SystemConfigController {
                 lixiexr.setTimeInput(timeFormat.parse(form.getTimeInput()));
             } catch (Exception e) {
             }
-            lixiexr.setBuy(form.getBuy());
-            lixiexr.setSell(form.getSell());
+            lixiexr.setBuy(form.getRoundBuy());
+            lixiexr.setSell(form.getRoundSell());
             lixiexr.setBuyPercentage(form.getBuyPercentage());
             lixiexr.setSellPercentage(form.getSellPercentage());
             lixiexr.setCurrency(this.currencyService.findOne(form.getCurrency()));

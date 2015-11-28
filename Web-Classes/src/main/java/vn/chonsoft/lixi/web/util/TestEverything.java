@@ -4,16 +4,9 @@
  */
 package vn.chonsoft.lixi.web.util;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -28,6 +21,9 @@ public class TestEverything {
     }
     
     public static void main(String[] args) {
+        
+        System.out.println(Math.floor(21766.8/100)*100);
+        /*
         String result = "Manchester United 1 Chelsea 0, Manchester United 2 Liverpool 0, Manchester United 1 Totemham 1, Asernal 4 Manchester United 2";
         String[] arrs = result.split(",");
         // [Thang, Hoa, Thua]
@@ -47,6 +43,7 @@ public class TestEverything {
             }
         }
         System.out.println(Arrays.toString(muResult));
+                */
         //Book b = new Book();
         //b.setTitle("ABC");
         //b.setAuthor("XYZ");

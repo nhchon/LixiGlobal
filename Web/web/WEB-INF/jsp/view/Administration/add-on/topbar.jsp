@@ -33,14 +33,6 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Orders <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="<c:url value="/Administration/Orders/newOrders"/>">New Orders</a></li>
-                        <!--
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                        -->
                     </ul>
                 </li>
                 <li id="m03" class="dropdown <c:if test="${m03 eq true}">active</c:if>">
@@ -48,13 +40,6 @@
                     <ul class="dropdown-menu">
                         <li><a href="<c:url value="/Administration/SystemConfig/categories"/>">Categories</a></li>
                         <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">LiXi Exchange Rate</a></li>
-                        <!--
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                        -->
                     </ul>
                 </li>
                 <li id="m05" class="dropdown <c:if test="${m05 eq true}">active</c:if> ">
@@ -62,20 +47,14 @@
                     <ul class="dropdown-menu">
                         <li><a href="<c:url value="/Administration/SystemUser/list"/>">User List</a></li>
                         <li><a href="<c:url value="/Administration/SystemUser/add"/>">Add New</a></li>
-                        <!--
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                        -->
                     </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="javascript:void(0);"><b>Hello <security:authentication property="principal.username"/></b></a></li>
                 <li><a href="javascript:void(0);">Help</a></li>
                 <li class="active"><a href="javascript:void(0);">Profile<span class="sr-only">(current)</span></a></li>
-                <li><a href="javascript:void(0);">Log Out</a></li>
+                <li><a href="<c:url value="/Administration/logout"/>">Log Out</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

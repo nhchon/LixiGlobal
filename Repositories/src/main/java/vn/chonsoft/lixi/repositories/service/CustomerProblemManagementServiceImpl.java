@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.chonsoft.lixi.model.support.CustomerProblem;
 import vn.chonsoft.lixi.model.support.CustomerProblemManagement;
 import vn.chonsoft.lixi.model.support.CustomerProblemStatus;
 import vn.chonsoft.lixi.repositories.CustomerProblemManagementRepository;
@@ -46,6 +47,18 @@ public class CustomerProblemManagementServiceImpl implements CustomerProblemMana
     public CustomerProblemManagement find(Long id){
         
         return this.repository.findOne(id);
+        
+    }
+    
+    /**
+     * 
+     * @param problem
+     * @return 
+     */
+    @Override
+    public CustomerProblemManagement findByProblem(CustomerProblem problem){
+        
+        return this.repository.findByProblem(problem);
         
     }
     /**

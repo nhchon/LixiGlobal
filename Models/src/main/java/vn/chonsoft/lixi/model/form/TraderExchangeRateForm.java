@@ -26,10 +26,12 @@ public class TraderExchangeRateForm {
     @NotNull(message = "{validate.not_null}")
     @NumberFormat
     private Double buy;
+    
     /* */
     @NotNull(message = "{validate.not_null}")
     @NumberFormat
     private Double sell;
+    
     /* */
     private Double vcbBuy;
     /* */

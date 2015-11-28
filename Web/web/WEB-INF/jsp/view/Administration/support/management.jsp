@@ -61,7 +61,7 @@
                                         <tr>
                                             <td>${iss.problem.id}</td>
                                             <td>
-                                                <a href="<c:url value="/Administration/SystemSupport/detail/${iss.problem.id}"/>">${iss.problem.subject.subject}</a>
+                                                <a href="<c:url value="/Administration/SystemSupport/detail/${iss.problem.id}?rl=management"/>">${iss.problem.subject.subject}</a>
                                             </td>
                                             <td>${iss.problem.orderId}</td>
                                             <td>${iss.problem.contactData}</td>

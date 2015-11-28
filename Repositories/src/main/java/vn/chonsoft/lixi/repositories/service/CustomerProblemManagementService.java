@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import vn.chonsoft.lixi.model.support.CustomerProblem;
 import vn.chonsoft.lixi.model.support.CustomerProblemManagement;
 import vn.chonsoft.lixi.model.support.CustomerProblemStatus;
 
@@ -18,6 +19,8 @@ public interface CustomerProblemManagementService {
     CustomerProblemManagement save(CustomerProblemManagement cpm);
     
     CustomerProblemManagement find(Long id);
+    
+    CustomerProblemManagement findByProblem(CustomerProblem problem);
     
     Page<CustomerProblemManagement> findAll(Pageable page);
     
