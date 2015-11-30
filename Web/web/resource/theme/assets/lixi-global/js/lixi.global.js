@@ -154,6 +154,54 @@ LixiGlobal.Gift = {
             inputObj.val(parseInt(inputObj.val()) - 1);
         }
         return  false;
+    },
+    chooseGiftItem: function (_obj) {
+        var obj = $(_obj);
+        var giftItemObj = obj.closest('.gift-product-item');
+        var selectedClass = 'gift-product-item-selected';
+        var buyBtnObj = giftItemObj.find('.btn-buy-item-event');
+        if (obj.is(":checked")) {
+            giftItemObj.addClass(selectedClass);
+            buyBtnObj.html("Cancel").attr('data-action', 'Cancel');
+        } else {
+            giftItemObj.removeClass(selectedClass);
+            buyBtnObj.html("Buy").attr('data-action', 'Buy');
+        }
+    },
+    initSentGiftPage: function () {
+        $('.btn-buy-item-event').click(function () {
+            var obj = $(this);
+            var giftItemObj = obj.closest('.gift-product-item');
+            if ((typeof obj.attr('data-action') !== "undefined") && (obj.attr('data-action') === "Cancel")) {
+                giftItemObj.find('.gift-item-checkbox input').prop("checked", false);
+                giftItemObj.find('.gift-item-checkbox .custom-checkbox').removeClass("selected");
+                obj.html("Buy").attr('data-action', 'Buy');
+            } else {
+                giftItemObj.find('.gift-item-checkbox input').prop("checked", true);
+                giftItemObj.find('.gift-item-checkbox .custom-checkbox').addClass("selected");
+                giftItemObj.addClass(selectedClass);
+                obj.html("Cancel").attr('data-action', 'Cancel');
+            }
+        });
+        var items = $('.gift-filter-items').find('.gift-product-item-col');
+        if (items.length > 0) {
+            var selectedClass = 'gift-product-item-selected';
+            $('.gift-filter-items').find('.gift-product-item-col').each(function (index) {
+                var objItem = $(this);
+                if (objItem.find('.gift-item-checkbox input').is(":checked")) {
+                    objItem.find('.gift-product-item').addClass(selectedClass);
+                    var buyBtnObj = objItem.find('.btn-buy-item-event');
+                    buyBtnObj.html("Cancel").attr('data-action', 'Cancel');
+                }
+            });
+        }
+        $('#pagination-data').twbsPagination({
+            totalPages: 90,
+            visiblePages: 9,
+            onPageClick: function (event, page) {
+                console.log(page);
+            }
+        });
     }
 };
 LixiGlobal.Quality = {
@@ -211,7 +259,7 @@ LixiGlobal.Chat = {
                 name: {
                     required: true
                 },
-                content:{
+                content: {
                     required: true,
                     minlength: 10
                 }
@@ -342,5 +390,8 @@ jQuery(document).ready(function () {
     }
     if ($('form.formSupportEmail').length > 0) {
         LixiGlobal.Support.initSupportEmail();
+    }
+    if ($('.gift-filter-wrapper').length > 0) {
+        LixiGlobal.Gift.initSentGiftPage();
     }
 });

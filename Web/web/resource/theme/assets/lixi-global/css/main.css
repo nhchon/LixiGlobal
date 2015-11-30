@@ -971,6 +971,13 @@ textarea{
     background: url(../images/icon-star-yellow.png) no-repeat scroll 0 center transparent;
 }
 /* End form validate*/
+
+.pagination-wrapper{
+    text-align:  center;
+}
+.pagination-wrapper #pagination-data{
+    margin: 0 auto;
+}
 /*==================================================
 =            Bootstrap 3 Media Queries             =
 ==================================================*/
