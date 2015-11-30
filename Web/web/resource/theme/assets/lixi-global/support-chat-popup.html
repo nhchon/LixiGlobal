@@ -1,0 +1,34 @@
+<span class="float-right sound-icon sound-off">
+    Sound
+    <input type="checkbox" class="onOffSound" checked="checked" value="1" name="onOffSound"/>
+</span>
+<h3 class="title">chat</h3>
+<p>Please complete the form below to get strated</p>
+<p class="text-color-link">*Required Fields</p>
+<form class="chat-form" method="post">
+    <div class="form-group">
+        <label>Name:<sup>*</sup></label>
+        <input class="form-control" required="true" name="name" placeholder="Name"/>
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input class="form-control" id="email" required="true" name="email" placeholder="Email"/>
+    </div>
+    <div class="form-group">
+        <label for="content">How can we help you today?</label>
+        <textarea class="form-control" required="true" name="content" placeholder="ABC DEF"></textarea>
+    </div>
+
+    <div class="button-control text-center">
+        <button  class="btn btn-default btn-cancel-dialog text-uppercase" type="reset">Cancel</button>
+        <button type="submit" class="btn btn-primary text-uppercase">start chat</button>
+    </div>
+</form>
+<div class="border-bottom"></div>
+<div>Ready to Connect</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        LixiGlobal.Chat.initOnOffSound();
+        LixiGlobal.Chat.submit();
+    });
+</script>
