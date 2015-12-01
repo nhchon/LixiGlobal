@@ -1,126 +1,180 @@
-<template:Client htmlTitle="LiXi Global">
-    
+<template:Client htmlTitle="Home - LiXi Global">
+
     <jsp:attribute name="extraHeadContent">
-        <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/home.css"/>" type="text/css" />
     </jsp:attribute>
-        
+
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
-            /** Page Script **/
-            var startViewport = null;
-            var resizing = false;
-            var getViewport = function () {
-                var viewPortWidth;
-                var viewPortHeight;
-                if (typeof window.innerWidth != 'undefined') {
-                    viewPortWidth = window.innerWidth,
-                            viewPortHeight = window.innerHeight
-                }
-                else if (typeof document.documentElement != 'undefined'
-                        && typeof document.documentElement.clientWidth != 'undefined' && document.documentElement.clientWidth != 0) {
-                    viewPortWidth = document.documentElement.clientWidth,
-                            viewPortHeight = document.documentElement.clientHeight
-                }
-                else {
-                    viewPortWidth = document.getElementsByTagName('body')[0].clientWidth,
-                            viewPortHeight = document.getElementsByTagName('body')[0].clientHeight
-                }
-                return [viewPortWidth, viewPortHeight];
-            };
-            var resize = function () {
-                resizing = true;
-                var viewport = getViewport();
-                var width = viewport[0];
-                var height = viewport[1];
-                var bodyHeight = $('#wrapper').outerHeight() + 95;
-                if (bodyHeight < height) {
-                    var val = (height - bodyHeight) / 2;
-                    var imgWidth = 1280;
-                    var imgHeight = 825;
-                    var ratio = imgWidth / imgHeight;
-                    var maxHeight = width / ratio;
-                    var homeHeight = $('#home').outerHeight() + val + val;
-                    $('#home').css({
-                        paddingTop: val + 'px'
-                    });
-                    $('#star-desc').css({
-                        paddingTop: (val + 15) + 'px'
-                    });
-                    if (homeHeight > maxHeight) {
-                        $('#home').addClass('bg-height-full');
-                    } else {
-                        $('#home').removeClass('bg-height-full');
-                    }
-                } else {
-                    $('#home').css({
-                        paddingTop: '0px'
-                    });
-                    $('#star-desc').css({
-                        paddingTop: '0px'
-                    });
-                }
-                resizing = false;
-            };
-            $(document).ready(function () {
-                startViewport = getViewport();
-                resize();
-                setInterval(function () {
-                    if (resizing)
-                        return;
-                    var newViewport = getViewport();
-                    if (newViewport[0] != startViewport[0] || newViewport[1] != startViewport[1]) {
-                        startViewport = newViewport;
-                        resize();
-                    }
-                }, 200)
-            });
         </script>
     </jsp:attribute>
-        
+
     <jsp:body>
-            <section id="home">
-                <div class="container">
-                    <div class="row">
-                        <div class="usp-wrapper">
-                            <div class="usp">
-                                <spring:message code="message.gift_easier"/>...
-                                <br />
-                                <spring:message code="message.in"/>&nbsp;<span class="strong"><spring:message code="message.three_steps"/></span>
-                                <br />
-                                <spring:message code="message.with_a_simple_fee"/>&nbsp;<span class="price">$1.00</span><span class="star">*</span>
-                            </div>
-                        </div>
-                        <div class="desc">
-                            <div class="col-lg-1 col-md-1 hidden-sm hidden-xs"></div>
-                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 img choose-value">
-                                <p><spring:message code="message.step1"/></p>
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-1 col-xs-12 img arrow"></div>
-                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 img make-payment">
-                                <p><spring:message code="message.step2"/></p>
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-1 col-xs-12 img arrow"></div>
-                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 img send-gift">
-                                <p><spring:message code="message.step3"/></p>
-                            </div>
-                            <div class="col-lg-1 col-md-1 hidden-sm hidden-xs"></div>
-                        </div>
-                        <div class="desc-txt hidden-xs">
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <p><spring:message code="message.step1"/></p>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <p><spring:message code="message.step2"/></p>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <p><spring:message code="message.step3"/></p>
-                            </div>
-                        </div>
-                        <div id="star-desc" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 star-desc">
-                            * <spring:message code="message.lixi_note"/>
+        <section class="section-slider text-right">
+            <img src="<c:url value="/resource/theme/assets/lixi-global/images/slider.jpg"/>"/>
+        </section>
+
+        <section class="section-gift">
+            <div class="container">
+                <div class="section-gift-top">
+                    <h2 class="text-center ">Gifting overseas has never been easier...<br/>
+                        <strong>in three easy steps</strong><br/> 
+                        with a simple fee of just <strong>USD $ 1.00<sup>*</sup></strong></h2>
+                    <div class="change-curency-box">
+                        <div class="btn-group">
+                            <button class="btn change-curency-box-des" type="button">
+                                <span class="des-box">Your locked-in exchange rate</span>
+                                <span class="amount-box">USD $ 1 = <strong>VND 23,000</strong> Vietnam Dong</span>
+                            </button>
+                            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
+                                <span class="flag flag-vn"></span>
+                                <i class="fa fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a class="flag-link" href="#change-rate" rel="tooltip" title="English"><span class="flag flag-en"></span></a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </section>
+                <div class="section-gift-bottom text-center">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3">
+                            <div class="gif-by-step">
+                                <span class="fa-stack fa-6x fa-stack-gift">
+                                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                                    <i class="fa fa-newspaper-o fa-stack-1x fa-stack-custom fa-inverse"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                                <h3>Choose the gift<br/>you want to buy</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-xs-1 col-has-gift-arrow">
+                            <div class="arrow-right">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="gif-by-step">
+                                <span class="fa-stack fa-6x fa-stack-gift">
+                                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                                    <i class="fa fa-credit-card fa-stack-1x fa-stack-custom  fa-inverse"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                                <h3>Pay by Credit/Debit Card<br/> or with bank account
+                            </div>
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-xs-1  col-has-gift-arrow">
+                            <div class="arrow-right">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="gif-by-step">
+                                <span class="fa-stack fa-6x fa-stack-gift">
+                                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                                    <i class="fa fa-send fa-stack-1x fa-stack-custom  fa-inverse"></i>
+                                </span>
+                                <div class="clearfix"></div>
+                                <h3>Confirmation is sent<br/>
+                                    right away<br/>
+                                    to the receiver </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gift-category">
+                    <h2 class="title text-center"><span>gift select your category</span></h2>
+                    <div class="gift-category-content">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="gift-item">
+                                    <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-01.png"/>) no-repeat scroll 0% 0%"></div>
+                                    <div class="gift-item-col-content">
+                                        <div class="gift-item-col-content-text">
+                                            <span class="gift-arrow-item gift-arrow-item-top"></span>
+                                            <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.perfume.en}</a></h2>
+                                            <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="gift-item">
+                                    <div class="gift-item-col-thumb" style="background: transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-03.png"/>) no-repeat scroll 0% 0%; min-height: 182px;"></div>
+                                    <div class="gift-item-col-content">
+                                        <div class="gift-item-col-content-text">
+                                            <span class="gift-arrow-item gift-arrow-item-top"></span>
+                                            <h2 class="gift-item-col-content-title"><a href="#shop-now">MOBILE CARDS</a></h2>
+                                            <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9 col-sm-9">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="gift-item">
+                                            <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-04.png"/>) no-repeat scroll 0% 0%; min-height: 287px;"></div>
+                                            <div class="gift-item-col-content">
+                                                <div class="gift-item-col-content-text">
+                                                    <span class="gift-arrow-item gift-arrow-item-top"></span>
+                                                    <h2 class="gift-item-col-content-title">${categories.cosmetics.en}</h2>
+                                                    <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="gift-item gift-item-text-on-left">
+                                            <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-05.png"/>) no-repeat scroll 0% 0%"></div>
+                                            <div class="gift-item-col-content">
+                                                <div class="gift-item-col-content-text">
+                                                    <span class="gift-arrow-item gift-arrow-item-top"></span>
+                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.candies.en}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="gift-item gift-item-text-on-left">
+                                            <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-06.png"/>) no-repeat scroll 0% 0%"></div>
+                                            <div class="gift-item-col-content">
+                                                <div class="gift-item-col-content-text">
+                                                    <span class="gift-arrow-item gift-arrow-item-top"></span>
+                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.flowers.en}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="gift-item gift-item-text-on-right">
+                                            <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-02.png"/>) no-repeat scroll 0% 0%"></div>
+                                            <div class="gift-item-col-content">
+                                                <div class="gift-item-col-content-text">
+                                                    <span class="gift-arrow-item gift-arrow-item-top"></span>
+                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.jewelries.en}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="gift-item gift-item-text-on-right gift-item-text-full">
+                                    <div class="gift-item-col-thumb" style="background: url(<c:url value="/resource/theme/assets/lixi-global/images/img-07.png"/>)"></div>
+                                    <div class="gift-item-col-content">
+                                        <div class="gift-item-col-content-text">
+                                            <span class="gift-arrow-item gift-arrow-item-top"></span>
+                                            <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.childrentoy.en}</a></h2>
+                                            <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </jsp:body>
 </template:Client>

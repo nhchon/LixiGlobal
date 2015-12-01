@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -19,11 +20,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.beans.CategoriesBean;
 
 /**
  *
@@ -34,19 +37,19 @@ public class IndexController {
 
     private static final Logger log = LogManager.getLogger(IndexController.class);
     
-    /**
-     *
-     * for common header content
-     *
-     * @return
-     */
-    @RequestMapping(value = "/test-round-up", method = {RequestMethod.GET, RequestMethod.POST})
-    public String testRoundUp() {
-        return "test-round-up";
-    }
+    @Autowired
+    private CategoriesBean categories;
     
+    /**
+     * 
+     * @param model 
+     * @return 
+     */
     @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
-    public String index() {
+    public String index(Map<String, Object> model) {
+        
+        model.put("categories", categories);
+        
         return "index";
     }
 
@@ -61,6 +64,16 @@ public class IndexController {
         return "top";
     }
 
+    /**
+     * 
+     * @return 
+     */
+    @RequestMapping(value = "/registerPage", method = RequestMethod.GET)
+    public String registerPage() {
+        
+        return "user/register";
+        
+    }
     /**
      *
      * for static footer content

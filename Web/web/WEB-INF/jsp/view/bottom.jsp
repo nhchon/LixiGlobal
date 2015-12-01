@@ -1,30 +1,51 @@
-<section id="footer" style="padding: 0px 0px">
+<footer>
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="links">
-                    <a href="javascript:void(0);">Home</a>
-                    <span>|</span>
-                    <a href="javascript:void(0);">About us</a>
-                    <br class="visible-xs" />
-                    <span class="hidden-xs">|</span>
-                    <a href="<c:url value="/support/post"/>">Terms & Privacy</a>
-                    <span>|</span>
-                    <a href="javascript:void(0);">Contact</a>
-                    <span>|</span>
-                    <a href="javascript:void(0);">Jobs</a>
-                    <span>|</span>
-                    <a href="<c:url value="/trader/login"/>">Traders</a>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="copyright">
-                    <span>Condition of Use Privacy Notice. 2015, lixi.global Inc or its afiliates</span>
+        <div class="footer-top">
+            <div class="row">
+                <div class="row-height">
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-height">
+                        <div class="footer-box">
+                            <div class="footer-logo"><a href="index.html"><img src="<c:url value="/resource/theme/assets/lixi-global/images/logo-white.png"/>"/></a></div>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-height">
+                        <div class="footer-box">
+                            <h2><span>Contact</span></h2>
+                            <p>33329 W. Apollo Rd Phoenix,<br/>A285041 USA </p>
+                            <div>
+                                <ul>
+                                    <li><a href="term-of-user.html">Term of Use</a></li>
+                                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-height">
+                        <div class="footer-box">
+                            <h2><span>Follow Us</span></h2>
+                            <div>
+                                <ul class="footer-social">
+                                    <li><a href="#link-data"><span><i class="fa fa-pinterest"></i></span>Pinterest</a></li>
+                                    <li><a href="#link-data"><span><i class="fa fa-facebook"></i></span>Facebook</a></li>
+                                    <li><a href="#link-data"><span><i class="fa fa-twitter"></i></span>Twitter</a></li>
+                                    <li><a href="#link-data"><span><i class="fa fa-instagram"></i></span>Instagram</a></li>
+                                    <li><a href="#link-data"><span><i class="fa fa-linkedin-square"></i></span>Linkedin</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="footer-bottom text-center">
+            <p>Copyright Lixi. All Right Reserved.</p>
+        </div>
     </div>
-</section>
+</footer>
+
 <div id="overlay" style="display:none;background-color: gray">
     <div style="padding: 20px 10px;width:100%;display: inline-block;position: relative">
         <div class="progress progress-striped active">

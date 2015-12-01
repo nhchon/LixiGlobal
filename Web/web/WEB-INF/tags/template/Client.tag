@@ -3,7 +3,7 @@
 <%@attribute name="extraHeadContent" fragment="true" required="false" %>
 <%@attribute name="extraJavascriptContent" fragment="true" required="false" %>
 <%@include file="/WEB-INF/jsp/base.jspf" %>
-<template:CoreClient htmlTitle="${htmlTitle}">
+<template:CoreClient2 htmlTitle="${htmlTitle}">
     <jsp:attribute name="headContent">
         <jsp:invoke fragment="extraHeadContent" />
     </jsp:attribute>
@@ -23,4 +23,4 @@
     <jsp:body>
         <jsp:doBody />
     </jsp:body>
-</template:CoreClient>
+</template:CoreClient2>

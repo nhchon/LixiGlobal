@@ -55,6 +55,7 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import vn.chonsoft.lixi.web.beans.CategoriesBean;
 import vn.chonsoft.lixi.web.beans.CreditCardProcesses;
 import vn.chonsoft.lixi.web.beans.VtcPayClient;
 import vn.chonsoft.lixi.web.beans.LiXiSecurityManager;
@@ -88,7 +89,8 @@ import vn.chonsoft.lixi.web.beans.TripleDES;
         excludeFilters =
         @ComponentScan.Filter({Controller.class, ControllerAdvice.class})
 )
-@PropertySource(value = { "classpath:lixi.properties" })
+@PropertySource(value = { "classpath:lixi.properties",  "classpath:categories.properties"})
+
 @Import({ SecurityConfiguration.class })
 public class RootContextConfiguration  implements
         AsyncConfigurer, SchedulingConfigurer{
@@ -332,6 +334,23 @@ public class RootContextConfiguration  implements
         return new LixiAsyncMethodsImpl();
     }
     
+    /**
+     * 
+     * @return 
+     */
+    @Bean
+    public CategoriesBean categoriesBean(){
+        
+        CategoriesBean c = new CategoriesBean();
+        c.setCandies(c.new Category(env.getProperty("candies").split(",")));
+        c.setJewelries(c.new Category(env.getProperty("jewelries").split(",")));
+        c.setPerfume(c.new Category(env.getProperty("perfume").split(",")));
+        c.setCosmetics(c.new Category(env.getProperty("cosmetics").split(",")));
+        c.setChildrentoy(c.new Category(env.getProperty("childrentoy").split(",")));
+        c.setFlowers(c.new Category(env.getProperty("flowers").split(",")));
+        
+        return c;
+    }
     /**
      * 
      * http://stackoverflow.com/questions/17097521/spring-3-2-value-annotation-

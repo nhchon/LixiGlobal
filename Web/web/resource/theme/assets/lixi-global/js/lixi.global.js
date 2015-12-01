@@ -35,7 +35,7 @@ LixiGlobal.User = {
             size: BootstrapDialog.SIZE_WIDE,
             cssClass: 'dialog-no-header',
             title: 'Register',
-            message: $('<div class="login-register-wrapper"><span class="loading-progress"></span></div>').load(siteUrl + 'register.html')
+            message: $('<div class="login-register-wrapper"><span class="loading-progress"></span></div>').load(registerPage)//siteUrl + 'register.html'
         });
     },
     loginFormInit: function () {
@@ -302,10 +302,12 @@ LixiGlobal.Dialog = {
         });
     }
 };
+
+
 jQuery(document).ready(function () {
-    $('.nav-login-event, .nav-register-event').click(function () {
-        LixiGlobal.User.registerPopup();
-    });
+    //$('.nav-login-event, .nav-register-event').click(function () {
+    //LixiGlobal.User.registerPopup();
+    //});
     $('[rel=tooltip]').tooltip();
     LixiGlobal.Menu.effectMainMenu();
     jQuery(window).resize(function () {

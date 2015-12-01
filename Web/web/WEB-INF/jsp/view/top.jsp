@@ -1,34 +1,119 @@
-<section id="header">
-    <div class="container">
-        <div class="row">
-            <a id="logo" href="<c:url value="/"/>"><img alt="Logo" src="<c:url value="/resource/theme/assets/lixiglobal/img/logo.png"/>" /></a>
-            <a id="menu-toggle"><i class="fa fa-bars"></i></a>
-            <ul id="menu-items">
-                <c:if test="${not empty TRADER_LOGIN_USERNAME}">
-                    <li class="hidden-sm"><a href="<c:url value="/user/signOut"/>">Sign Out</a></li>
-                    </c:if>
-
-                <c:if test="${empty TRADER_LOGIN_USERNAME}">
-                    <c:if test="${not empty USER_LOGIN_EMAIL}">
-                        <li class="hidden-sm"><a class="welcome">Welcome ${USER_LOGIN_FIRST_NAME}</a></li>
-                        <li class="separator hidden-sm"><span>|</span></li>
-                        <li><a href="<c:url value="/gifts/recipient"/>">Send a Gift</a></li>
-                        <li class="separator"><span>|</span></li>
-                        <li><a href="<c:url value="/user/yourAccount"/>">Your Account</a></li>
-                        <li class="separator hidden-sm"><span>|</span></li>
-                        <li class="hidden-sm"><a href="help.html">Help</a></li>
-                        <li class="separator hidden-sm"><span>|</span></li>
-                        <li class="hidden-sm"><a href="<c:url value="/user/signOut"/>">Sign Out</a></li>
-                        </c:if>
-                        <c:if test="${empty USER_LOGIN_EMAIL}">
-                        <li><a href="<c:url value="/user/signIn"/>"><spring:message code="message.sign_in"/></a></li>
-                        </c:if>
-                    </c:if>
-                <li class="languages">
-                    <a><spring:message code="message.tieng_viet"/></a>
-                    <a class="active"><spring:message code="message.english"/></a>
-                </li>
-            </ul>
+<header>
+    <nav class="navbar navbar-default navbar-top">
+        <div class="container">
+            <div class="navbar-collapse" id="navbar-collapse-top">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-login">
+                        <a class="hvr-underline-from-center nav-login-event" href="<c:url value="/user/register?a=login"/>"><i class="fa fa-user"></i> LOGIN</a>
+                    </li>
+                    <li>
+                        <a class="hvr-underline-from-center nav-register-event" href="<c:url value="/user/register?a=join"/>">REGISTER</a>
+                    </li>
+                    <li class="has-dropdown dropdown pull-right nav-language">
+                        <a class="hvr-underline-from-center" data-toggle="dropdown" href="#change-language"><span class="language-text">EN</span> <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">VN</a>
+                            </li>	
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
         </div>
-    </div>
-</section>
+    </nav>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-main">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+
+                <button type="button" class="navbar-toggle navbar-toggle-event" data-toggle="collapse" data-target="#navbar-collapse-main">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--                            <button type="button" class="navbar-toggle navbar-cart navbar-cart-event" data-toggle="collapse" data-target="#navbar-collapse-main">
+                                                <i class="fa fa-cart-plus"></i>
+                                            </button>-->
+                <a class="navbar-brand page-scroll" href="<c:url value="/"/>">
+                    <img src="<c:url value="/resource/theme/assets/lixi-global/images/logo.png"/>"/>
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="navbar-collapse-main">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a class="hvr-underline-from-center nav-link" href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a class="hvr-underline-from-center nav-link" href="send-gift.html">Send gift</a>
+                    </li>
+                    <li class="has-dropdown dropdown">
+                        <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="account.html">Account <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu nav-level-1">
+                            <li>
+                                <a class="nav-sub-link no-boder-top" href="order-history.html">Orders</a>
+                                <ul class="nav-level-2">
+                                    <li><a href="order-history.html">View, Track<br/> or cancel an orders</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a class="nav-sub-link" href="#payment-link">Payment Method</a>
+                                <ul class="nav-level-2">
+                                    <li><a href="payment.html">Manage payment options</a></li>
+                                    <li><a href="add-a-payment.html">Add a Credit/ Debit cards</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a class="nav-sub-link" href="#">Account setting</a>
+                                <ul class="nav-level-2">
+                                    <li><a href="account.html">Change email, password,<br/> name and mobile phone</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-dropdown dropdown">
+                        <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="support.html">Support <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu nav-level-1">
+                            <li>
+                                <a class="nav-sub-link no-boder-top" href="privacy-policy.html">Refund Policy</a>
+                            </li>
+                            <li>
+                                <a class="nav-sub-link" href="#">Customer Service</a>
+                                <ul class="nav-level-2">
+                                    <li><a href="support-email.html">Email</a></li>
+                                    <li><a href="support-phone.html">Phone</a></li>
+                                    <li><a href="support-chat.html">Chat</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="nav-search">
+                        <form class="search-form" method="post">
+                            <input class="form-control" name="keyword" placeholder="Keyword..."/>
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </li>
+                    <li class="nav-cart-wrapper">
+                        <a class="nav-cart-event" href="#view-cart">
+                            <div class="nav-cart">
+                                <div class="nav-cart-en">USD $150</div>
+                                <div class="nav-cart-vn">VND 3,000,000</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+</header>

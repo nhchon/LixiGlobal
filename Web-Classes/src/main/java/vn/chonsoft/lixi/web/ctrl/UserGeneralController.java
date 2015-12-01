@@ -88,6 +88,23 @@ public class UserGeneralController {
     
     @Inject
     private ThreadPoolTaskScheduler taskScheduler;
+    
+    ////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "register", method = RequestMethod.GET)
+    public ModelAndView register(Map<String, Object> model, @RequestParam String a){
+        
+        //
+        model.put("userSignUpForm", new UserSignUpForm());
+        
+        //
+        model.put("userSignInForm", new UserSignInForm());
+        
+        // forward action
+        model.put("action", a);
+        
+        return new ModelAndView("user2/register");
+    }
+    ////////////////////////////////////////////////////////////////////////////
     /**
      * 
      * @param model
@@ -97,7 +114,7 @@ public class UserGeneralController {
     public String signUp(Map<String, Object> model) {
 
         model.put("userSignUpForm", new UserSignUpForm());
-        return "user/signUp";
+        return "user2/register";
     }
     
     /**

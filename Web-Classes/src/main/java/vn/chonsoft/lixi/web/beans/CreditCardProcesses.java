@@ -14,7 +14,6 @@ import net.authorize.api.controller.CreateCustomerPaymentProfileController;
 import net.authorize.api.controller.CreateCustomerProfileController;
 import net.authorize.api.controller.base.ApiOperationBase;
 import net.authorize.api.controller.CreateTransactionController;
-import net.authorize.cim.ValidationModeType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
