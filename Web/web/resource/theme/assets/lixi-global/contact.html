@@ -50,7 +50,7 @@
                                 <li>
                                     <a class="hvr-underline-from-center nav-register-event" href="#dang-ky">REGISTER</a>
                                 </li>
-                                <li class="has-dropdown dropdown pull-right nav-language">
+                                <li class="has-dropdown dropdown nav-language">
                                     <a class="hvr-underline-from-center" data-toggle="dropdown" href="#change-language"><span class="language-text">EN</span> <i class="fa fa-angle-down"></i></a>
                                     <ul class="dropdown-menu">
                                         <li>
@@ -179,8 +179,9 @@
                     </div>
                 </div>
                 <div class="contact-section-content">
+                    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                    <div id="map"></div>
 
-                    
                 </div>
                 <div class="container">
 
@@ -220,7 +221,7 @@
                                         <i class="fa fa-phone"></i>&nbsp;&nbsp;<strong class="text-uppercase">Phone:</strong> 21564852
                                     </div>
                                     <div>
-                                        <i class="fa fa-phone"></i>&nbsp;&nbsp;<strong class="text-uppercase">email:</strong> info@lixi.global
+                                        <i class="fa fa-envelope"></i>&nbsp;&nbsp;<strong class="text-uppercase">email:</strong> info@lixi.global
                                     </div>
                                 </div>
                             </div>
@@ -289,7 +290,102 @@
         <script src="js/vendor/lixi.global-extend-js.js"></script>
         <script src="js/vendor/jquery.mCustomScrollbar.min.js"></script>
         <script src="js/lixi.global.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
+        <script>
 
+            // This example adds a search box to a map, using the Google Place Autocomplete
+// feature. People can enter geographical searches. The search box will return a
+// pick list containing a mix of places and predicted search terms.
+
+            function initAutocomplete() {
+                var lat = 33.852681;
+                var lng = -112.130629;
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: lat, lng: lng},
+                    zoom: 13,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+
+                // Create the search box and link it to the UI element.
+                var input = document.getElementById('pac-input');
+                var searchBox = new google.maps.places.SearchBox(input);
+                map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+                // Bias the SearchBox results towards current map's viewport.
+                map.addListener('bounds_changed', function () {
+                    searchBox.setBounds(map.getBounds());
+                });
+
+                var markers = [];
+                // Listen for the event fired when the user selects a prediction and retrieve
+                // more details for that place.
+                searchBox.addListener('places_changed', function () {
+                    var places = searchBox.getPlaces();
+
+                    if (places.length === 0) {
+                        return;
+                    }
+
+                    // Clear out the old markers.
+                    markers.forEach(function (marker) {
+                        marker.setMap(null);
+                    });
+                    markers = [];
+
+                    // For each place, get the icon, name and location.
+                    var bounds = new google.maps.LatLngBounds();
+                    places.forEach(function (place) {
+                        var icon = {
+                            url: place.icon,
+                            size: new google.maps.Size(71, 71),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(17, 34),
+                            scaledSize: new google.maps.Size(25, 25)
+                        };
+
+                        // Create a marker for each place.
+                        markers.push(new google.maps.Marker({
+                            map: map,
+                            icon: icon,
+                            title: place.name,
+                            position: place.geometry.location
+                        }));
+
+                        if (place.geometry.viewport) {
+                            // Only geocodes have viewport.
+                            bounds.union(place.geometry.viewport);
+                        } else {
+                            bounds.extend(place.geometry.location);
+                        }
+                    });
+                    map.fitBounds(bounds);
+                });
+                var myLatLng = new google.maps.LatLng(lat, lng);
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    title: 'Everest'
+                });
+                var title_site = 'LIXI.GLOBAL';
+                var phone_site = 'US+1 123456';
+                var email_to = '<a style="color:green;" href="mailto:contact@lixi.global">contact@lixi.global</a>';
+                var address_to = '33329 W. Apollo Rd Phoenix,vA285041 USA';
+                var infowindow = new google.maps.InfoWindow({
+                    content: "<div style='text-align: left; color:black;'><div  style=\"color: black; font-weight: bold; font-family: Arial; font-size: 0.9em\">" + title_site + "</div><div style=\"font-family: Arial; font-size: 0.9em\">Phone: " + phone_site + "</div><div style=\"font-family: Arial; font-size: 0.9em; color:black;\">Email: " + email_to + "</div><div style='clear:both;'></div><div style=\"font-family: Arial; font-size: 0.9em\">Address: " + address_to + "</div></div><div style='clear:both;'></div><div style=\"font-family: Arial; font-size: 0.9em; color:black;\">Website: <a style='color:green;' href='"+siteUrl+"'>"+siteUrl+"</a></div>",
+                    maxWidth: 625,
+                    boxStyle: {
+                        border: "1px solid black"
+                    },
+                    position: myLatLng,
+                    pixelOffset: new google.maps.Size(-1, 0)
+                });
+                infowindow.open(map);
+            }
+
+
+
+            google.maps.event.addDomListener(window, 'load', initAutocomplete);
+        </script>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
             /*(function (b, o, i, l, e, r) {

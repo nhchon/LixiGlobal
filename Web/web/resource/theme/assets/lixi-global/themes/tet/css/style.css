@@ -1,0 +1,151 @@
+/**
+* TET theme
+*/
+.section-slider-thumb {
+    background: transparent url("../images/slider.jpg") no-repeat scroll 0 0 / cover ;
+}
+.table-responsive-mobi td::before,
+.post-content-text h1, .post-content-text h2, .post-content-text h3, .post-content-text h4, .post-content-text h5, .post-content-text h6,
+.text-color-link,
+.dialog-no-header .bootstrap-dialog-close-button button,
+#navbar-collapse-main .nav-sub-link:hover,
+.gift-icon a:hover, 
+.gift-icon a:hover h5, 
+.gift-icon .active h5, 
+.gift-icon .active,
+.gift-filter-label,
+.section-gift-top h2,
+.title,
+.gif-by-step .text-primary,
+#navbar-collapse-main li a:hover,
+.gift-step .step-number,
+.gift-total-box span,
+.pagination > li > a, 
+.pagination > li > span,
+.gift-product-item .button-control .btn,
+.maximum-purchase,
+.button-control-page .btn,
+a:focus, a:hover {
+    color: #990012;
+}
+.gift-step a.active span,
+.gift-step a:hover span{
+    color: #fff;
+}
+.btn-primary {
+    background: #990012 none repeat scroll 0 0;
+    border-color:#990012;
+}
+.clean-paragraph {
+    background: rgba(0, 0, 0, 0) url("../images/bg-border-default.png") repeat-x scroll 0 center;
+}
+
+.form-control:focus {
+    border-color: #990012;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(237, 59, 111, 0.6);
+}
+.sound-icon {
+    background: rgba(0, 0, 0, 0) url("../images/icon-sound-on.png") no-repeat scroll right center;
+}
+
+
+.gift-item-col-content .gift-arrow-item-top {
+    background: transparent url("../images/icon-arrow-top.png") no-repeat scroll center top;
+}
+.gift-item.gift-item-text-on-left .gift-item-col-content .gift-arrow-item-top {
+    background: transparent url("../images/icon-arrow-right.png") no-repeat scroll right center;
+}
+
+.gift-item.gift-item-text-on-right .gift-item-col-content .gift-arrow-item-top {
+    background: transparent url("../images/icon-arrow-left.png") no-repeat scroll right center;
+}
+
+.gift-icon a.active .gift-icon-category.gift-icon-1, .gift-icon a:hover .gift-icon-category.gift-icon-1 {
+    background: rgba(0, 0, 0, 0) url("../images/gift-icon-01-hover.png") no-repeat scroll center center;
+}
+
+.gift-icon a.active .gift-icon-category.gift-icon-2, .gift-icon a:hover .gift-icon-category.gift-icon-2 {
+    background: rgba(0, 0, 0, 0) url("../images/gift-icon-02-hover.png") no-repeat scroll center center;
+}
+
+.gift-icon a.active .gift-icon-category.gift-icon-3, .gift-icon a:hover .gift-icon-category.gift-icon-3 {
+    background: rgba(0, 0, 0, 0) url("../images/gift-icon-03-hover.png") no-repeat scroll center center;
+}
+
+.gift-icon a.active .gift-icon-category.gift-icon-4, .gift-icon a:hover .gift-icon-category.gift-icon-4 {
+    background: rgba(0, 0, 0, 0) url("../images/gift-icon-04-hover.png") no-repeat scroll center center;
+}
+
+.gift-icon a.active .gift-icon-category.gift-icon-5, .gift-icon a:hover .gift-icon-category.gift-icon-5 {
+    background: rgba(0, 0, 0, 0) url("../images/gift-icon-05-hover.png") no-repeat scroll center center;
+}
+
+.gift-icon a.active .gift-icon-category.gift-icon-6, .gift-icon a:hover .gift-icon-category.gift-icon-6 {
+    background: rgba(0, 0, 0, 0) url("../images/gift-icon-06-hover.png") no-repeat scroll center center;
+}
+
+.gift-icon a.active .gift-icon-category.gift-icon-7, .gift-icon a:hover .gift-icon-category.gift-icon-7 {
+    background: rgba(0, 0, 0, 0) url("../images/gift-icon-07-hover.png") no-repeat scroll center center;
+}
+
+.panel-primary > .panel-heading,
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus,
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus,
+.slider-handle {
+    background-color: #990012;
+    border-color: #990012;
+}
+.table-responsive table thead {
+  background: #990012 none repeat scroll 0 0;
+}
+.btn-primary:hover,.btn-primary:focus,.btn-primary.focus,.btn-primary:active,.btn-primary.active,.open>.dropdown-toggle.btn-primary{
+    color:#fff;
+    background-color:#B7214B;
+    border-color:#F24F7D;
+}
+
+.gift-selection-step {
+    background: rgba(0, 0, 0, 0) url("../images/bg-border.png") repeat-x scroll 0 65px;
+}
+.gift-filter-control .tooltip.top .tooltip-arrow {
+    border-top-color: #990012;
+}
+.slider-handle {
+    background-color: #990012;
+    background-image: linear-gradient(to bottom, #990012 0%, #D33260 100%);
+}
+.gift-step a {
+    border: 2px solid #fec6c5;
+}
+.mCSB_scrollTools .mCSB_dragger,
+.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar, .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,
+.gift-filter-control .slider .tooltip-inner,
+.gift-filter-control .slider-selection,
+.gift-filter-control .slider-track,
+.gift-item-col-content,
+.hvr-underline-from-center::before,
+.gift-step a:hover, .gift-step a.active,
+.hvr-radial-out::before,
+.change-curency-box-des {
+    background: #990012;
+}
+.change-curency-box .dropdown-toggle {
+    background: #890616 none repeat scroll 0 0;
+}
+
+.change-curency-box .btn-group .flag-vn {
+    border: 1px solid #f986a7;
+}
+.fa-stack-gift {
+    background: #fec6c5;
+}
+
+
+
+.gift-category h2.title {
+    background: rgba(0, 0, 0, 0) url("../images/bg-line.png") repeat-x scroll 0 17px;
+}
+
+footer {
+    background: #990012 none repeat scroll 0 0;
+}

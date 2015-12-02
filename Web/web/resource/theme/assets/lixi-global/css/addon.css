@@ -1,0 +1,20 @@
+input.input-error{
+    border-color: #d38e99;
+    box-shadow: none;
+}
+
+div.error-message{
+    background: #f2dede none repeat scroll 0 0 / 20px 20px;
+    border-color: #ebccd1;
+    color: #b94a48;
+    border: 1px solid;
+    border-radius: 2px;
+    display: block;
+    margin-top: 2px;
+    padding: 5px 10px;
+    position: relative;
+    margin-bottom: 10px;
+}
+.post-wrapper{
+    padding:62px 0;
+}

@@ -3,12 +3,22 @@
         <div class="container">
             <div class="navbar-collapse" id="navbar-collapse-top">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="nav-login">
-                        <a class="hvr-underline-from-center nav-login-event" href="<c:url value="/user/register?a=login"/>"><i class="fa fa-user"></i> LOGIN</a>
-                    </li>
-                    <li>
-                        <a class="hvr-underline-from-center nav-register-event" href="<c:url value="/user/register?a=join"/>">REGISTER</a>
-                    </li>
+                    <c:if test="${not empty loginedUser.email}">
+                        <li>
+                            <a class="hvr-underline-from-center" href="javascript:void(0);">Hello ${loginedUser.email}</a>
+                        </li>
+                        <li>
+                            <a class="hvr-underline-from-center" href="<c:url value="/user/signOut"/>">Log Out</a>
+                        </li>
+                    </c:if>
+                    <c:if test="${empty loginedUser.email}">
+                        <li class="nav-login">
+                            <a class="hvr-underline-from-center nav-login-event" href="<c:url value="/user/signIn"/>"><i class="fa fa-user"></i> LOGIN</a>
+                        </li>
+                        <li>
+                            <a class="hvr-underline-from-center nav-register-event" href="<c:url value="/user/signUp"/>">REGISTER</a>
+                        </li>
+                    </c:if>
                     <li class="has-dropdown dropdown pull-right nav-language">
                         <a class="hvr-underline-from-center" data-toggle="dropdown" href="#change-language"><span class="language-text">EN</span> <i class="fa fa-angle-down"></i></a>
                         <ul class="dropdown-menu">

@@ -1,15 +1,59 @@
 /* global BootstrapDialog */
-
-var siteUrl = '';
+var LixiGlobal = {
+    Const: {
+        VND: 20000,
+        ThemeName: 'theme-name',
+        defaultTheme: 'default',
+        valentineTheme: 'valentine',
+        tetTheme: 'tet'
+    }
+};
+LixiGlobal.Browser = {
+    getAppName: function (p) {
+        var s = p.split("/").reverse();
+        s.splice(0, 1);
+        return s.reverse().join("/");
+    },
+    getPath: function () {
+        var p = window.location.pathname;
+        var s = p.split("/").reverse();
+        s.splice(0, 1);
+        return s.reverse().join("/");
+    },
+    getHost: function () {
+        var p = window.location.origin;
+        return p;
+    },
+    getParam: function (url, name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+        if (results === null) {
+            return null;
+        }
+        else {
+            return results[1] || 0;
+        }
+    },
+    getUrl: function () {
+        siteUrl = siteUrl.split(";jsessionid")[0];
+        return siteUrl;
+    },
+    getWebroot: function () {
+        var p = window.location.pathname;
+        var s = p.split("/").reverse();
+        s.splice(0, 2);
+        return s.reverse().join("/");
+    },
+    getSiteUrl: function () {
+        return this.getHost() + this.getPath();
+    }
+};
+var siteUrl = LixiGlobal.Browser.getSiteUrl();
+var THEME_PATH = CONTEXT_PATH + "/resource/theme/assets/lixi-global/themes/"
 Number.prototype.formatCurency = function (n, x) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 };
-var LixiGlobal = {
-    Const: {
-        VND: 20000
-    }
-};
+
 LixiGlobal.Menu = {
     effectMainMenu: function () {
         if ($(window).width() > 768) {
@@ -29,13 +73,15 @@ LixiGlobal.Menu = {
         }
     }
 };
+
+
 LixiGlobal.User = {
     registerPopup: function () {
         BootstrapDialog.show({
             size: BootstrapDialog.SIZE_WIDE,
             cssClass: 'dialog-no-header',
             title: 'Register',
-            message: $('<div class="login-register-wrapper"><span class="loading-progress"></span></div>').load(registerPage)//siteUrl + 'register.html'
+            message: $('<div class="login-register-wrapper"><span class="loading-progress"></span></div>').load(siteUrl + 'register.html')
         });
     },
     loginFormInit: function () {
@@ -183,6 +229,12 @@ LixiGlobal.Gift = {
                 obj.html("Cancel").attr('data-action', 'Cancel');
             }
         });
+        $("gift-item-checkbox input[type='checkbox']").on('change', function () {
+            if (this.checked) {
+                //do your stuff
+                console.log(1);
+            }
+        });
         var items = $('.gift-filter-items').find('.gift-product-item-col');
         if (items.length > 0) {
             var selectedClass = 'gift-product-item-selected';
@@ -229,7 +281,7 @@ LixiGlobal.Chat = {
         BootstrapDialog.show({
             cssClass: 'dialog-no-header',
             title: 'Chat',
-            message: $('<div class="chat-support-wrapper"><span class="loading-progress"></span></div>').load(siteUrl + 'support-chat-popup.html')
+            message: $('<div class="chat-support-wrapper"><span class="loading-progress"></span></div>').load(siteUrl + '/support-chat-popup.html')
         });
     },
     initOnOffSound: function () {
@@ -291,6 +343,37 @@ LixiGlobal.Support = {
         });
     }
 };
+
+/* Ec Cookie */
+LixiGlobal.Cookie = {
+    createCookie: function (name, value, days) {
+        var expires;
+
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toGMTString();
+        } else {
+            expires = "";
+        }
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    },
+    readCookie: function (name) {
+        var nameEQ = escape(name) + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ')
+                c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0)
+                return unescape(c.substring(nameEQ.length, c.length));
+        }
+        return null;
+    },
+    eraseCookie: function (name) {
+        this.createCookie(name, "", -1);
+    }
+};
 LixiGlobal.Dialog = {
     setTitleMessage: function (title, message) {
         return '<div class="text-center"><h2 class="title">' + title + '</h2><div>' + message + '</div></div>';
@@ -302,12 +385,70 @@ LixiGlobal.Dialog = {
         });
     }
 };
+LixiGlobal.Theme = {
+    changeLanguageTemplate: function () {
+        var html = '<li class="has-dropdown dropdown nav-change-theme">'
+                + '<a class="hvr-underline-from-center" data-toggle="dropdown" href="#change-theme"><span class="theme-name">Theme</span> <i class="fa fa-angle-down"></i></a>'
+                + '<ul class="dropdown-menu">'
+                + ' <li class="active">'
+                + '     <a data-theme="' + LixiGlobal.Const.defaultTheme + '" href="#">Default theme</a>'
+                + ' </li>	'
+                + ' <li>'
+                + '      <a data-theme="' + LixiGlobal.Const.valentineTheme + '" href="#">Valentine theme</a>'
+                + ' </li>'
+                + ' <li>'
+                + '      <a data-theme="' + LixiGlobal.Const.tetTheme + '" href="#">TET theme</a>'
+                + '  </li>'
+                + '  </ul>'
+                + '</li>';
+        if ($('#navbar-collapse-top .nav-change-theme').length <= 0) {
+            $('#navbar-collapse-top ul:first').append(html);
+        }
+    },
+    initTheme: function () {
+        this.changeLanguageTemplate();
+        var themeName = LixiGlobal.Cookie.readCookie(LixiGlobal.Const.ThemeName);
+        console.log($('#originalTheme').attr('href'));
+        if (typeof themeName !== "undefined" && themeName !== null) {
+            $('.nav-change-theme .dropdown-menu li').removeClass('active');
+            $('.nav-change-theme .dropdown-menu a[data-theme=' + themeName + ']').closest('li').addClass('active');
+            this.setTheme(themeName);
+        } else {
+            themeName = $('.nav-change-theme .dropdown-menu .active a').attr('data-theme');
+            this.setTheme(themeName);
+        }
+        if (themeName !== LixiGlobal.Const.defaultTheme) {
+            $('.navbar-brand img').attr('src', THEME_PATH + themeName + "/images/logo.png");
+        }
+        $('.nav-change-theme .dropdown-menu a').click(function () {
+            var obj = $(this);
+            $('.nav-change-theme .dropdown-menu li').removeClass('active');
+            obj.closest('li').addClass('active');
+            LixiGlobal.Theme.setTheme(obj.attr('data-theme'));
+            window.location.reload();
+        });
+    },
+    setTheme: function (name) {
+        var styleObj = $('#originalTheme');
+        var cssUrl = THEME_PATH + name + "/css/style.css";
+        LixiGlobal.Cookie.createCookie(LixiGlobal.Const.ThemeName, name, 30);
+        if (styleObj.length > 0) {
+            $('#originalTheme').attr('href', cssUrl);
+        } else {
+            $('html head').append('<link id="originalTheme" rel="stylesheet" type="text/css" href="' + cssUrl + '">');
+        }
 
+    }
+};
 
 jQuery(document).ready(function () {
+    
+    LixiGlobal.Theme.initTheme();
+
     //$('.nav-login-event, .nav-register-event').click(function () {
-    //LixiGlobal.User.registerPopup();
+        //LixiGlobal.User.registerPopup();
     //});
+    
     $('[rel=tooltip]').tooltip();
     LixiGlobal.Menu.effectMainMenu();
     jQuery(window).resize(function () {

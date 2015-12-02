@@ -62,6 +62,7 @@ public class UserGeneralController {
     
     private static final Logger log = LogManager.getLogger(UserGeneralController.class);
     
+    /* session bean - Login user */
     @Autowired
     private LoginedUser loginedUser;
     
@@ -89,22 +90,6 @@ public class UserGeneralController {
     @Inject
     private ThreadPoolTaskScheduler taskScheduler;
     
-    ////////////////////////////////////////////////////////////////////////////
-    @RequestMapping(value = "register", method = RequestMethod.GET)
-    public ModelAndView register(Map<String, Object> model, @RequestParam String a){
-        
-        //
-        model.put("userSignUpForm", new UserSignUpForm());
-        
-        //
-        model.put("userSignInForm", new UserSignInForm());
-        
-        // forward action
-        model.put("action", a);
-        
-        return new ModelAndView("user2/register");
-    }
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * 
      * @param model
@@ -114,6 +99,12 @@ public class UserGeneralController {
     public String signUp(Map<String, Object> model) {
 
         model.put("userSignUpForm", new UserSignUpForm());
+        
+        model.put("userSignInForm", new UserSignInForm());
+        
+        // forward action
+        model.put("action", "join");
+        
         return "user2/register";
     }
     
@@ -131,7 +122,7 @@ public class UserGeneralController {
             @Valid UserSignUpForm form, Errors errors, HttpServletRequest request) {
         
         if (errors.hasErrors()) {
-            return new ModelAndView("user/signUp");
+            return new ModelAndView("user2/signUp");
         }
         
         User u = new User();
@@ -165,7 +156,7 @@ public class UserGeneralController {
                 
                 model.put("inUseEmail", form.getEmail());
                 //
-                return new ModelAndView("user/email-in-use");
+                return new ModelAndView("user2/email-in-use");
                 
             }
             if(temp == null){
@@ -195,7 +186,7 @@ public class UserGeneralController {
         } catch (ConstraintViolationException e) {
             
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("user/signUp");
+            return new ModelAndView("user2/signUp");
             
         }
         
@@ -208,7 +199,7 @@ public class UserGeneralController {
                 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(form.getEmail());
-                message.setCc(LiXiConstants.YHANNART_GMAIL);
+                message.setCc(LiXiConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
                 message.setSubject("LiXi.Global - Confirm your registration");
                 message.setSentDate(Calendar.getInstance().getTime());
@@ -216,7 +207,7 @@ public class UserGeneralController {
                 Map model = new HashMap();	             
                 model.put("user", userService.findByEmail(form.getEmail()));
                 // built the path
-                String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString());
+                String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user2/registrationConfirm/"+activeCode).build().toUriString());
                 model.put("regisConfirmPath", regisConfirmPath);
                 
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -231,7 +222,7 @@ public class UserGeneralController {
         taskScheduler.execute(() -> mailSender.send(preparator));        
         
         model.put("email", form.getEmail());
-        return new ModelAndView("user/signUpComplete", model);
+        return new ModelAndView("user2/signUpComplete", model);
     }
     
     
@@ -255,7 +246,7 @@ public class UserGeneralController {
             
             model.put("codeWrong", 1);
             
-            return new ModelAndView("user/regisConfirm", model);
+            return new ModelAndView("user2/regisConfirm", model);
         }
         else{
             
@@ -268,7 +259,7 @@ public class UserGeneralController {
                 
                 model.put("codeExpired", 1);
 
-                return new ModelAndView("user/regisConfirm", model);
+                return new ModelAndView("user2/regisConfirm", model);
             }
             else{
                 
@@ -280,7 +271,7 @@ public class UserGeneralController {
                 
                 // return
                 model.put("activeResult", 1);
-                return new ModelAndView("user/regisConfirm", model);
+                return new ModelAndView("user2/regisConfirm", model);
             }
         }
     }
@@ -306,7 +297,7 @@ public class UserGeneralController {
                 
                 // return
                 model.put("activeResult", 1);
-                return new ModelAndView("user/regisConfirm", model);
+                return new ModelAndView("user2/regisConfirm", model);
             }
             else{
             
@@ -339,7 +330,7 @@ public class UserGeneralController {
                         Map model = new HashMap();	             
                         model.put("user", u);
                         // built the path
-                        String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString());
+                        String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user2/registrationConfirm/"+activeCode).build().toUriString());
                         model.put("regisConfirmPath", regisConfirmPath);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -354,7 +345,7 @@ public class UserGeneralController {
                 taskScheduler.execute(() -> mailSender.send(preparator));        
                 // return page
                 model.put("email", u.getEmail());
-                return new ModelAndView("user/signUpComplete", model);
+                return new ModelAndView("user2/signUpComplete", model);
             }
         } catch (Exception e) {
             
@@ -363,7 +354,7 @@ public class UserGeneralController {
             // There is something wrong
             model.put("codeWrong", 1);
             
-            return new ModelAndView("user/regisConfirm", model);
+            return new ModelAndView("user2/regisConfirm", model);
         }
         
     }
@@ -378,7 +369,7 @@ public class UserGeneralController {
     @RequestMapping(value = "passwordAssistance", method = RequestMethod.GET)
     public String passwordAssistance(Map<String, Object> model){
         
-        return "user/passwordAssistance";
+        return "user2/passwordAssistance";
         
     }
     
@@ -434,7 +425,7 @@ public class UserGeneralController {
                         Map model = new HashMap();	             
                         model.put("user", u);
                         // built the path
-                        String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword/"+activeCode).build().toUriString());
+                        String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user2/resetPassword/"+activeCode).build().toUriString());
                         model.put("resetPasswordPath", resetPasswordPath);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -450,7 +441,7 @@ public class UserGeneralController {
                 // complete
                 model.put("email", email);
                 
-                return new ModelAndView("user/passwordAssistanceComplete", model);
+                return new ModelAndView("user2/passwordAssistanceComplete", model);
                 
             } catch (Exception e) {
                 
@@ -462,7 +453,7 @@ public class UserGeneralController {
         // show error message
         model.put("passwordAssistance", false);
         //
-        return new ModelAndView("user/passwordAssistance", model);
+        return new ModelAndView("user2/passwordAssistance", model);
         
     }
     
@@ -483,7 +474,7 @@ public class UserGeneralController {
             // show error message
             model.put("passwordAssistance", 1);
 
-            return new ModelAndView("user/passwordAssistance");
+            return new ModelAndView("user2/passwordAssistance");
 
         }
         else{
@@ -493,7 +484,7 @@ public class UserGeneralController {
 
             model.put("userResetPasswordForm", form);
 
-            return new ModelAndView("user/resetPassword", model);
+            return new ModelAndView("user2/resetPassword", model);
         }
     }
     
@@ -509,7 +500,7 @@ public class UserGeneralController {
             @Valid UserResetPasswordForm form, Errors errors) {
         
         if (errors.hasErrors()) {
-            return new ModelAndView("user/resetPassword");
+            return new ModelAndView("user2/resetPassword");
         }
         
         try{
@@ -523,7 +514,7 @@ public class UserGeneralController {
                 // show error message
                 model.put("passwordAssistance", 1);
                 
-                return new ModelAndView("user/passwordAssistance");
+                return new ModelAndView("user2/passwordAssistance");
                 
             }
             else{
@@ -541,11 +532,11 @@ public class UserGeneralController {
             
             //
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("user/resetPassword");
+            return new ModelAndView("user2/resetPassword");
             
         }
         
-        return new ModelAndView("user/resetPasswordComplete");
+        return new ModelAndView("user2/resetPasswordComplete");
         
     }
     /**
@@ -556,8 +547,14 @@ public class UserGeneralController {
     @RequestMapping(value = "signIn", method = RequestMethod.GET)
     public String signIn(Map<String, Object> model) {
 
+        model.put("userSignUpForm", new UserSignUpForm());
+        
         model.put("userSignInForm", new UserSignInForm());
-        return "user/signIn";
+        
+        // forward action
+        model.put("action", "login");
+        
+        return "user2/register";
     }
 
     /**
@@ -572,8 +569,13 @@ public class UserGeneralController {
     public ModelAndView signIn(Map<String, Object> model,
             @Valid UserSignInForm form, Errors errors, HttpServletRequest request) {
         
+        // prepare for signUp form 
+        model.put("action", "login");
+        model.put("userSignUpForm", new UserSignUpForm());
+        
+        /* */
         if (errors.hasErrors()) {
-            return new ModelAndView("user/signIn");
+            return new ModelAndView("user2/register");
         }
         
         try {
@@ -584,7 +586,7 @@ public class UserGeneralController {
             if(u == null){
                 
                 model.put("signInFailed", 1);
-                return new ModelAndView("user/signIn");
+                return new ModelAndView("user2/register");
                 
             }
             
@@ -592,7 +594,7 @@ public class UserGeneralController {
             if(!u.getActivated()){
                 
                 model.put("notActivated", 1);
-                return new ModelAndView("user/signIn");
+                return new ModelAndView("user2/register");
                 
             }
             
@@ -600,7 +602,7 @@ public class UserGeneralController {
             if(!u.getEnabled()){
                 
                 model.put("notEnabled", 1);
-                return new ModelAndView("user/signIn");
+                return new ModelAndView("user2/register");
                 
             }
             
@@ -627,17 +629,17 @@ public class UserGeneralController {
             else{
                 
                 model.put("signInFailed", 1);
-                return new ModelAndView("user/signIn");
+                return new ModelAndView("user2/register");
                 
             }
         } catch (ConstraintViolationException e) {
             
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("user/signIn");
+            return new ModelAndView("user2/register");
             
         }
         
-        return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+        return new ModelAndView(new RedirectView("/gifts/recipient", true, true), null);
     }
     
     /**
@@ -673,7 +675,7 @@ public class UserGeneralController {
         Map<String, Object> model = new HashMap<>();
         model.put("inUseEmail", inUseEmail);
         //
-        return new ModelAndView("user/verify-email", model);
+        return new ModelAndView("user2/verify-email", model);
     }
     
     /**
@@ -727,7 +729,7 @@ public class UserGeneralController {
                     Map model = new HashMap();	             
                     model.put("user", u);
                     // built the path
-                    String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/verifyEmail/"+activeCode).build().toUriString());
+                    String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user2/verifyEmail/"+activeCode).build().toUriString());
                     model.put("newAccountPath", resetPasswordPath);
 
                     String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -744,14 +746,14 @@ public class UserGeneralController {
         }
         else{
             
-            return new ModelAndView("user/verify-email", model);
+            return new ModelAndView("user2/verify-email", model);
         }
         // remove LIXI_IN_USE_EMAIL in session
         request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
         
         //
         model.put("inUseEmail", inUseEmail);
-        return new ModelAndView("user/alert-verify-email", model);
+        return new ModelAndView("user2/alert-verify-email", model);
     }
     
     /**
@@ -773,7 +775,7 @@ public class UserGeneralController {
             // show error message
             model.put("wrongSecretCode", 1);
 
-            return new ModelAndView("user/verify-email-failed");
+            return new ModelAndView("user2/verify-email-failed");
 
         }
         else{
@@ -787,7 +789,7 @@ public class UserGeneralController {
             // store secret code into session and delete after user created account
             request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE, code);
             
-            return new ModelAndView(new RedirectView("/user/signUpWithExistingEmail", true, true));
+            return new ModelAndView(new RedirectView("/user2/signUpWithExistingEmail", true, true));
         }        
     }
     
@@ -810,7 +812,7 @@ public class UserGeneralController {
 
         model.put("userSignUpWithOutEmailForm", form);
 
-        return new ModelAndView("user/signUpWithOutEmail");
+        return new ModelAndView("user2/signUpWithOutEmail");
     }
     
     /**
@@ -828,7 +830,7 @@ public class UserGeneralController {
             @Valid UserSignUpWithOutEmailForm form, Errors errors, HttpServletRequest request) {
         
         if (errors.hasErrors()) {
-            return new ModelAndView("user/signUp");
+            return new ModelAndView("user2/signUp");
         }
         
         // get email from session
@@ -868,7 +870,7 @@ public class UserGeneralController {
         } catch (ConstraintViolationException e) {
             
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("user/signUpWithOutEmail");
+            return new ModelAndView("user2/signUpWithOutEmail");
             
         }
         
@@ -880,7 +882,7 @@ public class UserGeneralController {
         request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE);
         
         //
-        return new ModelAndView("user/signUpWithOutEmailComplete", model);
+        return new ModelAndView("user2/signUpWithOutEmailComplete", model);
     }
     
 }

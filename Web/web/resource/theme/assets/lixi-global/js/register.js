@@ -40,7 +40,7 @@ LixiGlobal.RegisterPage = {
                 confPassword: {
                     required: true,
                     minlength: 8,
-                    equalTo: "#password"
+                    equalTo: "#passwordSignUp"
                 },
                 email: {
                     required: true,

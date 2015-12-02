@@ -64,17 +64,14 @@ public class CheckLoginedUserAspectJ {
             return jp.proceed();
             */
             
-            if("".equals(loginedUser.getEmail()) || loginedUser.getEmail() == null){
+            if(loginedUser.getEmail() == null || "".equals(loginedUser.getEmail().trim())){
                 
                 return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
                 
             }
-            else{
-                
-                return jp.proceed();
-                
-            }
             
+            /* continue to process */
+            return jp.proceed();
         } catch (Throwable e) {
             
             log.info(e.getMessage(), e);

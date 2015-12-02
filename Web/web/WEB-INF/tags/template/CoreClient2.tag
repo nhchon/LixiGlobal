@@ -25,6 +25,8 @@
         <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:100,300,300italic,400,700|Julius+Sans+One|Roboto+Condensed:300,400">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/hover-min.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/main.css"/>">
+        <link id="originalTheme" rel="stylesheet" type="text/css" href="<c:url value="/resource/theme/assets/lixi-global/themes/default/css/style.css"/>">
+        <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/addon.css"/>">
 
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"/>"></script>
         <!--
@@ -43,6 +45,12 @@
             });
         </script>
         -->
+        <script type="text/javascript">
+            var CONTEXT_PATH = "${pageContext.request.contextPath}";
+            if (CONTEXT_PATH === null || CONTEXT_PATH === 'null' || CONTEXT_PATH === '/') {
+                CONTEXT_PATH = '';
+            }
+        </script>
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -61,6 +69,8 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-dialog.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.validate.min.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-slider.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/lixi.global-extend-js.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/lixi.global.js"/>"></script>
         <jsp:invoke fragment="javascriptContent" />

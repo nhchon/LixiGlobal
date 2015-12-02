@@ -9,11 +9,10 @@
     </jsp:attribute>
 
     <jsp:body>
-        <section class="section-slider text-right">
-            <img src="<c:url value="/resource/theme/assets/lixi-global/images/slider.jpg"/>"/>
+        <section class="section-slider section-slider-thumb text-right">
         </section>
 
-        <section class="section-gift">
+        <section class="section-gift bg-default">
             <div class="container">
                 <div class="section-gift-top">
                     <h2 class="text-center ">Gifting overseas has never been easier...<br/>

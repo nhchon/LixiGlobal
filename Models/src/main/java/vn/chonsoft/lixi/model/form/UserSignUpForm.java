@@ -32,14 +32,14 @@ public class UserSignUpForm{
     @Email(message = "{validate.user.email}")
     private String email;
     
-    @NotNull(message = "{validate.user.email}")
-    @Email(message = "{validate.user.email}")
-    private String confEmail;
+    //@NotNull(message = "{validate.user.email}")
+    //@Email(message = "{validate.user.email}")
+    //private String confEmail;
 
-    @Password(message = "{validate.user.password}")
+    @Password(message = "{message.password_format}")
     private String password;
 
-    @Password(message = "{validate.user.password}")
+    @Password(message = "{message.password_format}")
     private String confPassword;
     
     private String phone;
@@ -75,7 +75,7 @@ public class UserSignUpForm{
     public void setEmail(String email) {
         this.email = email;
     }
-
+    /*
     public String getConfEmail() {
         return confEmail;
     }
@@ -83,7 +83,7 @@ public class UserSignUpForm{
     public void setConfEmail(String confEmail) {
         this.confEmail = confEmail;
     }
-
+    */
     public String getPassword() {
         return password;
     }

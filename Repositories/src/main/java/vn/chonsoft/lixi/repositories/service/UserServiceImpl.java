@@ -76,7 +76,8 @@ public class UserServiceImpl implements UserService{
             u.getRecipients().size();
             
             // maximum payment amount
-            u.getUserMoneyLevel().getMoneyLevel();
+            if(u.getUserMoneyLevel() != null)
+                u.getUserMoneyLevel().getMoneyLevel();
             
             //
             u.getAddresses().size();

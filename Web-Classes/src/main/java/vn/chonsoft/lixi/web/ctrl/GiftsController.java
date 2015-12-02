@@ -9,13 +9,13 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,6 +52,8 @@ import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
+import vn.chonsoft.lixi.web.beans.CategoriesBean;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
 
 /**
  *
@@ -63,34 +65,41 @@ public class GiftsController {
 
     private static final Logger log = LogManager.getLogger(GiftsController.class);
 
-    @Inject
+    /* session bean - Login user */
+    @Autowired
+    private LoginedUser loginedUser;
+    
+    @Autowired
+    private CategoriesBean categories;
+    
+    @Autowired
     private UserService userService;
 
-    @Inject
+    @Autowired
     private RecipientService reciService;
 
-    @Inject
+    @Autowired
     private CurrencyTypeService currencyService;
 
-    @Inject
+    @Autowired
     private LixiExchangeRateService lxexrateService;
 
-    @Inject
+    @Autowired
     private LixiCategoryService lxcService;
 
-    @Inject
+    @Autowired
     private LixiOrderService lxorderService;
 
-    @Inject
+    @Autowired
     private LixiOrderGiftService lxogiftService;
 
-    @Inject
+    @Autowired
     private VatgiaProductService vgpService;
     
-    //@Inject
+    //@Autowired
     //private LixiFeeService feeService;
     
-    //@Inject
+    //@Autowired
     //private LixiCardFeeService cardFeeService;
     
     /**
@@ -105,7 +114,10 @@ public class GiftsController {
     @RequestMapping(value = "recipient", method = RequestMethod.GET)
     public ModelAndView recipient(Map<String, Object> model, HttpServletRequest request) {
 
-        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        /* put logined user */
+        model.put("loginedUser", loginedUser);
+        
+        String email = loginedUser.getEmail();
 
         // select recipients of user
         User u = this.userService.findByEmail(email);
@@ -120,7 +132,7 @@ public class GiftsController {
         
         model.put("chooseRecipientForm", form);
 
-        return new ModelAndView("giftprocess/recipient", model);
+        return new ModelAndView("giftprocess2/recipient", model);
 
     }
 
@@ -157,20 +169,17 @@ public class GiftsController {
      *
      * choose a ready recipient
      * 
+     * @param model
      * @param recId
      * @param request
      * @return
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "chooseRecipient/{recId}", method = RequestMethod.GET)
-    public ModelAndView chooseRecipient(@PathVariable Long recId, HttpServletRequest request) {
-
-        Map<String, Object> model = new HashMap<>();
-
-        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+    public ModelAndView chooseRecipient(Map<String, Object> model, @PathVariable Long recId) {
 
         // select recipients of user
-        setRecipients(model, email);
+        setRecipients(model, loginedUser.getEmail());
 
         Recipient reci = this.reciService.findById(recId);
         if (reci == null) {
@@ -191,7 +200,7 @@ public class GiftsController {
             model.put("chooseRecipientForm", form);
         }
         //
-        return new ModelAndView("giftprocess/recipient", model);
+        return new ModelAndView("giftprocess2/recipient");
     }
 
     /**
@@ -216,7 +225,7 @@ public class GiftsController {
 
         if (errors.hasErrors()) {
 
-            return new ModelAndView("giftprocess/recipient");
+            return new ModelAndView("giftprocess2/recipient");
         }
 
         try {
@@ -231,7 +240,7 @@ public class GiftsController {
                     model.put("recipientName", StringUtils.join(new String[]{form.getFirstName(),form.getMiddleName(), form.getLastName()}, " "));
                     model.put("recipientPhone", form.getPhone());
 
-                    return new ModelAndView("giftprocess/recipient", model);
+                    return new ModelAndView("giftprocess2/recipient", model);
                 }
                 //
                 rec = this.reciService.findByEmail(u, form.getEmail());
@@ -240,7 +249,7 @@ public class GiftsController {
                     model.put("duplicateEmail", 1);
                     model.put("recipientEmail", form.getEmail());
 
-                    return new ModelAndView("giftprocess/recipient", model);
+                    return new ModelAndView("giftprocess2/recipient", model);
                 }
             }
             // save or update the recipient
@@ -276,7 +285,7 @@ public class GiftsController {
 
             model.put("validationErrors", e.getConstraintViolations());
 
-            return new ModelAndView("giftprocess/recipient", model);
+            return new ModelAndView("giftprocess2/recipient", model);
 
         }
 
@@ -311,7 +320,7 @@ public class GiftsController {
             //request.getSession().setAttribute(LiXiConstants.LIXI_EXCHANGE_RATE_ID, lxexrate.getId());
 
             // jump
-            return new ModelAndView("giftprocess/value-of-gift", model);
+            return new ModelAndView("giftprocess2/value-of-gift", model);
         }
     }
 
@@ -486,7 +495,7 @@ public class GiftsController {
         model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
         
-        return new ModelAndView("giftprocess/type-of-gift-2", model);
+        return new ModelAndView("giftprocess2/type-of-gift-2", model);
 
     }
 
@@ -570,7 +579,7 @@ public class GiftsController {
         model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
         
-        return new ModelAndView("giftprocess/type-of-gift-content", model);
+        return new ModelAndView("giftprocess2/type-of-gift-content", model);
         
     }
     /**
@@ -654,7 +663,7 @@ public class GiftsController {
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
         model.put(LiXiConstants.CURRENT_PAYMENT, LiXiUtils.calculateCurrentPayment(order));
 
-        return new ModelAndView("giftprocess/choose-the-gift", model);
+        return new ModelAndView("giftprocess2/choose-the-gift", model);
 
     }
 
@@ -691,7 +700,7 @@ public class GiftsController {
             // wrong gift id
             model.put("wrong", 1);
 
-            return new ModelAndView("giftprocess/choose-the-gift", model);
+            return new ModelAndView("giftprocess2/choose-the-gift", model);
         }
 
         // sender
@@ -744,7 +753,7 @@ public class GiftsController {
             model.put(LiXiConstants.EXCEEDED_USD, LiXiUtils.getNumberFormat().format(exceededPaymentUSD));
             
             return chooseGift(lxCategory.getId(), model, request);
-                //return new ModelAndView("giftprocess/choose-the-gift", model);
+                //return new ModelAndView("giftprocess2/choose-the-gift", model);
             //return new ModelAndView(new RedirectView("/gifts/choose?exceed=1", true, true));
 
         }
@@ -989,7 +998,7 @@ public class GiftsController {
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
         
-        return new ModelAndView("giftprocess/exceed", model);
+        return new ModelAndView("giftprocess2/exceed", model);
     }
     /**
      *
@@ -1021,7 +1030,7 @@ public class GiftsController {
         model.put(LiXiConstants.LIXI_ORDER, order);
         model.put(LiXiConstants.REC_GIFTS, recGifts);
 
-        return new ModelAndView("giftprocess/more-recipient", model);
+        return new ModelAndView("giftprocess2/more-recipient", model);
     }
 
     /**
@@ -1149,7 +1158,7 @@ public class GiftsController {
         model.put(LiXiConstants.LIXI_ORDER, order);
         model.put(LiXiConstants.REC_GIFTS, recGifts);
 
-        return new ModelAndView("giftprocess/review-the-order", model);
+        return new ModelAndView("giftprocess2/review-the-order", model);
     }
 
     /**
