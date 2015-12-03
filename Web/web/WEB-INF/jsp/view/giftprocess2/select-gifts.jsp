@@ -21,7 +21,7 @@
                 <div class="section-gift-top">
                     <h2 class="title">Gift value for linh</h2>
                     <p>( We will select only gift at your price range )</p>
-                    <h5 class="maximum-purchase">Maximum purchase is VND 3,000,000 or USD $ 150</h5>
+                    <h5 class="maximum-purchase">Maximum purchase is VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 150}" pattern="###,###.##"/> or USD $ 150</h5>
                     <div class="change-curency-box">
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">
