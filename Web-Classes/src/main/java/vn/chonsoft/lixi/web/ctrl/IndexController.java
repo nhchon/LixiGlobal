@@ -48,7 +48,7 @@ public class IndexController {
     @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Map<String, Object> model) {
         
-        model.put("categories", categories);
+        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
         
         return "index";
     }

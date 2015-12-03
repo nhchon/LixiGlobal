@@ -96,7 +96,7 @@ public class TopUpMobileController {
         // sort categories
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "activated"),
                 new Sort.Order(Sort.Direction.ASC, "sortOrder"));
-        List<LixiCategory> categories = this.lxcService.findByLocaleCode(LocaleContextHolder.getLocale().toString(), sort);
+        List<LixiCategory> categories = this.lxcService.findAll();
         // get exchange rate
         LixiOrder order = null;
         // check order already created

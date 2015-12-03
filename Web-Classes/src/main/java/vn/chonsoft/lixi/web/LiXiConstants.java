@@ -10,6 +10,15 @@ package vn.chonsoft.lixi.web;
  */
 public abstract class LiXiConstants {
     
+    /* Category Code */
+    public static final String CAT_FLOWER = "FLOWER";
+    public static final String CAT_COSMETICS = "COSMETICS";
+    public static final String CAT_PERFUME = "PERFUME";
+    public static final String CAT_CHILDREN_TOY = "CHILDREN_TOY";
+    public static final String CAT_JEWELRIES = "JEWELRIES";
+    public static final String CAT_CANDIES = "CANDIES";
+    
+    ////////////////////////////////////////////////////////////////////////////
     public static final String SYSTEM_AUTO = "SYSTEM_AUTO";
     
     public static final String VTC_OK = "1";
@@ -91,6 +100,7 @@ public abstract class LiXiConstants {
     public static final String LIXI_ORDER_GIFT_PRODUCT_QUANTITY = "LIXI_ORDER_GIFT_PRODUCT_QUANTITY";
     public static final String REC_GIFTS = "REC_GIFTS";
 
+    public static final String LOGINED_USER = "LOGINED_USER";
     public static final String USER_LOGIN_ID = "USER_LOGIN_ID";
     public static final String USER_LOGIN_EMAIL = "USER_LOGIN_EMAIL";
     public static final String USER_LOGIN_FIRST_NAME = "USER_LOGIN_FIRST_NAME";
@@ -106,7 +116,7 @@ public abstract class LiXiConstants {
     public static final String ACCOUNTS = "ACCOUNTS";
     public static final String PRODUCTS = "PRODUCTS";
     public static final String PAGES = "PAGES";
-    public static final Integer NUM_PRODUCTS_PER_PAGE = 6;
+    public static final Integer NUM_PRODUCTS_PER_PAGE = 20;
     public static final String LIXI_TOTAL_AMOUNT = "LIXI_TOTAL_AMOUNT";
     
     public static final String YHANNART_GMAIL = "yhannart@gmail.com";

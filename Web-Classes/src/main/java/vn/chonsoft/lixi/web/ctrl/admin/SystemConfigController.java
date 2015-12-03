@@ -4,7 +4,6 @@
  */
 package vn.chonsoft.lixi.web.ctrl.admin;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,10 +12,8 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
 import javax.validation.Valid;
 import javax.validation.ConstraintViolationException;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
-import vn.chonsoft.lixi.model.SupportLocale;
 import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.form.LiXiExchangeRateForm;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
@@ -214,7 +210,7 @@ public class SystemConfigController {
         
         // 
         model.put("VATGIA_CATEGORIES", vgcs);
-        model.put("SUPPORT_LOCALE", this.slService.findAll());
+        //model.put("SUPPORT_LOCALE", this.slService.findAll());
 
         return new ModelAndView("Administration/config/categories");
 
@@ -239,93 +235,28 @@ public class SystemConfigController {
         vgc.setActivated(LiXiConstants.LIXI_ACTIVATED);
         Integer sortOrder = Integer.parseInt(request.getParameter("sortOrder"));
         vgc.setSortOrder(sortOrder);
-        //
-        List<SupportLocale> sls = this.slService.findAll();
-        List<LixiCategory> lixiCategories = new ArrayList<>();
-        for (SupportLocale sl : sls) {
-
-            String code = sl.getCode();
-            String name = request.getParameter(code);
-            // if name is empty, we do nothing
-            if(name == null || "".equals(name)){
-                
-                return new ModelAndView(new RedirectView("/Administration/SystemConfig/categories", true, true));
-                
-            }
-            String idStr = request.getParameter(code+"-id");
-            
-            LixiCategory lxc = new LixiCategory();
-            // set id for update if we have
-            if(idStr!=null && !"".equals(idStr.trim())){
-                lxc.setId(Integer.parseInt(idStr));
-            }
-            
-            lxc.setLocale(sl);
-            lxc.setName(name);
-            lxc.setActivated(LiXiConstants.LIXI_ACTIVATED);
-            lxc.setSortOrder(sortOrder);
-            
-            // handle upload icon
-            // gets absolute path of the web application
-            String applicationPath = request.getServletContext().getRealPath("");
-            // constructs path of the directory to save uploaded file
-            String uploadFilePath = applicationPath + File.separator + LiXiConstants.WEB_INF_FOLDER + File.separator + LiXiConstants.CATEGORY_ICON_FOLDER;
-            // creates the save directory if it does not exists
-            File fileSaveDir = new File(uploadFilePath);
-            if (!fileSaveDir.exists()) {
-                fileSaveDir.mkdirs();
-            }
-            
-            //log.info("Upload File Directory="+fileSaveDir.getAbsolutePath());
-         
-            try {
-                
-                Part filePart = request.getPart("img-"+code); // Retrieves <input type="file" name="img-${code}">
-                if(filePart != null){
-                    
-                    String fileName = filePart.getSubmittedFileName();
-                    
-                    if(fileName != null && !"".equals(fileName)){
-                        
-                        String ext = FilenameUtils.getExtension(fileName);
-                        String newFileName = System.currentTimeMillis() + "." + ext;
-
-                        filePart.write(uploadFilePath + File.separator + newFileName);
-
-                        lxc.setIcon(newFileName);
-                    }
-                    else{
-                        
-                        // keep old file
-                        String oldFile = request.getParameter("img-old-"+code);
-                        if(oldFile != null && !"".equals(oldFile)){
-                            
-                            lxc.setIcon(oldFile);
-                        }
-                        else{
-                            // no image
-                            lxc.setIcon(LiXiConstants.NO_IMAGE_JPG);
-                        }
-                    }
-                }
-                else{
-                    // no image
-                    lxc.setIcon(LiXiConstants.NO_IMAGE_JPG);
-                }
-            } catch (Exception e) {
-                
-                // no icon
-                lxc.setIcon(LiXiConstants.NO_IMAGE_JPG);
-                
-            }
-            //
-            lxc.setCreatedDate(Calendar.getInstance().getTime());
-            lxc.setCreatedBy(createdBy);
-            lxc.setVatgiaId(vgc);
-            lixiCategories.add(lxc);
+        
+        /* LixiCategory */
+        LixiCategory lxc = new LixiCategory();
+        
+        String idStr = request.getParameter("lxId");
+        // set id for update if we have
+        if(idStr!=null && !"".equals(idStr.trim())){
+            lxc.setId(Integer.parseInt(idStr));
         }
+        
+        lxc.setCode(request.getParameter("code"));
+        lxc.setEnglish(request.getParameter("english"));
+        lxc.setVietnam(request.getParameter("vietnam"));
+        lxc.setActivated(LiXiConstants.LIXI_ACTIVATED);
+        lxc.setSortOrder(sortOrder);
 
-        vgc.setLixiCategories(lixiCategories);
+        //
+        lxc.setCreatedDate(Calendar.getInstance().getTime());
+        lxc.setCreatedBy(createdBy);
+        lxc.setVatgiaId(vgc);
+
+        vgc.setLixiCategory(lxc);
 
         //
         this.vgcService.save(vgc);
@@ -347,9 +278,7 @@ public class SystemConfigController {
         // update non activated status
         vgc.setActivated(LiXiConstants.LIXI_NON_ACTIVATED);
         
-        for(LixiCategory lxc : vgc.getLixiCategories()){
-            lxc.setActivated(LiXiConstants.LIXI_NON_ACTIVATED);
-        }
+        vgc.getLixiCategory().setActivated(LiXiConstants.LIXI_NON_ACTIVATED);
         
         this.vgcService.save(vgc);
         //

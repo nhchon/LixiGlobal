@@ -48,7 +48,8 @@ LixiGlobal.Browser = {
     }
 };
 var siteUrl = LixiGlobal.Browser.getSiteUrl();
-var THEME_PATH = CONTEXT_PATH + "/resource/theme/assets/lixi-global/themes/"
+var THEME_PATH = CONTEXT_PATH + "/resource/theme/assets/lixi-global/themes/";
+var originalSliderVal = 10;
 Number.prototype.formatCurency = function (n, x) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
@@ -207,6 +208,7 @@ LixiGlobal.Gift = {
         var selectedClass = 'gift-product-item-selected';
         var buyBtnObj = giftItemObj.find('.btn-buy-item-event');
         if (obj.is(":checked")) {
+            alert('hi im checked')
             giftItemObj.addClass(selectedClass);
             buyBtnObj.html("Cancel").attr('data-action', 'Cancel');
         } else {
@@ -229,12 +231,14 @@ LixiGlobal.Gift = {
                 obj.html("Cancel").attr('data-action', 'Cancel');
             }
         });
+        
         $("gift-item-checkbox input[type='checkbox']").on('change', function () {
             if (this.checked) {
                 //do your stuff
                 console.log(1);
             }
         });
+        
         var items = $('.gift-filter-items').find('.gift-product-item-col');
         if (items.length > 0) {
             var selectedClass = 'gift-product-item-selected';
@@ -247,9 +251,10 @@ LixiGlobal.Gift = {
                 }
             });
         }
+        
         $('#pagination-data').twbsPagination({
-            totalPages: 90,
-            visiblePages: 9,
+            totalPages: TOTAL_PAGES,
+            visiblePages: 5,
             onPageClick: function (event, page) {
                 console.log(page);
             }
@@ -462,8 +467,36 @@ jQuery(document).ready(function () {
                 return "USD $" + value + " ~ VND " + (value * LixiGlobal.Const.VND).formatCurency();
             }
         });
+        /*
         sliderFilter.on("slide", function (slideEvt) {
             //Call filter when change value here
+            if(originalSliderVal != slideEvt){
+                sliderFilter.disable();
+                alert(slideEvt);
+                //
+                originalSliderVal = slideEvt;
+            }
+            console.log(slideEvt);
+        });
+        */
+        sliderFilter.on("slideStart", function (slideEvt) {
+            //Call filter when change value here
+            //alert(slideEvt);
+            //
+            originalSliderVal = slideEvt;
+            console.log(slideEvt);
+        });
+        sliderFilter.on("slideStop", function (slideEvt) {
+            //Call filter when change value here
+            if(originalSliderVal != slideEvt){
+                sliderFilter.disable();
+                //alert("change " + slideEvt);
+                //
+                originalSliderVal = slideEvt;
+                var overlayDiv = $('#overlay');
+                overlayDiv.positionOn($('.gift-filter-items'));
+                overlayDiv.show();
+            }
             console.log(slideEvt);
         });
 

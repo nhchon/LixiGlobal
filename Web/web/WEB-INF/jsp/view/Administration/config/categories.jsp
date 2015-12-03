@@ -62,51 +62,38 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th></th>
-                                <th><spring:message code="message.vat_gia_category_name"/></th>
-                                <c:forEach items="${SUPPORT_LOCALE}" var="sl">
-                                    <th>${sl.name}</th>
-                                    <td></td>
-                                </c:forEach>
-                                <th>Sort Order</th>    
+                                <th>#</th>
+                                <th>VG's ID</th>
+                                <th>VG's Name</th>
+                                <th>Code</th>
+                                <th>English</th>
+                                <th>Vietnam</th>
+                                <th></th>    
                                 <th><!-- Submit button --></th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach items="${VATGIA_CATEGORIES}" var="vg">
-                                <form:form id="form${vg.id}" role="form" action="${pageContext.request.contextPath}/Administration/SystemConfig/categories" method="post" enctype="multipart/form-data">
+                                <form:form id="form${vg.id}" role="form" action="${pageContext.request.contextPath}/Administration/SystemConfig/categories" method="post">
                                     <tr>
+                                        <td><input type="text" class="form-control" value="<c:if test="${not empty vg.lixiCategory}">${vg.lixiCategory.id}</c:if>" readonly="" style="width:50px;"/></td>
                                         <td><input name="vgId" type="text" value="${vg.id}" class="form-control" readonly="" style="width:50px;"/></td>
                                         <td><input name="vgName" type="text" value="${vg.title}" class="form-control"/></td>
-                                        <c:if test="${not empty vg.lixiCategories}">
-                                            <c:forEach items="${vg.lixiCategories}" var="lxc">
-                                                <td>
-                                                    <input name="${lxc.locale.code}" type="text" value="${lxc.name}" class="form-control"/>
-                                                    <input type="hidden" name="${lxc.locale.code}-id" value="${lxc.id}"/>
-                                                </td>
-                                                <td>
-                                                    <img name="icon-${lxc.locale.code}" width="136" height="136" src="<c:url value="/showImages/"/>${lxc.icon}"/>
-                                                    <input type="hidden" name="img-old-${lxc.locale.code}" value="${lxc.icon}"/>
-                                                    <button type="button" onclick="removeIcon(${vg.id}, '${lxc.locale.code}');">Remove Icon</button>
-                                                    <input type="file" name="img-${lxc.locale.code}" class="form-control"/>
-                                                </td>
-                                            </c:forEach>
+                                        <td><input type="text" name="code" value="${vg.lixiCategory.code}" class="form-control"/></td>
+                                        <c:if test="${not empty vg.lixiCategory}">
+                                            <td><input name="english" type="text" value="${vg.lixiCategory.english}" class="form-control"/></td>
+                                            <td><input name="vietnam" type="text" value="${vg.lixiCategory.vietnam}" class="form-control"/>
+                                                <input type="hidden" name="lxId" value="${vg.lixiCategory.id}"/>
+                                            </td>
                                         </c:if>
-                                        <c:if test="${empty vg.lixiCategories}">
-                                            <c:forEach items="${SUPPORT_LOCALE}" var="sl">
-                                                <td><input name="${sl.code}" type="text" value="" class="form-control"/></td>
-                                                <td>
-                                                    <input type="file" name="img" class="form-control"/>
-                                                </td>
-                                            </c:forEach>
-                                                
+                                        <c:if test="${empty vg.lixiCategory}">
+                                            <td><input type="text" name="english" value="" class="form-control"/></td>
+                                            <td>
+                                                <input type="text" name="vietname" class="form-control"/>
+                                            </td>
                                         </c:if>
-                                                <td><input type="number" class="form-control" value="${vg.sortOrder}" name="sortOrder"/></td>        
-                                        <td><button class="btn btn-primary" type="submit" onclick="return validateCategoryName(${vg.id});">Save</button>
-                                            <c:if test="${vg.activated eq 1}">
-                                                <button class="btn btn-warning" type="button" onclick="deleteCategory(${vg.id});">Delete</button>
-                                            </c:if>
-                                        </td>    
+                                        <td></td>        
+                                        <td></td>    
                                     </tr>
                                 </form:form>
                             </c:forEach>

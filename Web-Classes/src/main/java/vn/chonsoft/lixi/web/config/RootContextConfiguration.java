@@ -55,6 +55,8 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
+import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.beans.CategoriesBean;
 import vn.chonsoft.lixi.web.beans.CreditCardProcesses;
 import vn.chonsoft.lixi.web.beans.VtcPayClient;
@@ -94,12 +96,18 @@ import vn.chonsoft.lixi.web.beans.TripleDES;
 @Import({ SecurityConfiguration.class })
 public class RootContextConfiguration  implements
         AsyncConfigurer, SchedulingConfigurer{
+    
     private static final Logger log = LogManager.getLogger();
+    
     private static final Logger schedulingLogger =
             LogManager.getLogger(log.getName() + ".[scheduling]");
 
     @Autowired
     private Environment env;
+    
+    @Autowired
+    private LixiCategoryService lxCategoryService;
+    
     
     @Bean
     public MessageSource messageSource()
@@ -342,12 +350,12 @@ public class RootContextConfiguration  implements
     public CategoriesBean categoriesBean(){
         
         CategoriesBean c = new CategoriesBean();
-        c.setCandies(c.new Category(env.getProperty("candies").split(",")));
-        c.setJewelries(c.new Category(env.getProperty("jewelries").split(",")));
-        c.setPerfume(c.new Category(env.getProperty("perfume").split(",")));
-        c.setCosmetics(c.new Category(env.getProperty("cosmetics").split(",")));
-        c.setChildrentoy(c.new Category(env.getProperty("childrentoy").split(",")));
-        c.setFlowers(c.new Category(env.getProperty("flowers").split(",")));
+        c.setCandies(this.lxCategoryService.findByCode(LiXiConstants.CAT_CANDIES));
+        c.setJewelries(this.lxCategoryService.findByCode(LiXiConstants.CAT_JEWELRIES));
+        c.setPerfume(this.lxCategoryService.findByCode(LiXiConstants.CAT_PERFUME));
+        c.setCosmetics(this.lxCategoryService.findByCode(LiXiConstants.CAT_COSMETICS));
+        c.setChildrentoy(this.lxCategoryService.findByCode(LiXiConstants.CAT_CHILDREN_TOY));
+        c.setFlowers(this.lxCategoryService.findByCode(LiXiConstants.CAT_FLOWER));
         
         return c;
     }

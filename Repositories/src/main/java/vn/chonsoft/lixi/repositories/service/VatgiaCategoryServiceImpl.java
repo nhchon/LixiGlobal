@@ -66,7 +66,7 @@ public class VatgiaCategoryServiceImpl implements VatgiaCategoryService{
         VatgiaCategory vgc = this.vgcRepository.findOne(id);
         //
         if(vgc != null) {
-            vgc.getLixiCategories();
+            vgc.getLixiCategory();
         }
         //
         return vgc;
@@ -87,7 +87,7 @@ public class VatgiaCategoryServiceImpl implements VatgiaCategoryService{
             
             if(vgc != null){
                 
-                vgc.getLixiCategories();
+                vgc.getLixiCategory();
                 
             }
         }

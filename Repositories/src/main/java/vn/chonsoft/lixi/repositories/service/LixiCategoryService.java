@@ -21,11 +21,13 @@ public interface LixiCategoryService {
     
     List<LixiCategory> findAll();
     
-    List<LixiCategory> findByLocaleCode(String code);
+    //List<LixiCategory> findByLocaleCode(String code);
     
-    List<LixiCategory> findByLocaleCode(String code, Sort sort);
+    //List<LixiCategory> findByLocaleCode(String code, Sort sort);
     
     LixiCategory findById(Integer id);
+    
+    LixiCategory findByCode(String code);
     
     void deleteByVatGiaId(Integer vatgiaId);
 }

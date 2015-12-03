@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -41,8 +42,8 @@ public class VatgiaCategory implements Serializable {
     @Column(name = "sort_order")
     private Integer sortOrder;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vatgiaId", fetch = FetchType.EAGER)
-    private List<LixiCategory> lixiCategories;
+    @OneToOne(mappedBy = "vatgiaId")
+    private LixiCategory lixiCategory;
 
     public VatgiaCategory() {
     }
@@ -90,14 +91,15 @@ public class VatgiaCategory implements Serializable {
         this.sortOrder = sortOrder;
     }
 
-    public List<LixiCategory> getLixiCategories() {
-        return lixiCategories;
+    public LixiCategory getLixiCategory() {
+        return lixiCategory;
     }
 
-    public void setLixiCategories(List<LixiCategory> lixiCategories) {
-        this.lixiCategories = lixiCategories;
+    public void setLixiCategory(LixiCategory lixiCategory) {
+        this.lixiCategory = lixiCategory;
     }
 
+    
     @Override
     public int hashCode() {
         int hash = 0;

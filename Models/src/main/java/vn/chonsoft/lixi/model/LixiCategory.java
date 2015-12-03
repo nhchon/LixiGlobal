@@ -5,8 +5,8 @@
 package vn.chonsoft.lixi.model;
 
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,13 +35,17 @@ public class LixiCategory implements Serializable {
     @Column(name = "id")
     private Integer id;
     
-    @Basic(optional = false)
-    @Column(name = "name")
-    private String name;
+    @Basic
+    @Column(name = "code", unique = true)
+    private String code;
     
     @Basic
-    @Column(name = "icon")
-    private String icon;
+    @Column(name = "english")
+    private String english;
+    
+    @Basic
+    @Column(name = "vietnam")
+    private String vietnam;
     
     @Column(name = "activated")
     private Integer activated;
@@ -65,12 +69,8 @@ public class LixiCategory implements Serializable {
     @Column(name = "modified_by")
     private String modifiedBy;
     
-    @JoinColumn(name = "locale_code", referencedColumnName = "code")
-    @ManyToOne(optional = false)
-    private SupportLocale locale;
-    
     @JoinColumn(name = "vatgia_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private VatgiaCategory vatgiaId;
 
     public LixiCategory() {
@@ -78,13 +78,6 @@ public class LixiCategory implements Serializable {
 
     public LixiCategory(Integer id) {
         this.id = id;
-    }
-
-    public LixiCategory(Integer id, String name, Date createdDate, String createdBy) {
-        this.id = id;
-        this.name = name;
-        this.createdDate = createdDate;
-        this.createdBy = createdBy;
     }
 
     public Integer getId() {
@@ -95,20 +88,52 @@ public class LixiCategory implements Serializable {
         this.id = id;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getEnglish() {
+        return english;
+    }
+
+    public void setEnglish(String english) {
+        this.english = english;
+    }
+
+    public String getVietnam() {
+        return vietnam;
+    }
+
+    public void setVietnam(String vietnam) {
+        this.vietnam = vietnam;
+    }
+
     public String getName() {
-        return name;
+        return english;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName(Locale locale) {
+        
+        if(locale == null)
+            return english;
+        if(locale.getLanguage().equals("en"))
+            return english;
+        else
+            return vietnam;
     }
 
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public String getName(String lan) {
+        
+        if(lan == null)
+            return english;
+        if(lan.equals("en"))
+            return english;
+        else
+            return vietnam;
     }
 
     public Integer getActivated() {
@@ -157,14 +182,6 @@ public class LixiCategory implements Serializable {
 
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
-    }
-
-    public SupportLocale getLocale() {
-        return locale;
-    }
-
-    public void setLocale(SupportLocale locale) {
-        this.locale = locale;
     }
 
     public VatgiaCategory getVatgiaId() {

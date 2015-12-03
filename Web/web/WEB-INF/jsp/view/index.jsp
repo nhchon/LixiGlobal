@@ -88,7 +88,7 @@
                                     <div class="gift-item-col-content">
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                            <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.perfume.en}</a></h2>
+                                            <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.perfume.english}</a></h2>
                                             <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                         </div>
                                     </div>
@@ -112,7 +112,7 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title">${categories.cosmetics.en}</h2>
+                                                    <h2 class="gift-item-col-content-title">${LIXI_CATEGORIES.cosmetics.english}</h2>
                                                     <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
@@ -124,7 +124,7 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.candies.en}</a></h2>
+                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.candies.english}</a></h2>
                                                     <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
@@ -134,7 +134,7 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.flowers.en}</a></h2>
+                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.flowers.english}</a></h2>
                                                     <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
@@ -148,7 +148,7 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.jewelries.en}</a></h2>
+                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.jewelries.english}</a></h2>
                                                     <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
@@ -164,7 +164,7 @@
                                     <div class="gift-item-col-content">
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                            <h2 class="gift-item-col-content-title"><a href="#shop-now">${categories.childrentoy.en}</a></h2>
+                                            <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.childrentoy.english}</a></h2>
                                             <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                         </div>
                                     </div>

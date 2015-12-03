@@ -3,15 +3,15 @@
         <div class="container">
             <div class="navbar-collapse" id="navbar-collapse-top">
                 <ul class="nav navbar-nav navbar-right">
-                    <c:if test="${not empty loginedUser.email}">
+                    <c:if test="${not empty LOGINED_USER.email}">
                         <li>
-                            <a class="hvr-underline-from-center" href="javascript:void(0);">Hello ${loginedUser.email}</a>
+                            <a class="hvr-underline-from-center" href="javascript:void(0);">Hello ${LOGINED_USER.email}</a>
                         </li>
                         <li>
                             <a class="hvr-underline-from-center" href="<c:url value="/user/signOut"/>">Log Out</a>
                         </li>
                     </c:if>
-                    <c:if test="${empty loginedUser.email}">
+                    <c:if test="${empty LOGINED_USER.email}">
                         <li class="nav-login">
                             <a class="hvr-underline-from-center nav-login-event" href="<c:url value="/user/signIn"/>"><i class="fa fa-user"></i> LOGIN</a>
                         </li>
@@ -59,7 +59,7 @@
                         <a class="hvr-underline-from-center nav-link" href="index.html">Home</a>
                     </li>
                     <li>
-                        <a class="hvr-underline-from-center nav-link" href="send-gift.html">Send gift</a>
+                        <a class="hvr-underline-from-center nav-link" href="<c:url value="/gifts/type"/>">Send gift</a>
                     </li>
                     <li class="has-dropdown dropdown">
                         <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="account.html">Account <i class="fa fa-angle-down"></i></a>

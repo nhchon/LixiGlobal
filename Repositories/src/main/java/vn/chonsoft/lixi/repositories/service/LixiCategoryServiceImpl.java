@@ -46,24 +46,25 @@ public class LixiCategoryServiceImpl implements LixiCategoryService{
     }
     
     @Override
-    public List<LixiCategory> findByLocaleCode(String code){
+    public LixiCategory findByCode(String code){
         
-        return this.lxcRepository.findByLocale_Code(code);
+        return this.lxcRepository.findByCode(code);
         
     }
     
-    /**
-     * 
-     * @param code
-     * @param sort
-     * @return 
-     */
-    @Override
-    public List<LixiCategory> findByLocaleCode(String code, Sort sort){
+    //@Override
+    //public List<LixiCategory> findByLocaleCode(String code){
         
-        return this.lxcRepository.findByLocale_Code(code, sort);
+    //    return this.lxcRepository.findByLocale_Code(code);
         
-    }
+    //}
+
+    //@Override
+    //public List<LixiCategory> findByLocaleCode(String code, Sort sort){
+        
+    //    return this.lxcRepository.findByLocale_Code(code, sort);
+        
+    //}
     
     @Transactional
     @Override

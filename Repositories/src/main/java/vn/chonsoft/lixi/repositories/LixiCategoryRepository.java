@@ -19,9 +19,11 @@ import vn.chonsoft.lixi.model.LixiCategory;
  */
 public interface LixiCategoryRepository extends JpaRepository<LixiCategory, Integer>{
     
-    List<LixiCategory> findByLocale_Code(String code);
+    //List<LixiCategory> findByLocale_Code(String code);
     
-    List<LixiCategory> findByLocale_Code(String code, Sort sort);
+    //List<LixiCategory> findByLocale_Code(String code, Sort sort);
+    
+    LixiCategory findByCode(String code);
     
     @Modifying
     @Transactional
