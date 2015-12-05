@@ -122,31 +122,6 @@ public class GiftsController2 {
     }
 
     /**
-     * 
-     * check if the product is already selected in current order
-     * 
-     * @param products
-     * @param order 
-     */
-    private void checkSelected(List<VatgiaProduct> products, LixiOrder order, Recipient rec){
-        
-        if(rec == null) return;
-        if(order == null) return;
-        if(order.getGifts() == null || order.getGifts().isEmpty())
-            return;
-        
-        //
-        for(VatgiaProduct p : products){
-            for(LixiOrderGift gift : order.getGifts()){
-                if(gift.getRecipient().equals(rec) && p.getId().intValue() == gift.getProductId()){
-                    p.setSelected(Boolean.TRUE);
-                    p.setQuantity(gift.getProductQuantity());
-                    break;
-                }
-            }
-        }
-    }
-    /**
      *
      * select one of ready recipients or create a new recipients
      * 
@@ -337,7 +312,7 @@ public class GiftsController2 {
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "type/{selectedCatId}", method = RequestMethod.GET)
-    public ModelAndView typeOfGift(Map<String, Object> model, @PathVariable Integer selectedCatId, @PageableDefault(sort = {"price"}, value = 20) Pageable page,  HttpServletRequest request) {
+    public ModelAndView typeOfGift(Map<String, Object> model, @PathVariable Integer selectedCatId, @PageableDefault(sort = {"price"}, value = 20, page = 0) Pageable page,  HttpServletRequest request) {
 
         /* put logined user */
         model.put(LiXiConstants.LOGINED_USER, loginedUser);
@@ -351,7 +326,7 @@ public class GiftsController2 {
         LixiCategory lxcategory = categories.getById(selectedCatId);
         
         // check current selected category
-        log.info("selectedCatId: " + selectedCatId + " vg id : " + lxcategory.getVatgiaId().getId());
+        log.info("selectedCatId: " + selectedCatId + " VG's id : " + lxcategory.getVatgiaId().getId());
         
         // store category into session
         request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, selectedCatId);
@@ -395,8 +370,8 @@ public class GiftsController2 {
         
         // get current recipient
         Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
-        // check selected
-        checkSelected(products, order, rec);
+        /* check already selected product */
+        LiXiUtils.checkSelected(products, order, rec);
         
         //Map<String, Object> model = new HashMap<>();
         model.put(LiXiConstants.PRODUCTS, products);

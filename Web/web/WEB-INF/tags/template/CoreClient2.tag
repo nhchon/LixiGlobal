@@ -70,23 +70,6 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-dialog.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.validate.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-slider.js"/>"></script>
-        <script type="text/javascript">
-            $.fn.slider.Constructor.prototype.disable = function () {
-            this.picker.off();
-            }
-            $.fn.slider.Constructor.prototype.enable = function () {
-                    if (this.touchCapable) {
-                                    // Touch: Bind touch events:
-                                    this.picker.on({
-                                            touchstart: $.proxy(this.mousedown, this)
-                                    });
-                            } else {
-                                    this.picker.on({
-                                            mousedown: $.proxy(this.mousedown, this)
-                                    });
-                            }
-            }            
-        </script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/lixi.global-extend-js.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/lixi.global.js"/>"></script>

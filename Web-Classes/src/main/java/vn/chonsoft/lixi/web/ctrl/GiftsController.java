@@ -290,9 +290,6 @@ public class GiftsController {
         // check selected
         checkSelected(products, order, rec);
         
-        // check selected
-        checkSelected(products, order, rec);
-
         SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
         
         model.put(LiXiConstants.PRODUCTS, products);

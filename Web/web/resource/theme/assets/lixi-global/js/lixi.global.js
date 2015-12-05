@@ -208,7 +208,7 @@ LixiGlobal.Gift = {
         var selectedClass = 'gift-product-item-selected';
         var buyBtnObj = giftItemObj.find('.btn-buy-item-event');
         if (obj.is(":checked")) {
-            alert('hi im checked')
+            //alert('hi im checked')
             giftItemObj.addClass(selectedClass);
             buyBtnObj.html("Cancel").attr('data-action', 'Cancel');
         } else {
@@ -216,19 +216,41 @@ LixiGlobal.Gift = {
             buyBtnObj.html("Buy").attr('data-action', 'Buy');
         }
     },
+    toBuyStatus: function(giftItemObj){
+        /* */
+        giftItemObj.find('.gift-item-checkbox input').prop("checked", false);
+        giftItemObj.find('.gift-item-checkbox .custom-checkbox').removeClass("selected");
+        giftItemObj.find(".btn-buy-item-event").html("Buy").attr('data-action', 'Buy');
+    },
+    toCancelStatus: function(giftItemObj){
+        /* */
+        giftItemObj.find('.gift-item-checkbox input').prop("checked", true);
+        giftItemObj.find('.gift-item-checkbox .custom-checkbox').addClass("selected");
+        giftItemObj.addClass("'gift-product-item-selected'");
+        giftItemObj.find(".btn-buy-item-event").html("Cancel").attr('data-action', 'Cancel');
+    },
     initSentGiftPage: function () {
         $('.btn-buy-item-event').click(function () {
             var obj = $(this);
             var giftItemObj = obj.closest('.gift-product-item');
             if ((typeof obj.attr('data-action') !== "undefined") && (obj.attr('data-action') === "Cancel")) {
-                giftItemObj.find('.gift-item-checkbox input').prop("checked", false);
-                giftItemObj.find('.gift-item-checkbox .custom-checkbox').removeClass("selected");
-                obj.html("Buy").attr('data-action', 'Buy');
+                //giftItemObj.find('.gift-item-checkbox input').prop("checked", false);
+                //giftItemObj.find('.gift-item-checkbox .custom-checkbox').removeClass("selected");
+                //obj.html("Buy").attr('data-action', 'Buy');
+                /* */
+                var productId = giftItemObj.find("input[name='item']").val();
+                var quantity = giftItemObj.find("input[name='quantity']").val();
+                checkExceed(productId, -quantity);
             } else {
-                giftItemObj.find('.gift-item-checkbox input').prop("checked", true);
-                giftItemObj.find('.gift-item-checkbox .custom-checkbox').addClass("selected");
-                giftItemObj.addClass(selectedClass);
-                obj.html("Cancel").attr('data-action', 'Cancel');
+                //giftItemObj.find('.gift-item-checkbox input').prop("checked", true);
+                //giftItemObj.find('.gift-item-checkbox .custom-checkbox').addClass("selected");
+                //giftItemObj.addClass(selectedClass);
+                //obj.html("Cancel").attr('data-action', 'Cancel');
+                
+                /* */
+                var productId = giftItemObj.find("input[name='item']").val();
+                var quantity = giftItemObj.find("input[name='quantity']").val();
+                checkExceed(productId, quantity);
             }
         });
         
@@ -256,7 +278,8 @@ LixiGlobal.Gift = {
             totalPages: TOTAL_PAGES,
             visiblePages: 5,
             onPageClick: function (event, page) {
-                console.log(page);
+                /* load products - gifts.js */
+                loadPage(page);
             }
         });
     }

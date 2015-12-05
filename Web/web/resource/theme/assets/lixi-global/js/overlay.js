@@ -27,3 +27,18 @@ $.fn.positionOn = function(element) {
     }
   });
 };
+
+/**
+ * 
+ * @param {type} obj
+ * @returns {undefined}
+ */
+function overlayOn(obj){
+    var overlayDiv = $('#overlay');
+    overlayDiv.positionOn(obj);
+    overlayDiv.show();
+}
+
+function overlayOff(){
+    $('#overlay').hide();
+}

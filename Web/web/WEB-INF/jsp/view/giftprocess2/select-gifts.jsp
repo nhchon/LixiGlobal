@@ -6,8 +6,11 @@
 
     <jsp:attribute name="extraJavascriptContent">
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.twbsPagination.min.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/gifts.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
+            var AJAX_LOAD_PRODUCTS_PATH = '<c:url value="/gifts/ajax/products"/>';
+            var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
             var TOTAL_PAGES = ${PAGES.totalPages};
         </script>
     </jsp:attribute>
@@ -56,34 +59,8 @@
                     </div>
                     <div class="gift-filter-items">
                         <h2 class="title">${SELECTED_LIXI_CATEGORY_NAME}</h2>
-                        <div class="row">
-                            <c:forEach items="${PRODUCTS}" var="p" varStatus="theCount">
-                            <div class="col-md-3 col-sm-4 col-xs-6 col-for-five gift-product-item-col">
-                                <div class="gift-product-item text-center">
-                                    <div title="${p.name}" class="gift-product-thumb" style="background: url(${p.imageUrl}) no-repeat scroll center center transparent;"> </div>
-                                    <h4 class="title" title="${p.name}">${p.name}</h4>
-                                    <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
-                                    <h4 class="title price">USD $ <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
-                                    <div class="gift-number-box">
-                                        <div class="input-group text-center">
-                                            <span class="input-group-btn">
-                                                <button onclick="LixiGlobal.Gift.initSubBtn(this);" class="btn btn-default gift-sub-event" type="button"><i class="fa fa-chevron-down"></i></button>
-                                            </span>
-                                            <input min="1" name="number" value="1" class="form-control gift-number" placeholder="Number">
-                                            <span class="input-group-btn">
-                                                <button onclick="LixiGlobal.Gift.initAddBtn(this);"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
-                                            </span>
-                                        </div><!-- /input-group -->
-                                    </div>
-                                    <div class="button-control">
-                                        <button class="btn btn-default title buy btn-buy-item-event">Buy</button>
-                                    </div>
-                                    <span class="gift-item-checkbox">
-                                        <input class="custom-checkbox-input" onclick="LixiGlobal.Gift.chooseGiftItem(this);" type="checkbox" name="item"/>
-                                    </span>
-                                </div>
-                            </div>
-                            </c:forEach>
+                        <div class="row" id="divProducts">
+                            <%@include file="/WEB-INF/jsp/view/giftprocess2/ajax-products.jsp" %>
                         </div>
                         <div class="pagination-wrapper">
                             <ul id="pagination-data" class="pagination-sm"></ul>
@@ -93,7 +70,7 @@
                         <div class="button-control gift-total-wrapper text-center text-uppercase">
                             <div class="gift-total-box">
                                 <span class="gift-total-box-left">order Total</span>
-                                <span class="gift-total-box-right">usd $ 99.00 ~ VND 2,225,322</span>
+                                <span class="gift-total-box-right">usd $ <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span></span>
                             </div>
                             <div class="button-control-page">
                                 <button class="btn btn-default">BACK</button>

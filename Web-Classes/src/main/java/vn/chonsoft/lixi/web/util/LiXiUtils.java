@@ -39,6 +39,7 @@ import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.model.pojo.Exrate;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
@@ -449,6 +450,35 @@ public class LiXiUtils {
         return path.replaceFirst(":8080", "");
     }
 
+    /**
+     * 
+     * check if the product is already selected in current order
+     * 
+     * @param products
+     * @param order 
+     */
+    public static void checkSelected(List<VatgiaProduct> products, LixiOrder order, Recipient rec){
+        
+        if(rec == null) return;
+        if(order == null) return;
+        if(order.getGifts() == null || order.getGifts().isEmpty())
+            return;
+        
+        //
+        for(VatgiaProduct p : products){
+            /* default quantity */
+            p.setQuantity(1);
+            /* */
+            for(LixiOrderGift gift : order.getGifts()){
+                if(gift.getRecipient().equals(rec) && p.getId().intValue() == gift.getProductId()){
+                    p.setSelected(Boolean.TRUE);
+                    p.setQuantity(gift.getProductQuantity());
+                    break;
+                }
+            }
+        }
+    }
+    
     /**
      *
      * @param file
