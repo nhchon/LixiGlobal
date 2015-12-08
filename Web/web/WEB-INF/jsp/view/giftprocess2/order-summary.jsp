@@ -5,8 +5,10 @@
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/summary.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
+            var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
         </script>
     </jsp:attribute>
 
@@ -16,7 +18,7 @@
             <div class="container">
                 <c:set var="localStep" value="5"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
-                <form action="" method="post" class="receiver-form">
+                <form action="" method="get" class="receiver-form">
                     <div class="section-receiver">
                         <h2 class="title">order summary</h2>
                         <div class="table-responsive table-responsive-mobi">
@@ -48,11 +50,11 @@
                                                 <div class="gift-number-box">
                                                     <div class="input-group add-sub-item text-center">
                                                         <span class="input-group-btn">
-                                                            <button onclick="LixiGlobal.Gift.initSubBtn(this);" class="btn btn-default gift-sub-event" type="button"><i class="fa fa-chevron-down"></i></button>
+                                                            <button onclick="subBtn(${g.id}, ${g.productId}, ${entry.recipient.id});" class="btn btn-default gift-sub-event" type="button"><i class="fa fa-chevron-down"></i></button>
                                                         </span>
                                                         <input id="quantity${g.id}" min="1" name="number" value="${g.productQuantity}" class="form-control gift-number" placeholder="Number">
                                                         <span class="input-group-btn">
-                                                            <button onclick="LixiGlobal.Gift.initAddBtn(this);"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
+                                                            <button onclick="addBtn(${g.id}, ${g.productId}, ${entry.recipient.id});"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
                                                         </span>
                                                     </div><!-- /input-group -->
                                                 </div>
@@ -60,17 +62,17 @@
                                             <td data-title="Unit Price">
                                                 <c:set var="priceInUSD" value="${g.getPriceInUSD(LIXI_ORDER.lxExchangeRate.buy)}"/>
                                                 <div><strong>USD $ <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/></strong></div>
-                                                <div><strong>VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/></strong></div>
+                                                <div><strong>VND <fmt:formatNumber value="${priceInUSD * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
-                                                <p><button class="btn btn-default text-uppercase">Change</button></p>
-                                                <p> <button class="btn btn-primary text-uppercase">Delete</button></p>
+                                                <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/gifts/type/${g.category.id}"/>';"><spring:message code="message.change"/></button></p>
+                                                <p> <button type="button" class="btn btn-primary text-uppercase" onclick="location.href='<c:url value="/gifts/delete/gift/${g.id}"/>';"><spring:message code="message.delete"/></button></p>
                                             </td>
                                         </tr>
                                         </c:forEach>
                                         <tr class="has-colspan">
                                             <td colspan="5" class="border-right has-colspan-label"><strong class="text-uppercase title text-right float-right">Total</strong></td>
-                                            <td colspan="2"><strong class="text-uppercase  title">usd $ <fmt:formatNumber value="${entry.allTotal.usd}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${entry.allTotal.vnd}" pattern="###,###.##"/></strong></td>
+                                            <td colspan="2"><strong class="text-uppercase  title">usd $ <span id="recPaymentUSD${entry.recipient.id}"><fmt:formatNumber value="${entry.allTotal.usd}" pattern="###,###.##"/></span> ~ VND <span id="recPaymentVND${entry.recipient.id}"><fmt:formatNumber value="${entry.allTotal.vnd}" pattern="###,###.##"/></span></strong></td>
                                         </tr>
                                     </c:forEach>
                                     <tr class="has-colspan">
@@ -87,7 +89,7 @@
                     </div>
                     <div class="button-control text-center text-uppercase">
                         <div class="button-control-page">
-                            <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="send-gift-receiver.html">Keep shopping</button>
+                            <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/recipient"/>">Keep shopping</button>
                             <button class="btn btn-primary btn-has-link-event"  type="button" data-link="select-a-payment.html">NEXT</button>
                         </div>
                     </div>

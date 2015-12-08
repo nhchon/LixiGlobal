@@ -90,16 +90,16 @@ public class RecipientInOrder {
         /* */
         double buy = getLxExchangeRate().getBuy();
         // gift type
-        double sumGiftVND = 0;
+        //double sumGiftVND = 0;
         double sumGiftUSD = 0;
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
-                sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
+                //sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
                 sumGiftUSD += (gift.getPriceInUSD(buy) * gift.getProductQuantity());
             }
         }
         
-        return new SumVndUsd("LIXI_GIFT_TYPE", sumGiftVND, sumGiftUSD);
+        return new SumVndUsd("LIXI_GIFT_TYPE", sumGiftUSD * buy, sumGiftUSD);
     }
     
     /**
@@ -112,15 +112,15 @@ public class RecipientInOrder {
         double buy = getLxExchangeRate().getBuy();
         
         // buy phone card
-        double sumBuyCardVND = 0;
+        //double sumBuyCardVND = 0;
         double sumBuyCardUSD = 0;
         if (getBuyPhoneCards() != null) {
             for (BuyCard card : getBuyPhoneCards()) {
-                sumBuyCardVND += (card.getNumOfCard() * card.getValueOfCard());
+                //sumBuyCardVND += (card.getNumOfCard() * card.getValueOfCard());
                 sumBuyCardUSD += (card.getValueInUSD(buy) * card.getNumOfCard());
             }
         }
-        return new SumVndUsd("LIXI_PHONE_CARD_TYPE", sumBuyCardVND, sumBuyCardUSD);
+        return new SumVndUsd("LIXI_PHONE_CARD_TYPE", sumBuyCardUSD * buy, sumBuyCardUSD);
     }
     
     public SumVndUsd getTopUpTotal(){
@@ -129,15 +129,15 @@ public class RecipientInOrder {
         double buy = getLxExchangeRate().getBuy();
         
         // top up mobile phone
-        double sumTopUpVND = 0;
+        //double sumTopUpVND = 0;
         double sumTopUpUSD = 0;
         if (getTopUpMobilePhones() != null) {
             for (TopUpMobilePhone topUp : getTopUpMobilePhones()) {
-                sumTopUpVND += (topUp.getAmount() * buy);
+                //sumTopUpVND += (topUp.getAmount() * buy);
                 sumTopUpUSD += topUp.getAmount();
             }
         }
-        return new SumVndUsd("LIXI_TOP_UP_TYPE", sumTopUpVND, sumTopUpUSD);
+        return new SumVndUsd("LIXI_TOP_UP_TYPE", sumTopUpUSD * buy, sumTopUpUSD);
     }
     
     public SumVndUsd getAllTotal(){

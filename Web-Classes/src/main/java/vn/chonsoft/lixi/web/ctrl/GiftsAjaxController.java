@@ -28,6 +28,7 @@ import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
@@ -167,14 +168,15 @@ public class GiftsAjaxController {
      * check order is exceeded
      * 
      * @param model
+     * @param recId
      * @param productId
      * @param quantity
      * @param request
      * @return 
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "checkExceed/{productId}/{quantity}", method = RequestMethod.GET)
-    public ModelAndView checkExceed(Map<String, Object> model, @PathVariable Integer productId, @PathVariable Integer quantity, HttpServletRequest request){
+    @RequestMapping(value = "checkExceed/{recId}/{productId}/{quantity}", method = RequestMethod.GET)
+    public ModelAndView checkExceed(Map<String, Object> model, @PathVariable Long recId, @PathVariable Integer productId, @PathVariable Integer quantity, HttpServletRequest request){
         
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
@@ -189,7 +191,10 @@ public class GiftsAjaxController {
 
         }
         /* get recipient */
-        Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
+        if(recId == 0){
+            recId = (Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID);
+        }
+        Recipient rec = this.reciService.findById(recId);
         LixiOrderGift alreadyGift = this.lxogiftService.findByOrderAndRecipientAndProductId(order, rec, productId);
         
         // get price
@@ -209,15 +214,17 @@ public class GiftsAjaxController {
             lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
             buy = lxExch.getBuy();
         }
-        
+        RecipientInOrder recInOrder = null;
         SumVndUsd[] currentPayments;
-        if(quantity > 0){
-            currentPayments = LiXiUtils.calculateCurrentPayment(order, LiXiUtils.getOrderGiftId(alreadyGift)); // in USD
-        }
-        else{
+        //if(quantity > 0){
+        //    currentPayments = LiXiUtils.calculateCurrentPayment(order, LiXiUtils.getOrderGiftId(alreadyGift)); // in USD
+        //}
+        //else{
             // remove the gift, count all and then minus out
-            currentPayments = LiXiUtils.calculateCurrentPayment(order);
-        }
+        //    currentPayments = LiXiUtils.calculateCurrentPayment(order);
+        //}
+        currentPayments = LiXiUtils.calculateCurrentPayment(order, alreadyGift);
+        
         double currentPayment = currentPayments[0].getUsd();//USD
         currentPayment += LiXiUtils.roundPriceQuantity2USD(price, quantity, buy);// in USD
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
@@ -286,6 +293,7 @@ public class GiftsAjaxController {
                     lxogift.setCategory(lxCategory);
                     lxogift.setProductId(productId);
                     lxogift.setProductPrice(price);
+                    lxogift.setExchPrice((long)(lxogift.getPriceInUSD(buy)*buy));//truncated
                     lxogift.setProductName(vgp.getName());
                     lxogift.setProductImage(vgp.getImageUrl());
                     lxogift.setProductQuantity(quantity);
@@ -311,11 +319,18 @@ public class GiftsAjaxController {
                     this.lxogiftService.delete(alreadyGift.getId());
                 }
             }
+            /* re-calculate recipient's total */
+            recInOrder = LiXiUtils.getRecipientInOrder(LiXiUtils.genMapRecGifts(this.lxorderService.findById(order.getId())), recId);
             
         }
         // store current payment
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
+        
+        if(recInOrder != null){
+            model.put("RECIPIENT_PAYMENT_USD", LiXiUtils.getNumberFormat().format(recInOrder.getAllTotal().getUsd()));
+            model.put("RECIPIENT_PAYMENT_VND", LiXiUtils.getNumberFormat().format(recInOrder.getAllTotal().getVnd()));
+        }
         
         return new ModelAndView("giftprocess2/exceed", model);
     }

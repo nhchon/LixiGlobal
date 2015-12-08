@@ -238,7 +238,7 @@ public class LiXiUtils {
         // get exchange rate
         double buy = order.getLxExchangeRate().getBuy();
         // gift type
-        double sumGiftVND = 0;
+        //double sumGiftVND = 0;
         double sumGiftUSD = 0;
         if (order.getGifts() != null) {
             for (LixiOrderGift gift : order.getGifts()) {
@@ -246,41 +246,41 @@ public class LiXiUtils {
                 if (LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() == excludeId) {
                     // Nothing
                 } else {
-                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
+                    //sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
                     sumGiftUSD += (gift.getPriceInUSD(buy) * gift.getProductQuantity());
                 }
 
             }
         }
         // plus to total
-        totalVND += sumGiftVND;
+        totalVND += sumGiftUSD * buy;
         totalUSD += sumGiftUSD;
         
         // index 1
-        returnAllSum[1] = new SumVndUsd(LiXiConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
+        returnAllSum[1] = new SumVndUsd(LiXiConstants.LIXI_GIFT_TYPE, sumGiftUSD * buy, sumGiftUSD);
         
         // top up mobile phone
-        double sumTopUpVND = 0;
+        //double sumTopUpVND = 0;
         double sumTopUpUSD = 0;
         if (order.getTopUpMobilePhones() != null) {
             for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
 
                 if (LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() == excludeId) {
                 } else {
-                    sumTopUpVND += (topUp.getAmount() * buy);
+                    //sumTopUpVND += (topUp.getAmount() * buy);
                     sumTopUpUSD += topUp.getAmount();
                 }
 
             }
         }
         // plus to total
-        totalVND += sumTopUpVND;
+        totalVND += sumTopUpUSD * buy;
         totalUSD += sumTopUpUSD;
         // index 2
-        returnAllSum[2] = new SumVndUsd(LiXiConstants.LIXI_TOP_UP_TYPE, sumGiftVND, sumGiftUSD);
+        returnAllSum[2] = new SumVndUsd(LiXiConstants.LIXI_TOP_UP_TYPE, sumTopUpUSD * buy, sumTopUpUSD);
         
         // buy phone card
-        double sumBuyCardVND = 0;
+        //double sumBuyCardVND = 0;
         double sumBuyCardUSD = 0;
         if (order.getBuyCards() != null) {
             for (BuyCard card : order.getBuyCards()) {
@@ -288,18 +288,18 @@ public class LiXiUtils {
                 if (LiXiConstants.LIXI_PHONE_CARD_TYPE.equals(type) && card.getId() == excludeId) {
                     // nothing
                 } else {
-                    sumBuyCardVND += (card.getNumOfCard() * card.getValueOfCard());
+                    //sumBuyCardVND += (card.getNumOfCard() * card.getValueOfCard());
                     sumBuyCardUSD += (card.getValueInUSD(buy) * card.getNumOfCard());
                 }
 
             }
         }
         // plus to total
-        totalVND += sumBuyCardVND;
+        totalVND += sumBuyCardUSD * buy;
         totalUSD += sumBuyCardUSD;
         
         // index 3
-        returnAllSum[3] = new SumVndUsd(LiXiConstants.LIXI_PHONE_CARD_TYPE, sumGiftVND, sumGiftUSD);
+        returnAllSum[3] = new SumVndUsd(LiXiConstants.LIXI_PHONE_CARD_TYPE, sumBuyCardUSD * buy, sumBuyCardUSD);
 
         // index 0
         returnAllSum[0] = new SumVndUsd(LiXiConstants.TOTAL_ALL_TYPE, totalVND, totalUSD);
@@ -324,6 +324,21 @@ public class LiXiUtils {
     }
 
     /**
+     * 
+     * @param order
+     * @param alreadyGift
+     * @return 
+     */
+    public static SumVndUsd[] calculateCurrentPayment(LixiOrder order, LixiOrderGift alreadyGift) {
+
+        if(alreadyGift != null){
+            return calculateCurrentPayment(order, alreadyGift.getId(), LiXiConstants.LIXI_GIFT_TYPE);
+        }
+        /* */
+        return calculateCurrentPayment(order, -1);
+    }
+
+    /**
      *
      * @param order
      * @return
@@ -334,6 +349,22 @@ public class LiXiUtils {
 
     }
 
+    /**
+     * 
+     * @param recGifts
+     * @param recId
+     * @return 
+     */
+    public static RecipientInOrder getRecipientInOrder(List<RecipientInOrder> recGifts, Long recId){
+        
+        for(RecipientInOrder rec : recGifts){
+            if(rec.getRecipient().getId().longValue() == recId)
+                return rec;
+        }
+        
+        /**/
+        return null;
+    }
     /**
      *
      *

@@ -43,6 +43,10 @@ public class LixiOrderGift implements Serializable {
     private double productPrice;
     
     @Basic
+    @Column(name = "exch_price")
+    private double exchPrice;
+    
+    @Basic
     @Column(name = "product_name")
     private String productName;
     
@@ -88,12 +92,6 @@ public class LixiOrderGift implements Serializable {
     @ManyToOne(optional = false)
     private LixiOrder order;
     
-    /*
-    @JoinColumn(name = "amount_currency", referencedColumnName = "code")
-    @ManyToOne(optional = false)
-    private CurrencyType amountCurrency;
-    */
-    
     public LixiOrderGift() {
     }
 
@@ -138,6 +136,14 @@ public class LixiOrderGift implements Serializable {
         double inUsd = getProductPrice()/exchange +0.005;
         
         return Math.round(inUsd * 100.0) / 100.0;
+    }
+
+    public double getExchPrice() {
+        return exchPrice;
+    }
+
+    public void setExchPrice(double exchPrice) {
+        this.exchPrice = exchPrice;
     }
     
     public String getProductName() {

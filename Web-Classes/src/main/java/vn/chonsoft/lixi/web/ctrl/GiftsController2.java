@@ -26,6 +26,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
@@ -421,4 +422,31 @@ public class GiftsController2 {
         return new ModelAndView("giftprocess2/order-summary", model);
     }
     
+    /**
+     * 
+     * @param giftId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "delete/gift/{giftId}", method = RequestMethod.GET)
+    public ModelAndView delete(@PathVariable Long giftId, HttpServletRequest request) {
+        
+        LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+
+        LixiOrderGift lxogift = this.lxogiftService.findByIdAndOrder(giftId, order);
+
+        if (lxogift != null) {
+
+            this.lxogiftService.delete(lxogift.getId());
+
+        } else {
+
+            log.info("Lixi order gift is null: " + giftId);
+        }
+
+        // jump 
+        return new ModelAndView(new RedirectView("/gifts/order-summary", true, true));
+        
+    }
 }

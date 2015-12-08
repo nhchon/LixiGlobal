@@ -87,6 +87,7 @@ public abstract class LiXiConstants {
     public static final String SELECTED_LIXI_CATEGORY_NAME = "SELECTED_LIXI_CATEGORY_NAME";
     public static final String SELECTED_PRODUCT_ID = "SELECTED_PRODUCT_ID";
     public static final String SELECTED_PRODUCT_QUANTITY = "SELECTED_PRODUCT_QUANTITY";
+    public static final String RECIPIENT_IN_ORDER = "RECIPIENT_IN_ORDER";
     
     public static final String CURRENCIES = "CURRENCIES";
     public static final String LIXI_EXCHANGE_RATE = "LIXI_EXCHANGE_RATE";
