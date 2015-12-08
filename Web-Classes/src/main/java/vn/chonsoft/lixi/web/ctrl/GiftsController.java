@@ -720,6 +720,7 @@ public class GiftsController {
         
         return new ModelAndView("giftprocess2/exceed", model);
     }
+
     /**
      *
      * @param model 

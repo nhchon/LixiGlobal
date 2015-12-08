@@ -106,6 +106,8 @@ public class Recipient implements Serializable {
     }
 
     public String getMiddleName() {
+        
+        if(middleName == null) return "";
         return middleName;
     }
 

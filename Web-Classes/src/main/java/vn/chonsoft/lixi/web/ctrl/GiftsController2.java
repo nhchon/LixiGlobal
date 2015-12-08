@@ -5,7 +5,6 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +26,12 @@ import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
-import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
@@ -387,5 +385,40 @@ public class GiftsController2 {
 
     }
 
+    /**
+     *
+     * @param model 
+     * @param request
+     * @return
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "order-summary", method = RequestMethod.GET)
+    public ModelAndView orderSummary(Map<String, Object> model, HttpServletRequest request) {
+
+        /* put logined user */
+        model.put(LiXiConstants.LOGINED_USER, loginedUser);
+
+        User u = this.userService.findByEmail(loginedUser.getEmail());
+
+        // check order created
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if(orderId == null){
+            
+            // to do
+            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+        }
+        
+        LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+
+        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
+        SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // in USD
+        
+        model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
+        model.put(LiXiConstants.LIXI_ORDER, order);
+        model.put(LiXiConstants.LIXI_TOTAL_AMOUNT, currentPayments[0]);
+        model.put(LiXiConstants.REC_GIFTS, recGifts);
+
+        return new ModelAndView("giftprocess2/order-summary", model);
+    }
     
 }

@@ -208,6 +208,14 @@ public class LiXiUtils {
     }
 
     /**
+     * 
+     * @param order
+     * @return 
+     */
+    public static SumVndUsd getTotalOrder(LixiOrder order) {
+        return calculateCurrentPayment(order)[0];
+    }
+    /**
      *
      * Calculate total money, in VND, exclude specific id of the type of gift
      * (gift,top up, card)
@@ -397,6 +405,7 @@ public class LiXiUtils {
 
             RecipientInOrder recInOrder = new RecipientInOrder();
             recInOrder.setOrderId(order.getId());
+            recInOrder.setLxExchangeRate(order.getLxExchangeRate());
             recInOrder.setRecipient(rec);
 
             if (recGifts.containsKey(rec)) {

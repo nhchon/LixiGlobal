@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Client htmlTitle="LiXi Global - Blank Sample Page">
+<template:Client htmlTitle="LiXi Global - Select Gifts">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>
@@ -65,7 +65,6 @@
                         <div class="pagination-wrapper">
                             <ul id="pagination-data" class="pagination-sm"></ul>
                         </div>
-
                         <div class="clean-paragraph"></div>
                         <div class="button-control gift-total-wrapper text-center text-uppercase">
                             <div class="gift-total-box">
@@ -74,7 +73,7 @@
                             </div>
                             <div class="button-control-page">
                                 <button class="btn btn-default">BACK</button>
-                                <button class="btn btn-primary btn-has-link-event"  type="button" data-link="send-gift-receiver.html">NEXT</button>
+                                <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/gifts/order-summary"/>">NEXT</button>
                             </div>
                         </div>
                     </div>

@@ -192,6 +192,13 @@ LixiGlobal.Gift = {
         var obj = $(_obj);
         var inputObj = obj.closest('.gift-number-box').find('.gift-number');
         inputObj.val(parseInt(inputObj.val()) + 1);
+        
+        var giftItemObj = obj.closest('.gift-product-item');
+        var productId = giftItemObj.find("input[name='item']").val();
+        var quantity = giftItemObj.find("input[name='quantity']").val();
+        //alert(productId + " " + quantity)
+        overlayOn($("#product"+productId));
+        checkExceed(productId, quantity);
         return  false;
     },
     initSubBtn: function (_obj) {
@@ -200,6 +207,12 @@ LixiGlobal.Gift = {
         if (parseInt(inputObj.val()) > 1) {
             inputObj.val(parseInt(inputObj.val()) - 1);
         }
+        var giftItemObj = obj.closest('.gift-product-item');
+        var productId = giftItemObj.find("input[name='item']").val();
+        var quantity = giftItemObj.find("input[name='quantity']").val();
+        //alert(productId + " " + quantity)
+        overlayOn($("#product"+productId));
+        checkExceed(productId, quantity);
         return  false;
     },
     chooseGiftItem: function (_obj) {
@@ -209,11 +222,17 @@ LixiGlobal.Gift = {
         var buyBtnObj = giftItemObj.find('.btn-buy-item-event');
         if (obj.is(":checked")) {
             //alert('hi im checked')
-            giftItemObj.addClass(selectedClass);
-            buyBtnObj.html("Cancel").attr('data-action', 'Cancel');
+            var productId = giftItemObj.find("input[name='item']").val();
+            var quantity = giftItemObj.find("input[name='quantity']").val();
+            overlayOn($("#product"+productId));
+            checkExceed(productId, quantity);
         } else {
-            giftItemObj.removeClass(selectedClass);
-            buyBtnObj.html("Buy").attr('data-action', 'Buy');
+            //giftItemObj.removeClass(selectedClass);
+            //buyBtnObj.html("Buy").attr('data-action', 'Buy');
+            var productId = giftItemObj.find("input[name='item']").val();
+            var quantity = giftItemObj.find("input[name='quantity']").val();
+            overlayOn($("#product"+productId));
+            checkExceed(productId, -quantity);
         }
     },
     toBuyStatus: function(giftItemObj){
@@ -234,22 +253,16 @@ LixiGlobal.Gift = {
             var obj = $(this);
             var giftItemObj = obj.closest('.gift-product-item');
             if ((typeof obj.attr('data-action') !== "undefined") && (obj.attr('data-action') === "Cancel")) {
-                //giftItemObj.find('.gift-item-checkbox input').prop("checked", false);
-                //giftItemObj.find('.gift-item-checkbox .custom-checkbox').removeClass("selected");
-                //obj.html("Buy").attr('data-action', 'Buy');
                 /* */
                 var productId = giftItemObj.find("input[name='item']").val();
                 var quantity = giftItemObj.find("input[name='quantity']").val();
+                overlayOn($("#product"+productId));
                 checkExceed(productId, -quantity);
             } else {
-                //giftItemObj.find('.gift-item-checkbox input').prop("checked", true);
-                //giftItemObj.find('.gift-item-checkbox .custom-checkbox').addClass("selected");
-                //giftItemObj.addClass(selectedClass);
-                //obj.html("Cancel").attr('data-action', 'Cancel');
-                
                 /* */
                 var productId = giftItemObj.find("input[name='item']").val();
                 var quantity = giftItemObj.find("input[name='quantity']").val();
+                overlayOn($("#product"+productId));
                 checkExceed(productId, quantity);
             }
         });

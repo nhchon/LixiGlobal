@@ -12,8 +12,8 @@ function loadPage(pageNum) {
             //addHandlerToCheckboxAndSelect();
             LixiGlobal.Gift.initSentGiftPage();
         },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
+        error: function (jqXHR, textStatus, errorThrown)
+        {
             alert(errorThrown);
         }
     });
@@ -33,9 +33,10 @@ function checkExceed(productId, quantity) {
         dataType: 'json',
         success: function (data, textStatus, jqXHR)
         {
+            overlayOff();
             if (data.exceed === '1') {
                 //$('#divError').remove();
-                $('#divProducts').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
+                //$('#divProducts').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
                 // uncheck
                 $('input[name=item]').each(function () {
                     if ($(this).val() == productId) {
@@ -60,7 +61,6 @@ function checkExceed(productId, quantity) {
                 alert(data.message);
             } else {
                 // no exceed, remove error
-                //$('#divError').remove();
                 // update current payment
                 $('#currentPaymentVND').html(data.CURRENT_PAYMENT_VND);
                 $('#currentPaymentUSD').html(data.CURRENT_PAYMENT_USD);
@@ -73,6 +73,7 @@ function checkExceed(productId, quantity) {
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
+            overlayOff();
             alert(errorThrown);
             //alert('Đã có lỗi, vui lòng thử lại !'); 
         }
