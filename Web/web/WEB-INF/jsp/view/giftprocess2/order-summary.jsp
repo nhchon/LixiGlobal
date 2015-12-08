@@ -35,7 +35,7 @@
                                 <tbody>
                                     <c:forEach items="${REC_GIFTS}" var="entry">
                                         <c:forEach items="${entry.gifts}" var="g">
-                                        <tr>
+                                            <tr id="giftRow${g.id}">
                                             <td data-title="Select">
                                                 <input type="checkbox" class="custom-checkbox-input"/>
                                             </td>
@@ -50,7 +50,7 @@
                                                         <span class="input-group-btn">
                                                             <button onclick="LixiGlobal.Gift.initSubBtn(this);" class="btn btn-default gift-sub-event" type="button"><i class="fa fa-chevron-down"></i></button>
                                                         </span>
-                                                        <input min="1" name="number" value="${g.productQuantity}" class="form-control gift-number" placeholder="Number">
+                                                        <input id="quantity${g.id}" min="1" name="number" value="${g.productQuantity}" class="form-control gift-number" placeholder="Number">
                                                         <span class="input-group-btn">
                                                             <button onclick="LixiGlobal.Gift.initAddBtn(this);"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
                                                         </span>
@@ -76,7 +76,7 @@
                                     <tr class="has-colspan">
                                         <td colspan="3" class="no-padding-left"><strong class="text-uppercase text-right">order limit ( USD $ 150 / vnd 3,000,000 ) </strong></td>
                                         <td colspan="2" class="border-right has-colspan-label"><strong class="text-uppercase text-right  float-right  title">Total</strong></td>
-                                        <td colspan="2"><strong class="text-uppercase  title">usd $ <fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.usd}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.vnd}" pattern="###,###.##"/></strong></td>
+                                        <td colspan="2"><strong class="text-uppercase  title">usd $ <span id="currentPaymentUSD"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.usd}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.vnd}" pattern="###,###.##"/></span></strong></td>
                                     </tr>
                                 </tbody>
                             </table>
