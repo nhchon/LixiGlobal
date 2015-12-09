@@ -79,6 +79,7 @@ public class LiXiUtils {
         l.setLoginedDate(Calendar.getInstance().getTime());
         
     }
+    
     /**
      *
      * Check user is loggined or not
@@ -206,19 +207,6 @@ public class LiXiUtils {
         return Math.round(inUsd * 100.0) / 100.0;
         
     }
-    /**
-     *
-     * @param price, in VND
-     * @param quantity
-     * @param exchange
-     * @return
-     */
-    public static double roundPriceQuantity2USD(double price, int quantity, double exchange) {
-
-        double rsl = ((price * quantity) / exchange) + (quantity * 0.005);
-
-        return Math.round(rsl * 100.0) / 100.0;
-    }
 
     /**
      * 
@@ -248,10 +236,8 @@ public class LiXiUtils {
         double totalVND = 0;
         double totalUSD = 0;
         //
-        // get exchange rate
-        double buy = order.getLxExchangeRate().getBuy();
         // gift type
-        //double sumGiftVND = 0;
+        double sumGiftVND = 0;
         double sumGiftUSD = 0;
         if (order.getGifts() != null) {
             for (LixiOrderGift gift : order.getGifts()) {
@@ -259,18 +245,21 @@ public class LiXiUtils {
                 if (LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() == excludeId) {
                     // Nothing
                 } else {
-                    //sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
-                    sumGiftUSD += (gift.getPriceInUSD(buy) * gift.getProductQuantity());
+                    sumGiftVND += (gift.getExchPrice() * gift.getProductQuantity());
+                    sumGiftUSD += (gift.getUsdPrice() * gift.getProductQuantity());
                 }
 
             }
         }
         // plus to total
-        totalVND += sumGiftUSD * buy;
+        totalVND += sumGiftVND;
         totalUSD += sumGiftUSD;
         
         // index 1
-        returnAllSum[1] = new SumVndUsd(LiXiConstants.LIXI_GIFT_TYPE, sumGiftUSD * buy, sumGiftUSD);
+        returnAllSum[1] = new SumVndUsd(LiXiConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
+        
+        // get exchange rate
+        double buy = order.getLxExchangeRate().getBuy();
         
         // top up mobile phone
         //double sumTopUpVND = 0;

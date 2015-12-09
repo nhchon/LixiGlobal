@@ -36,6 +36,7 @@ import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserService;
+import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
 import vn.chonsoft.lixi.repositories.service.VatgiaProductService;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -83,7 +84,8 @@ public class GiftsAjaxController {
     @Autowired
     private VatgiaProductService vgpService;
     
-    
+    @Autowired
+    private VatgiaCategoryService vgcService;
     /**
      * 
      * Ajax call get products
@@ -214,19 +216,13 @@ public class GiftsAjaxController {
             lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
             buy = lxExch.getBuy();
         }
+        
         RecipientInOrder recInOrder = null;
         SumVndUsd[] currentPayments;
-        //if(quantity > 0){
-        //    currentPayments = LiXiUtils.calculateCurrentPayment(order, LiXiUtils.getOrderGiftId(alreadyGift)); // in USD
-        //}
-        //else{
-            // remove the gift, count all and then minus out
-        //    currentPayments = LiXiUtils.calculateCurrentPayment(order);
-        //}
         currentPayments = LiXiUtils.calculateCurrentPayment(order, alreadyGift);
         
         double currentPayment = currentPayments[0].getUsd();//USD
-        currentPayment += LiXiUtils.roundPriceQuantity2USD(price, quantity, buy);// in USD
+        currentPayment += (LiXiUtils.toUsdPrice(price, buy) * quantity);// in USD
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
 
             // maximum payment is over
@@ -235,9 +231,9 @@ public class GiftsAjaxController {
             double exceededPaymentVND = (currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount()) * buy;
             double exceededPaymentUSD = currentPayment - u.getUserMoneyLevel().getMoneyLevel().getAmount();
             
-            model.put(LiXiConstants.EXCEEDED_VND, LiXiUtils.getNumberFormat().format(exceededPaymentVND));
+            model.put(LiXiConstants.EXCEEDED_VND, exceededPaymentVND);
             
-            model.put(LiXiConstants.EXCEEDED_USD, LiXiUtils.getNumberFormat().format(exceededPaymentUSD));
+            model.put(LiXiConstants.EXCEEDED_USD, exceededPaymentUSD);
          
             if(alreadyGift != null){
                 // restore value for already selected gift
@@ -250,9 +246,6 @@ public class GiftsAjaxController {
             model.put("exceed", 0);
 
             // store OR remove the gift
-            /* get selected category*/
-            LixiCategory lxCategory = this.lxcService.findById((Integer) request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID));
-            
             // check the gifts already bought
             if(alreadyGift == null){
                 
@@ -290,11 +283,11 @@ public class GiftsAjaxController {
                     LixiOrderGift lxogift = new LixiOrderGift();
                     lxogift.setRecipient(rec);
                     lxogift.setOrder(order);
-                    lxogift.setCategory(lxCategory);
+                    lxogift.setCategory(this.vgcService.findOne(vgp.getCategoryId()).getLixiCategory());
                     lxogift.setProductId(productId);
                     lxogift.setProductPrice(price);
                     lxogift.setUsdPrice(LiXiUtils.toUsdPrice(price, buy));
-                    lxogift.setExchPrice((long)(lxogift.getUsdPrice()*buy));//truncated
+                    lxogift.setExchPrice((long)(lxogift.getUsdPrice() * buy));//truncated
                     lxogift.setProductName(vgp.getName());
                     lxogift.setProductImage(vgp.getImageUrl());
                     lxogift.setProductQuantity(quantity);
@@ -325,12 +318,14 @@ public class GiftsAjaxController {
             
         }
         // store current payment
-        model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
-        model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment);
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, currentPayment * buy);
         
         if(recInOrder != null){
-            model.put("RECIPIENT_PAYMENT_USD", LiXiUtils.getNumberFormat().format(recInOrder.getAllTotal().getUsd()));
-            model.put("RECIPIENT_PAYMENT_VND", LiXiUtils.getNumberFormat().format(recInOrder.getAllTotal().getVnd()));
+            model.put("RECIPIENT_PAYMENT_USD", recInOrder.getAllTotal().getUsd());
+            model.put("RECIPIENT_PAYMENT_VND", recInOrder.getAllTotal().getUsd() * buy);
+            log.info(currentPayment + " " + recInOrder.getAllTotal().getUsd());
+            log.info((currentPayment * buy) + " " + recInOrder.getAllTotal().getVnd());
         }
         
         return new ModelAndView("giftprocess2/exceed", model);

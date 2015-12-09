@@ -5,6 +5,8 @@
 package vn.chonsoft.lixi.model.pojo;
 
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrderGift;
@@ -16,6 +18,8 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
  * @author chonnh
  */
 public class RecipientInOrder {
+    
+    private static final Logger log = LogManager.getLogger(RecipientInOrder.class);
     
     private Long orderd;
     
@@ -89,13 +93,15 @@ public class RecipientInOrder {
         
         /* */
         double buy = getLxExchangeRate().getBuy();
+        
         // gift type
         //double sumGiftVND = 0;
         double sumGiftUSD = 0;
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
-                //sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
-                sumGiftUSD += (gift.getPriceInUSD(buy) * gift.getProductQuantity());
+                //sumGiftVND += (gift.getExchPrice() * gift.getProductQuantity());
+                sumGiftUSD += (gift.getUsdPrice() * gift.getProductQuantity());
+                log.info("gift: " + sumGiftUSD);
             }
         }
         
@@ -118,6 +124,7 @@ public class RecipientInOrder {
             for (BuyCard card : getBuyPhoneCards()) {
                 //sumBuyCardVND += (card.getNumOfCard() * card.getValueOfCard());
                 sumBuyCardUSD += (card.getValueInUSD(buy) * card.getNumOfCard());
+                log.info("sumBuyCardUSD: " + sumBuyCardUSD);
             }
         }
         return new SumVndUsd("LIXI_PHONE_CARD_TYPE", sumBuyCardUSD * buy, sumBuyCardUSD);
@@ -135,6 +142,7 @@ public class RecipientInOrder {
             for (TopUpMobilePhone topUp : getTopUpMobilePhones()) {
                 //sumTopUpVND += (topUp.getAmount() * buy);
                 sumTopUpUSD += topUp.getAmount();
+                log.info("sumTopUpUSD: " + sumTopUpUSD);
             }
         }
         return new SumVndUsd("LIXI_TOP_UP_TYPE", sumTopUpUSD * buy, sumTopUpUSD);

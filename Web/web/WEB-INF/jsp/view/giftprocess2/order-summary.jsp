@@ -60,9 +60,8 @@
                                                 </div>
                                             </td>
                                             <td data-title="Unit Price">
-                                                <c:set var="priceInUSD" value="${g.getPriceInUSD(LIXI_ORDER.lxExchangeRate.buy)}"/>
-                                                <div><strong>USD $ <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/></strong></div>
-                                                <div><strong>VND <fmt:formatNumber value="${priceInUSD * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong></div>
+                                                <div><strong>USD $ <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/></strong></div>
+                                                <div><strong>VND <fmt:formatNumber value="${g.exchPrice}" pattern="###,###.##"/></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
                                                 <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/gifts/type/${g.category.id}"/>';"><spring:message code="message.change"/></button></p>

@@ -620,7 +620,7 @@ public class GiftsController {
             currentPayments = LiXiUtils.calculateCurrentPayment(order);
         }
         double currentPayment = currentPayments[0].getUsd();//USD
-        currentPayment += LiXiUtils.roundPriceQuantity2USD(price, quantity, buy);// in USD
+        currentPayment += (LiXiUtils.toUsdPrice(price, buy) * quantity);// in USD
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
 
             // maximum payment is over

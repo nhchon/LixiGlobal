@@ -15,7 +15,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -311,7 +313,7 @@ public class GiftsController2 {
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "type/{selectedCatId}", method = RequestMethod.GET)
-    public ModelAndView typeOfGift(Map<String, Object> model, @PathVariable Integer selectedCatId, @PageableDefault(sort = {"price"}, value = 20, page = 0) Pageable page,  HttpServletRequest request) {
+    public ModelAndView typeOfGift(Map<String, Object> model, @PathVariable Integer selectedCatId,  HttpServletRequest request) {
 
         /* put logined user */
         model.put(LiXiConstants.LOGINED_USER, loginedUser);
@@ -354,6 +356,9 @@ public class GiftsController2 {
         
         /* list product */
         List<VatgiaProduct> products = null;
+        /* zero-based page index */
+        Pageable page = new PageRequest(0, LiXiConstants.NUM_PRODUCTS_PER_PAGE, new Sort(new Sort.Order(Sort.Direction.ASC, "price")));
+
         Page<VatgiaProduct> vgps = this.vgpService.findByCategoryIdAndAliveAndPrice(lxcategory.getVatgiaId().getId(), 1, price, page);
         if(vgps.hasContent()){
             products = vgps.getContent();

@@ -279,7 +279,7 @@ public class TopUpMobileController {
             buy = lxExch.getBuy();
         }
 
-        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy), buy);
+        boolean exceed = checkExceed(model, order, userMoneyLevelAmount, (LiXiUtils.toUsdPrice(valueOfCard, buy) * numOfCard), buy);
         // order is exceed
         if (exceed) {
 
@@ -596,7 +596,7 @@ public class TopUpMobileController {
 
         SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // [VND, USD]
         double currentPayment = currentPayments[0].getUsd();//USD
-        currentPayment += LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy);// in USD
+        currentPayment += (LiXiUtils.toUsdPrice(valueOfCard, buy) * numOfCard);// in USD
 
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
 
@@ -619,7 +619,7 @@ public class TopUpMobileController {
         model.put(LiXiConstants.VALUE_OF_CARD, valueOfCard);
 
         // topup in VND
-        model.put(LiXiConstants.BUY_PHONE_CARD_IN_USD, LiXiUtils.getNumberFormat().format(LiXiUtils.roundPriceQuantity2USD(valueOfCard, numOfCard, buy)));
+        model.put(LiXiConstants.BUY_PHONE_CARD_IN_USD, LiXiUtils.getNumberFormat().format((LiXiUtils.toUsdPrice(valueOfCard, buy) * numOfCard)));
 
         // store current payment
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
