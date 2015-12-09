@@ -322,6 +322,7 @@ public class GiftsAjaxController {
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, currentPayment * buy);
         
         if(recInOrder != null){
+            
             model.put("RECIPIENT_PAYMENT_USD", recInOrder.getAllTotal().getUsd());
             model.put("RECIPIENT_PAYMENT_VND", recInOrder.getAllTotal().getUsd() * buy);
             //log.info(currentPayment + " " + recInOrder.getAllTotal().getUsd());
