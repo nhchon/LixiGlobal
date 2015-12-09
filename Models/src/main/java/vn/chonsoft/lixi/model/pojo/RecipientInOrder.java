@@ -100,8 +100,17 @@ public class RecipientInOrder {
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
                 //sumGiftVND += (gift.getExchPrice() * gift.getProductQuantity());
-                sumGiftUSD += (gift.getUsdPrice() * gift.getProductQuantity());
+                double temp = gift.getUsdPrice() * gift.getProductQuantity();
+                sumGiftUSD += (Math.round(temp * 100.0) / 100.0);//(gift.getUsdPrice() * gift.getProductQuantity());
+                log.info("gift.getUsdPrice(): " + gift.getUsdPrice());
+                log.info("gift.getProductQuantity(): " + gift.getProductQuantity());
+                log.info("temp: " + temp);
+                log.info("Math.round(temp * 100.0) / 100.0: " + (Math.round(temp * 100.0) / 100.0));
                 log.info("gift: " + sumGiftUSD);
+                /* round up */
+                sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+                 log.info("gift: " + sumGiftUSD);
+                
             }
         }
         
@@ -118,13 +127,13 @@ public class RecipientInOrder {
         double buy = getLxExchangeRate().getBuy();
         
         // buy phone card
-        //double sumBuyCardVND = 0;
         double sumBuyCardUSD = 0;
         if (getBuyPhoneCards() != null) {
             for (BuyCard card : getBuyPhoneCards()) {
-                //sumBuyCardVND += (card.getNumOfCard() * card.getValueOfCard());
-                sumBuyCardUSD += (card.getValueInUSD(buy) * card.getNumOfCard());
-                log.info("sumBuyCardUSD: " + sumBuyCardUSD);
+                double temp = (card.getValueInUSD(buy) * card.getNumOfCard());
+                sumBuyCardUSD += (double) Math.round(temp * 100) / 100;
+                /* round up */
+                sumBuyCardUSD = Math.round(sumBuyCardUSD * 100.0) / 100.0;
             }
         }
         return new SumVndUsd("LIXI_PHONE_CARD_TYPE", sumBuyCardUSD * buy, sumBuyCardUSD);
@@ -142,7 +151,6 @@ public class RecipientInOrder {
             for (TopUpMobilePhone topUp : getTopUpMobilePhones()) {
                 //sumTopUpVND += (topUp.getAmount() * buy);
                 sumTopUpUSD += topUp.getAmount();
-                log.info("sumTopUpUSD: " + sumTopUpUSD);
             }
         }
         return new SumVndUsd("LIXI_TOP_UP_TYPE", sumTopUpUSD * buy, sumTopUpUSD);

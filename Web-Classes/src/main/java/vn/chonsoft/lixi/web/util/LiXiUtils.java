@@ -232,12 +232,12 @@ public class LiXiUtils {
         if (order == null) {
             return returnAllSum;
         }
+        /* */
+        double buy = order.getLxExchangeRate().getBuy();
         
-        double totalVND = 0;
         double totalUSD = 0;
         //
         // gift type
-        double sumGiftVND = 0;
         double sumGiftUSD = 0;
         if (order.getGifts() != null) {
             for (LixiOrderGift gift : order.getGifts()) {
@@ -245,44 +245,37 @@ public class LiXiUtils {
                 if (LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() == excludeId) {
                     // Nothing
                 } else {
-                    sumGiftVND += (gift.getExchPrice() * gift.getProductQuantity());
                     sumGiftUSD += (gift.getUsdPrice() * gift.getProductQuantity());
+                    /* round up */
+                    sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
                 }
 
             }
         }
         // plus to total
-        totalVND += sumGiftVND;
         totalUSD += sumGiftUSD;
         
         // index 1
-        returnAllSum[1] = new SumVndUsd(LiXiConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
-        
-        // get exchange rate
-        double buy = order.getLxExchangeRate().getBuy();
+        returnAllSum[1] = new SumVndUsd(LiXiConstants.LIXI_GIFT_TYPE, sumGiftUSD * buy, sumGiftUSD);
         
         // top up mobile phone
-        //double sumTopUpVND = 0;
         double sumTopUpUSD = 0;
         if (order.getTopUpMobilePhones() != null) {
             for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
 
                 if (LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() == excludeId) {
                 } else {
-                    //sumTopUpVND += (topUp.getAmount() * buy);
                     sumTopUpUSD += topUp.getAmount();
                 }
 
             }
         }
         // plus to total
-        totalVND += sumTopUpUSD * buy;
         totalUSD += sumTopUpUSD;
         // index 2
         returnAllSum[2] = new SumVndUsd(LiXiConstants.LIXI_TOP_UP_TYPE, sumTopUpUSD * buy, sumTopUpUSD);
         
         // buy phone card
-        //double sumBuyCardVND = 0;
         double sumBuyCardUSD = 0;
         if (order.getBuyCards() != null) {
             for (BuyCard card : order.getBuyCards()) {
@@ -290,21 +283,21 @@ public class LiXiUtils {
                 if (LiXiConstants.LIXI_PHONE_CARD_TYPE.equals(type) && card.getId() == excludeId) {
                     // nothing
                 } else {
-                    //sumBuyCardVND += (card.getNumOfCard() * card.getValueOfCard());
                     sumBuyCardUSD += (card.getValueInUSD(buy) * card.getNumOfCard());
+                    /* round up */
+                    sumBuyCardUSD = Math.round(sumBuyCardUSD * 100.0) / 100.0;
                 }
 
             }
         }
         // plus to total
-        totalVND += sumBuyCardUSD * buy;
         totalUSD += sumBuyCardUSD;
         
         // index 3
         returnAllSum[3] = new SumVndUsd(LiXiConstants.LIXI_PHONE_CARD_TYPE, sumBuyCardUSD * buy, sumBuyCardUSD);
 
         // index 0
-        returnAllSum[0] = new SumVndUsd(LiXiConstants.TOTAL_ALL_TYPE, totalVND, totalUSD);
+        returnAllSum[0] = new SumVndUsd(LiXiConstants.TOTAL_ALL_TYPE, totalUSD * buy, totalUSD);
         
         // return total
         return returnAllSum;
