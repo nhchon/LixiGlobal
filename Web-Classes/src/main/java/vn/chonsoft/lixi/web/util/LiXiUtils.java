@@ -194,6 +194,19 @@ public class LiXiUtils {
     }
 
     /**
+     * 
+     * @param vnd
+     * @param exchange
+     * @return 
+     */
+    public static double toUsdPrice(double vnd, double exchange){
+        
+        double inUsd = vnd/exchange +0.005;
+        
+        return Math.round(inUsd * 100.0) / 100.0;
+        
+    }
+    /**
      *
      * @param price, in VND
      * @param quantity

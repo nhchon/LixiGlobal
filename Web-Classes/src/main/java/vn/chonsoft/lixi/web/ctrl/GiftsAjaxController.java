@@ -293,7 +293,8 @@ public class GiftsAjaxController {
                     lxogift.setCategory(lxCategory);
                     lxogift.setProductId(productId);
                     lxogift.setProductPrice(price);
-                    lxogift.setExchPrice((long)(lxogift.getPriceInUSD(buy)*buy));//truncated
+                    lxogift.setUsdPrice(LiXiUtils.toUsdPrice(price, buy));
+                    lxogift.setExchPrice((long)(lxogift.getUsdPrice()*buy));//truncated
                     lxogift.setProductName(vgp.getName());
                     lxogift.setProductImage(vgp.getImageUrl());
                     lxogift.setProductQuantity(quantity);

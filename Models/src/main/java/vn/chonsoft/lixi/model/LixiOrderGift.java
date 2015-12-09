@@ -47,6 +47,10 @@ public class LixiOrderGift implements Serializable {
     private double exchPrice;
     
     @Basic
+    @Column(name = "usd_price")
+    private double usdPrice;
+    
+    @Basic
     @Column(name = "product_name")
     private String productName;
     
@@ -144,6 +148,14 @@ public class LixiOrderGift implements Serializable {
 
     public void setExchPrice(double exchPrice) {
         this.exchPrice = exchPrice;
+    }
+
+    public double getUsdPrice() {
+        return usdPrice;
+    }
+
+    public void setUsdPrice(double usdPrice) {
+        this.usdPrice = usdPrice;
     }
     
     public String getProductName() {
