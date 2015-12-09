@@ -324,8 +324,8 @@ public class GiftsAjaxController {
         if(recInOrder != null){
             model.put("RECIPIENT_PAYMENT_USD", recInOrder.getAllTotal().getUsd());
             model.put("RECIPIENT_PAYMENT_VND", recInOrder.getAllTotal().getUsd() * buy);
-            log.info(currentPayment + " " + recInOrder.getAllTotal().getUsd());
-            log.info((currentPayment * buy) + " " + recInOrder.getAllTotal().getVnd());
+            //log.info(currentPayment + " " + recInOrder.getAllTotal().getUsd());
+            //log.info((currentPayment * buy) + " " + recInOrder.getAllTotal().getVnd());
         }
         
         return new ModelAndView("giftprocess2/exceed", model);
