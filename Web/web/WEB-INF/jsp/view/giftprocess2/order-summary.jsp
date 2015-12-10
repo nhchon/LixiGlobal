@@ -9,6 +9,8 @@
         <script type="text/javascript">
             /** Page Script **/
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
+            var DELETE_GIFT_PATH = '<c:url value="/gifts/delete/gift"/>';
+            var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
         </script>
     </jsp:attribute>
 
@@ -64,8 +66,8 @@
                                                 <div><strong>VND <fmt:formatNumber value="${g.exchPrice}" pattern="###,###.##"/></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
-                                                <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/gifts/type/${g.category.id}"/>';"><spring:message code="message.change"/></button></p>
-                                                <p> <button type="button" class="btn btn-primary text-uppercase" onclick="location.href='<c:url value="/gifts/delete/gift/${g.id}"/>';"><spring:message code="message.delete"/></button></p>
+                                                <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/gifts/type/${entry.recipient.id}/${g.category.id}"/>';"><spring:message code="message.change"/></button></p>
+                                                <p> <button type="button" class="btn btn-primary text-uppercase" onclick="deleteGiftOnSummary(${g.id})"><spring:message code="message.delete"/></button></p>
                                             </td>
                                         </tr>
                                         </c:forEach>

@@ -639,7 +639,7 @@ public class UserGeneralController {
             
         }
         
-        return new ModelAndView(new RedirectView("/gifts/recipient", true, true), null);
+        return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true), null);
     }
     
     /**

@@ -193,9 +193,6 @@ public class GiftsAjaxController {
 
         }
         /* get recipient */
-        if(recId == 0){
-            recId = (Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID);
-        }
         Recipient rec = this.reciService.findById(recId);
         LixiOrderGift alreadyGift = this.lxogiftService.findByOrderAndRecipientAndProductId(order, rec, productId);
         

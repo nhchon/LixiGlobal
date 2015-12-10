@@ -1,3 +1,10 @@
+function deleteGiftOnSummary(giftId){
+   
+    if(confirm(CONFIRM_DELETE_MESSAGE)){
+        location.href= DELETE_GIFT_PATH +'/'+giftId;
+    }
+}
+
 /**
  * 
  * @param {type} id
@@ -13,7 +20,7 @@ function addBtn(id, productId, recId){
     
     /**/
     overlayOn($("#giftRow"+id));
-    checkExceedOnSummaryPage(recId, productId, qObj.val())
+    checkExceedOnSummaryPage(id, productId, recId, qObj.val())
 }
 
 /**
@@ -34,7 +41,7 @@ function subBtn(id, productId, recId){
         qObj.val(quantity-1);
         /**/
         overlayOn($("#giftRow"+id));
-        checkExceedOnSummaryPage(recId, productId, (quantity - 1))
+        checkExceedOnSummaryPage(id, productId, recId, (quantity - 1))
     }
     
 }
@@ -46,7 +53,7 @@ function subBtn(id, productId, recId){
  * @param {type} quantity
  * @returns {undefined}
  */
-function checkExceedOnSummaryPage(recId, productId, quantity) {
+function checkExceedOnSummaryPage(id, productId, recId, quantity) {
     $.ajax({
         url: AJAX_CHECK_EXCEED_PATH + '/' + recId+ '/' + productId + '/' + quantity,
         type: "get",
@@ -60,7 +67,7 @@ function checkExceedOnSummaryPage(recId, productId, quantity) {
                     resetQuantity = "1";
 
                 if (data.SELECTED_PRODUCT_ID > 0) {
-                    $('#quantity'+productId).val(resetQuantity);
+                    $('#quantity'+id).val(resetQuantity);
                 }
                 alert(data.message);
             } else {

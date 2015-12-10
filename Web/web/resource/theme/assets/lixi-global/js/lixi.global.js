@@ -198,7 +198,7 @@ LixiGlobal.Gift = {
         var quantity = giftItemObj.find("input[name='quantity']").val();
         //alert(productId + " " + quantity)
         overlayOn($("#product"+productId));
-        checkExceed(productId, quantity);
+        checkExceed($('#recId').val(), productId, quantity);
         return  false;
     },
     initSubBtn: function (_obj) {
@@ -212,27 +212,27 @@ LixiGlobal.Gift = {
         var quantity = giftItemObj.find("input[name='quantity']").val();
         //alert(productId + " " + quantity)
         overlayOn($("#product"+productId));
-        checkExceed(productId, quantity);
+        checkExceed($('#recId').val(), productId, quantity);
         return  false;
     },
     chooseGiftItem: function (_obj) {
         var obj = $(_obj);
         var giftItemObj = obj.closest('.gift-product-item');
-        var selectedClass = 'gift-product-item-selected';
-        var buyBtnObj = giftItemObj.find('.btn-buy-item-event');
+        //var selectedClass = 'gift-product-item-selected';
+        //var buyBtnObj = giftItemObj.find('.btn-buy-item-event');
         if (obj.is(":checked")) {
             //alert('hi im checked')
             var productId = giftItemObj.find("input[name='item']").val();
             var quantity = giftItemObj.find("input[name='quantity']").val();
             overlayOn($("#product"+productId));
-            checkExceed(productId, quantity);
+            checkExceed($('#recId').val(), productId, quantity);
         } else {
             //giftItemObj.removeClass(selectedClass);
             //buyBtnObj.html("Buy").attr('data-action', 'Buy');
             var productId = giftItemObj.find("input[name='item']").val();
             var quantity = giftItemObj.find("input[name='quantity']").val();
             overlayOn($("#product"+productId));
-            checkExceed(productId, quantity);
+            checkExceed($('#recId').val(), productId, quantity);
         }
     },
     toBuyStatus: function(giftItemObj){
@@ -257,13 +257,13 @@ LixiGlobal.Gift = {
                 var productId = giftItemObj.find("input[name='item']").val();
                 var quantity = giftItemObj.find("input[name='quantity']").val();
                 overlayOn($("#product"+productId));
-                checkExceed(productId, quantity);
+                checkExceed($('#recId').val(), productId, quantity);
             } else {
                 /* */
                 var productId = giftItemObj.find("input[name='item']").val();
                 var quantity = giftItemObj.find("input[name='quantity']").val();
                 overlayOn($("#product"+productId));
-                checkExceed(productId, quantity);
+                checkExceed($('#recId').val(), productId, quantity);
             }
         });
         

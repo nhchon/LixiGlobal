@@ -26,9 +26,9 @@ function loadPage(pageNum) {
  * @param {type} quantity
  * @returns {undefined}
  */
-function checkExceed(productId, quantity) {
+function checkExceed(recId, productId, quantity) {
     $.ajax({
-        url: AJAX_CHECK_EXCEED_PATH + '/0/' + productId + '/' + quantity, // recId = 0
+        url: AJAX_CHECK_EXCEED_PATH + '/' + recId + '/' + productId + '/' + quantity, // recId = 0
         type: "get",
         dataType: 'json',
         success: function (data, textStatus, jqXHR)
