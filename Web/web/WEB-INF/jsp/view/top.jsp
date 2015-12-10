@@ -3,15 +3,13 @@
         <div class="container">
             <div class="navbar-collapse" id="navbar-collapse-top">
                 <ul class="nav navbar-nav navbar-right">
-                    <c:if test="${not empty LOGINED_USER.email}">
-                        <li>
-                            <a class="hvr-underline-from-center" href="javascript:void(0);">Hello ${LOGINED_USER.email}</a>
-                        </li>
+                    <c:if test="${not empty sessionScope['scopedTarget.loginedUser']}">
+                        <li><a href="javascript:void(0);">Hello ${sessionScope['scopedTarget.loginedUser'].email}</a></li>
                         <li>
                             <a class="hvr-underline-from-center" href="<c:url value="/user/signOut"/>">Log Out</a>
                         </li>
                     </c:if>
-                    <c:if test="${empty LOGINED_USER.email}">
+                    <c:if test="${empty sessionScope['scopedTarget.loginedUser']}">
                         <li class="nav-login">
                             <a class="hvr-underline-from-center nav-login-event" href="<c:url value="/user/signIn"/>"><i class="fa fa-user"></i> LOGIN</a>
                         </li>

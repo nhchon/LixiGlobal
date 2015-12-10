@@ -134,10 +134,6 @@ public class GiftsController2 {
     @RequestMapping(value = "recipient", method = RequestMethod.GET)
     public ModelAndView recipient(Map<String, Object> model, HttpServletRequest request) {
         
-        /* put logined user */
-        model.put(LiXiConstants.LOGINED_USER, loginedUser);
-        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
-        
         // select recipients of user
         User u = this.userService.findByEmail(loginedUser.getEmail());
         if (u != null) {
@@ -167,10 +163,6 @@ public class GiftsController2 {
     @RequestMapping(value = "chooseRecipient/{recId}", method = RequestMethod.GET)
     public ModelAndView chooseRecipient(Map<String, Object> model, @PathVariable Long recId) {
 
-        /* put logined user */
-        model.put(LiXiConstants.LOGINED_USER, loginedUser);
-        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
-        
         // select recipients of user
         setRecipients(model, loginedUser.getEmail());
 
@@ -210,10 +202,6 @@ public class GiftsController2 {
     @RequestMapping(value = {"recipient", "chooseRecipient/{recId}"}, method = RequestMethod.POST)
     public ModelAndView chooseRecipient(Map<String, Object> model,
             @Valid ChooseRecipientForm form, Errors errors, HttpServletRequest request) {
-
-        /* put logined user */
-        model.put(LiXiConstants.LOGINED_USER, loginedUser);
-        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
 
         User u = this.userService.findByEmail(loginedUser.getEmail());
         // select recipients of user
@@ -291,8 +279,7 @@ public class GiftsController2 {
     @RequestMapping(value = "chooseCategory", method = RequestMethod.GET)
     public ModelAndView chooseCategory(Map<String, Object> model){
         
-        /* put logined user */
-        model.put(LiXiConstants.LOGINED_USER, loginedUser);
+        /* no top categories */
         model.put(LiXiConstants.LIXI_CATEGORIES, categories);
         
         return new ModelAndView("giftprocess2/chooseCategory");
@@ -349,16 +336,10 @@ public class GiftsController2 {
     @UserSecurityAnnotation
     @RequestMapping(value = "type/{recId}/{selectedCatId}", method = RequestMethod.GET)
     public ModelAndView typeOfGift(Map<String, Object> model, @PathVariable Long recId, @PathVariable Integer selectedCatId,  HttpServletRequest request) {
-
-        /* put logined user */
-        model.put(LiXiConstants.LOGINED_USER, loginedUser);
-        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
-
+        
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
         
-        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
-
         // load list products
         LixiCategory lxcategory = categories.getById(selectedCatId);
         
@@ -437,10 +418,6 @@ public class GiftsController2 {
     @UserSecurityAnnotation
     @RequestMapping(value = "order-summary", method = RequestMethod.GET)
     public ModelAndView orderSummary(Map<String, Object> model, HttpServletRequest request) {
-
-        /* put logined user */
-        model.put(LiXiConstants.LOGINED_USER, loginedUser);
-        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
 
         User u = this.userService.findByEmail(loginedUser.getEmail());
 

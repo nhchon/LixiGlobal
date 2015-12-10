@@ -71,7 +71,7 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
  * @author chonnh
  */
 @WebController
-@RequestMapping("checkout")
+@RequestMapping("checkout2")
 public class CheckOutController {
 
     private static final Logger log = LogManager.getLogger(CheckOutController.class);

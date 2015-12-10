@@ -102,15 +102,8 @@ public class RecipientInOrder {
                 //sumGiftVND += (gift.getExchPrice() * gift.getProductQuantity());
                 double temp = gift.getUsdPrice() * gift.getProductQuantity();
                 sumGiftUSD += (Math.round(temp * 100.0) / 100.0);//(gift.getUsdPrice() * gift.getProductQuantity());
-                log.info("gift.getUsdPrice(): " + gift.getUsdPrice());
-                log.info("gift.getProductQuantity(): " + gift.getProductQuantity());
-                log.info("temp: " + temp);
-                log.info("Math.round(temp * 100.0) / 100.0: " + (Math.round(temp * 100.0) / 100.0));
-                log.info("gift: " + sumGiftUSD);
                 /* round up */
                 sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
-                 log.info("gift: " + sumGiftUSD);
-                
             }
         }
         
@@ -145,11 +138,9 @@ public class RecipientInOrder {
         double buy = getLxExchangeRate().getBuy();
         
         // top up mobile phone
-        //double sumTopUpVND = 0;
         double sumTopUpUSD = 0;
         if (getTopUpMobilePhones() != null) {
             for (TopUpMobilePhone topUp : getTopUpMobilePhones()) {
-                //sumTopUpVND += (topUp.getAmount() * buy);
                 sumTopUpUSD += topUp.getAmount();
             }
         }

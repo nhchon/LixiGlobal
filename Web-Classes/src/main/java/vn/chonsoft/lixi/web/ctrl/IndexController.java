@@ -66,6 +66,19 @@ public class IndexController {
 
     /**
      * 
+     * @param model
+     * @return 
+     */
+    @RequestMapping(value = "/categories", method = {RequestMethod.GET, RequestMethod.POST})
+    public String categoriesOnTop(Map<String, Object> model) {
+
+        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
+        
+        return "categories";
+    }
+
+    /**
+     * 
      * @return 
      */
     @RequestMapping(value = "/registerPage", method = RequestMethod.GET)

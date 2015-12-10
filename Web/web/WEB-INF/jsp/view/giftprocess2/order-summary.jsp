@@ -15,7 +15,7 @@
     </jsp:attribute>
 
     <jsp:body>
-        <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-categories.jsp" %>
+        <c:import url="/categories"/>
         <section class="bg-default main-section">
             <div class="container">
                 <c:set var="localStep" value="5"/>
@@ -23,6 +23,10 @@
                 <form action="" method="get" class="receiver-form">
                     <div class="section-receiver">
                         <h2 class="title">order summary</h2>
+                        <c:if test="${empty REC_GIFTS}">
+                            <p>Your order is empty.</p>
+                        </c:if>
+                        <c:if test="${not empty REC_GIFTS}">
                         <div class="table-responsive table-responsive-mobi">
                             <table class="text-center">
                                 <thead>
@@ -87,13 +91,16 @@
                         <p style="margin-top: 10px;">
                             ( <sup>*</sup> You can shop for up to 5 different persons )
                         </p>
+                        </c:if>        
                     </div>
+                    <c:if test="${not empty REC_GIFTS}">
                     <div class="button-control text-center text-uppercase">
                         <div class="button-control-page">
                             <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/recipient"/>">Keep shopping</button>
-                            <button class="btn btn-primary btn-has-link-event"  type="button" data-link="select-a-payment.html">NEXT</button>
+                            <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/checkout/paymentMethods"/>">NEXT</button>
                         </div>
                     </div>
+                    </c:if>        
                 </form>
             </div>
         </section>

@@ -29,22 +29,6 @@
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/addon.css"/>">
 
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"/>"></script>
-        <!--
-        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/queryloader2.min.js"/>"></script>
-        <script>
-            window.addEventListener('DOMContentLoaded', function () {
-                "use strict";
-                new QueryLoader2(document.querySelector("body"), {
-                    barColor: "#0093DD",
-                    backgroundColor: "#fff",
-                    percentage: true,
-                    barHeight: 2,
-                    minimumTime: 200,
-                    fadeOutTime: 1000
-                });
-            });
-        </script>
-        -->
         <script type="text/javascript">
             var CONTEXT_PATH = "${pageContext.request.contextPath}";
             if (CONTEXT_PATH === null || CONTEXT_PATH === 'null' || CONTEXT_PATH === '/') {

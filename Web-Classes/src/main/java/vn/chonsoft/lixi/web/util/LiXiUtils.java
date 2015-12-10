@@ -367,7 +367,9 @@ public class LiXiUtils {
      * @return
      */
     public static List<RecipientInOrder> genMapRecGifts(LixiOrder order) {
-
+        
+        if(order == null) return null;
+        
         Map<Recipient, List<LixiOrderGift>> recGifts = new HashMap<>();
         Map<Recipient, List<BuyCard>> recPhoneCards = new HashMap<>();
         Map<Recipient, List<TopUpMobilePhone>> recTopUps = new HashMap<>();

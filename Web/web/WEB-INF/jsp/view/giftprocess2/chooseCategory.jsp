@@ -11,7 +11,7 @@
     </jsp:attribute>
 
     <jsp:body>
-        <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-categories.jsp" %> 
+        <%-- <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-categories.jsp" %> --%>
         <section class="section-gift bg-default section-wrapper">
             <div class="container">
                 <c:set var="localStep" value="1"/>
