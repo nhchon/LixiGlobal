@@ -136,7 +136,6 @@ public class CheckOutController {
         User u = this.userService.findByEmail(email);
         List<UserCard> cards = this.ucService.findByUser(u);
         if (cards == null || cards.isEmpty()) {
-
             // back url
             model.put("backUrl", "/gifts/more-recipient");
         } else {

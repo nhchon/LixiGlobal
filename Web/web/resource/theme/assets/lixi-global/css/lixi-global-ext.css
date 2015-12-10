@@ -2177,7 +2177,14 @@ yx-axis
     position:absolute;
     z-index:999;
 }
-
+.checkImage {
+    height: 230px;
+    width: 100%;
+    margin-bottom: 10px;
+    background: url(../images/check.png) left center no-repeat;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../../images/check.png', sizingMethod='scale');
+    background-size: contain;
+}
 .visa{
     background: rgba(0, 0, 0, 0) url("../images/icon-card-visa.png") no-repeat scroll 0 0px;
 }

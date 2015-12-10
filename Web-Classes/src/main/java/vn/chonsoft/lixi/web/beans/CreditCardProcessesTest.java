@@ -122,6 +122,7 @@ public class CreditCardProcessesTest {
         billingInfo.setState("");
         billingInfo.setCountry("");
         billingInfo.setZip("");
+        //billingInfo.setCountry();
         billingInfo.setPhoneNumber(u.getPhone());
         billingInfo.setFaxNumber(u.getPhone());
         
