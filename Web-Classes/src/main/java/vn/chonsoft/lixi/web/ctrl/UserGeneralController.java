@@ -219,7 +219,7 @@ public class UserGeneralController {
            };        
         
         // send oldEmail
-        taskScheduler.execute(() -> mailSender.send(preparator));        
+        taskScheduler.execute(() -> mailSender.send(preparator));  
         
         model.put("email", form.getEmail());
         return new ModelAndView("user2/signUpComplete", model);

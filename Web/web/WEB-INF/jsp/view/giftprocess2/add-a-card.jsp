@@ -16,7 +16,22 @@
             <div class="container">
                 <c:set var="localStep" value="6"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
-                <form method="post" class="form-add-a-payment">
+                    <c:if test="${validationErrors != null}">
+                    <div class="alert alert-warning alert-dismissible bg-white" role="alert">
+                        <div class="alert-message">
+                            <h4 class="text-red">There was problem</h4>
+                            <c:forEach items="${validationErrors}" var="error">
+                                <div><c:out value="${error.message}" /></div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                    </c:if>
+                    <c:if test="${expiration_failed eq 1}">
+                        <div class="msg msg-error">
+                            <spring:message code="validate.checkout.exp_date"/>
+                        </div>
+                    </c:if>
+                <form:form modelAttribute="addCardForm" cssClass="form-add-a-payment">
                     <h2 class="title">add a payment menthod</h2>
                     <div class="form-content">
                         <div class="form-group">
@@ -41,13 +56,14 @@
                                 <div class="form-group form-group-selectpicker-full">
                                     <label for="cardType">Select Card Type:</label>
                                     <div class="clearfix"></div>
-                                    <select class="selectpicker">
+                                    <form:select path="cardType" class="form-control" required="true">
                                         <option value="">Select a Card Type</option>
                                         <option value="1">Visa</option>
                                         <option value="2">Master Card</option>
                                         <option value="3">Discover</option>
                                         <option value="4">Amex</option>
-                                    </select>
+                                    </form:select>
+                                    <div class="has-error"><form:errors path="cardType" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                         </div>
@@ -55,13 +71,15 @@
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group">
                                     <label for="cardNumber">Card Number:</label>
-                                    <input class="form-control" id="cardNumber" name="cardNumber" placeholder="Card Number"/>
+                                    <form:input path="cardNumber" required="true" class="form-control" placeholder="Card Number"/>
+                                    <div class="has-error"><form:errors path="cardNumber" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group">
                                     <label for="nameOnCard">Name on Card:</label>
-                                    <input class="form-control" id="nameOnCard" name="nameOnCard" placeholder="Your name, as it appears on card"/>
+                                    <form:input path="cardName" required="true" class="form-control" placeholder="Your name, as it appears on card"/>
+                                    <div class="has-error"><form:errors path="cardName" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                         </div>
@@ -69,8 +87,8 @@
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label for="expirationDate">Expiration Month</label>
-                                    <select name="expiry_month" id="creditCcMonthField" class="form-control">
-                                        <option value="" selected="selected">Exp. Month</option>
+                                    <form:select path="expMonth" class="form-control" required="true">
+                                        <option value="">Exp. Month</option>
                                         <option value="01">Jan</option>
                                         <option value="02">Feb</option>
                                         <option value="03">Mar</option>
@@ -83,26 +101,29 @@
                                         <option value="10">Oct</option>
                                         <option value="11">Nov</option>
                                         <option value="12">Dec</option>
-                                    </select>
+                                    </form:select>
+                                    <div class="has-error"><form:errors path="expMonth" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label for="expirationDate">Expiration Year</label>
-                                    <select name="expiry_year" id="creditCcYearField" class="form-control">
-                                        <option value="" selected="selected">Exp. Year</option>
+                                    <form:select path="expYear" class="form-control" required="true">
+                                        <option value="">Exp. Year</option>
                                         <jsp:useBean id="now" class="java.util.Date" />
                                         <fmt:formatDate var="currYear" value="${now}" pattern="yyyy" />
                                         <c:forEach begin="${currYear}" end="${currYear + 10}" var="year">
                                             <option value="${year}">${year}</option>
                                         </c:forEach>
-                                    </select>
+                                    </form:select>
+                                    <div class="has-error"><form:errors path="expYear" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label for="cvv">CVV:</label>
-                                    <input class="form-control" id="cvv" required="true" name="cvv" placeholder="CCV number"/>
+                                    <form:input path="cvv" class="form-control" required="true" placeholder="CCV number"/>
+                                    <div class="has-error"><form:errors path="cvv" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
 
@@ -112,13 +133,15 @@
                             <div class="col-md-8 col-sm-8">
                                 <div class="form-group">
                                     <label for="streetAddress">Street Address:</label>
-                                    <input class="form-control" id="streetAddress" required="true" name="streetAddress" placeholder="Street address"/>
+                                    <form:input path="address" class="form-control" required="true" placeholder="Street address"/>
+                                    <div class="has-error"><form:errors path="address" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label for="city">City:</label>
-                                    <input class="form-control" id="city" required="true" name="city" placeholder="City"/>
+                                    <form:input path="city"  class="form-control" required="true" placeholder="City"/>
+                                    <div class="has-error"><form:errors path="city" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                         </div>
@@ -126,23 +149,26 @@
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label for="state">State/Province/Region:</label>
-                                    <input class="form-control" id="state" required="true" name="state" placeholder="State/Province/Region"/>
+                                    <form:input path="state" class="form-control" required="true" placeholder="State/Province/Region"/>
+                                    <div class="has-error"><form:errors path="state" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label for="zipCode">Zip:</label>
-                                    <input class="form-control" id="zipCode" required="true" name="zipCode" placeholder="Zip code"/>
+                                    <form:input path="zipCode" class="form-control" required="true" placeholder="Zip code"/>
+                                    <div class="has-error"><form:errors path="zipCode" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group form-group-selectpicker-full">
                                     <label for="county">County:</label><div class="clearfix"></div>
-                                    <select class="selectpicker" name="country">
+                                    <form:select class="form-control" path="country" required="true">
                                         <option value="">Choose country</option>
-                                        <option value="USA">USA</option>
+                                        <option value="USA" selected="">USA</option>
                                         <option value="Vietnam">Vietnam</option>
-                                    </select>
+                                    </form:select>
+                                    <div class="has-error"><form:errors path="country" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                         </div>
@@ -158,7 +184,7 @@
                     <p>
                         <strong class="text-color-link"><a href="<c:url value="/checkout/addBankAccount"/>">Add a checking account</a></strong>.(You can review your order before it’s final)
                     </p>
-                </form>
+                </form:form>
             </div>
         </section>
 

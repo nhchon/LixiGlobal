@@ -48,7 +48,7 @@ public class UserCard implements Serializable {
     private String cardName;
     
     @Basic(optional = false)
-    @Column(name = "card_number", unique = true)
+    @Column(name = "card_number")
     private String cardNumber;
     
     @Basic(optional = false)

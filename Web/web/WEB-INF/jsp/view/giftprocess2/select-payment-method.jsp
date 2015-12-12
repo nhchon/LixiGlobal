@@ -83,7 +83,7 @@
                                 <button class="btn btn-primary btn-has-link-event text-uppercase"  type="button" data-link="place-order.html">use this payment method</button>
                             </div>
                             <div class="col-md-6 text-right">
-                                <button class="btn btn-primary btn-has-link-event text-uppercase" type="button" data-link="add-a-payment.html">add new card</button>
+                                <button class="btn btn-primary btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/checkout/addCard"/>">add new card</button>
                                 <button class="btn btn-primary text-uppercase btn-has-link-event"  type="button" data-link="place-order.html">add new bank account</button>
                             </div>
                         </div>
