@@ -29,6 +29,7 @@ import vn.chonsoft.lixi.repositories.service.AuthorizePaymentResultService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderPaymentService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
+import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 /**
  *
@@ -106,7 +107,7 @@ public class CreditCardProcesses {
      * @param card
      * @return 
      */
-    public boolean createPaymentProfile(UserCard card){
+    public String createPaymentProfile(UserCard card){
         
         //Common code to set for all requests
         ApiOperationBase.setEnvironment(getEnvironment());
@@ -129,14 +130,13 @@ public class CreditCardProcesses {
         
         /* Billing Address*/
         CustomerAddressType billingInfo = new CustomerAddressType();
-        billingInfo.setFirstName(card.getUser().getFirstName());
-        billingInfo.setLastName(card.getUser().getLastName());
-        billingInfo.setCompany("");
-        billingInfo.setAddress("");
-        billingInfo.setCity("");
-        billingInfo.setState("");
-        billingInfo.setCountry("");
-        billingInfo.setZip("");
+        billingInfo.setFirstName(card.getBillingAddress().getFirstName());
+        billingInfo.setLastName(card.getBillingAddress().getLastName());
+        billingInfo.setAddress(card.getBillingAddress().getAddress());
+        billingInfo.setCity(card.getBillingAddress().getCity());
+        billingInfo.setState(card.getBillingAddress().getState());
+        billingInfo.setCountry(card.getBillingAddress().getCountry());
+        billingInfo.setZip(card.getBillingAddress().getZipCode());
         billingInfo.setPhoneNumber(card.getUser().getPhone());
         billingInfo.setFaxNumber(card.getUser().getPhone());
         
@@ -160,7 +160,7 @@ public class CreditCardProcesses {
         /* Handle result */
         AuthorizePaymentResult payResult = new AuthorizePaymentResult();
         payResult.setCardId(card.getId());
-        boolean returned = false;
+        String returned = "";
         if (response != null) {
             
             String resultCode = response.getMessages().getResultCode().value();
@@ -175,12 +175,12 @@ public class CreditCardProcesses {
                 // set card payment id
                 card.setAuthorizePaymentId(response.getCustomerPaymentProfileId());
                 //
-                returned = true;
+                returned = LiXiConstants.OK;
             } else {
                 
-                System.out.println("Failed to create customer profile:  " + response.getMessages().getResultCode());
+                System.out.println("Failed to create payment profile:  " + response.getMessages().getResultCode());
                 for(MessagesType.Message m : response.getMessages().getMessage()){
-                    System.out.println(m.getCode() + " : " + m.getText());
+                    returned += ("<div>"+m.getCode() + " : " + m.getText()+ "</div>");
                 }
             }
         }
@@ -188,7 +188,8 @@ public class CreditCardProcesses {
             
             payResult.setResponseCode("-999");
             payResult.setResponseText("CAN NOT CREATE CreateCustomerPaymentProfileResponse");
-            
+            //
+            returned = "There was a problem with your card information";
         }
         
         // save
@@ -208,7 +209,7 @@ public class CreditCardProcesses {
      * @param card
      * @return 
      */
-    public boolean createCustomerProfile(User u, UserCard card){
+    public String createCustomerProfile(User u, UserCard card){
         
         //Common code to set for all requests
         ApiOperationBase.setEnvironment(getEnvironment());
@@ -229,15 +230,13 @@ public class CreditCardProcesses {
         
         /* Billing Address*/
         CustomerAddressType billingInfo = new CustomerAddressType();
-        billingInfo.setFirstName(u.getFirstName());
-        billingInfo.setLastName(u.getLastName());
-        billingInfo.setCompany("");
-        billingInfo.setAddress("");
-        //billingInfo.set
-        billingInfo.setCity("");
-        billingInfo.setState("");
-        billingInfo.setCountry("");
-        billingInfo.setZip("");
+        billingInfo.setFirstName(card.getBillingAddress().getFirstName());
+        billingInfo.setLastName(card.getBillingAddress().getLastName());
+        billingInfo.setAddress(card.getBillingAddress().getAddress());
+        billingInfo.setCity(card.getBillingAddress().getCity());
+        billingInfo.setState(card.getBillingAddress().getState());
+        billingInfo.setCountry(card.getBillingAddress().getCountry());
+        billingInfo.setZip(card.getBillingAddress().getZipCode());
         billingInfo.setPhoneNumber(u.getPhone());
         billingInfo.setFaxNumber(u.getPhone());
         
@@ -269,7 +268,7 @@ public class CreditCardProcesses {
         /* Handle result */
         AuthorizeCustomerResult cus = new AuthorizeCustomerResult();
         cus.setUserId(u.getId());
-        boolean returned = false;
+        String returned = "";
         if (response != null) {
             
             String resultCode = response.getMessages().getResultCode().value();
@@ -284,16 +283,19 @@ public class CreditCardProcesses {
                 // update customer profile id
                 this.userService.updateAuthorizeProfileId(response.getCustomerProfileId(), u.getId());
                 // set card payment id
-                for(String s : response.getCustomerPaymentProfileIdList().getNumericString()){
-                    card.setAuthorizePaymentId(s);
-                }
-                //
-                returned = true;
+                card.setAuthorizePaymentId(response.getCustomerPaymentProfileIdList().getNumericString().get(0));
+                //for(String s : response.getCustomerPaymentProfileIdList().getNumericString()){
+                    //card.setAuthorizePaymentId(s);
+                //}
+                this.cardService.save(card);
+                
+                // return
+                returned = LiXiConstants.OK;
             } else {
                 
                 System.out.println("Failed to create customer profile:  " + response.getMessages().getResultCode());
                 for(MessagesType.Message m : response.getMessages().getMessage()){
-                    System.out.println(m.getCode() + " : " + m.getText());
+                    returned += ("<div>"+m.getCode() + " : " + m.getText()+ "</div>");
                 }
             }
         }
@@ -301,7 +303,8 @@ public class CreditCardProcesses {
             
             cus.setResponseCode("-999");
             cus.setResponseText("CAN NOT CREATE CreateCustomerProfileResponse");
-            
+            //
+            returned = "There was a problem with your card information";
         }
         
         // save

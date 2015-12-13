@@ -20,6 +20,7 @@ public abstract class LiXiConstants {
     
     ////////////////////////////////////////////////////////////////////////////
     public static final String SYSTEM_AUTO = "SYSTEM_AUTO";
+    public static final String OK = "OK";
     
     public static final String VTC_OK = "1";
             

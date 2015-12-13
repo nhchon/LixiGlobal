@@ -16,13 +16,20 @@
             <div class="container">
                 <c:set var="localStep" value="6"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
-                    <c:if test="${validationErrors != null}">
+                    <c:if test="${not empty validationErrors}">
                     <div class="alert alert-warning alert-dismissible bg-white" role="alert">
                         <div class="alert-message">
                             <h4 class="text-red">There was problem</h4>
                             <c:forEach items="${validationErrors}" var="error">
                                 <div><c:out value="${error.message}" /></div>
                             </c:forEach>
+                        </div>
+                    </div>
+                    </c:if>
+                    <c:if test="${(not empty authorizeError) and (authorizeError ne 'OK')}">
+                    <div class="alert alert-warning alert-dismissible bg-white" role="alert">
+                        <div class="alert-message">
+                            ${authorizeError}
                         </div>
                     </div>
                     </c:if>
@@ -129,6 +136,22 @@
 
                         </div>
                         <h4 class="text-color-link text-uppercase">Billing address</h4>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label for="streetAddress">First Name:</label>
+                                    <form:input path="firstName" class="form-control" required="true" placeholder="Street address"/>
+                                    <div class="has-error"><form:errors path="firstName" cssClass="help-block" element="div"/></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label for="city">Last Name:</label>
+                                    <form:input path="lastName"  class="form-control" required="true" placeholder="City"/>
+                                    <div class="has-error"><form:errors path="lastName" cssClass="help-block" element="div"/></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-8 col-sm-8">
                                 <div class="form-group">

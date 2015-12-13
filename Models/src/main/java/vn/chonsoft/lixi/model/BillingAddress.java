@@ -30,41 +30,40 @@ public class BillingAddress implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
+    @Basic
     @Column(name = "id")
     private Long id;
     
-    @Basic(optional = false)
-    @Column(name = "full_name")
-    private String fullName;
+    @Basic
+    @Column(name = "first_name")
+    private String firstName;
     
-    @Basic(optional = false)
-    @Column(name = "add1")
-    private String add1;
+    @Basic
+    @Column(name = "last_name")
+    private String lastName;
     
-    @Basic(optional = false)
-    @Column(name = "add2")
-    private String add2;
+    @Basic
+    @Column(name = "address")
+    private String address;
     
-    @Basic(optional = false)
+    @Basic
     @Column(name = "city")
     private String city;
     
-    @Basic(optional = false)
+    @Basic
     @Column(name = "state")
     private String state;
     
-    @Basic(optional = false)
+    @Basic
     @Column(name = "zip_code")
     private String zipCode;
     
-    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
-    @Basic(optional = false)
-    @Column(name = "phone")
-    private String phone;
+    @Basic
+    @Column(name = "country")
+    private String country;
     
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User user;
 
     public BillingAddress() {
@@ -74,15 +73,14 @@ public class BillingAddress implements Serializable {
         this.id = id;
     }
 
-    public BillingAddress(Long id, String fullName, String add1, String add2, String city, String state, String zipCode, String phone) {
+    public BillingAddress(Long id, String firstName, String lastName, String address, String city, String state, String zipCode) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.id = id;
-        this.fullName = fullName;
-        this.add1 = add1;
-        this.add2 = add2;
+        this.address = address;
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
-        this.phone = phone;
     }
 
     public Long getId() {
@@ -93,28 +91,28 @@ public class BillingAddress implements Serializable {
         this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getAdd1() {
-        return add1;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setAdd1(String add1) {
-        this.add1 = add1;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getAdd2() {
-        return add2;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdd2(String add2) {
-        this.add2 = add2;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getCity() {
@@ -141,12 +139,12 @@ public class BillingAddress implements Serializable {
         this.zipCode = zipCode;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getCountry() {
+        return country;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public User getUser() {

@@ -194,6 +194,11 @@ public class LiXiUtils {
         return Math.round((a + 0.005) * 100.0) / 100.0;
     }
 
+    public static double round2Decimal(double a) {
+
+        return Math.round(a * 100.0) / 100.0;
+    }
+
     /**
      * 
      * @param vnd

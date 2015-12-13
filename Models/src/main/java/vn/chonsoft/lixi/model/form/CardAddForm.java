@@ -33,9 +33,7 @@ public class CardAddForm {
     private Integer expYear;
     
     @NotNull(message = "{validate.not_null}")
-    @Min(100)
-    @Max(999)
-    private Integer cvv;
+    private String cvv;
 
     public Integer getCardType() {
         return cardType;
@@ -77,11 +75,11 @@ public class CardAddForm {
         this.expYear = expYear;
     }
 
-    public Integer getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(Integer cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
     

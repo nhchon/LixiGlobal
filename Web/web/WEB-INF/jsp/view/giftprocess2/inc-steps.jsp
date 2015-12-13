@@ -34,7 +34,7 @@
         </div>
         <div class="col-md-2 col-sm-3 col-xs-3 col-for-seven">
             <div class="gift-step">
-                <a class="<c:if test="${localStep eq 5}">active </c:if> hvr-radial-out" href="order-summary.html">
+                <a class="<c:if test="${localStep eq 5}">active </c:if> hvr-radial-out" href="<c:url value="/gifts/order-summary"/>">
                     <span class="step-number">5</span>
                 </a>
                 <h5>Order summary</h5>
@@ -42,7 +42,7 @@
         </div>
         <div class="col-md-2  col-sm-3 col-xs-3 col-for-seven">
             <div class="gift-step">
-                <a class="<c:if test="${localStep eq 6}">active </c:if> hvr-radial-out" href="select-a-payment.html">
+                <a class="<c:if test="${localStep eq 6}">active </c:if> hvr-radial-out" href="<c:url value="/checkout/paymentMethods"/>">
                     <span class="step-number">6</span>
                 </a>
                 <h5>choose payment</h5>

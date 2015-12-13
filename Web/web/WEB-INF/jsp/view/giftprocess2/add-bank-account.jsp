@@ -32,9 +32,7 @@
                                     <label for="cardType">Select Card Type:</label>
                                     <div class="clearfix"></div>
                                     <select id="accountTypeField" class="form-control" name="account_type">
-                                        <option value="">Select Account Type</option>
                                         <option value="checking">Checking Account</option>
-                                        <option value="savings">Savings Account</option>
                                     </select>
                                 </div>
                             </div>
@@ -92,11 +90,9 @@
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group form-group-selectpicker-full">
-                                    <label for="county">County:</label><div class="clearfix"></div>
+                                    <label for="county">Country:</label><div class="clearfix"></div>
                                     <select class="selectpicker" name="country">
-                                        <option value="">Choose country</option>
                                         <option value="USA">USA</option>
-                                        <option value="Vietnam">Vietnam</option>
                                     </select>
                                 </div>
                             </div>

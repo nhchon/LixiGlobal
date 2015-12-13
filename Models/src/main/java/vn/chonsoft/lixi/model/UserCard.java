@@ -61,7 +61,7 @@ public class UserCard implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "card_cvv")
-    private int cardCvv;
+    private String cardCvv;
     
     @Basic(optional = false)
     @Column(name = "modified_date")
@@ -82,7 +82,7 @@ public class UserCard implements Serializable {
         this.cardNumber = "XXXX1111";
         this.expMonth = 0;
         this.expYear = 0;
-        this.cardCvv = 0;
+        this.cardCvv = "";
         
     }
 
@@ -94,11 +94,11 @@ public class UserCard implements Serializable {
         this.cardNumber = "XXXX1111";
         this.expMonth = 0;
         this.expYear = 0;
-        this.cardCvv = 0;
+        this.cardCvv = "";
         
     }
 
-    public UserCard(Long id, String authorizePaymentId, int cardType, String cardName, String cardNumber, int expMonth, int expYear, int cardCvv, Date modifiedDate) {
+    public UserCard(Long id, String authorizePaymentId, int cardType, String cardName, String cardNumber, int expMonth, int expYear, String cardCvv, Date modifiedDate) {
         this.id = id;
         this.authorizePaymentId = authorizePaymentId;
         this.cardType = cardType;
@@ -170,11 +170,11 @@ public class UserCard implements Serializable {
         this.expYear = expYear;
     }
 
-    public int getCardCvv() {
+    public String getCardCvv() {
         return cardCvv;
     }
 
-    public void setCardCvv(int cardCvv) {
+    public void setCardCvv(String cardCvv) {
         this.cardCvv = cardCvv;
     }
 

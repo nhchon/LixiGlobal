@@ -201,7 +201,7 @@ public class CheckOutController {
             uc.setCardNumber("XXXX"+StringUtils.right(form.getCardNumber(), 4));
             uc.setExpMonth(0);
             uc.setExpYear(0);
-            uc.setCardCvv(0);
+            uc.setCardCvv("000");
             uc.setModifiedDate(Calendar.getInstance().getTime());
             
             uc = this.ucService.save(uc);
@@ -663,13 +663,13 @@ public class CheckOutController {
             // created billing address
             BillingAddress bil = new BillingAddress();
             bil.setUser(u);
-            bil.setFullName(form.getFullName());
-            bil.setAdd1(form.getAdd1());
-            bil.setAdd2(form.getAdd2());
+            //bil.setFullName(form.getFullName());
+            bil.setAddress(form.getAdd1());
+            //bil.setAdd2(form.getAdd2());
             bil.setCity(form.getCity());
             bil.setState(form.getState());
             bil.setZipCode(form.getZipCode());
-            bil.setPhone(form.getPhone());
+            //bil.setPhone(form.getPhone());
 
             bil = this.baService.save(bil);
 

@@ -34,11 +34,15 @@ public class AddCardForm {
     private Integer expYear;
     
     @NotNull(message = "{validate.not_null}")
-    @Min(100)
-    @Max(999)
-    private Integer cvv;
+    private String cvv;
     
     /* Billing address */
+    @NotBlank(message = "{validate.not_null}")
+    private String firstName;
+    
+    @NotBlank(message = "{validate.not_null}")
+    private String lastName;
+    
     @NotBlank(message = "{validate.not_null}")
     private String address;
     
@@ -97,12 +101,28 @@ public class AddCardForm {
         this.expYear = expYear;
     }
 
-    public Integer getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(Integer cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getAddress() {

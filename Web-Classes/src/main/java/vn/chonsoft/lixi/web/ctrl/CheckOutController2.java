@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
@@ -142,7 +143,13 @@ public class CheckOutController2 {
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "addCard", method = RequestMethod.GET)
-    public ModelAndView addCard(Map<String, Object> model) {
+    public ModelAndView addCard(Map<String, Object> model, HttpServletRequest request) {
+        
+        // for test 
+        if(request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) == null){
+            request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, new Long(4));
+        }
+        ////////////////////////////////////////////////////////////////////////
         
         User u = this.userService.findByEmail(loginedUser.getEmail());
         List<UserCard> cards = this.ucService.findByUser(u);
@@ -154,9 +161,12 @@ public class CheckOutController2 {
         }
         
         /* card form */
-        AddCardForm addForm = new AddCardForm();
-        addForm.setCardType(1);
-        model.put("addCardForm", addForm);
+        AddCardForm addCardForm = new AddCardForm();
+        addCardForm.setCardType(1);
+        addCardForm.setFirstName(loginedUser.getFirstName());
+        addCardForm.setLastName(loginedUser.getLastName());
+        
+        model.put("addCardForm", addCardForm);
         
         return new ModelAndView("giftprocess2/add-a-card", model);
     }
@@ -176,12 +186,7 @@ public class CheckOutController2 {
     public ModelAndView addACard(Map<String, Object> model,
             @Valid AddCardForm form, Errors errors, HttpServletRequest request) {
 
-        log.info("hi ! I'm here");
-        
         if (errors.hasErrors()) {
-            log.info("hi ! error");
-            log.info(errors.getFieldError().getField());
-            //errors.getAllErrors().forEach(x -> {log.info(x.getObjectName());});
             return new ModelAndView("giftprocess2/add-a-card");
         }
 
@@ -189,63 +194,85 @@ public class CheckOutController2 {
 
             if (!LiXiUtils.checkMonthYearGreaterThanCurrent(form.getExpMonth(), form.getExpYear())) {
 
-                log.info("hi ! error 2");
                 model.put("expiration_failed", 1);
 
                 return new ModelAndView("giftprocess2/add-a-card", model);
             }
 
             User u = this.userService.findByEmail(loginedUser.getEmail());
-
+            
+            // billing address
+            BillingAddress bl = new BillingAddress();
+            bl.setFirstName(form.getFirstName());
+            bl.setLastName(form.getLastName());
+            bl.setAddress(form.getAddress());
+            bl.setCity(form.getCity());
+            bl.setState(form.getState());
+            bl.setZipCode(form.getZipCode());
+            bl.setCountry(form.getCountry());
+            bl.setUser(u);
+            
+            bl = this.baService.save(bl);
+            
             // Add a card
             UserCard uc = new UserCard();
             uc.setUser(u);
             uc.setCardType(form.getCardType());
             uc.setCardName(form.getCardName());
+            uc.setBillingAddress(bl);
+            uc.setModifiedDate(Calendar.getInstance().getTime());
             /* Don't store full card information */
             uc.setCardNumber("XXXX"+StringUtils.right(form.getCardNumber(), 4));
             uc.setExpMonth(0);
             uc.setExpYear(0);
-            uc.setCardCvv(0);
-            uc.setModifiedDate(Calendar.getInstance().getTime());
-            
+            uc.setCardCvv("000");
+
             uc = this.ucService.save(uc);
-            
-            // pass real information
+
+            // pass real information to authorize.net
             uc.setCardNumber(form.getCardNumber());
             uc.setExpMonth(form.getExpMonth());
             uc.setExpYear(form.getExpYear());
             uc.setCardCvv(form.getCvv());
             
-            log.info(form.getCardNumber());
             /* Create authorize.net profile */
+            String returned = LiXiConstants.OK;
             if(StringUtils.isEmpty(u.getAuthorizeProfileId())){
-                this.creaditCardProcesses.createCustomerProfile(u, uc);
+                returned = this.creaditCardProcesses.createCustomerProfile(u, uc);
             }
             else{
-                this.creaditCardProcesses.createPaymentProfile(uc);
+                returned = this.creaditCardProcesses.createPaymentProfile(uc);
             }
             
-            // update order, add card
-            LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-            order.setCard(uc);
-            //remove bank account IF it has
-            order.setBankAccount(null);
+            /* if we store card information on authorize.net OK */
+            if(LiXiConstants.OK.equals(returned)){
 
-            this.lxorderService.save(order);
+                // update order, add card
+                LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+                order.setCard(uc);
+                //remove bank account IF it has
+                order.setBankAccount(null);
 
-            // check billing address
-            //Pageable just6rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
-            //Page<BillingAddress> addresses = this.baService.findByUser(u, just6rec);
-            //if (addresses != null && addresses.hasContent()) {
-                // jump to page choose billing address
-            //    return new ModelAndView(new RedirectView("/checkout/choose-billing-address", true, true));
-            //} else {
-                // add a new billing address
-            //    return new ModelAndView(new RedirectView("/checkout/billing-address", true, true));
-            //}
-            return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
-            
+                this.lxorderService.save(order);
+
+                // check billing address
+                //Pageable just6rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
+                //Page<BillingAddress> addresses = this.baService.findByUser(u, just6rec);
+                //if (addresses != null && addresses.hasContent()) {
+                    // jump to page choose billing address
+                //    return new ModelAndView(new RedirectView("/checkout/choose-billing-address", true, true));
+                //} else {
+                    // add a new billing address
+                //    return new ModelAndView(new RedirectView("/checkout/billing-address", true, true));
+                //}
+                return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
+            }
+            else{
+                
+                model.put("authorizeError", returned);
+
+                return new ModelAndView("giftprocess2/add-a-card", model);
+            }
         } catch (ConstraintViolationException e) {
 
             log.info("Insert card failed", e);

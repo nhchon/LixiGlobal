@@ -40,6 +40,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="<c:url value="/Administration/SystemConfig/categories"/>">Categories</a></li>
                         <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">LiXi Exchange Rate</a></li>
+                        <li><a href="<c:url value="/Administration/SystemFee/list"/>">LiXi Global Fee</a></li>
                     </ul>
                 </li>
                 <li id="m05" class="dropdown <c:if test="${m05 eq true}">active</c:if> ">
