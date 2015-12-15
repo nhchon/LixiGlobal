@@ -792,7 +792,7 @@ public class CheckOutController {
         finalTotal = total + cardFeeNumber + (handlingFee.getFee() * (recGifts.isEmpty() ? 0 : recGifts.size()));
 
         // update final total into db
-        order.setTotalAmount(new BigDecimal(LiXiUtils.getNumberFormat().format(finalTotal)));
+        //order.setTotalAmount(new BigDecimal(LiXiUtils.getNumberFormat().format(finalTotal)));
 
         this.lxorderService.save(order);
         //
@@ -958,16 +958,11 @@ public class CheckOutController {
 
             this.lxorderService.save(order);
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
-            boolean chargeResult = creaditCardProcesses.chargeByCustomerProfile(order);
+            boolean chargeResult = creaditCardProcesses.chargeByCustomerProfile(null);
             if (chargeResult == false) {
                 return new ModelAndView(new RedirectView("/checkout/payment-method/change?wrong=1", true, true));
             } 
             else {
-                // already paid
-                order.setIsPaid(Boolean.TRUE);
-                order.setLixiStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
-                this.lxorderService.save(order);
-
                 // send mail to sender
                 final String emailSender = order.getSender().getEmail();
                 final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);

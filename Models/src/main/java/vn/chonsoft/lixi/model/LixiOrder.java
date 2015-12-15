@@ -20,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -52,14 +53,6 @@ public class LixiOrder implements Serializable {
     @Column(name = "setting")
     private Integer setting;
     
-    @Basic
-    @Column(name = "total_amount")
-    private BigDecimal totalAmount;
-    
-    @Basic
-    @Column(name = "is_paid")
-    private Boolean isPaid;
-    
     @Basic(optional = false)
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -89,9 +82,6 @@ public class LixiOrder implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<TopUpMobilePhone> topUpMobilePhones;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    private List<LixiOrderPayment> lixiOrderPayments;
     
     public LixiOrder() {
     }
@@ -148,22 +138,6 @@ public class LixiOrder implements Serializable {
         
     }
 
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public Boolean getIsPaid() {
-        return isPaid;
-    }
-
-    public void setIsPaid(Boolean isPaid) {
-        this.isPaid = isPaid;
-    }
-    
     public Date getModifiedDate() {
         return modifiedDate;
     }
@@ -254,12 +228,4 @@ public class LixiOrder implements Serializable {
         this.topUpMobilePhones = topUpMobilePhones;
     }
 
-    public List<LixiOrderPayment> getLixiOrderPayments() {
-        return lixiOrderPayments;
-    }
-
-    public void setLixiOrderPayments(List<LixiOrderPayment> lixiOrderPayments) {
-        this.lixiOrderPayments = lixiOrderPayments;
-    }
-    
 }

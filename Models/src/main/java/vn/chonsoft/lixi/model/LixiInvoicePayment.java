@@ -12,9 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,8 +22,8 @@ import javax.persistence.TemporalType;
  * @author chonnh
  */
 @Entity
-@Table(name = "lixi_order_payment")
-public class LixiOrderPayment implements Serializable {
+@Table(name = "lixi_invoice_payment")
+public class LixiInvoicePayment implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
@@ -50,18 +48,19 @@ public class LixiOrderPayment implements Serializable {
     private Date modifiedDate;
     
     @Basic(optional = false)
-    @Column(name = "order_id")
-    private Long order;
+    @Column(name = "invoice_id")
+    private Long invoice;
 
-    public LixiOrderPayment() {
+    public LixiInvoicePayment() {
     }
 
-    public LixiOrderPayment(Long id) {
+    public LixiInvoicePayment(Long id) {
         this.id = id;
     }
 
-    public LixiOrderPayment(Long id, String responseCode, String responseText, Date modifiedDate) {
+    public LixiInvoicePayment(Long id, Long invoice, String responseCode, String responseText, Date modifiedDate) {
         this.id = id;
+        this.invoice = invoice;
         this.responseCode = responseCode;
         this.responseText = responseText;
         this.modifiedDate = modifiedDate;
@@ -99,12 +98,12 @@ public class LixiOrderPayment implements Serializable {
         this.modifiedDate = modifiedDate;
     }
 
-    public Long getOrder() {
-        return order;
+    public Long getInvoice() {
+        return invoice;
     }
 
-    public void setOrder(Long order) {
-        this.order = order;
+    public void setInvoice(Long invoice) {
+        this.invoice = invoice;
     }
 
     @Override
@@ -117,10 +116,10 @@ public class LixiOrderPayment implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof LixiOrderPayment)) {
+        if (!(object instanceof LixiInvoicePayment)) {
             return false;
         }
-        LixiOrderPayment other = (LixiOrderPayment) object;
+        LixiInvoicePayment other = (LixiInvoicePayment) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

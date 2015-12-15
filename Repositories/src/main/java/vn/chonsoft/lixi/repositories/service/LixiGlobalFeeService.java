@@ -4,6 +4,9 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
+import org.springframework.data.domain.Sort;
+import vn.chonsoft.lixi.model.Country;
 import vn.chonsoft.lixi.model.LixiGlobalFee;
 
 /**
@@ -14,4 +17,7 @@ public interface LixiGlobalFeeService {
     
     LixiGlobalFee save(LixiGlobalFee fee);
     
+    List<LixiGlobalFee> findByCountry(Country country);
+    
+    List<LixiGlobalFee> findByCountry(Country country, Sort sort);
 }

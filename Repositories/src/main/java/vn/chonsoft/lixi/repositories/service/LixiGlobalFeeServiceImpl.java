@@ -4,8 +4,11 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import vn.chonsoft.lixi.model.Country;
 import vn.chonsoft.lixi.model.LixiGlobalFee;
 import vn.chonsoft.lixi.repositories.LixiGlobalFeeRepository;
 
@@ -23,5 +26,31 @@ public class LixiGlobalFeeServiceImpl implements LixiGlobalFeeService{
     public LixiGlobalFee save(LixiGlobalFee fee) {
         
         return this.fRepository.save(fee);
+    }
+    
+    /**
+     * 
+     * @param country
+     * @return 
+     */
+    @Override
+    public List<LixiGlobalFee> findByCountry(Country country){
+        
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "amount"));
+        
+        return this.fRepository.findByCountry(country, sort);
+        
+    }
+    
+    /**
+     * 
+     * @param country
+     * @param sort
+     * @return 
+     */
+    @Override
+    public List<LixiGlobalFee> findByCountry(Country country, Sort sort){
+        
+        return this.fRepository.findByCountry(country, sort);
     }
 }

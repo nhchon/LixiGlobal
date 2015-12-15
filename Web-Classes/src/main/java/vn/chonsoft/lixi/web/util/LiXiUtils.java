@@ -34,6 +34,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import vn.chonsoft.lixi.model.BuyCard;
+import vn.chonsoft.lixi.model.LixiGlobalFee;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
@@ -349,6 +350,14 @@ public class LiXiUtils {
 
     }
 
+    public static LixiGlobalFee getLixiGlobalFee(List<LixiGlobalFee> fees, int method, double totalCost){
+       
+        for(LixiGlobalFee fee : fees){
+            if((fee.getPaymentMethod() == method) && (totalCost <= fee.getAmount())) return fee;
+        }
+        
+        return null;
+    }
     /**
      * 
      * @param recGifts

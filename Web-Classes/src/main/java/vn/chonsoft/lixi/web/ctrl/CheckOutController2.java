@@ -5,9 +5,12 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -17,22 +20,34 @@ import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.BillingAddress;
+import vn.chonsoft.lixi.model.LixiGlobalFee;
+import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.form.AddCardForm;
 import vn.chonsoft.lixi.model.form.BankAccountAddForm;
+import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.model.pojo.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
+import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
+import vn.chonsoft.lixi.repositories.service.CountryService;
 import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
-import vn.chonsoft.lixi.repositories.service.LixiFeeService;
+import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
+import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
@@ -86,8 +101,14 @@ public class CheckOutController2 {
     private UserBankAccountService ubcService;
 
     @Inject
-    private LixiFeeService feeService;
+    private LixiGlobalFeeService feeService;
 
+    @Autowired
+    private LixiInvoiceService invoiceService;
+    
+    @Autowired
+    private CountryService countryService;
+    
     @Inject
     private LixiCardFeeService cardFeeService;
 
@@ -305,6 +326,114 @@ public class CheckOutController2 {
     /**
      * 
      * @param model
+     * @param order 
+     */
+    private void calculateFee(Map<String, Object> model, LixiOrder order){
+        
+        /* get billing address */
+        BillingAddress bl = null;
+        int paymentMethod = 0;
+        if(order.getCard() != null){
+            bl = order.getCard().getBillingAddress();
+        }
+        else{
+            bl = order.getBankAccount().getBillingAddress();
+            paymentMethod = 1;
+        }
+        
+        double buy = order.getLxExchangeRate().getBuy();
+        
+        /* get lixi global fee */
+        List<LixiGlobalFee> fees = this.feeService.findByCountry(this.countryService.findByName(bl.getCountry()));
+        
+        //log.info("fees.length : " + fees.size());
+        
+        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
+        model.put(LiXiConstants.LIXI_ORDER, order);
+        model.put(LiXiConstants.REC_GIFTS, recGifts);
+
+        // calculate the total
+        double finalTotal = 0;
+        SumVndUsd[] totals = LiXiUtils.calculateCurrentPayment(order);
+        double giftPrice = totals[0].getUsd();//usd
+
+        //log.info("gift price : " + giftPrice);
+        /* get lixi fee */
+        LixiGlobalFee fee = LiXiUtils.getLixiGlobalFee(fees, paymentMethod, giftPrice);
+        
+        //log.info("LixiGlobalFee == null:" + (fee == null));
+        
+        /* calculate card fee */
+        double cardFee = 0.0;
+        double feePercent = 0;
+        if (order.getSetting() == EnumLixiOrderSetting.ALLOW_REFUND.getValue()) {
+            feePercent = fee.getAllowRefundFee();
+        }
+        else{
+            feePercent = fee.getGiftOnlyFee();
+        }
+
+        //log.info("feePercent: " + feePercent);
+        
+        cardFee = LiXiUtils.round2Decimal((feePercent * giftPrice)/100.0);
+        if(cardFee > fee.getMaxFee()){
+            cardFee = fee.getMaxFee();
+        }
+        
+        /* lixi handling fee */
+        double lixiFee = (fee.getLixiFee() * (recGifts.isEmpty() ? 0 : recGifts.size()));
+        // final total 
+        finalTotal = giftPrice + cardFee + lixiFee;
+
+        model.put(LiXiConstants.LIXI_GIFT_PRICE, LiXiUtils.round2Decimal(giftPrice));
+        model.put(LiXiConstants.LIXI_GIFT_PRICE_VND, buy * giftPrice);
+        model.put(LiXiConstants.LIXI_FINAL_TOTAL, LiXiUtils.round2Decimal(finalTotal));
+        model.put(LiXiConstants.LIXI_FINAL_TOTAL_VND, LiXiUtils.round2Decimal(buy * finalTotal));
+        model.put(LiXiConstants.LIXI_HANDLING_FEE, fee.getLixiFee());
+        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, lixiFee);
+        model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFee);
+        
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param setting
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "place-order/calculateFee/{setting}", method = RequestMethod.GET)
+    public ModelAndView calculateFee(Map<String, Object> model, @PathVariable Integer setting, HttpServletRequest request) {
+
+        LixiOrder order = null;
+        // order already created
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if (orderId != null) {
+
+            order = this.lxorderService.findById(orderId);
+            // save setting
+            order.setSetting(setting);
+
+            this.lxorderService.save(order);
+        } else {
+
+            // order not exist
+            model.put("error", 1);
+        }
+        //
+        model.put("error", 0);
+
+        // calculate fee
+        calculateFee(model, order);
+
+        return new ModelAndView("giftprocess2/fees");
+    }
+    
+    /**
+     * 
+     * 
+     * @param model
      * @param request
      * @return 
      */
@@ -312,6 +441,146 @@ public class CheckOutController2 {
     @RequestMapping(value = "place-order", method = RequestMethod.GET)
     public ModelAndView placeOrder(Map<String, Object> model, HttpServletRequest request) {
         
+        // for test 
+        if(request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) == null){
+            request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, new Long(4));
+        }
+        ////////////////////////////////////////////////////////////////////////
+        
+        LixiOrder order = null;
+        // order already created
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if (orderId != null) {
+
+            order = this.lxorderService.findById(orderId);
+        } else {
+
+            // order not exist, go to Choose recipient page
+            return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
+        }
+
+        
+        // calculate fee
+        calculateFee(model, order);
+
         return new ModelAndView("giftprocess2/place-order");
     }
+    
+    /**
+     * 
+     * @param request
+     * @return
+     * @throws Exception 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "place-order", method = RequestMethod.POST)
+    public ModelAndView placeOrder(HttpServletRequest request) throws Exception {
+
+        User u = this.userService.findByEmail(loginedUser.getEmail());
+
+        LixiOrder order = null;
+        // order already created
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if (orderId != null) {
+
+            order = this.lxorderService.findById(orderId);
+            Date currDate = Calendar.getInstance().getTime();
+            
+            order.setLixiStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
+            order.setModifiedDate(currDate);
+            this.lxorderService.save(order);
+            
+            /* create invoice */
+            Map<String, Object> model = new HashMap<>();
+            calculateFee(model, order);
+            
+            LixiInvoice invoice = new LixiInvoice();
+            invoice.setOrder(order);
+            invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
+            invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
+            invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
+            invoice.setTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL));
+            invoice.setInvoiceDate(currDate);
+            invoice.setCreatedDate(currDate);
+
+            invoice = this.invoiceService.save(invoice);
+            //////////////////////// CHARGE CREDIT CARD ////////////////////////
+            boolean chargeResult = creaditCardProcesses.chargeByCustomerProfile(invoice);
+            if (chargeResult == false) {
+                return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
+            } 
+            else {
+                // send mail to sender
+                final String emailSender = order.getSender().getEmail();
+                final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
+                final LixiOrder refOrder = order;
+                MimeMessagePreparator preparator = new MimeMessagePreparator() {
+                    @SuppressWarnings({"rawtypes", "unchecked"})
+                    @Override
+                    public void prepare(MimeMessage mimeMessage) throws Exception {
+                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+                        message.setTo(emailSender);
+                        message.setCc(LiXiConstants.YHANNART_GMAIL);
+                        message.setFrom("support@lixi.global");
+                        message.setSubject("LiXi.Global - Invoice Alert");
+                        message.setSentDate(Calendar.getInstance().getTime());
+
+                        Map<String, Object> model = new HashMap<>();
+                        model.put("sender", u);
+                        model.put("LIXI_ORDER", refOrder);
+                        model.put("REC_GIFTS", recGifts);
+                        calculateFee(model, refOrder);
+
+                        String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                velocityEngine, "emails/paid-order-alert.vm", "UTF-8", model);
+                        message.setText(text, true);
+                    }
+                };
+                // send oldEmail
+                taskScheduler.execute(() -> mailSender.send(preparator));
+
+            }
+            ////////////////////////////////////////////////////////////////////
+            log.info("Call Async methods");
+            log.info("processTopUpItems");
+            // The order is paid, top up mobile
+            lxAsyncMethods.processTopUpItems(order);
+            
+            // Buy Cards
+            //lxAsyncMethods.processBuyCardItems(order);
+            
+            //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
+            log.info("submitOrdersToBaoKim");
+            lxAsyncMethods.submitOrdersToBaoKim(order);
+            ////////////////////////////////////////////////////////////////////
+            log.info("END OF Call Async methods");
+            
+            // jump to thank you page
+            return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
+        } else {
+
+            // order not exist, go to Choose recipient page
+            return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
+        }
+
+    }
+
+    /**
+     *
+     * Submit the order
+     *
+     * @param request
+     * @return
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "thank-you", method = RequestMethod.GET)
+    public ModelAndView thankYou(HttpServletRequest request) {
+
+        // remove Lixi order id
+        request.getSession().removeAttribute(LiXiConstants.LIXI_ORDER_ID);
+
+        //
+        return new ModelAndView("giftprocess2/thank-you");
+    }
+    
 }

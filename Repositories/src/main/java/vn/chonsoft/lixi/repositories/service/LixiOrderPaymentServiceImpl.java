@@ -6,7 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
-import vn.chonsoft.lixi.model.LixiOrderPayment;
+import vn.chonsoft.lixi.model.LixiInvoicePayment;
 import vn.chonsoft.lixi.repositories.LixiOrderPaymentRepository;
 
 /**
@@ -25,7 +25,7 @@ public class LixiOrderPaymentServiceImpl implements LixiOrderPaymentService{
      * @return 
      */
     @Override
-    public LixiOrderPayment save(LixiOrderPayment payment) {
+    public LixiInvoicePayment save(LixiInvoicePayment payment) {
         
         return this.paymentRepository.save(payment);
         

@@ -5,7 +5,7 @@
 package vn.chonsoft.lixi.repositories.service;
 
 import org.springframework.validation.annotation.Validated;
-import vn.chonsoft.lixi.model.LixiOrderPayment;
+import vn.chonsoft.lixi.model.LixiInvoicePayment;
 
 /**
  *
@@ -14,5 +14,5 @@ import vn.chonsoft.lixi.model.LixiOrderPayment;
 @Validated
 public interface LixiOrderPaymentService {
     
-    LixiOrderPayment save(LixiOrderPayment payment);
+    LixiInvoicePayment save(LixiInvoicePayment payment);
 }

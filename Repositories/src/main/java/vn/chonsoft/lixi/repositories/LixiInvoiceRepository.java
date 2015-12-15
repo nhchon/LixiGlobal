@@ -5,12 +5,15 @@
 package vn.chonsoft.lixi.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import vn.chonsoft.lixi.model.LixiInvoicePayment;
+import vn.chonsoft.lixi.model.LixiInvoice;
+import vn.chonsoft.lixi.model.LixiOrder;
 
 /**
  *
  * @author chonnh
  */
-public interface LixiOrderPaymentRepository extends JpaRepository<LixiInvoicePayment, Integer>{
+public interface LixiInvoiceRepository extends JpaRepository<LixiInvoice, Long>{
+    
+    LixiInvoice findByOrder(LixiOrder order);
     
 }

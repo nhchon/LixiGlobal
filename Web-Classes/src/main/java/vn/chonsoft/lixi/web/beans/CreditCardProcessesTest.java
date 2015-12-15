@@ -19,7 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vn.chonsoft.lixi.model.AuthorizeCustomerResult;
 import vn.chonsoft.lixi.model.LixiOrder;
-import vn.chonsoft.lixi.model.LixiOrderPayment;
+import vn.chonsoft.lixi.model.LixiInvoicePayment;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
@@ -231,7 +231,7 @@ public class CreditCardProcessesTest {
             // Create the payment transaction request
             txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
             txnRequest.setPayment(paymentType);
-            txnRequest.setAmount(new BigDecimal(String.valueOf(order.getTotalAmount())));
+            //txnRequest.setAmount(new BigDecimal(String.valueOf(order.getTotalAmount())));
         }
         else{
             // paid by banking account
@@ -278,8 +278,8 @@ public class CreditCardProcessesTest {
         boolean returned = false;
         
         // insert lixi order payment
-        LixiOrderPayment payment = new LixiOrderPayment();
-        payment.setOrder(order.getId());
+        LixiInvoicePayment payment = new LixiInvoicePayment();
+        payment.setInvoice(order.getId());
         //
         System.out.println("###############################################");
         System.out.println("Order ID: " + order.getId());
@@ -420,7 +420,7 @@ public class CreditCardProcessesTest {
         boolean returned = false;
         
         // insert lixi order payment
-        //LixiOrderPayment payment = new LixiOrderPayment();
+        //LixiOrderPayment payment = new LixiInvoicePayment();
         //payment.setOrder(orderId);
         //
         System.out.println("###############################################");

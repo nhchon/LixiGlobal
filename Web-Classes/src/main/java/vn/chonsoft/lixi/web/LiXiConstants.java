@@ -63,7 +63,10 @@ public abstract class LiXiConstants {
     public static final String LIXI_CARD_PROCESSING_FEE_ADD_ON = "LIXI_CARD_PROCESSING_FEE_ADD_ON";
     public static final String LIXI_ECHECK_FEE_GIFT_ONLY = "LIXI_ECHECK_FEE_GIFT_ONLY";
     public static final String LIXI_ECHECK_FEE_ALLOW_REFUND = "LIXI_ECHECK_FEE_ALLOW_REFUND";
+    public static final String LIXI_GIFT_PRICE = "LIXI_GIFT_PRICE";
+    public static final String LIXI_GIFT_PRICE_VND = "LIXI_GIFT_PRICE_VND";
     public static final String LIXI_FINAL_TOTAL = "LIXI_FINAL_TOTAL";
+    public static final String LIXI_FINAL_TOTAL_VND = "LIXI_FINAL_TOTAL_VND";
     public static final String LIXI_ALL_TOTAL = "LIXI_ALL_TOTAL";
     
     public static final String VND = "VND";

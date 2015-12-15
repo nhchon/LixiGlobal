@@ -16,6 +16,8 @@ public interface CountryService {
     
     Country findById(Long id);
     
+    Country findByName(String name);
+    
     @Transactional
     List<Country> findAll();
 }

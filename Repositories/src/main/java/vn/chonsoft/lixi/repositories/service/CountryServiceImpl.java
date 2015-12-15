@@ -27,6 +27,18 @@ public class CountryServiceImpl implements CountryService{
         return this.cRepository.findOne(id);
         
     }
+    
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    @Override
+    public Country findByName(String name){
+        
+        return this.cRepository.findByName(name);
+    }
+    
     /**
      * 
      * @return 

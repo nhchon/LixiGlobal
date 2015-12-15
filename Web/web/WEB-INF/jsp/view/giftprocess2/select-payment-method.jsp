@@ -16,6 +16,13 @@
             <div class="container">
                 <c:set var="localStep" value="6"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
+                <c:if test="${wrong eq 1 || param.wrong eq 1}">
+                <div class="alert alert-warning alert-dismissible bg-white" role="alert">
+                    <div class="alert-message">
+                        <spring:message code="validate.there_is_something_wrong"/>
+                    </div>
+                </div>
+                </c:if>
                 <form action="" method="post" class="receiver-form">
                     <div class="section-receiver">
                         <h2 class="title">Select a payment method</h2>
