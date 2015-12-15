@@ -5,7 +5,6 @@
 package vn.chonsoft.lixi.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -82,6 +81,9 @@ public class LixiOrder implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<TopUpMobilePhone> topUpMobilePhones;
+    
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
+    private LixiInvoice invoice;
     
     public LixiOrder() {
     }
@@ -226,6 +228,14 @@ public class LixiOrder implements Serializable {
 
     public void setTopUpMobilePhones(List<TopUpMobilePhone> topUpMobilePhones) {
         this.topUpMobilePhones = topUpMobilePhones;
+    }
+
+    public LixiInvoice getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(LixiInvoice invoice) {
+        this.invoice = invoice;
     }
 
 }

@@ -79,6 +79,9 @@ public class LixiOrderServiceImpl implements LixiOrderService{
             
             //
             order.getBankAccount();
+            
+            // invoice
+            order.getInvoice();
         }
         
         return order;

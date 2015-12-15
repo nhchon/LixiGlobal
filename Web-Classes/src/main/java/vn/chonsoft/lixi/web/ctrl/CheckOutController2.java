@@ -490,20 +490,23 @@ public class CheckOutController2 {
             order.setModifiedDate(currDate);
             this.lxorderService.save(order);
             
-            /* create invoice */
-            Map<String, Object> model = new HashMap<>();
-            calculateFee(model, order);
-            
-            LixiInvoice invoice = new LixiInvoice();
-            invoice.setOrder(order);
-            invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
-            invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
-            invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
-            invoice.setTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL));
-            invoice.setInvoiceDate(currDate);
-            invoice.setCreatedDate(currDate);
+            LixiInvoice invoice = order.getInvoice();
+            if(invoice == null){
+                /* create invoice */
+                Map<String, Object> model = new HashMap<>();
+                calculateFee(model, order);
+                
+                invoice = new LixiInvoice();
+                invoice.setOrder(order);
+                invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
+                invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
+                invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
+                invoice.setTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL));
+                invoice.setInvoiceDate(currDate);
+                invoice.setCreatedDate(currDate);
 
-            invoice = this.invoiceService.save(invoice);
+                invoice = this.invoiceService.save(invoice);
+            }
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
             boolean chargeResult = creaditCardProcesses.chargeByCustomerProfile(invoice);
             if (chargeResult == false) {
