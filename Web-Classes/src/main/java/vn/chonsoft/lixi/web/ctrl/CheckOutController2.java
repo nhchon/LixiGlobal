@@ -28,6 +28,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.BillingAddress;
@@ -135,7 +136,7 @@ public class CheckOutController2 {
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "paymentMethods", method = RequestMethod.GET)
-    public ModelAndView changePaymentMethod(Map<String, Object> model, HttpServletRequest request) {
+    public ModelAndView choosePaymentMethod(Map<String, Object> model, HttpServletRequest request) {
         
         User u = this.userService.findByEmail(loginedUser.getEmail());
 
@@ -159,18 +160,49 @@ public class CheckOutController2 {
     
     /**
      * 
+     * @param cardId
+     * @param accId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "paymentMethods", method = RequestMethod.POST)
+    public ModelAndView choosePaymentMethod(@RequestParam(required = false) Long cardId, @RequestParam(required = false) Long accId, HttpServletRequest request) {
+        
+        if(cardId == null && accId == null){
+            
+            return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
+        }
+        
+        /* get order */
+        LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        
+        if(cardId != null){
+            
+            order.setCard(this.ucService.findById(cardId));
+            order.setBankAccount(null);
+            
+        }
+        else if(cardId != null){
+            
+            order.setBankAccount(this.ubcService.findById(accId));
+            order.setCard(null);
+            
+        }
+        
+        this.lxorderService.save(order);
+
+        return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
+        
+    }
+    /**
+     * 
      * @param model
      * @return 
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "addCard", method = RequestMethod.GET)
     public ModelAndView addCard(Map<String, Object> model, HttpServletRequest request) {
-        
-        // for test 
-        if(request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) == null){
-            request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, new Long(4));
-        }
-        ////////////////////////////////////////////////////////////////////////
         
         User u = this.userService.findByEmail(loginedUser.getEmail());
         List<UserCard> cards = this.ucService.findByUser(u);
@@ -242,14 +274,6 @@ public class CheckOutController2 {
             uc.setCardName(form.getCardName());
             uc.setBillingAddress(bl);
             uc.setModifiedDate(Calendar.getInstance().getTime());
-            /* Don't store full card information */
-            uc.setCardNumber("XXXX"+StringUtils.right(form.getCardNumber(), 4));
-            uc.setExpMonth(0);
-            uc.setExpYear(0);
-            uc.setCardCvv("000");
-
-            uc = this.ucService.save(uc);
-
             // pass real information to authorize.net
             uc.setCardNumber(form.getCardNumber());
             uc.setExpMonth(form.getExpMonth());
@@ -268,6 +292,12 @@ public class CheckOutController2 {
             /* if we store card information on authorize.net OK */
             if(LiXiConstants.OK.equals(returned)){
 
+                /* Don't store full card information */
+                String secretCardNumber= "XXXX"+StringUtils.right(form.getCardNumber(), 4);
+                uc.setCardNumber(secretCardNumber);
+                uc.setCardCvv("000");
+                uc = this.ucService.save(uc);
+                
                 // update order, add card
                 LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
                 order.setCard(uc);
@@ -289,10 +319,9 @@ public class CheckOutController2 {
                 return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
             }
             else{
-                
                 model.put("authorizeError", returned);
 
-                return new ModelAndView("giftprocess2/add-a-card", model);
+                return new ModelAndView("giftprocess2/add-a-card");
             }
         } catch (ConstraintViolationException e) {
 
@@ -376,7 +405,7 @@ public class CheckOutController2 {
         //log.info("feePercent: " + feePercent);
         
         cardFee = LiXiUtils.round2Decimal((feePercent * giftPrice)/100.0);
-        if(cardFee > fee.getMaxFee()){
+        if((fee.getMaxFee() > 0) && (cardFee > fee.getMaxFee())){
             cardFee = fee.getMaxFee();
         }
         
@@ -440,12 +469,6 @@ public class CheckOutController2 {
     @UserSecurityAnnotation
     @RequestMapping(value = "place-order", method = RequestMethod.GET)
     public ModelAndView placeOrder(Map<String, Object> model, HttpServletRequest request) {
-        
-        // for test 
-        if(request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) == null){
-            request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, new Long(4));
-        }
-        ////////////////////////////////////////////////////////////////////////
         
         LixiOrder order = null;
         // order already created

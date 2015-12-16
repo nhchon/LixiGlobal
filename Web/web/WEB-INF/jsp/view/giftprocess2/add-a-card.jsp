@@ -65,10 +65,10 @@
                                     <div class="clearfix"></div>
                                     <form:select path="cardType" class="form-control" required="true">
                                         <option value="">Select a Card Type</option>
-                                        <option value="1">Visa</option>
-                                        <option value="2">Master Card</option>
-                                        <option value="3">Discover</option>
-                                        <option value="4">Amex</option>
+                                        <option value="1" <c:if test="${addCardForm.cardType eq 1}">selected=""</c:if>>Visa</option>
+                                        <option value="2" <c:if test="${addCardForm.cardType eq 2}">selected=""</c:if>>Master Card</option>
+                                        <option value="3" <c:if test="${addCardForm.cardType eq 3}">selected=""</c:if>>Discover</option>
+                                        <option value="4" <c:if test="${addCardForm.cardType eq 4}">selected=""</c:if>>Amex</option>
                                     </form:select>
                                     <div class="has-error"><form:errors path="cardType" cssClass="help-block" element="div"/></div>
                                 </div>
@@ -96,18 +96,18 @@
                                     <label for="expirationDate">Expiration Month</label>
                                     <form:select path="expMonth" class="form-control" required="true">
                                         <option value="">Exp. Month</option>
-                                        <option value="01">Jan</option>
-                                        <option value="02">Feb</option>
-                                        <option value="03">Mar</option>
-                                        <option value="04">Apr</option>
-                                        <option value="05">May</option>
-                                        <option value="06">Jun</option>
-                                        <option value="07">Jul</option>
-                                        <option value="08">Aug</option>
-                                        <option value="09">Sep</option>
-                                        <option value="10">Oct</option>
-                                        <option value="11">Nov</option>
-                                        <option value="12">Dec</option>
+                                        <option value="01" <c:if test="${addCardForm.expMonth eq 1}">selected=""</c:if>>Jan</option>
+                                        <option value="02" <c:if test="${addCardForm.expMonth eq 2}">selected=""</c:if>>Feb</option>
+                                        <option value="03" <c:if test="${addCardForm.expMonth eq 3}">selected=""</c:if>>Mar</option>
+                                        <option value="04" <c:if test="${addCardForm.expMonth eq 4}">selected=""</c:if>>Apr</option>
+                                        <option value="05" <c:if test="${addCardForm.expMonth eq 5}">selected=""</c:if>>May</option>
+                                        <option value="06" <c:if test="${addCardForm.expMonth eq 6}">selected=""</c:if>>Jun</option>
+                                        <option value="07" <c:if test="${addCardForm.expMonth eq 7}">selected=""</c:if>>Jul</option>
+                                        <option value="08" <c:if test="${addCardForm.expMonth eq 8}">selected=""</c:if>>Aug</option>
+                                        <option value="09" <c:if test="${addCardForm.expMonth eq 9}">selected=""</c:if>>Sep</option>
+                                        <option value="10" <c:if test="${addCardForm.expMonth eq 10}">selected=""</c:if>>Oct</option>
+                                        <option value="11" <c:if test="${addCardForm.expMonth eq 11}">selected=""</c:if>>Nov</option>
+                                        <option value="12" <c:if test="${addCardForm.expMonth eq 12}">selected=""</c:if>>Dec</option>
                                     </form:select>
                                     <div class="has-error"><form:errors path="expMonth" cssClass="help-block" element="div"/></div>
                                 </div>
@@ -120,7 +120,7 @@
                                         <jsp:useBean id="now" class="java.util.Date" />
                                         <fmt:formatDate var="currYear" value="${now}" pattern="yyyy" />
                                         <c:forEach begin="${currYear}" end="${currYear + 10}" var="year">
-                                            <option value="${year}">${year}</option>
+                                            <option value="${year}"  <c:if test="${addCardForm.expYear eq year}">selected=""</c:if>>${year}</option>
                                         </c:forEach>
                                     </form:select>
                                     <div class="has-error"><form:errors path="expYear" cssClass="help-block" element="div"/></div>

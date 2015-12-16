@@ -15,6 +15,8 @@ import vn.chonsoft.lixi.validations.NotBlank;
  */
 public class AddCardForm {
     
+    private Long cardId;
+    
     /* card detail */
     @Min(1)
     private Integer cardType;
@@ -37,6 +39,8 @@ public class AddCardForm {
     private String cvv;
     
     /* Billing address */
+    private Long blId;
+    
     @NotBlank(message = "{validate.not_null}")
     private String firstName;
     
@@ -60,6 +64,14 @@ public class AddCardForm {
 
     @NotBlank(message = "{validate.not_null}")
     private String country;
+
+    public Long getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(Long cardId) {
+        this.cardId = cardId;
+    }
 
     public Integer getCardType() {
         return cardType;
@@ -107,6 +119,14 @@ public class AddCardForm {
 
     public void setCvv(String cvv) {
         this.cvv = cvv;
+    }
+
+    public Long getBlId() {
+        return blId;
+    }
+
+    public void setBlId(Long blId) {
+        this.blId = blId;
     }
 
     public String getFirstName() {

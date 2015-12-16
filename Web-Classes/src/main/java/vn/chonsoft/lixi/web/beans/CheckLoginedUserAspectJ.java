@@ -29,8 +29,8 @@ public class CheckLoginedUserAspectJ {
     @Autowired
     private LoginedUser loginedUser;
     
-    @Autowired
-    private UserService userService;
+    //@Autowired
+    //private UserService userService;
     
     @Pointcut("@annotation(vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation)")
     public void annotatedUserSecurityAnnotation(){}
@@ -42,10 +42,10 @@ public class CheckLoginedUserAspectJ {
             
             if(StringUtils.isEmpty(loginedUser.getEmail())){
                 
-                //return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
+                return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
                 
                 /* igonred login step */
-                LiXiUtils.setLoginedUser(loginedUser, this.userService.findByEmail("daothidam88@gmail.com"));
+                //LiXiUtils.setLoginedUser(loginedUser, this.userService.findByEmail("daothidam88@gmail.com"));
                 
             }
             

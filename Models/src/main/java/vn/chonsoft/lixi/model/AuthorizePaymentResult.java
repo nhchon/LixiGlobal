@@ -48,8 +48,8 @@ public class AuthorizePaymentResult implements Serializable {
     private Date createdDate;
 
     @Basic
-    @Column(name = "card_id")
-    private Long cardId;
+    @Column(name = "card_info")
+    private String cardInfo;
     
     public AuthorizePaymentResult() {
     }
@@ -97,12 +97,12 @@ public class AuthorizePaymentResult implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public Long getCardId() {
-        return cardId;
+    public String getCardInfo() {
+        return cardInfo;
     }
 
-    public void setCardId(Long cardId) {
-        this.cardId = cardId;
+    public void setCardInfo(String cardInfo) {
+        this.cardInfo = cardInfo;
     }
 
     @Override

@@ -44,7 +44,9 @@
                                     <td>
                                         <select class="form-control" name="payment">
                                             <option value="0">Credit Card</option>
+                                            <c:if test="${c.name eq 'US'}">
                                             <option value="1">Checking Account</option>
+                                            </c:if>
                                         </select>
                                     </td>
                                     <td>

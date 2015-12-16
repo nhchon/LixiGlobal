@@ -60,8 +60,8 @@ public class CreditCardProcesses {
     @Inject
     private UserService userService;
 
-    @Inject
-    private UserCardService cardService;
+    //@Inject
+    //private UserCardService cardService;
 
     @Autowired
     private LixiInvoiceService invoiceService;
@@ -166,7 +166,8 @@ public class CreditCardProcesses {
 
         /* Handle result */
         AuthorizePaymentResult payResult = new AuthorizePaymentResult();
-        payResult.setCardId(card.getId());
+        String cardInfo = "["+StringUtils.right(card.getCardNumber(), 4) + "-"+card.getExpMonth()+"-"+card.getExpYear()+"]";
+        payResult.setCardInfo(cardInfo);
         String returned = "";
         if (response != null) {
 
@@ -203,7 +204,7 @@ public class CreditCardProcesses {
         this.paymentResultService.save(payResult);
 
         /* update authorize.net payment id */
-        this.cardService.updateAuthorizeProfileId(card.getAuthorizePaymentId(), card.getId());
+        //this.cardService.updateAuthorizeProfileId(card.getAuthorizePaymentId(), card.getId());
 
         // return
         return returned;
@@ -294,7 +295,7 @@ public class CreditCardProcesses {
                 //for(String s : response.getCustomerPaymentProfileIdList().getNumericString()){
                 //card.setAuthorizePaymentId(s);
                 //}
-                this.cardService.save(card);
+                //this.cardService.save(card);
 
                 // return
                 returned = LiXiConstants.OK;
@@ -376,14 +377,13 @@ public class CreditCardProcesses {
         }
         // Order
         OrderType invoice = new OrderType();
-        invoice.setInvoiceNumber(order.getId().toString());
+        invoice.setInvoiceNumber(lxInvoice.getId().toString() );
         invoice.setDescription("["
                 + lxInvoice.getId() + ", "
                 + order.getId() + ", "
                 + order.getSender().getId() + ", "
                 + order.getSender().getFullName() + ", "
-                + order.getSender().getEmail() + ", "
-                + order.getId()
+                + order.getSender().getEmail()
                 + "]");
         //
         txnRequest.setOrder(invoice);
@@ -439,14 +439,13 @@ public class CreditCardProcesses {
 
         /* Order information */
         OrderType invoice = new OrderType();
-        invoice.setInvoiceNumber(order.getId().toString());
+        invoice.setInvoiceNumber(lxInvoice.getId().toString());
         invoice.setDescription("["
                 + lxInvoice.getId() + ", "
                 + order.getId() + ", "
                 + order.getSender().getId() + ", "
                 + order.getSender().getFullName() + ", "
-                + order.getSender().getEmail() + ", "
-                + order.getId()
+                + order.getSender().getEmail()
                 + "]");
         txnRequest.setOrder(invoice);
 
@@ -507,7 +506,8 @@ public class CreditCardProcesses {
             
             payment.setResponseCode(result.getResponseCode());
             payment.setResponseText(LiXiUtils.marshal(response));
-
+            payment.setNetTransId(result.getTransId());
+            
             lxInvoice.setNetResponseCode(result.getResponseCode());
             lxInvoice.setNetTransId(result.getTransId());
         } else {

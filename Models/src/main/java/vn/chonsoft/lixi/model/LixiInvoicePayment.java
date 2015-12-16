@@ -33,6 +33,9 @@ public class LixiInvoicePayment implements Serializable {
     @Column(name = "id")
     private Long id;
     
+    @Column(name = "net_trans_id")
+    private String netTransId;
+    
     @Basic
     @Column(name = "response_code")
     private String responseCode;
@@ -72,6 +75,14 @@ public class LixiInvoicePayment implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNetTransId() {
+        return netTransId;
+    }
+
+    public void setNetTransId(String netTransId) {
+        this.netTransId = netTransId;
     }
 
     public String getResponseCode() {

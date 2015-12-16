@@ -41,7 +41,7 @@
                                         <h4>Order summary</h4>
                                         <c:forEach items="${entry.gifts}" var="g"  varStatus="giftCount">
                                         <div>
-                                            <strong style="width:350px;">${g.productName}</strong>
+                                            <strong style="width:500px;">${g.productName}</strong>
                                             <span>USD $ <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> * ${g.productQuantity} ~ VND <fmt:formatNumber value="${g.exchPrice * g.productQuantity}" pattern="###,###.##"/></span>
                                             <a href="#" class="edit-info-event"></a>
                                             <!--<span>( gift / more recipient )</span>-->
@@ -67,15 +67,28 @@
                                             </div>
                                         </div>
                                         <h4 class="text-color-link">Payment method</h4>
+                                        <c:if test="${not empty LIXI_ORDER.card}">
+                                            <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.card.cardNumber)}"/>
                                         <div>
-                                            <strong>Visa:</strong><span>ending with 4242</span> <a href="#" class="edit-info-event"></a>
+                                            <strong>${LIXI_ORDER.card.cardTypeName}:</strong> <span>ending with ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}</span> <a href="#" class="edit-info-event"></a>
                                         </div>
                                         <div>
-                                            <strong>Order #:</strong><span>21591</span> <a href="#" class="edit-info-event"></a>
+                                            <strong>Order #:</strong><span>${LIXI_ORDER.id}</span> <a href="#" class="edit-info-event"></a>
                                         </div>
                                         <div>
-                                            <strong>Billing address:</strong><span>abc</span>
+                                            <strong>Billing address:</strong><span>${LIXI_ORDER.card.billingAddress.firstName}&nbsp;${LIXI_ORDER.card.billingAddress.lastName}, ${LIXI_ORDER.card.billingAddress.address}</span>
                                         </div>
+                                        </c:if>
+                                        <c:if test="${not empty LIXI_ORDER.bankAccount}">
+                                            <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.bankAccount.checkingAccount)}"/>
+                                            <div>
+                                            <b>${LIXI_ORDER.bankAccount.name}</b> ending in ${fn:substring(LIXI_ORDER.bankAccount.checkingAccount, lengthCard-4, lengthCard)}
+                                            </div>
+                                            <br/>
+                                            <div>
+                                            <b>Billing address:</b> <span id="billingAdd">${LIXI_ORDER.bankAccount.billingAddress.fullName}, ${LIXI_ORDER.bankAccount.billingAddress.add1}
+                                            </div>    
+                                        </c:if>
                                     </div>
                                     <div class="receiver-order-item">
                                         <div class="row">
@@ -105,7 +118,7 @@
                     </div>
                     <div class="button-control gift-total-wrapper text-center text-uppercase" style="padding-bottom: 20px;">
                         <div class="button-control-page">
-                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/checkout/order-summary"/>">Cancel</button>
+                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/order-summary"/>">Cancel</button>
                             <button type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>
                         </div>
                     </div>
