@@ -192,6 +192,14 @@ public class GiftsAjaxController {
             order = this.lxorderService.findById(orderId);
 
         }
+        // delet gift if quantity < 0
+        if(quantity < 0){
+            
+            this.lxogiftService.deleteByOrderAndProductId(order, productId);
+            //re-select order
+            order = this.lxorderService.findById(order.getId());
+        }
+
         /* get recipient */
         Recipient rec = this.reciService.findById(recId);
         LixiOrderGift alreadyGift = this.lxogiftService.findByOrderAndRecipientAndProductId(order, rec, productId);

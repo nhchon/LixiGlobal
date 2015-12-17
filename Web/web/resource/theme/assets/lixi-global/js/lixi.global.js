@@ -232,7 +232,7 @@ LixiGlobal.Gift = {
             var productId = giftItemObj.find("input[name='item']").val();
             var quantity = giftItemObj.find("input[name='quantity']").val();
             overlayOn($("#product"+productId));
-            checkExceed($('#recId').val(), productId, quantity);
+            checkExceed($('#recId').val(), productId, -quantity);
         }
     },
     toBuyStatus: function(giftItemObj){
@@ -257,7 +257,7 @@ LixiGlobal.Gift = {
                 var productId = giftItemObj.find("input[name='item']").val();
                 var quantity = giftItemObj.find("input[name='quantity']").val();
                 overlayOn($("#product"+productId));
-                checkExceed($('#recId').val(), productId, quantity);
+                checkExceed($('#recId').val(), productId, -quantity);
             } else {
                 /* */
                 var productId = giftItemObj.find("input[name='item']").val();

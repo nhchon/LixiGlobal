@@ -525,6 +525,7 @@ public class CheckOutController2 {
                 invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
                 invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
                 invoice.setTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL));
+                invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
                 invoice.setInvoiceDate(currDate);
                 invoice.setCreatedDate(currDate);
 

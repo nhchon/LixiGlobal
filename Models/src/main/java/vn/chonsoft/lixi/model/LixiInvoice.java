@@ -52,6 +52,9 @@ public class LixiInvoice implements Serializable {
     @Column(name = "total_amount")
     private Double totalAmount;
     
+    @Column(name = "total_amount_vnd")
+    private Double totalAmountVnd;
+    
     @Column(name = "net_trans_id")
     private String netTransId;
     
@@ -126,6 +129,14 @@ public class LixiInvoice implements Serializable {
 
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public Double getTotalAmountVnd() {
+        return totalAmountVnd;
+    }
+
+    public void setTotalAmountVnd(Double totalAmountVnd) {
+        this.totalAmountVnd = totalAmountVnd;
     }
 
     public String getNetTransId() {

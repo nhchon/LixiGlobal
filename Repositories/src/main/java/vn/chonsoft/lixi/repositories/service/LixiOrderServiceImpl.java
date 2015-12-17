@@ -4,8 +4,10 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +25,8 @@ import vn.chonsoft.lixi.repositories.LixiOrderRepository;
 @Service
 public class LixiOrderServiceImpl implements LixiOrderService{
     
-    @Inject LixiOrderRepository lxorderRepository;
+    @Autowired 
+    private LixiOrderRepository lxorderRepository;
 
     /**
      * 
@@ -121,6 +124,36 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         
     }
     
+    @Override
+    public LixiOrder findLastBySenderAndLixiStatus(User sender, Integer status){
+        
+        List<LixiOrder> ls = this.lxorderRepository.findBySenderAndLixiStatus(sender, status);
+        if(ls != null && !ls.isEmpty()){
+                
+                return ls.get(0);
+                
+        }
+        //
+        return null;
+    }
+    
+    /**
+     * 
+     * @param ids
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<LixiOrder> findAll(List<Long> ids){
+        
+        List<LixiOrder> ls = this.lxorderRepository.findAll(ids);
+        if(ls != null && !ls.isEmpty()){
+            ls.forEach((LixiOrder o) -> o.getGifts().size());
+        }
+        return ls;
+        
+    }
+    
     /**
      * 
      * @param status
@@ -141,31 +174,82 @@ public class LixiOrderServiceImpl implements LixiOrderService{
     
     /**
      * 
-     * @param ids
+     * @param sender
+     * @param page
      * @return 
      */
     @Override
     @Transactional
-    public List<LixiOrder> findAll(List<Long> ids){
+    public Page<LixiOrder> findBySender(User sender, Pageable page){
         
-        List<LixiOrder> ls = this.lxorderRepository.findAll(ids);
-        if(ls != null && !ls.isEmpty()){
-            ls.forEach((LixiOrder o) -> o.getGifts().size());
+        Page<LixiOrder> ps = this.lxorderRepository.findBySender(sender, page);
+        if(ps != null && ps.hasContent()){
+            ps.getContent().forEach((LixiOrder o) -> {
+                // make sure load gifts
+                o.getGifts().size();
+
+                // top up
+                o.getTopUpMobilePhones().size();
+
+                // phone card
+                o.getBuyCards().size();
+
+                // exchange rate
+                o.getLxExchangeRate();
+
+                //
+                o.getCard();
+
+                //
+                o.getBankAccount();
+
+                // invoice
+                o.getInvoice();
+            });
         }
-        return ls;
         
+        return ps;
     }
     
+    /**
+     * 
+     * @param sender
+     * @param begin
+     * @param end
+     * @param page
+     * @return 
+     */
     @Override
-    public LixiOrder findLastBySenderAndLixiStatus(User sender, Integer status){
+    @Transactional
+    public Page<LixiOrder> findByModifiedDate(User sender, Date begin, Date end, Pageable page){
         
-        List<LixiOrder> ls = this.lxorderRepository.findBySenderAndLixiStatus(sender, status);
-        if(ls != null && !ls.isEmpty()){
-                
-                return ls.get(0);
-                
+        Page<LixiOrder> ps = this.lxorderRepository.findBySenderAndModifiedDateBetween(sender, begin, end, page);
+        if(ps != null && ps.hasContent()){
+            ps.getContent().forEach((LixiOrder o) -> {
+                // make sure load gifts
+                o.getGifts().size();
+
+                // top up
+                o.getTopUpMobilePhones().size();
+
+                // phone card
+                o.getBuyCards().size();
+
+                // exchange rate
+                o.getLxExchangeRate();
+
+                //
+                o.getCard();
+
+                //
+                o.getBankAccount();
+
+                // invoice
+                o.getInvoice();
+            });
         }
-        //
-        return null;
+        
+        return ps;
     }
+    
 }

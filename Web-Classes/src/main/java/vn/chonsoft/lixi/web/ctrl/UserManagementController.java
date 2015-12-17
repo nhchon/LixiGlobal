@@ -6,7 +6,9 @@ package vn.chonsoft.lixi.web.ctrl;
 
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
@@ -17,6 +19,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -24,18 +30,23 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.UserEditEmailForm;
 import vn.chonsoft.lixi.model.form.UserEditNameForm;
 import vn.chonsoft.lixi.model.form.UserEditPasswordForm;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
+import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
-import vn.chonsoft.lixi.web.beans.CheckLoginedUserAspectJ;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -46,6 +57,10 @@ import vn.chonsoft.lixi.web.beans.CheckLoginedUserAspectJ;
 public class UserManagementController {
     
     private static final Logger log = LogManager.getLogger(UserManagementController.class);
+    
+    /* session bean - Login user */
+    @Autowired
+    private LoginedUser loginedUser;
     
     @Autowired
     private JavaMailSender mailSender;
@@ -60,7 +75,7 @@ public class UserManagementController {
     private ThreadPoolTaskScheduler taskScheduler;
     
     @Autowired
-    private CheckLoginedUserAspectJ checkLoginedUser;
+    private LixiOrderService lxorderService;;
     
     /**
      * 
@@ -347,8 +362,7 @@ public class UserManagementController {
     @RequestMapping(value = "editPhoneNumber", method = RequestMethod.POST)
     public ModelAndView editPhoneNumber(HttpServletRequest request) {
         
-        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
-        User u = this.userService.findByEmail(email);
+        User u = this.userService.findByEmail(loginedUser.getEmail());
         
         String phone = request.getParameter("phone");
         
@@ -362,4 +376,87 @@ public class UserManagementController {
         
     }
     
+    /**
+     * 
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "orderHistory", method = RequestMethod.GET)
+    public ModelAndView orderHistory() {
+        
+        return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek", true, true));
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param when
+     * @param page
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "orderHistory/{when}", method = RequestMethod.GET)
+    public ModelAndView orderHistory(Map<String, Object> model, @PathVariable String when, @PageableDefault(sort = {"modifiedDate"}, value = 50, direction = Sort.Direction.DESC) Pageable page) {
+        
+        /**/
+        User sender = this.userService.findByEmail(loginedUser.getEmail());
+        
+        Calendar calendar = Calendar.getInstance(); // this would default to now
+        Date end = calendar.getTime();
+        Date begin = null;
+        
+        switch(when){
+            case "last30Days":
+            {
+                calendar.add(Calendar.DAY_OF_MONTH, -30);
+                begin = calendar.getTime();
+                break;
+            }
+            case "last6Months":
+            {
+                calendar.add(Calendar.MONTH, -6);
+                begin = calendar.getTime();
+                break;
+            }
+            case "allOrders":
+            {
+                begin = null;
+                break;
+            }
+            default:{
+                // last week
+                calendar.add(Calendar.DAY_OF_MONTH, -7);
+                begin = calendar.getTime();
+            }
+        }
+        
+        log.info("order history: begin " + begin + " : " + end);
+        
+        Page<LixiOrder> ps = null;
+        if(begin != null){
+            
+            ps = this.lxorderService.findByModifiedDate(sender, begin, end, page);
+            
+        }
+        else{
+            
+            /* all orders */
+            ps = this.lxorderService.findBySender(sender, page);
+        }
+        
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new HashMap<>();
+        if(ps.hasContent()){
+            ps.getContent().forEach(o -> {
+                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+            });
+        }
+        /* forward time */
+        model.put("when", when);
+        
+        model.put("orders", ps);
+        
+        model.put("mOs", mOs);
+        
+        return new ModelAndView("user2/orderHistory");
+    }
 }

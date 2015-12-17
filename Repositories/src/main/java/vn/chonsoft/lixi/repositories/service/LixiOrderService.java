@@ -4,9 +4,12 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
@@ -20,15 +23,27 @@ public interface LixiOrderService {
     
     int updateStatus(Integer status, Long id);
     
+    @Transactional
     LixiOrder save(LixiOrder order);
     
+    @Transactional
+    LixiOrder findById(Long id);
+
+    @Transactional
     LixiOrder findLastOrder(User user);
     
+    @Transactional
+    LixiOrder findLastBySenderAndLixiStatus(User sender, Integer status);
+    
+    @Transactional
     List<LixiOrder> findAll(List<Long> ids);
     
-    LixiOrder findById(Long id);
+    @Transactional
+    Page<LixiOrder> findBySender(User sender, Pageable page);
     
+    @Transactional
     Page<LixiOrder> findByLixiStatus(Integer status, Pageable page);
     
-    LixiOrder findLastBySenderAndLixiStatus(User sender, Integer status);
+    @Transactional
+    Page<LixiOrder> findByModifiedDate(User sender, Date begin, Date end, Pageable page);
 }

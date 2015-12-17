@@ -3,7 +3,7 @@
         <div class="container">
             <div class="navbar-collapse" id="navbar-collapse-top">
                 <ul class="nav navbar-nav navbar-right">
-                    <c:if test="${not empty sessionScope['scopedTarget.loginedUser']}">
+                    <c:if test="${not empty sessionScope['scopedTarget.loginedUser'].email}">
                         <li><a href="javascript:void(0);">Hello ${sessionScope['scopedTarget.loginedUser'].email}</a></li>
                         <li>
                             <a class="hvr-underline-from-center" href="<c:url value="/user/signOut"/>">Log Out</a>
@@ -42,9 +42,6 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <!--                            <button type="button" class="navbar-toggle navbar-cart navbar-cart-event" data-toggle="collapse" data-target="#navbar-collapse-main">
-                                                <i class="fa fa-cart-plus"></i>
-                                            </button>-->
                 <a class="navbar-brand page-scroll" href="<c:url value="/"/>">
                     <img src="<c:url value="/resource/theme/assets/lixi-global/images/logo.png"/>"/>
                 </a>
@@ -63,9 +60,9 @@
                         <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="account.html">Account <i class="fa fa-angle-down"></i></a>
                         <ul class="dropdown-menu nav-level-1">
                             <li>
-                                <a class="nav-sub-link no-boder-top" href="order-history.html">Orders</a>
+                                <a class="nav-sub-link no-boder-top" href="<c:url value="/user/orderHistory"/>">Orders</a>
                                 <ul class="nav-level-2">
-                                    <li><a href="order-history.html">View, Track<br/> or cancel an orders</a></li>
+                                    <li><a href="<c:url value="/user/orderHistory"/>">View, Track<br/> or cancel an orders</a></li>
                                 </ul>
                             </li>
                             <li>

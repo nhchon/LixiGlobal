@@ -41,6 +41,24 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
  */
 public class CreditCardProcesses {
 
+    public enum TranSactionResponseCode{
+        
+        APPROVED("1"),
+        DECLINED("2"),
+        ERROR("3"),
+        HELD_FOR_REVIEW("4");
+        
+        private final String value;
+
+        private TranSactionResponseCode(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+    
     private static final Logger log = LogManager.getLogger(CreditCardProcesses.class);
 
     private String apiLoginId;
@@ -488,7 +506,7 @@ public class CreditCardProcesses {
             if (response.getMessages().getResultCode() == MessageTypeEnum.OK) {
 
                 // log
-                if (result.getResponseCode().equals("1")) {
+                if (TranSactionResponseCode.APPROVED.getValue().equals(result.getResponseCode()) || TranSactionResponseCode.HELD_FOR_REVIEW.getValue().equals(result.getResponseCode())) {
                     log.info(result.getResponseCode());
                     log.info("Successful Credit Card Transaction");
                     log.info(result.getAuthCode());

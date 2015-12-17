@@ -88,8 +88,8 @@
                                     <div class="gift-item-col-content">
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                            <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.perfume.english}</a></h2>
-                                            <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                            <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.perfume.id}"/>">${LIXI_CATEGORIES.perfume.english}</a></h2>
+                                            <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.perfume.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                         </div>
                                     </div>
                                 </div>
@@ -112,8 +112,8 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title">${LIXI_CATEGORIES.cosmetics.english}</h2>
-                                                    <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.cosmetics.id}"/>">${LIXI_CATEGORIES.cosmetics.english}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.cosmetics.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -124,8 +124,8 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.candies.english}</a></h2>
-                                                    <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.candies.id}"/>">${LIXI_CATEGORIES.candies.english}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.candies.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -134,8 +134,8 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.flowers.english}</a></h2>
-                                                    <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.flowers.id}"/>">${LIXI_CATEGORIES.flowers.english}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.flowers.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -148,8 +148,8 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.jewelries.english}</a></h2>
-                                                    <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.jewelries.id}"/>">${LIXI_CATEGORIES.jewelries.english}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.jewelries.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -164,8 +164,8 @@
                                     <div class="gift-item-col-content">
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                            <h2 class="gift-item-col-content-title"><a href="#shop-now">${LIXI_CATEGORIES.childrentoy.english}</a></h2>
-                                            <div class="gift-item-col-content-link"><a href="#shop-now">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                            <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.childrentoy.id}"/>">${LIXI_CATEGORIES.childrentoy.english}</a></h2>
+                                            <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.childrentoy.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
                                         </div>
                                     </div>
                                 </div>

@@ -301,6 +301,33 @@ public class GiftsController2 {
     
     /**
      * 
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "type", method = RequestMethod.GET)
+    public ModelAndView typeOfGift(HttpServletRequest request){
+        
+        Long recId = (Long)request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID);
+        Integer selectedCatId = (Integer)request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID);
+        
+        if(recId == null){
+            
+            return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
+        }
+        else{
+            
+            if(selectedCatId == null){
+                
+                return new ModelAndView(new RedirectView("/type/" + recId.toString(), true, true));
+            }
+            else{
+                return new ModelAndView(new RedirectView("/type/" + recId.toString() + "/" + selectedCatId.toString(), true, true));
+            }
+        }
+    }
+    /**
+     * 
      * select default category
      * 
      * @param recId 
