@@ -321,6 +321,7 @@ public class RootContextConfiguration  implements
      * 
      * @return 
      */
+    /*
     @Bean
     public CreditCardProcesses creditCardProcesses(){
         
@@ -331,7 +332,7 @@ public class RootContextConfiguration  implements
         
         return processes;
     }
-    
+    */
     /**
      * 
      * @return 
@@ -358,16 +359,5 @@ public class RootContextConfiguration  implements
         c.setFlowers(this.lxCategoryService.findByCode(LiXiConstants.CAT_FLOWER));
         
         return c;
-    }
-    /**
-     * 
-     * http://stackoverflow.com/questions/17097521/spring-3-2-value-annotation-
-     * with-pure-java-configuration-does-not-work-but-env
-     * 
-     * @return 
-     */
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
     }
 }

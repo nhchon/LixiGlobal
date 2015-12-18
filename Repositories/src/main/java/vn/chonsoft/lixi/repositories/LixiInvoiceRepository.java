@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -15,5 +16,11 @@ import vn.chonsoft.lixi.model.LixiOrder;
 public interface LixiInvoiceRepository extends JpaRepository<LixiInvoice, Long>{
     
     LixiInvoice findByOrder(LixiOrder order);
+    
+    LixiInvoice findByNetTransId(String transId);
+    
+    List<LixiInvoice> findByNetResponseCodeIn(Iterable<String> code);
+
+    List<LixiInvoice> findByNetTransStatusIn(Iterable<String> status);
     
 }

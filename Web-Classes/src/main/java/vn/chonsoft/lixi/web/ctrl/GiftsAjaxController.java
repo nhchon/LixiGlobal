@@ -30,7 +30,6 @@ import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
-import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
@@ -72,8 +71,8 @@ public class GiftsAjaxController {
     @Autowired
     private LixiExchangeRateService lxexrateService;
 
-    @Autowired
-    private LixiCategoryService lxcService;
+    //@Autowired
+    //private LixiCategoryService lxcService;
 
     @Autowired
     private LixiOrderService lxorderService;
@@ -227,7 +226,11 @@ public class GiftsAjaxController {
         currentPayments = LiXiUtils.calculateCurrentPayment(order, alreadyGift);
         
         double currentPayment = currentPayments[0].getUsd();//USD
-        currentPayment += (LiXiUtils.toUsdPrice(price, buy) * quantity);// in USD
+        if(quantity>0){
+            // add selected gift
+            currentPayment += (LiXiUtils.toUsdPrice(price, buy) * quantity);
+        }
+        
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
 
             // maximum payment is over

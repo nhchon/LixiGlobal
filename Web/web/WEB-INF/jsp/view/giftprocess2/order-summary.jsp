@@ -67,7 +67,7 @@
                                             </td>
                                             <td data-title="Unit Price">
                                                 <div><strong>USD $ <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/></strong></div>
-                                                <div><strong>VND <fmt:formatNumber value="${g.exchPrice}" pattern="###,###.##"/></strong></div>
+                                                <div><strong>VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
                                                 <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/gifts/type/${entry.recipient.id}/${g.category.id}"/>';"><spring:message code="message.change"/></button></p>

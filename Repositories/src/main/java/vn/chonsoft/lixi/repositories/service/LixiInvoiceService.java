@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -17,9 +18,13 @@ public interface LixiInvoiceService {
     @Transactional
     LixiInvoice save(LixiInvoice invoice);
     
-    @Transactional
     LixiInvoice findById(long id);
     
-    @Transactional
+    LixiInvoice findByNetTransId(String transId);
+    
     LixiInvoice findByOrder(LixiOrder order);
+    
+    List<LixiInvoice> findByNetResponseCode(Iterable<String> code);
+    
+    List<LixiInvoice> findByNetTransStatusIn(Iterable<String> status);
 }

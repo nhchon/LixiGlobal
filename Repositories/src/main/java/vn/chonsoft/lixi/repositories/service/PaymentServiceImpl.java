@@ -2,72 +2,87 @@
  * Lixi is a Vietnamese word for small gift of money
  * 2015 @ Lixi Global
  */
-package vn.chonsoft.lixi.web.beans;
+package vn.chonsoft.lixi.repositories.service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import javax.inject.Inject;
-
-import net.authorize.Environment;
-import net.authorize.api.contract.v1.*;
+import net.authorize.api.contract.v1.BankAccountType;
+import net.authorize.api.contract.v1.BankAccountTypeEnum;
+import net.authorize.api.contract.v1.CreateCustomerPaymentProfileRequest;
+import net.authorize.api.contract.v1.CreateCustomerPaymentProfileResponse;
+import net.authorize.api.contract.v1.CreateCustomerProfileRequest;
+import net.authorize.api.contract.v1.CreateCustomerProfileResponse;
+import net.authorize.api.contract.v1.CreateTransactionRequest;
+import net.authorize.api.contract.v1.CreateTransactionResponse;
+import net.authorize.api.contract.v1.CreditCardType;
+import net.authorize.api.contract.v1.CustomerAddressType;
+import net.authorize.api.contract.v1.CustomerPaymentProfileType;
+import net.authorize.api.contract.v1.CustomerProfilePaymentType;
+import net.authorize.api.contract.v1.CustomerProfileType;
+import net.authorize.api.contract.v1.CustomerTypeEnum;
+import net.authorize.api.contract.v1.GetTransactionDetailsRequest;
+import net.authorize.api.contract.v1.GetTransactionDetailsResponse;
+import net.authorize.api.contract.v1.MerchantAuthenticationType;
+import net.authorize.api.contract.v1.MessageTypeEnum;
+import net.authorize.api.contract.v1.MessagesType;
+import net.authorize.api.contract.v1.OrderType;
+import net.authorize.api.contract.v1.PaymentProfile;
+import net.authorize.api.contract.v1.PaymentType;
+import net.authorize.api.contract.v1.TransactionDetailsType;
+import net.authorize.api.contract.v1.TransactionRequestType;
+import net.authorize.api.contract.v1.TransactionResponse;
+import net.authorize.api.contract.v1.TransactionTypeEnum;
+import net.authorize.api.contract.v1.ValidationModeEnum;
 import net.authorize.api.controller.CreateCustomerPaymentProfileController;
 import net.authorize.api.controller.CreateCustomerProfileController;
-import net.authorize.api.controller.base.ApiOperationBase;
 import net.authorize.api.controller.CreateTransactionController;
 import net.authorize.api.controller.GetTransactionDetailsController;
+import net.authorize.api.controller.base.ApiOperationBase;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import vn.chonsoft.lixi.model.AuthorizeCustomerResult;
 import vn.chonsoft.lixi.model.AuthorizePaymentResult;
 import vn.chonsoft.lixi.model.LixiInvoice;
-import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiInvoicePayment;
+import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
+import vn.chonsoft.lixi.model.pojo.EnumTransactionResponseCode;
 import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
-import vn.chonsoft.lixi.repositories.service.AuthorizeCustomerResultService;
-import vn.chonsoft.lixi.repositories.service.AuthorizePaymentResultService;
-import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
-import vn.chonsoft.lixi.repositories.service.LixiOrderPaymentService;
-import vn.chonsoft.lixi.repositories.service.UserService;
-import vn.chonsoft.lixi.web.LiXiConstants;
-import vn.chonsoft.lixi.web.util.LiXiUtils;
+import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
 
 /**
  *
  * @author chonnh
  */
-public class CreditCardProcesses{
-
-    public enum TransactionResponseCode{
-        
-        APPROVED("1"),
-        DECLINED("2"),
-        ERROR("3"),
-        HELD_FOR_REVIEW("4");
-        
-        private final String value;
-
-        private TransactionResponseCode(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
+@Service
+@PropertySource(value = { "classpath:authorize.properties"})
+public class PaymentServiceImpl implements PaymentService{
     
-    private static final Logger log = LogManager.getLogger(CreditCardProcesses.class);
-
+    private static final Logger log = LogManager.getLogger(PaymentServiceImpl.class);
+    
+    @Autowired
+    private Environment env;
+    
+    @Value("${authorize.net.api_login_id}")
     private String apiLoginId;
-    private String transactionKey;
+    
+    @Value("${authorize.net.transaction_key}")
+    private String transactionKey = null;
 
+    @Value("${authorize.net.run_mode}")
     private String runMode = "SANDBOX";
 
     @Autowired
@@ -84,51 +99,60 @@ public class CreditCardProcesses{
 
     @Autowired
     private LixiInvoiceService invoiceService;
-
-    public void setApiLoginId(String apiLoginId) {
-        this.apiLoginId = apiLoginId;
+    
+    /**
+     * 
+     * http://stackoverflow.com/questions/17097521/spring-3-2-value-annotation-
+     * with-pure-java-configuration-does-not-work-but-env
+     * 
+     * @return 
+     */
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 
-    public void setTransactionKey(String transactionKey) {
-        this.transactionKey = transactionKey;
+    private void checkInit(){
+        
+        if(apiLoginId == null){
+            
+            apiLoginId = env.getProperty("authorize.net.api_login_id");
+            transactionKey = env.getProperty("authorize.net.transaction_key");
+            runMode = env.getProperty("authorize.net.run_mode");
+            
+            log.info("===> PaymentServiceImpl init : " + apiLoginId);
+        }
     }
-
-    public String getRunMode() {
-        return runMode;
-    }
-
-    public void setRunMode(String runMode) {
-        this.runMode = runMode;
-    }
-
     /**
      *
      * @return
      */
-    private Environment getEnvironment() {
+    private net.authorize.Environment getEnvironment() {
 
         //SANDBOX, SANDBOX_TESTMODE, PRODUCTION, PRODUCTION_TESTMODE, LOCAL_VM, HOSTED_VM, CUSTOM
         switch (runMode) {
             case "PRODUCTION":
-                return Environment.PRODUCTION;
+                return net.authorize.Environment.PRODUCTION;
             case "PRODUCTION_TESTMODE":
-                return Environment.PRODUCTION_TESTMODE;
+                return net.authorize.Environment.PRODUCTION_TESTMODE;
             case "LOCAL_VM":
-                return Environment.LOCAL_VM;
+                return net.authorize.Environment.LOCAL_VM;
             case "HOSTED_VM":
-                return Environment.HOSTED_VM;
+                return net.authorize.Environment.HOSTED_VM;
             case "CUSTOM":
-                return Environment.CUSTOM;
+                return net.authorize.Environment.CUSTOM;
             case "SANDBOX_TESTMODE":
-                return Environment.SANDBOX_TESTMODE;
+                return net.authorize.Environment.SANDBOX_TESTMODE;
             default:
-                return Environment.SANDBOX;
+                return net.authorize.Environment.SANDBOX;
         }
     }
 
     /**
      * 
      */
+    @Override
+    @Scheduled(fixedDelay=3*60*60*1000, initialDelay=60*1000)
     public void updateAllInvoiceStatus(){
         
         List<String> continueStatus = Arrays.asList(EnumTransactionStatus.begin.getValue(),
@@ -153,6 +177,7 @@ public class CreditCardProcesses{
         }
     }
     
+    @Override
     public void updateInvoiceStatus(LixiInvoice invoice){
         
         //Common code to set for all requests
@@ -201,8 +226,9 @@ public class CreditCardProcesses{
      * @param card
      * @return
      */
+    @Override
     public String createPaymentProfile(UserCard card) {
-
+        
         //Common code to set for all requests
         ApiOperationBase.setEnvironment(getEnvironment());
 
@@ -259,7 +285,7 @@ public class CreditCardProcesses{
         if (response != null) {
 
             String resultCode = response.getMessages().getResultCode().value();
-            String resultText = LiXiUtils.marshalWithoutRootElement(response.getMessages());
+            String resultText = LiXiRepoUtils.marshalWithoutRootElement(response.getMessages());
 
             payResult.setResponseCode(resultCode);
             payResult.setResponseText(resultText);
@@ -270,7 +296,7 @@ public class CreditCardProcesses{
                 // set card payment id
                 card.setAuthorizePaymentId(response.getCustomerPaymentProfileId());
                 //
-                returned = LiXiConstants.OK;
+                returned = LiXiRepoUtils.OK;
             } else {
 
                 System.out.println("Failed to create payment profile:  " + response.getMessages().getResultCode());
@@ -304,6 +330,7 @@ public class CreditCardProcesses{
      * @param card
      * @return
      */
+    @Override
     public String createCustomerProfile(User u, UserCard card) {
 
         //Common code to set for all requests
@@ -367,7 +394,7 @@ public class CreditCardProcesses{
         if (response != null) {
 
             String resultCode = response.getMessages().getResultCode().value();
-            String resultText = LiXiUtils.marshalWithoutRootElement(response.getMessages());
+            String resultText = LiXiRepoUtils.marshalWithoutRootElement(response.getMessages());
 
             cus.setResponseCode(resultCode);
             cus.setResponseText(resultText);
@@ -385,7 +412,7 @@ public class CreditCardProcesses{
                 //this.cardService.save(card);
 
                 // return
-                returned = LiXiConstants.OK;
+                returned = LiXiRepoUtils.OK;
             } else {
 
                 System.out.println("Failed to create customer profile:  " + response.getMessages().getResultCode());
@@ -414,6 +441,7 @@ public class CreditCardProcesses{
      * @param lxInvoice
      * @return
      */
+    @Override
     public boolean charge(LixiInvoice lxInvoice) {
 
         LixiOrder order = lxInvoice.getOrder();
@@ -493,6 +521,7 @@ public class CreditCardProcesses{
      * @param lxInvoice
      * @return
      */
+    @Override
     public boolean chargeByCustomerProfile(LixiInvoice lxInvoice) {
 
         /* get order */
@@ -575,7 +604,7 @@ public class CreditCardProcesses{
             if (response.getMessages().getResultCode() == MessageTypeEnum.OK) {
 
                 // log
-                if (TransactionResponseCode.APPROVED.getValue().equals(result.getResponseCode()) || TransactionResponseCode.HELD_FOR_REVIEW.getValue().equals(result.getResponseCode())) {
+                if (EnumTransactionResponseCode.APPROVED.getValue().equals(result.getResponseCode()) || EnumTransactionResponseCode.HELD_FOR_REVIEW.getValue().equals(result.getResponseCode())) {
                     log.info(result.getResponseCode());
                     log.info("Successful Credit Card Transaction");
                     log.info(result.getAuthCode());
@@ -592,7 +621,7 @@ public class CreditCardProcesses{
             }
             
             payment.setResponseCode(result.getResponseCode());
-            payment.setResponseText(LiXiUtils.marshal(response));
+            payment.setResponseText(LiXiRepoUtils.marshal(response));
             payment.setNetTransId(result.getTransId());
             
             lxInvoice.setNetResponseCode(result.getResponseCode());
@@ -610,5 +639,6 @@ public class CreditCardProcesses{
 
         return returned;
     }
+    
     
 }

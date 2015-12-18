@@ -44,7 +44,7 @@
                                                 ORDER NO ${m.key.id}
                                             </div>
                                         <div style="font-size:14px;padding-top: 8px;">
-                                            <a href="<c:url value="/user/orderDetail/${m.key.id}"/>">Order Detail</a> |  <a href="" >Order Again</a>
+                                            <a href="<c:url value="/user/orderDetail/${m.key.id}"/>">Order Detail</a> |  <a href="javascript:alert('Comming Soon');" >Order Again</a>
                                         </div>
                                     </div>
                                     <div class="col-md-2" style="text-align:center;">
@@ -80,15 +80,19 @@
                                                     ${m.key.invoice.netTransStatus}
                                                 </c:if>             
                                             </c:if>
+                                            <c:set var="lastCheck" value="Last check: "/>
+                                            <c:if test="${m.key.invoice.netTransStatus eq 'settledSuccessfully'}">
+                                                <c:set var="lastCheck" value=""/>
+                                            </c:if>
                                             <c:if test="${empty m.key.invoice}">
-                                                &nbsp;(Last check: <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>)
+                                                &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>)
                                             </c:if>
                                             <c:if test="${not empty m.key.invoice}">
                                                 <c:if test="${empty m.key.invoice.netTransStatus}">
-                                                    &nbsp;(Last check: <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.invoiceDate}"/>)
+                                                    &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.invoiceDate}"/>)
                                                 </c:if>
                                                 <c:if test="${not empty m.key.invoice.netTransStatus}">
-                                                    &nbsp;(Last check: <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.lastCheckDate}"/>)
+                                                    &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.lastCheckDate}"/>)
                                                 </c:if>             
                                             </c:if>
                                         </div>

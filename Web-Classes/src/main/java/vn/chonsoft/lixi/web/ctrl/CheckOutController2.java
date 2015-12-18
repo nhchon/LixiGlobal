@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.BillingAddress;
-import vn.chonsoft.lixi.model.LixiGlobalFee;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
@@ -40,10 +38,9 @@ import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.form.AddCardForm;
 import vn.chonsoft.lixi.model.form.BankAccountAddForm;
-import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
-import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.CountryService;
 import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
@@ -51,6 +48,7 @@ import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
+import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
@@ -77,31 +75,31 @@ public class CheckOutController2 {
     @Autowired
     private LoginedUser loginedUser;
     
-    @Inject
+    @Autowired
     private RecipientService reciService;
 
-    @Inject
+    @Autowired
     private UserService userService;
 
-    @Inject
+    @Autowired
     private UserCardService ucService;
 
-    @Inject
+    @Autowired
     private BillingAddressService baService;
 
-    @Inject
+    @Autowired
     private LixiOrderService lxorderService;
 
-    @Inject
-    private LixiOrderGiftService lxogiftService;
+    //@Autowired
+    //private LixiOrderGiftService lxogiftService;
 
-    @Inject
-    private RecipientService recService;
+    //@Autowired
+    //private RecipientService recService;
 
-    @Inject
+    @Autowired
     private UserBankAccountService ubcService;
 
-    @Inject
+    @Autowired
     private LixiGlobalFeeService feeService;
 
     @Autowired
@@ -110,22 +108,22 @@ public class CheckOutController2 {
     @Autowired
     private CountryService countryService;
     
-    @Inject
-    private LixiCardFeeService cardFeeService;
+    //@Autowired
+    //private LixiCardFeeService cardFeeService;
 
-    @Inject
+    @Autowired
     private JavaMailSender mailSender;
 
-    @Inject
+    @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
 
-    @Inject
+    @Autowired
     private VelocityEngine velocityEngine;
 
-    @Inject
-    private CreditCardProcesses creaditCardProcesses;
+    @Autowired
+    private PaymentService paymentService;
 
-    @Inject
+    @Autowired
     private LixiAsyncMethods lxAsyncMethods;
     
     /**
@@ -283,10 +281,10 @@ public class CheckOutController2 {
             /* Create authorize.net profile */
             String returned = LiXiConstants.OK;
             if(StringUtils.isEmpty(u.getAuthorizeProfileId())){
-                returned = this.creaditCardProcesses.createCustomerProfile(u, uc);
+                returned = this.paymentService.createCustomerProfile(u, uc);
             }
             else{
-                returned = this.creaditCardProcesses.createPaymentProfile(uc);
+                returned = this.paymentService.createPaymentProfile(uc);
             }
             
             /* if we store card information on authorize.net OK */
@@ -459,13 +457,14 @@ public class CheckOutController2 {
                 invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
                 invoice.setTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL));
                 invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
+                invoice.setNetTransStatus(EnumTransactionStatus.begin.getValue());
                 invoice.setInvoiceDate(currDate);
                 invoice.setCreatedDate(currDate);
 
                 invoice = this.invoiceService.save(invoice);
             }
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
-            boolean chargeResult = creaditCardProcesses.chargeByCustomerProfile(invoice);
+            boolean chargeResult = paymentService.chargeByCustomerProfile(invoice);
             if (chargeResult == false) {
                 return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
             } 

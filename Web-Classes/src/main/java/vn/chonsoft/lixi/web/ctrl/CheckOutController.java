@@ -57,6 +57,7 @@ import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
+import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
@@ -116,7 +117,7 @@ public class CheckOutController {
     private VelocityEngine velocityEngine;
 
     @Inject
-    private CreditCardProcesses creaditCardProcesses;
+    private PaymentService paymentService;
 
     @Inject
     private LixiAsyncMethods lxAsyncMethods;
@@ -215,10 +216,10 @@ public class CheckOutController {
             log.info(form.getCardNumber());
             /* Create authorize.net profile */
             if(StringUtils.isEmpty(u.getAuthorizeProfileId())){
-                this.creaditCardProcesses.createCustomerProfile(u, uc);
+                this.paymentService.createCustomerProfile(u, uc);
             }
             else{
-                this.creaditCardProcesses.createPaymentProfile(uc);
+                this.paymentService.createPaymentProfile(uc);
             }
             
             // update order, add card
@@ -958,7 +959,7 @@ public class CheckOutController {
 
             this.lxorderService.save(order);
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
-            boolean chargeResult = creaditCardProcesses.chargeByCustomerProfile(null);
+            boolean chargeResult = paymentService.chargeByCustomerProfile(null);
             if (chargeResult == false) {
                 return new ModelAndView(new RedirectView("/checkout/payment-method/change?wrong=1", true, true));
             } 

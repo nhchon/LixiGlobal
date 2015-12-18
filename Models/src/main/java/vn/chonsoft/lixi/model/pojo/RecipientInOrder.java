@@ -95,19 +95,21 @@ public class RecipientInOrder {
         double buy = getLxExchangeRate().getBuy();
         
         // gift type
-        //double sumGiftVND = 0;
+        double sumGiftVND = 0;
         double sumGiftUSD = 0;
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
                 //sumGiftVND += (gift.getExchPrice() * gift.getProductQuantity());
                 double temp = gift.getUsdPrice() * gift.getProductQuantity();
                 sumGiftUSD += (Math.round(temp * 100.0) / 100.0);//(gift.getUsdPrice() * gift.getProductQuantity());
+                sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
                 /* round up */
                 sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+                sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
             }
         }
         
-        return new SumVndUsd("LIXI_GIFT_TYPE", sumGiftUSD * buy, sumGiftUSD);
+        return new SumVndUsd("LIXI_GIFT_TYPE", sumGiftVND, sumGiftUSD);
     }
     
     /**

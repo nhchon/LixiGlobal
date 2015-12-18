@@ -15,6 +15,22 @@
 
                 });
             });
+            
+            function toogleTrans(){
+                if($('#transInfo').is(":visible")){
+                    
+                    $('#iconTrans').removeClass();
+                    $('#iconTrans').addClass("fa fa-caret-right");
+                    //
+                    $('#transInfo').hide();
+                }
+                else{
+                    $('#iconTrans').removeClass();
+                    $('#iconTrans').addClass("fa fa-caret-down");
+                    //
+                    $('#transInfo').show();
+                }
+            }
         </script>
     </jsp:attribute>
 
@@ -105,7 +121,28 @@
                             </div>
                         </div>
                         <div class="panel-footer" style="background-color: #fff;">
-                            <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span> Transactions                          
+                            <i id="iconTrans" class="fa fa-caret-right"></i> <a href="javascript:toogleTrans();">Transactions</a>
+                            <div class="row" id="transInfo" style="display: none;">
+                                <div class="col-md-12">
+                                    <c:if test="${not empty LIXI_ORDER.card}">
+                                        <c:choose>
+                                            <c:when test="${LIXI_ORDER.card.cardType eq 1}">
+                                                Visa Card
+                                            </c:when>
+                                            <c:when test="${LIXI_ORDER.card.cardType eq 2}">
+                                                Master Card
+                                            </c:when>
+                                            <c:when test="${LIXI_ORDER.card.cardType eq 3}">
+                                                Discover Card
+                                            </c:when>
+                                            <c:when test="${LIXI_ORDER.card.cardType eq 4}">
+                                                American Express
+                                            </c:when>
+                                        </c:choose>
+                                         ending in ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)} : $<fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/>
+                                    </c:if>
+                                </div>
+                            </div>
                         </div>                        
                     </div>
                     <div class="panel panel-default">

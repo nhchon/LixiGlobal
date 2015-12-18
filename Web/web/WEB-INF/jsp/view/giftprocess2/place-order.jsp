@@ -42,7 +42,7 @@
                                         <c:forEach items="${entry.gifts}" var="g"  varStatus="giftCount">
                                         <div>
                                             <strong style="width:500px;">${g.productName}</strong>
-                                            <span>USD $ <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> * ${g.productQuantity} ~ VND <fmt:formatNumber value="${g.exchPrice * g.productQuantity}" pattern="###,###.##"/></span>
+                                            <span>USD $ <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> * ${g.productQuantity} ~ VND <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></span>
                                             <a href="#" class="edit-info-event"></a>
                                             <!--<span>( gift / more recipient )</span>-->
                                         </div>

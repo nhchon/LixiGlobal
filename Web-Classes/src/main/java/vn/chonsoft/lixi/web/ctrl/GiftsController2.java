@@ -74,14 +74,14 @@ public class GiftsController2 {
     @Autowired
     private RecipientService reciService;
 
-    @Autowired
-    private CurrencyTypeService currencyService;
+    //@Autowired
+    //private CurrencyTypeService currencyService;
 
     @Autowired
     private LixiExchangeRateService lxexrateService;
 
-    @Autowired
-    private LixiCategoryService lxcService;
+    //@Autowired
+    //private LixiCategoryService lxcService;
 
     @Autowired
     private LixiOrderService lxorderService;
