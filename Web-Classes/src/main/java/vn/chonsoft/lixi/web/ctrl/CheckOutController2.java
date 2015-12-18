@@ -355,78 +355,6 @@ public class CheckOutController2 {
     /**
      * 
      * @param model
-     * @param order 
-     */
-    private void calculateFee(Map<String, Object> model, LixiOrder order){
-        
-        /* get billing address */
-        BillingAddress bl = null;
-        int paymentMethod = 0;
-        if(order.getCard() != null){
-            bl = order.getCard().getBillingAddress();
-        }
-        else{
-            bl = order.getBankAccount().getBillingAddress();
-            paymentMethod = 1;
-        }
-        
-        double buy = order.getLxExchangeRate().getBuy();
-        
-        /* get lixi global fee */
-        List<LixiGlobalFee> fees = this.feeService.findByCountry(this.countryService.findByName(bl.getCountry()));
-        
-        //log.info("fees.length : " + fees.size());
-        
-        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
-        model.put(LiXiConstants.LIXI_ORDER, order);
-        model.put(LiXiConstants.REC_GIFTS, recGifts);
-
-        // calculate the total
-        double finalTotal = 0;
-        SumVndUsd[] totals = LiXiUtils.calculateCurrentPayment(order);
-        double giftPrice = totals[0].getUsd();//usd
-
-        //log.info("gift price : " + giftPrice);
-        /* get lixi fee */
-        LixiGlobalFee fee = LiXiUtils.getLixiGlobalFee(fees, paymentMethod, giftPrice);
-        
-        //log.info("LixiGlobalFee == null:" + (fee == null));
-        
-        /* calculate card fee */
-        double cardFee = 0.0;
-        double feePercent = 0;
-        if (order.getSetting() == EnumLixiOrderSetting.ALLOW_REFUND.getValue()) {
-            feePercent = fee.getAllowRefundFee();
-        }
-        else{
-            feePercent = fee.getGiftOnlyFee();
-        }
-
-        //log.info("feePercent: " + feePercent);
-        
-        cardFee = LiXiUtils.round2Decimal((feePercent * giftPrice)/100.0);
-        if((fee.getMaxFee() > 0) && (cardFee > fee.getMaxFee())){
-            cardFee = fee.getMaxFee();
-        }
-        
-        /* lixi handling fee */
-        double lixiFee = (fee.getLixiFee() * (recGifts.isEmpty() ? 0 : recGifts.size()));
-        // final total 
-        finalTotal = giftPrice + cardFee + lixiFee;
-
-        model.put(LiXiConstants.LIXI_GIFT_PRICE, LiXiUtils.round2Decimal(giftPrice));
-        model.put(LiXiConstants.LIXI_GIFT_PRICE_VND, buy * giftPrice);
-        model.put(LiXiConstants.LIXI_FINAL_TOTAL, LiXiUtils.round2Decimal(finalTotal));
-        model.put(LiXiConstants.LIXI_FINAL_TOTAL_VND, LiXiUtils.round2Decimal(buy * finalTotal));
-        model.put(LiXiConstants.LIXI_HANDLING_FEE, fee.getLixiFee());
-        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, lixiFee);
-        model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFee);
-        
-    }
-    
-    /**
-     * 
-     * @param model
      * @param setting
      * @param request
      * @return 
@@ -454,7 +382,8 @@ public class CheckOutController2 {
         model.put("error", 0);
 
         // calculate fee
-        calculateFee(model, order);
+        LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
+                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
 
         return new ModelAndView("giftprocess2/fees");
     }
@@ -481,10 +410,10 @@ public class CheckOutController2 {
             // order not exist, go to Choose recipient page
             return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
         }
-
         
         // calculate fee
-        calculateFee(model, order);
+        LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
+                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
 
         return new ModelAndView("giftprocess2/place-order");
     }
@@ -517,7 +446,11 @@ public class CheckOutController2 {
             if(invoice == null){
                 /* create invoice */
                 Map<String, Object> model = new HashMap<>();
-                calculateFee(model, order);
+                /* get billing address */
+                BillingAddress bl = LiXiUtils.getBillingAddress(order);
+
+                // calculate fee
+                LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(this.countryService.findByName(bl.getCountry())));
                 
                 invoice = new LixiInvoice();
                 invoice.setOrder(order);
@@ -556,7 +489,10 @@ public class CheckOutController2 {
                         model.put("sender", u);
                         model.put("LIXI_ORDER", refOrder);
                         model.put("REC_GIFTS", recGifts);
-                        calculateFee(model, refOrder);
+                        /* get billing address */
+                        BillingAddress bl = LiXiUtils.getBillingAddress(refOrder);
+                        // calculate fee
+                        LiXiUtils.calculateFee(model, refOrder, feeService.findByCountry(countryService.findByName(bl.getCountry())));
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
                                 velocityEngine, "emails/paid-order-alert.vm", "UTF-8", model);

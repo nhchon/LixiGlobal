@@ -35,12 +35,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.UserEditEmailForm;
 import vn.chonsoft.lixi.model.form.UserEditNameForm;
 import vn.chonsoft.lixi.model.form.UserEditPasswordForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
+import vn.chonsoft.lixi.model.pojo.SumVndUsd;
+import vn.chonsoft.lixi.repositories.service.CountryService;
+import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -75,7 +79,13 @@ public class UserManagementController {
     private ThreadPoolTaskScheduler taskScheduler;
     
     @Autowired
-    private LixiOrderService lxorderService;;
+    private LixiOrderService orderService;;
+    
+    @Autowired
+    private CountryService countryService;
+    
+    @Autowired
+    private LixiGlobalFeeService feeService;
     
     /**
      * 
@@ -435,13 +445,13 @@ public class UserManagementController {
         Page<LixiOrder> ps = null;
         if(begin != null){
             
-            ps = this.lxorderService.findByModifiedDate(sender, begin, end, page);
+            ps = this.orderService.findByModifiedDate(sender, begin, end, page);
             
         }
         else{
             
             /* all orders */
-            ps = this.lxorderService.findBySender(sender, page);
+            ps = this.orderService.findBySender(sender, page);
         }
         
         Map<LixiOrder, List<RecipientInOrder>> mOs = new HashMap<>();
@@ -458,5 +468,41 @@ public class UserManagementController {
         model.put("mOs", mOs);
         
         return new ModelAndView("user2/orderHistory");
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param id
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "orderDetail/{id}", method = RequestMethod.GET)
+    public ModelAndView orderHistory(Map<String, Object> model, @PathVariable Long id) {
+        
+        /* */
+        User sender = this.userService.findByEmail(loginedUser.getEmail());
+        
+        /* load the order */
+        LixiOrder order = this.orderService.findById(id);
+        
+        /* check the owner */
+        if(order == null || (!order.getSender().equals(sender))){
+            
+            // sign out
+            return new ModelAndView(new RedirectView("/user/signOut", true, true));
+        }
+        
+        /* do business */
+        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
+        
+        model.put(LiXiConstants.LIXI_ORDER, order);
+        
+        // calculate fee
+        LiXiUtils.calculateFee(model, order, feeService.findByCountry(
+                countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+        
+        /* return */
+        return new ModelAndView("user2/orderDetail");
     }
 }

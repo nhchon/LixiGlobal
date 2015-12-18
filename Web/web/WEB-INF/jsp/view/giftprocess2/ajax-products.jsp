@@ -4,7 +4,7 @@
             <div title="${p.name}" class="gift-product-thumb" style="background: url(${p.imageUrl}) no-repeat scroll center center transparent;"> </div>
             <h4 class="title" title="${p.name}">${p.name}</h4>
             <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
-            <h4 class="title price">USD $ <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${priceInUSD * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></h4>
+            <h4 class="title price">USD $ <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
             <div class="gift-number-box">
                 <div class="input-group text-center">
                     <span class="input-group-btn">

@@ -33,6 +33,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiGlobalFee;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -42,6 +43,7 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
+import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.Exrate;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
@@ -222,6 +224,89 @@ public class LiXiUtils {
     public static SumVndUsd getTotalOrder(LixiOrder order) {
         return calculateCurrentPayment(order)[0];
     }
+    
+    public static BillingAddress getBillingAddress(LixiOrder order){
+        
+        /* get billing address */
+        if(order.getCard() != null){
+            return order.getCard().getBillingAddress();
+        }
+        
+        return order.getBankAccount().getBillingAddress();
+    }
+    /**
+     * 
+     * @param model
+     * @param order 
+     */
+    public static void calculateFee(Map<String, Object> model, LixiOrder order, List<LixiGlobalFee> fees){
+        
+        /* get billing address */
+        BillingAddress bl = null;
+        int paymentMethod = 0;
+        if(order.getCard() != null){
+            bl = order.getCard().getBillingAddress();
+        }
+        else{
+            bl = order.getBankAccount().getBillingAddress();
+            paymentMethod = 1;
+        }
+        
+        double buy = order.getLxExchangeRate().getBuy();
+        
+        /* get lixi global fee */
+        //List<LixiGlobalFee> fees = this.feeService.findByCountry(this.countryService.findByName(bl.getCountry()));
+        
+        //log.info("fees.length : " + fees.size());
+        
+        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
+        model.put(LiXiConstants.LIXI_ORDER, order);
+        model.put(LiXiConstants.REC_GIFTS, recGifts);
+
+        // calculate the total
+        double finalTotal = 0;
+        SumVndUsd[] totals = LiXiUtils.calculateCurrentPayment(order);
+        double giftPrice = totals[0].getUsd();//usd
+        double giftPriceVnd = totals[0].getVnd();
+
+        //log.info("gift price : " + giftPrice);
+        /* get lixi fee */
+        LixiGlobalFee fee = LiXiUtils.getLixiGlobalFee(fees, paymentMethod, giftPrice);
+        
+        //log.info("LixiGlobalFee == null:" + (fee == null));
+        
+        /* calculate card fee */
+        double cardFee = 0.0;
+        double feePercent = 0;
+        if (order.getSetting() == EnumLixiOrderSetting.ALLOW_REFUND.getValue()) {
+            feePercent = fee.getAllowRefundFee();
+        }
+        else{
+            feePercent = fee.getGiftOnlyFee();
+        }
+
+        //log.info("feePercent: " + feePercent);
+        
+        cardFee = LiXiUtils.round2Decimal((feePercent * giftPrice)/100.0);
+        if((fee.getMaxFee() > 0) && (cardFee > fee.getMaxFee())){
+            cardFee = fee.getMaxFee();
+        }
+        
+        /* lixi handling fee */
+        double lixiFee = (fee.getLixiFee() * (recGifts.isEmpty() ? 0 : recGifts.size()));
+        // final total 
+        finalTotal = giftPrice + cardFee + lixiFee;
+
+        model.put(LiXiConstants.LIXI_GIFT_PRICE, LiXiUtils.round2Decimal(giftPrice));
+        model.put(LiXiConstants.LIXI_GIFT_PRICE_VND, giftPriceVnd);
+        model.put(LiXiConstants.LIXI_FINAL_TOTAL, LiXiUtils.round2Decimal(finalTotal));
+        model.put(LiXiConstants.LIXI_FINAL_TOTAL_VND, LiXiUtils.round2Decimal(buy * finalTotal));
+        model.put(LiXiConstants.LIXI_HANDLING_FEE, fee.getLixiFee());
+        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, lixiFee);
+        model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFee);
+        
+    }
+    
     /**
      *
      * Calculate total money, in VND, exclude specific id of the type of gift
@@ -242,27 +327,30 @@ public class LiXiUtils {
         double buy = order.getLxExchangeRate().getBuy();
         
         double totalUSD = 0;
-        //
+        double totalVND = 0;
         // gift type
         double sumGiftUSD = 0;
+        double sumGiftVND = 0;
         if (order.getGifts() != null) {
             for (LixiOrderGift gift : order.getGifts()) {
 
                 if (LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() == excludeId) {
                     // Nothing
                 } else {
+                    sumGiftVND += gift.getProductPrice();
                     sumGiftUSD += (gift.getUsdPrice() * gift.getProductQuantity());
                     /* round up */
                     sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+                    sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
                 }
 
             }
         }
         // plus to total
         totalUSD += sumGiftUSD;
-        
+        totalVND += sumGiftVND;
         // index 1
-        returnAllSum[1] = new SumVndUsd(LiXiConstants.LIXI_GIFT_TYPE, sumGiftUSD * buy, sumGiftUSD);
+        returnAllSum[1] = new SumVndUsd(LiXiConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
         
         // top up mobile phone
         double sumTopUpUSD = 0;
@@ -278,6 +366,8 @@ public class LiXiUtils {
         }
         // plus to total
         totalUSD += sumTopUpUSD;
+        totalVND += sumTopUpUSD * buy;
+        
         // index 2
         returnAllSum[2] = new SumVndUsd(LiXiConstants.LIXI_TOP_UP_TYPE, sumTopUpUSD * buy, sumTopUpUSD);
         
@@ -298,12 +388,12 @@ public class LiXiUtils {
         }
         // plus to total
         totalUSD += sumBuyCardUSD;
-        
+        totalVND += sumBuyCardUSD * buy;
         // index 3
         returnAllSum[3] = new SumVndUsd(LiXiConstants.LIXI_PHONE_CARD_TYPE, sumBuyCardUSD * buy, sumBuyCardUSD);
 
         // index 0
-        returnAllSum[0] = new SumVndUsd(LiXiConstants.TOTAL_ALL_TYPE, totalUSD * buy, totalUSD);
+        returnAllSum[0] = new SumVndUsd(LiXiConstants.TOTAL_ALL_TYPE, totalVND, totalUSD);
         
         // return total
         return returnAllSum;
