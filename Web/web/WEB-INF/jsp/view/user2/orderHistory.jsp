@@ -140,7 +140,7 @@
                                                 ${g.productName}
                                             </div>
                                             <div class="col-md-2" style="padding-top:40px;">
-                                                $ <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> - <fmt:formatNumber value="${g.exchPrice}" pattern="###,###.##"/> đ
+                                                $ <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> - <fmt:formatNumber value="${g.exchPrice}" pattern="###,###.##"/> đ
                                             </div>
                                         </div>
                                     </c:forEach>

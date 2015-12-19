@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-md-2 col-sm-3 col-xs-3 col-for-seven">
                         <div class="gift-icon">
-                            <a href="#">
+                            <a <c:if test="${TOPUP_SELECTED eq 'YES'}">class="active"</c:if> href="<c:url value="/topUp"/>">
                                 <span class="gift-icon-category gift-icon-1"></span>
                                 <h5>Mobile Top up</h5>
                             </a>

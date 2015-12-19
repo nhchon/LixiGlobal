@@ -1,0 +1,333 @@
+<template:Client htmlTitle="LiXi Global - Choose Type of Gift">
+
+    <jsp:attribute name="extraHeadContent">
+        <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/type-of-gift.css"/>" type="text/css" />
+    </jsp:attribute>
+
+    <jsp:attribute name="extraJavascriptContent">
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/recipient.js"/>"></script>
+        <script type="text/javascript">
+            /** Page Script **/
+            var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
+            var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
+            var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
+            var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
+            var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
+            var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
+            var TOP_UP_EMPTY = '<spring:message code="validate.topup.no_empty"/>';
+            var NUM_OF_CARD = '<spring:message code="validate.buyphonecard.num_of_card"/>';
+
+            $(document).ready(function () {
+
+                // default show/hide panels
+            <c:if test="${empty TOPUP_ACTION or TOPUP_ACTION eq 'MOBILE_MINUTE'}">
+                $('#topUpPanel').show();
+                $('#buyCardPanel').hide();
+            </c:if>
+            <c:if test="${TOPUP_ACTION eq 'PHONE_CARD'}">
+                $('#topUpPanel').hide();
+                $('#buyCardPanel').show();
+            </c:if>
+                //
+                $('#myTabs a').click(function (e) {
+                    e.preventDefault()
+                    $(this).tab('show')
+                    if ($(this).attr('id') === 'buyCardTab') {
+                        $('#buyCardPanel').show();
+                        $('#topUpPanel').hide();
+                    }
+                    else
+                    if ($(this).attr('id') === 'topUpTab') {
+                        $('#topUpPanel').show();
+                        $('#buyCardPanel').hide();
+                    }
+                })
+                // check exceed on amount topup
+                $('#amountTopUp').change(function () {
+                    checkTopUpExceed($(this).val());
+                });
+
+                // check exceed on buy phone card
+                $('#numOfCard').change(function () {
+                    checkBuyPhoneCardExceed($(this).val(), $('#valueOfCard').val());
+                });
+
+                $('#valueOfCard').change(function () {
+                    checkBuyPhoneCardExceed($('#numOfCard').val(), $('#valueOfCard').val());
+                });
+
+                // submit
+                $('#btnTopUpKeepShopping').click(function () {
+                    // set action
+                    $('#topUpAction').val('KEEP_SHOPPING_ACTION');
+                    //
+                    return checkTopUpMobileForm();
+                });
+
+                $('#btnTopUpBuyNow').click(function () {
+                    // set action
+                    $('#topUpAction').val('BUY_NOW_ACTION');
+                    //
+                    return checkTopUpMobileForm();
+                });
+
+                $('#btnPhoneCardKeepShopping').click(function () {
+                    // set action
+                    $('#phoneCardAction').val('KEEP_SHOPPING_ACTION');
+                    //
+                    return checkBuyPhoneCardForm();
+                });
+                $('#btnPhoneCardBuyNow').click(function () {
+                    //set action
+                    $('#phoneCardAction').val('BUY_NOW_ACTION');
+                    //
+                    return checkBuyPhoneCardForm();
+                });
+
+            });
+
+            function checkBuyPhoneCardExceed(numOfCard, valueOfCard) {
+                if (numOfCard === '') {
+                    $('#buyCardInUSD').val('');
+                }
+                else {
+                    $.ajax({
+                        url: '<c:url value="/topUp/checkBuyPhoneCardExceed"/>' + '/' + numOfCard + '/' + valueOfCard,
+                                type: "get",
+                        dataType: 'json',
+                                success: function (data, textStatus, jqXHR)
+                                {
+                            if (data.exceed == '1') {
+                                $('#divError').remove();
+                                $('#buyCardPanelBody').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
+                                alert(data.message);
+                                // disable submit buttons
+                                disableBuyCardSubmitButtons(true);
+                            } else {
+                                // no exceed, remove error
+                                $('#divError').remove();
+                                // update current payment
+                                $('#currentPaymentVND').html(data.CURRENT_PAYMENT_VND);
+                                $('#currentPaymentUSD').html(data.CURRENT_PAYMENT_USD);
+                                //
+                                disableBuyCardSubmitButtons(false);
+                            }
+                            $('#buyCardInUSD').val(data.BUY_PHONE_CARD_IN_USD + " USD");
+                        },
+                                error: function (jqXHR, textStatus, errorThrown)
+                                {
+                            //alert(errorThrown);
+                            //alert('Đã có lỗi, vui lòng thử lại !'); 
+                        }
+                    });
+                }
+            }
+
+            function checkTopUpExceed(amount) {
+                if (amount === '') {
+                    $('#topUpInVND').val('');
+                }
+                else {
+                    $.ajax({
+                        url: '<c:url value="/topUp/checkTopUpExceed"/>' + '/' + amount,
+                                type: "get",
+                        dataType: 'json',
+                                success: function (data, textStatus, jqXHR)
+                                {
+                            if (data.exceed == '1') {
+                                $('#divError').remove();
+                                $('#topUpPanelBody').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
+                                alert(data.message);
+                                // disable submit buttons
+                                disableTopUpSubmitButtons(true);
+                            } else {
+                                // no exceed, remove error
+                                $('#divError').remove();
+                                // update current payment
+                                $('#currentPaymentVND').html(data.CURRENT_PAYMENT_VND);
+                                $('#currentPaymentUSD').html(data.CURRENT_PAYMENT_USD);
+                                //
+                                disableTopUpSubmitButtons(false);
+                            }
+                            $('#topUpInVND').val(data.TOP_UP_IN_VND + " VND");
+                        },
+                                error: function (jqXHR, textStatus, errorThrown)
+                                {
+                            //alert(errorThrown);
+                            //alert('Đã có lỗi, vui lòng thử lại !'); 
+                        }
+                    });
+                }
+            }
+
+            /**
+             * 
+             * @returns {undefined}             
+             *
+             */
+            function disableTopUpSubmitButtons(enable) {
+                $('#btnTopUpKeepShopping').prop('disabled', enable);
+                $('#btnTopUpBuyNow').prop('disabled', enable);
+            }
+
+            function disableBuyCardSubmitButtons(enable) {
+                $('#btnPhoneCardKeepShopping').prop('disabled', enable);
+                $('#btnPhoneCardBuyNow').prop('disabled', enable);
+            }
+
+            function editRecipient(focusId) {
+                $.get('<c:url value="/topUp/editRecipient"/>', function (data) {
+                    enableEditRecipientHtmlContent(data);
+                    // focus on phone field
+                    $('#editRecipientModal').on('shown.bs.modal', function () {
+                        $('#' + focusId).focus()
+                    })
+
+                });
+            }
+            /**
+             * 
+             * @returns {Boolean}
+             */
+            function checkTopUpMobileForm() {
+                if ($.trim($('#amountTopUp').val()) === '') {
+                    alert(TOP_UP_EMPTY);
+                    $('#amountTopUp').focus();
+                    return false;
+                }
+                else {
+                    return true
+                }
+            }
+
+            /**
+             * 
+             * @returns {Boolean}
+             */
+            function checkBuyPhoneCardForm() {
+                if ($.trim($('#numOfCard').val()) === '' || !$('#numOfCard').isInteger()) {
+                    alert(NUM_OF_CARD);
+                    $('#numOfCard').focus();
+                    return false;
+                }
+                else {
+                    return true
+                }
+            }
+        </script>
+    </jsp:attribute>
+
+    <jsp:body>
+        <!-- Page Content -->
+        <c:import url="/categories"/>
+        <section class="section-gift bg-default main-section">
+            <div class="container post-wrapper" style="padding-top:30px;">
+                <div class="section-receiver">      
+                    <h2 class="title">Top up mobile phone</h2>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <%-- Top up mobile phone --%>
+                                <div id="topUpPanel" class="panel panel-default">
+                                    <div class="panel-body" id="topUpPanelBody">
+                                        <c:if test="${topUpExceed eq 1}">
+                                            <div class="msg msg-error" id="divError">
+                                                <spring:message code="validate.top_up_exceeded">
+                                                    <spring:argument value="${TOP_UP_AMOUNT}"/>
+                                                    <spring:argument value="${EXCEEDED_VND}"/>
+                                                    <spring:argument value="${EXCEEDED_USD}"/>
+                                                </spring:message>
+                                            </div>
+                                        </c:if>
+                                        <c:if test="${addSuccess eq 1}">
+                                            <div class="alert alert-success" role="alert">
+                                                Top Up Mobile Minute is success
+                                            </div>
+                                        </c:if>
+                                        <form class="form-horizontal" role="form" method="post" action="${pageContext.request.contextPath}/topUp/topUpMobilePhone">
+                                            <div class="form-group">
+                                                <label class="col-md-3" for="email">Amount you want to top up</label>
+                                                <div class="col-md-7">
+
+                                                    <div class="row">
+                                                        <div class="col-md-10" style="padding-right: 0px;">
+                                                            <input type="number" name="amountTopUp" id="amountTopUp" min="10" class="form-control" placeholder="ie. 10" title="Min is $10"/>
+                                                        </div>
+                                                        <div class="col-md-2" style="padding-left: 0px;">
+                                                            <input type="text" class="form-control" value="USD" readonly="" name="currency" style="width:55px;"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3" for="pwd">Currency conversion rate</label>
+                                                <div class="col-md-3"> 
+                                                    <input type="text" class="form-control" value="1 USD" readonly="">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control" value="<fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> VND" readonly="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3" for="pwd">Top up in VND</label>
+                                                <div class="col-md-7"> 
+                                                    <input type="text" name="topUpInVND" id="topUpInVND" class="form-control" placeholder="<fmt:formatNumber value="${10 * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> VND" readonly="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
+                                                <div class="col-md-7">
+                                                    <div class="row">
+                                                        <div class="col-md-2" style="padding-right: 0px;">
+                                                            <input type="text" name="recDialCode" class="form-control" value="${SELECTED_RECIPIENT.dialCode}" readonly="" style="padding: 6px;"/>
+                                                        </div>
+                                                        <div class="col-md-7" style="padding-left: 0px;padding-right: 0px;">
+                                                            <input type="text" id="recPhone" name="recPhone" class="form-control" readonly="" value="${SELECTED_RECIPIENT.phone}"/>
+                                                            <span class="help-block errors"></span>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <button type="button" class="btn btn-default" onclick="editRecipient('phone');">Change</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-7">
+                                                    <input type="hidden" value="" id="topUpAction" name="topUpAction"/>
+                                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                                    <button id="btnTopUpKeepShopping" type="submit" class="btn btn-primary">Buy & Keep Shopping</button>
+                                                    <button id="btnTopUpBuyNow" type="submit" class="btn btn-warning">Buy Now</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <%-- current payment --%>
+                                <div class="row">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-7">
+                                        <div class="button-control gift-total-wrapper text-uppercase" style="margin-top:0px;">
+                                            <div class="gift-total-box" style="margin:0px;width:400px;">
+                                                <span class="gift-total-box-left">order Total</span>
+                                                <span class="gift-total-box-right">usd $ <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Billing Address Modal -->
+        <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" id="editRecipientContent">
+                </div>
+            </div>
+        </div>
+    </jsp:body>
+</template:Client>

@@ -6,7 +6,6 @@ package vn.chonsoft.lixi.web.ctrl;
 
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +14,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.BuyCard;
-import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.Recipient;
@@ -43,6 +40,7 @@ import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VtcServiceCodeService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
@@ -55,6 +53,10 @@ public class TopUpMobileController {
 
     private static final Logger log = LogManager.getLogger(TopUpMobileController.class);
 
+    /* session bean - Login user */
+    @Autowired
+    private LoginedUser loginedUser;
+    
     @Inject
     private UserService userService;
 
@@ -89,14 +91,20 @@ public class TopUpMobileController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView show(Map<String, Object> model, HttpServletRequest request) {
 
+        Long recId = (Long)request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID);
+        
+        if(recId == null){
+            
+            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+        }
+        
         // sender
-        String email = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
-        User u = this.userService.findByEmail(email);
+        User u = this.userService.findByEmail(loginedUser.getEmail());
 
         // sort categories
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "activated"),
-                new Sort.Order(Sort.Direction.ASC, "sortOrder"));
-        List<LixiCategory> categories = this.lxcService.findAll();
+        //Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "activated"),
+        //        new Sort.Order(Sort.Direction.ASC, "sortOrder"));
+        //List<LixiCategory> categories = this.lxcService.findAll();
         // get exchange rate
         LixiOrder order = null;
         // check order already created
@@ -121,10 +129,10 @@ public class TopUpMobileController {
         }
         /* get recipient */
         Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
+        model.put("TOPUP_SELECTED", "YES");
         model.put(LiXiConstants.SELECTED_RECIPIENT, rec);
-
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
-        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
+        //model.put(LiXiConstants.LIXI_CATEGORIES, categories);
         model.put(LiXiConstants.PHONE_COMPANIES, this.vtcServiceCodeService.findAll());
         // maximum payment & current payment
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
@@ -133,7 +141,7 @@ public class TopUpMobileController {
         model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
 
-        return new ModelAndView("topup/topup", model);
+        return new ModelAndView("topup2/topup", model);
     }
 
     /**
@@ -349,7 +357,7 @@ public class TopUpMobileController {
 
         model.put("chooseRecipientForm", form);
 
-        return new ModelAndView("topup/editRecipientModal", model);
+        return new ModelAndView("topup2/editRecipientModal", model);
     }
 
     /**
@@ -370,7 +378,7 @@ public class TopUpMobileController {
 
         if (errors.hasErrors()) {
 
-            return new ModelAndView("topup/editRecipientModal");
+            return new ModelAndView("topup2/editRecipientModal");
         }
 
         try {
@@ -397,7 +405,7 @@ public class TopUpMobileController {
 
             // jump to page Value Of Gift
             model.put("success", 1);
-            return new ModelAndView("topup/editRecipientModalResult", model);
+            return new ModelAndView("topup2/editRecipientModalResult", model);
 
         } catch (ConstraintViolationException e) {
 
@@ -405,7 +413,7 @@ public class TopUpMobileController {
 
             model.put("validationErrors", e.getConstraintViolations());
 
-            return new ModelAndView("topup/editRecipientModalResult", model);
+            return new ModelAndView("topup2/editRecipientModalResult", model);
 
         }
 
@@ -552,7 +560,7 @@ public class TopUpMobileController {
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
 
-        return new ModelAndView("topup/exceedTopUp", model);
+        return new ModelAndView("topup2/exceedTopUp", model);
     }
 
     /**
@@ -625,6 +633,6 @@ public class TopUpMobileController {
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, LiXiUtils.getNumberFormat().format(currentPayment));
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
 
-        return new ModelAndView("topup/exceedPhoneCard", model);
+        return new ModelAndView("topup2/exceedPhoneCard", model);
     }
 }
