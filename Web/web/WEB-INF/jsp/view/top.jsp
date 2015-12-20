@@ -51,7 +51,7 @@
             <div class="collapse navbar-collapse" id="navbar-collapse-main">
                 <ul class="nav navbar-nav navbar-left">
                     <li>
-                        <a class="hvr-underline-from-center nav-link" href="index.html">Home</a>
+                        <a class="hvr-underline-from-center nav-link" href="<c:url value="/"/>">Home</a>
                     </li>
                     <li>
                         <a class="hvr-underline-from-center nav-link" href="<c:url value="/gifts/chooseCategory"/>">Send gift</a>

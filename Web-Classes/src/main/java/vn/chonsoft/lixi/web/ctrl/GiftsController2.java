@@ -122,6 +122,21 @@ public class GiftsController2 {
     }
 
     /**
+     * 
+     * @param id
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "loadRec/{id}", method = RequestMethod.GET)
+    public ModelAndView loadRecipient(Map<String, Object> model, @PathVariable Long id){
+        
+        Recipient rec = this.reciService.findById(id);
+        
+        model.put("rec", rec);
+        
+        return new ModelAndView("giftprocess2/recInfo");
+    }
+    /**
      *
      * select one of ready recipients or create a new recipients
      * 
@@ -142,11 +157,12 @@ public class GiftsController2 {
 
         // default value for message note
         ChooseRecipientForm form = new ChooseRecipientForm();
+        //form.setNextUrl(request.getParameter("nextUrl"));
         form.setNote("Happy Birthday");
         
         model.put("chooseRecipientForm", form);
 
-        return new ModelAndView("giftprocess2/recipient", model);
+        return new ModelAndView("giftprocess2/recipient");
 
     }
     
@@ -254,8 +270,15 @@ public class GiftsController2 {
             request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_ID, rec.getId());
             request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, form.getFirstName() + " " + StringUtils.defaultIfEmpty(form.getMiddleName(), "") + " " + form.getLastName());
 
-            // jump to page Value Of Gift
-            return new ModelAndView(new RedirectView("/gifts/type/" + rec.getId(), true, true));
+            /* next page */
+            String nextUrl = "/gifts/type/" + rec.getId();
+            if(!StringUtils.isEmpty(form.getNextUrl())){
+                nextUrl = form.getNextUrl();
+            }
+            
+            log.info("nextUrl : " + nextUrl);
+            
+            return new ModelAndView(new RedirectView(nextUrl, true, true));
 
         } catch (ConstraintViolationException e) {
 

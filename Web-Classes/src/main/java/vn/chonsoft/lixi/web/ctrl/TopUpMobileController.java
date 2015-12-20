@@ -95,7 +95,7 @@ public class TopUpMobileController {
         
         if(recId == null){
             
-            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+            return new ModelAndView(new RedirectView("/gifts/recipient?nextUrl=/topUp", true, true));
         }
         
         // sender
@@ -127,9 +127,11 @@ public class TopUpMobileController {
             // get latest from database
             lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
         }
+        /* 0 for selected top up category */
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, 0);
+        
         /* get recipient */
         Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
-        model.put("TOPUP_SELECTED", "YES");
         model.put(LiXiConstants.SELECTED_RECIPIENT, rec);
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
         //model.put(LiXiConstants.LIXI_CATEGORIES, categories);

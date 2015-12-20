@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.model.form;
 
+import vn.chonsoft.lixi.validations.Email;
 import vn.chonsoft.lixi.validations.NotBlank;
 import vn.chonsoft.lixi.validations.NotBlankButNullable;
 
@@ -24,6 +25,7 @@ public class ChooseRecipientForm{
     @NotBlank(message = "{validate.user.lastName}")
     private String lastName;
     
+    @Email
     private String email;
     
     private String dialCode;
@@ -33,6 +35,8 @@ public class ChooseRecipientForm{
     
     private String note;
 
+    private String nextUrl;
+    
     public Long getRecId() {
         return recId;
     }
@@ -95,6 +99,14 @@ public class ChooseRecipientForm{
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getNextUrl() {
+        return nextUrl;
+    }
+
+    public void setNextUrl(String nextUrl) {
+        this.nextUrl = nextUrl;
     }
 
 }

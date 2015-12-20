@@ -8,9 +8,10 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/select-receiver.js"/>"></script>
         <script type="text/javascript">
             var CHOOSE_RECEIVER_PATH = '<c:url value="/gifts/chooseRecipient/"/>';
+            var LOAD_RECEIVER_PATH = '<c:url value="/gifts/loadRec"/>';
             /** Page Script **/
             $(document).ready(function () {
-                
+
             });
         </script>
     </jsp:attribute>
@@ -40,10 +41,10 @@
                             </div>
                         </c:if>
                         <h4><c:if test="${not empty RECIPIENTS}"><spring:message code="message.or"/>&nbsp;</c:if><spring:message code="gift.input_recipient"/>:</h4>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-4">
-                                <div class="form-group">
-                                    <label for="firstName">First Name:</label>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label for="firstName">First Name:</label>
                                     <form:input path="firstName" class="form-control" placeholder="${firstNameMessage}" />
                                     <div class="has-error"><form:errors path="firstName" cssClass="help-block" element="div"/></div>
                                 </div>
@@ -75,21 +76,20 @@
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group">
                                     <label for="phoneNumber">Phone Number:</label>
-                                    <div class="input-group input-group-event">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="input-group-label">+84</span> <span class="caret text-color-gray"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a data-value="+84" href="#areaPhoneNumber">+84</a></li>
-                                                <li><a  data-value="+1" href="#areaPhoneNumber">+1</a></li>
-                                            </ul>
-                                            <form:input path="dialCode" cssClass="input-group-value hidden" value="+84"/>
-                                        </div><!-- /btn-group -->
-                                        <form:input path="phone" class="form-control"/>
-                                        <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
-                                    </div><!-- /input-group -->
+                                    <div class="row">
+                                        <div class="col-md-2" style="padding-right: 0px;">
+                                            <form:select path="dialCode"  class="form-control">
+                                                <option value="+84">+84</option>
+                                                <option value="+1">+1</option>
+                                            </form:select>
+                                        </div>
+                                        <div class="col-md-10" style="padding-left: 0px;">
+                                            <form:input path="phone" class="form-control"/>
+                                            <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
                         <div class="form-group">
                             <label for="messenger">Messenger:</label>
