@@ -43,10 +43,8 @@ import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.CountryService;
-import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
-import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
@@ -56,7 +54,6 @@ import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
-import vn.chonsoft.lixi.web.beans.CreditCardProcesses;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
@@ -455,7 +452,7 @@ public class CheckOutController2 {
                 invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
                 invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
                 invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
-                invoice.setTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL));
+                invoice.setTotalAmount(1.0);//(Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)
                 invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
                 invoice.setNetTransStatus(EnumTransactionStatus.begin.getValue());
                 invoice.setInvoiceDate(currDate);
@@ -504,13 +501,13 @@ public class CheckOutController2 {
             }
             ////////////////////////////////////////////////////////////////////
             log.info("Call Async methods");
-            log.info("processTopUpItems");
-            // The order is paid, top up mobile
-            lxAsyncMethods.processTopUpItems(order);
-            
-            // Buy Cards
-            //lxAsyncMethods.processBuyCardItems(order);
-            
+            if(LiXiConstants.YES.equals(loginedUser.getConfig(LiXiConstants.VTC_AUTO))){
+                // The order is paid, top up mobile
+                lxAsyncMethods.processTopUpItems(order);
+
+                // Buy Cards
+                //lxAsyncMethods.processBuyCardItems(order);
+            }
             //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
             log.info("submitOrdersToBaoKim");
             lxAsyncMethods.submitOrdersToBaoKim(order);

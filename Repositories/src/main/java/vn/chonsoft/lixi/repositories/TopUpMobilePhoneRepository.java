@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 
@@ -13,4 +14,5 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
  */
 public interface TopUpMobilePhoneRepository  extends JpaRepository<TopUpMobilePhone, Long>{
     
+    List<TopUpMobilePhone> findByIsSubmittedIn(Iterable<Integer> isSubmitted);
 }

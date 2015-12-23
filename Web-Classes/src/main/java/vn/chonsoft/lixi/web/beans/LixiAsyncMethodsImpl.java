@@ -48,19 +48,19 @@ import vn.vtc.pay.RequestTransactionResponse;
  *
  * @author chonnh
  */
-public class LixiAsyncMethodsImpl implements LixiAsyncMethods{
+public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
 
     private static final Logger log = LogManager.getLogger(LixiAsyncMethodsImpl.class);
-    
+
     @Inject
     private LixiOrderService orderService;
-    
+
     @Inject
     private LixiOrderGiftService orderGiftService;
-    
+
     @Inject
     private DauSoService dauSoService;
-    
+
     @Inject
     private VtcServiceCodeService vtcServiceCodeService;
 
@@ -69,7 +69,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods{
 
     @Inject
     private TopUpMobilePhoneService topUpService;
-    
+
     @Inject
     private TopUpResultService turService;
 
@@ -91,19 +91,18 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods{
     @Inject
     private BuyCardService bcService;
 
-    
     /**
-     * 
-     * @param order 
+     *
+     * @param order
      */
     @Override
     @Async
     public void submitOrdersToBaoKim(LixiOrder order) {
-        
+
         LiXiVatGiaUtils.getInstance().submitOrdersToBaoKim(order, orderService, orderGiftService);
-        
+
     }
-    
+
     /**
      *
      * @param phone
@@ -124,122 +123,133 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods{
 
         return dauSos.get(0);
     }
-    
+
     /**
      * 
-     * @param order 
+     * @param topUp 
      */
     @Override
     @Async
-    public void processTopUpItems(LixiOrder order){
+    public void processTopUpItem(TopUpMobilePhone topUp) {
+
+        Recipient rec = topUp.getRecipient();
+        String amount = "10000"; // new Long((long)topUp.getAmount()).toString();
+        String account = rec.getPhone(); // phone number
+
+        DauSo dauSo = getDauSo(account);
+        //if(!dauSos.isEmpty()){
+
+        VtcServiceCode serviceCode = this.vtcServiceCodeService.findByNetworkAndLxChucNang(dauSo.getNetwork(), LiXiConstants.NAP_TIEN_TRA_TRUOC);
+
+        String requestData = vtcClient.topUpRequestData(topUp.getId(), serviceCode.getCode(), account, amount);
+
+        RequestTransactionResponse response = null;
+        try {
+            // call vtc's service
+            response = vtcClient.topupTelco(requestData);
+
+        } catch (WebServiceException e) {
+            log.info(e.getMessage(), e);
+            /* handle exception */
+            // update topup
+            topUp.setIsSubmitted(-1);// submit failed
+            topUp.setResponseCode(-1);
+            topUp.setResponseMessage(e.getMessage());
+
+            this.topUpService.save(topUp);
+
+            // email to sender, receiver, admin
+        }
+
+        if (response != null) {
+            // <ResponseCode>|<OrgTransID>|<PartnerBalance>|<DataSign>
+            String vtcReturned = response.getRequestTransactionResult();
+            log.info(vtcReturned);
+
+            // save result into database
+            TopUpResult tur = new TopUpResult();
+            tur.setTopUp(topUp);
+            tur.setRequestData(requestData);
+            tur.setResponseData(vtcReturned);
+            tur.setTopUp(topUp);
+            tur.setModifiedDate(Calendar.getInstance().getTime());
+
+            this.turService.save(tur);
+
+            // parse result
+            String[] results = vtcReturned.split("\\|");
+            if (LiXiConstants.VTC_OK.equals(results[0])) {
+                // update topup
+                topUp.setIsSubmitted(1);
+                topUp.setResponseCode(1);//OK
+                topUp.setResponseMessage("OK");
+
+                this.topUpService.save(topUp);
+
+                // send email
+                MimeMessagePreparator preparator = new MimeMessagePreparator() {
+                    @SuppressWarnings({"rawtypes", "unchecked"})
+                    @Override
+                    public void prepare(MimeMessage mimeMessage) throws Exception {
+                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+                        message.setTo(rec.getEmail());
+                        message.setCc(LiXiConstants.CHONNH_GMAIL);
+                        message.setFrom("support@lixi.global");
+                        message.setSubject("LiXi.Global - Top Up Mobile Minutes Alert");
+                        message.setSentDate(Calendar.getInstance().getTime());
+
+                        Map model = new HashMap();
+                        model.put("rec", rec);
+                        model.put("sender", topUp.getOrder().getSender());
+                        model.put("amount", topUp.getAmount());
+
+                        String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                velocityEngine, "emails/topup-confirmation.vm", "UTF-8", model);
+                        message.setText(text, true);
+                    }
+                };
+                // send oldEmail
+                taskScheduler.execute(() -> mailSender.send(preparator));
+            }// enf if TOP UP is OK
+            else {
+
+                // what to do if VTC TOP UP is failed ???
+                // update topup
+                VtcResponseCode vtcResponse = this.responseCodeService.findByCode(Integer.parseInt(results[0]));
+
+                topUp.setIsSubmitted(1);
+                topUp.setResponseCode(vtcResponse.getCode());//OK
+                topUp.setResponseMessage(vtcResponse.getDescription());
+
+                this.topUpService.save(topUp);
+            }
+        }
+
+    }
+
+    /**
+     *
+     * @param order
+     */
+    @Override
+    @Async
+    public void processTopUpItems(LixiOrder order) {
 
         log.info("Order ID: " + order.getId() + " - TopUp is empty: " + order.getTopUpMobilePhones().isEmpty());
 
         for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
 
-            Recipient rec = topUp.getRecipient();
-            String amount = "10000"; // new Long((long)topUp.getAmount()).toString();
-            String account = rec.getPhone(); // phone number
-
-            DauSo dauSo = getDauSo(account);
-            //if(!dauSos.isEmpty()){
-
-            VtcServiceCode serviceCode = this.vtcServiceCodeService.findByNetworkAndLxChucNang(dauSo.getNetwork(), LiXiConstants.NAP_TIEN_TRA_TRUOC);
-
-            String requestData = vtcClient.topUpRequestData(topUp.getId(), serviceCode.getCode(), account, amount);
-
-            RequestTransactionResponse response = null;
-            try {
-                // call vtc's service
-                response = vtcClient.topupTelco(requestData);
-
-            } catch (WebServiceException e) {
-                log.info(e.getMessage(), e);
-                /* handle exception */
-                // update topup
-                topUp.setIsSubmitted(-1);
-                topUp.setResponseCode(-1);
-                topUp.setResponseMessage(e.getMessage());
-
-                this.topUpService.save(topUp);
-
-                // email to sender, receiver, admin
-            }
-
-            if (response != null) {
-                // <ResponseCode>|<OrgTransID>|<PartnerBalance>|<DataSign>
-                String vtcReturned = response.getRequestTransactionResult();
-                log.info(vtcReturned);
-
-                // save result into database
-                TopUpResult tur = new TopUpResult();
-                tur.setTopUp(topUp);
-                tur.setRequestData(requestData);
-                tur.setResponseData(vtcReturned);
-                tur.setTopUp(topUp);
-                tur.setModifiedDate(Calendar.getInstance().getTime());
-
-                this.turService.save(tur);
-
-                // parse result
-                String[] results = vtcReturned.split("\\|");
-                if (LiXiConstants.VTC_OK.equals(results[0])) {
-                    // update topup
-                    topUp.setIsSubmitted(1);
-                    topUp.setResponseCode(1);//OK
-                    topUp.setResponseMessage("OK");
-
-                    this.topUpService.save(topUp);
-
-                    // send email
-                    MimeMessagePreparator preparator = new MimeMessagePreparator() {
-                        @SuppressWarnings({"rawtypes", "unchecked"})
-                        @Override
-                        public void prepare(MimeMessage mimeMessage) throws Exception {
-                            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
-                            message.setTo(rec.getEmail());
-                            message.setCc(LiXiConstants.CHONNH_GMAIL);
-                            message.setFrom("support@lixi.global");
-                            message.setSubject("LiXi.Global - Top Up Mobile Minutes Alert");
-                            message.setSentDate(Calendar.getInstance().getTime());
-
-                            Map model = new HashMap();
-                            model.put("rec", rec);
-                            model.put("sender", order.getSender());
-                            model.put("amount", topUp.getAmount());
-
-                            String text = VelocityEngineUtils.mergeTemplateIntoString(
-                                    velocityEngine, "emails/topup-confirmation.vm", "UTF-8", model);
-                            message.setText(text, true);
-                        }
-                    };
-                    // send oldEmail
-                    taskScheduler.execute(() -> mailSender.send(preparator));
-                }// enf if TOP UP is OK
-                else {
-
-                    // what to do if VTC TOP UP is failed ???
-                    // update topup
-                    VtcResponseCode vtcResponse = this.responseCodeService.findByCode(Integer.parseInt(results[0]));
-
-                    topUp.setIsSubmitted(1);
-                    topUp.setResponseCode(vtcResponse.getCode());//OK
-                    topUp.setResponseMessage(vtcResponse.getDescription());
-
-                    this.topUpService.save(topUp);
-                }
-            }
         }// forEach topUps
-        
+
     }
-    
+
     /**
-     * 
-     * @param order 
+     *
+     * @param order
      */
     @Override
     @Async
-    public void processBuyCardItems(LixiOrder order){
+    public void processBuyCardItems(LixiOrder order) {
         log.info("buyCard is empty:" + order.getBuyCards().isEmpty());
 
         for (BuyCard bc : order.getBuyCards()) {
@@ -355,9 +365,9 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods{
 
                     }
                 } catch (Exception e) {
-                    
+
                     log.info(" Get Card failed : " + e.getMessage(), e);
-                    
+
                     // update buycard item
                     bc.setIsSubmitted(1);
                     bc.setResponseCode(-999999);
@@ -366,7 +376,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods{
                     this.bcService.save(bc);
                 }
             } else {
-                
+
                 // what to do when buy card failed
                 // update buycard
                 VtcResponseCode vtcResponse = this.responseCodeService.findByCode(Integer.parseInt(rs[0]));
@@ -378,6 +388,6 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods{
                 //
             }
         }
-        
+
     }
 }

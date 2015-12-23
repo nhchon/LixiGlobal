@@ -4,8 +4,10 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.repositories.TopUpMobilePhoneRepository;
 
@@ -28,5 +30,47 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
     public TopUpMobilePhone save(TopUpMobilePhone topUp) {
         
         return this.topUpRepository.save(topUp);
+    }
+    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public TopUpMobilePhone findById(Long id){
+        
+        return this.topUpRepository.findOne(id);
+        
+    }
+    
+    /**
+     * 
+     * @param isSubmitted
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<TopUpMobilePhone> findByIsSubmitted(Iterable<Integer> isSubmitted){
+        
+        List<TopUpMobilePhone>  l = this.topUpRepository.findByIsSubmittedIn(isSubmitted);
+        
+        l.forEach(t -> {
+            t.getOrder().getInvoice();
+            t.getRecipient();
+        });
+        
+        return l;
+        
+    }
+    /**
+     * 
+     * @param id 
+     */
+    @Override
+    public void deleteById(Long id){
+        
+        this.topUpRepository.delete(id);
+        
     }
 }

@@ -21,9 +21,11 @@ public abstract class LiXiConstants {
     ////////////////////////////////////////////////////////////////////////////
     public static final String SYSTEM_AUTO = "SYSTEM_AUTO";
     public static final String OK = "OK";
+    public static final String YES = "YES";
+    public static final String NO = "NO";
     
     public static final String VTC_OK = "1";
-            
+    public static final String VTC_AUTO = "VTC_AUTO";
     public static final String LIXI_GLOBAL_TOP_UP_CODE = "LG-TU-";
     public static final String LIXI_GLOBAL_BUY_CARD_CODE = "LG-BC-";
     

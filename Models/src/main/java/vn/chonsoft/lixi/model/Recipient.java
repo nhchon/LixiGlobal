@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  *
@@ -123,6 +124,13 @@ public class Recipient implements Serializable {
         this.lastName = lastName;
     }
 
+    @Transient
+    public String getFullName(){
+        
+        return this.getFirstName()+ (this.getMiddleName()==null?" ":" " + this.getMiddleName() + " ") + this.getLastName();
+    }
+    
+    
     public String getEmail() {
         return email;
     }

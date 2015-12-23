@@ -68,30 +68,30 @@
                             <li>
                                 <a class="nav-sub-link" href="#payment-link">Payment Method</a>
                                 <ul class="nav-level-2">
-                                    <li><a href="payment.html">Manage payment options</a></li>
-                                    <li><a href="add-a-payment.html">Add a Credit/ Debit cards</a></li>
+                                    <li><a href="<c:url value="/checkout/paymentMethods"/>">Manage payment options</a></li>
+                                    <li><a href="<c:url value="/checkout/addCard"/>">Add a Credit/ Debit cards</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a class="nav-sub-link" href="#">Account setting</a>
                                 <ul class="nav-level-2">
-                                    <li><a href="account.html">Change email, password,<br/> name and mobile phone</a></li>
+                                    <li><a href="javascript:void(0);">Change email, password,<br/> name and mobile phone</a></li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
                     <li class="has-dropdown dropdown">
-                        <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="support.html">Support <i class="fa fa-angle-down"></i></a>
+                        <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="javascript:void(0);">Support <i class="fa fa-angle-down"></i></a>
                         <ul class="dropdown-menu nav-level-1">
                             <li>
-                                <a class="nav-sub-link no-boder-top" href="privacy-policy.html">Refund Policy</a>
+                                <a class="nav-sub-link no-boder-top" href="javascript:void(0);">Refund Policy</a>
                             </li>
                             <li>
                                 <a class="nav-sub-link" href="#">Customer Service</a>
                                 <ul class="nav-level-2">
-                                    <li><a href="support-email.html">Email</a></li>
-                                    <li><a href="support-phone.html">Phone</a></li>
-                                    <li><a href="support-chat.html">Chat</a></li>
+                                    <li><a href="<c:url value="/support/post"/>">Email</a></li>
+                                    <li><a href="<c:url value="/support/post"/>">Phone</a></li>
+                                    <li><a href="<c:url value="/support/post"/>">Chat</a></li>
                                 </ul>
                             </li>
                         </ul>

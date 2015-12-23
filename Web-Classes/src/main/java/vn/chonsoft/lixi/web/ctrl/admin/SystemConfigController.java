@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import javax.validation.ConstraintViolationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,9 +24,11 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiCategory;
+import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.form.LiXiExchangeRateForm;
@@ -36,6 +39,7 @@ import vn.chonsoft.lixi.model.trader.Trader;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
 import vn.chonsoft.lixi.repositories.service.ExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
+import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.SupportLocaleService;
 import vn.chonsoft.lixi.repositories.service.TraderService;
@@ -76,7 +80,9 @@ public class SystemConfigController {
     
     @Inject
     private SupportLocaleService slService;
-
+    
+    @Autowired
+    private LixiConfigService configService;
     /**
      *
      * @return
@@ -100,6 +106,63 @@ public class SystemConfigController {
         return exrs;
     }
 
+    /**
+     * 
+     * 
+     * @param model 
+     * @return 
+     */
+    @RequestMapping(value = "configs", method = RequestMethod.GET)
+    public ModelAndView configs(Map<String, Object> model){
+        
+        List<LixiConfig> configs = this.configService.findAll();
+        
+        model.put("configs", configs);
+        
+        return new ModelAndView("Administration/config/configs");
+    }
+    
+    /**
+     * 
+     * 
+     * @param model 
+     * @param name 
+     * @param value 
+     * @param id
+     * @return 
+     */
+    @RequestMapping(value = "configs/save", method = RequestMethod.POST)
+    public ModelAndView saveConfig(Map<String, Object> model, @RequestParam String name, @RequestParam String value, @RequestParam Integer id){
+        
+        LixiConfig config = new LixiConfig();
+        config.setName(name);
+        config.setValue(value);
+        if(id>0) config.setId(id);
+        
+        this.configService.save(config);
+        
+        RedirectView r = new RedirectView("/Administration/SystemConfig/configs", true, true);
+        r.setExposeModelAttributes(false);
+        return new ModelAndView(r);
+    }
+    /**
+     * 
+     * 
+     * @param model 
+     * @param name 
+     * @param value 
+     * @param id
+     * @return 
+     */
+    @RequestMapping(value = "configs/delete/{id}", method = RequestMethod.POST)
+    public ModelAndView saveConfig(Map<String, Object> model, @PathVariable Integer id){
+        
+        this.configService.delete(id);
+        
+        RedirectView r = new RedirectView("/Administration/SystemConfig/configs", true, true);
+        r.setExposeModelAttributes(false);
+        return new ModelAndView(r);
+    }
     /**
      *
      * @param model
@@ -284,4 +347,6 @@ public class SystemConfigController {
         //
         return new ModelAndView(new RedirectView("/Administration/SystemConfig/categories", true, true));
     }
+    
+    
 }

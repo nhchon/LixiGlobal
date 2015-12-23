@@ -35,6 +35,7 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.BuyCard;
+import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiGlobalFee;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
@@ -65,7 +66,7 @@ public class LiXiUtils {
         df.applyPattern("###,###.##");
     }
 
-    public static void setLoginedUser(LoginedUser l, User u){
+    public static void setLoginedUser(LoginedUser l, User u, List<LixiConfig> configs){
     
         l.setId(u.getId());
         l.setFirstName(u.getFirstName());
@@ -80,6 +81,8 @@ public class LiXiUtils {
         l.setActivated(u.getActivated());
         // login date
         l.setLoginedDate(Calendar.getInstance().getTime());
+        
+        configs.forEach(c -> {l.addConfig(c.getName(), c.getValue());});
         
     }
     

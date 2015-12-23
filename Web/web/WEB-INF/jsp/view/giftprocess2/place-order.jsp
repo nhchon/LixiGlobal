@@ -47,6 +47,14 @@
                                             <!--<span>( gift / more recipient )</span>-->
                                         </div>
                                         </c:forEach>
+                                        <c:forEach items="${entry.topUpMobilePhones}" var="t"  varStatus="tCount">
+                                        <div>
+                                            <strong style="width:500px;">Top up mobile phone</strong>
+                                            <span>USD $ <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></span>
+                                            <a href="#" class="edit-info-event"></a>
+                                            <!--<span>( gift / more recipient )</span>-->
+                                        </div>
+                                        </c:forEach>
                                     </div>
                                 </div>
                             </c:forEach>

@@ -5,6 +5,13 @@ function deleteGiftOnSummary(giftId){
     }
 }
 
+function deleteTopUpOnSummary(id){
+   
+    if(confirm(CONFIRM_DELETE_MESSAGE)){
+        location.href= DELETE_TOPUP_PATH +'/'+id;
+    }
+}
+
 /**
  * 
  * @param {type} id

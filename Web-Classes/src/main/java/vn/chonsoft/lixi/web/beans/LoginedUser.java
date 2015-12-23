@@ -7,6 +7,8 @@ package vn.chonsoft.lixi.web.beans;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -28,6 +30,9 @@ public class LoginedUser implements Serializable {
     private Date createdDateBean; //Date that this bean is created by spring container
     private Date loginedDate; // user login time
 
+    /* system config */
+    private Map<String, String> configs;
+    
     public LoginedUser(){
         
         this.id = 0L;
@@ -139,6 +144,30 @@ public class LoginedUser implements Serializable {
     public void setLoginedDate(Date loginedDate) {
         this.loginedDate = loginedDate;
     }
+
+    public Map<String, String> getConfigs() {
+        return configs;
+    }
+
+    public void setConfigs(Map<String, String> configs) {
+        this.configs = configs;
+    }
     
+    public String getConfig(String name){
+        
+        if(name == null || configs == null) return null;
+        
+        return configs.get(name);
+    }
     
+    public void addConfig(String name, String value){
+        
+        if(name != null){
+            /* */
+            if(configs == null)
+                configs = new HashMap<>();
+            /* */
+            configs.put(name, value);
+        }
+    }
 }

@@ -1,11 +1,10 @@
 <template:Client htmlTitle="LiXi Global - Choose Type of Gift">
 
     <jsp:attribute name="extraHeadContent">
-        <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/type-of-gift.css"/>" type="text/css" />
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
-        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/recipient.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
             var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
@@ -18,30 +17,6 @@
             var NUM_OF_CARD = '<spring:message code="validate.buyphonecard.num_of_card"/>';
 
             $(document).ready(function () {
-
-                // default show/hide panels
-            <c:if test="${empty TOPUP_ACTION or TOPUP_ACTION eq 'MOBILE_MINUTE'}">
-                $('#topUpPanel').show();
-                $('#buyCardPanel').hide();
-            </c:if>
-            <c:if test="${TOPUP_ACTION eq 'PHONE_CARD'}">
-                $('#topUpPanel').hide();
-                $('#buyCardPanel').show();
-            </c:if>
-                //
-                $('#myTabs a').click(function (e) {
-                    e.preventDefault()
-                    $(this).tab('show')
-                    if ($(this).attr('id') === 'buyCardTab') {
-                        $('#buyCardPanel').show();
-                        $('#topUpPanel').hide();
-                    }
-                    else
-                    if ($(this).attr('id') === 'topUpTab') {
-                        $('#topUpPanel').show();
-                        $('#buyCardPanel').hide();
-                    }
-                })
                 // check exceed on amount topup
                 $('#amountTopUp').change(function () {
                     checkTopUpExceed($(this).val());
@@ -71,65 +46,18 @@
                     return checkTopUpMobileForm();
                 });
 
-                $('#btnPhoneCardKeepShopping').click(function () {
-                    // set action
-                    $('#phoneCardAction').val('KEEP_SHOPPING_ACTION');
-                    //
-                    return checkBuyPhoneCardForm();
-                });
-                $('#btnPhoneCardBuyNow').click(function () {
-                    //set action
-                    $('#phoneCardAction').val('BUY_NOW_ACTION');
-                    //
-                    return checkBuyPhoneCardForm();
-                });
-
             });
-
-            function checkBuyPhoneCardExceed(numOfCard, valueOfCard) {
-                if (numOfCard === '') {
-                    $('#buyCardInUSD').val('');
-                }
-                else {
-                    $.ajax({
-                        url: '<c:url value="/topUp/checkBuyPhoneCardExceed"/>' + '/' + numOfCard + '/' + valueOfCard,
-                                type: "get",
-                        dataType: 'json',
-                                success: function (data, textStatus, jqXHR)
-                                {
-                            if (data.exceed == '1') {
-                                $('#divError').remove();
-                                $('#buyCardPanelBody').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
-                                alert(data.message);
-                                // disable submit buttons
-                                disableBuyCardSubmitButtons(true);
-                            } else {
-                                // no exceed, remove error
-                                $('#divError').remove();
-                                // update current payment
-                                $('#currentPaymentVND').html(data.CURRENT_PAYMENT_VND);
-                                $('#currentPaymentUSD').html(data.CURRENT_PAYMENT_USD);
-                                //
-                                disableBuyCardSubmitButtons(false);
-                            }
-                            $('#buyCardInUSD').val(data.BUY_PHONE_CARD_IN_USD + " USD");
-                        },
-                                error: function (jqXHR, textStatus, errorThrown)
-                                {
-                            //alert(errorThrown);
-                            //alert('Đã có lỗi, vui lòng thử lại !'); 
-                        }
-                    });
-                }
-            }
 
             function checkTopUpExceed(amount) {
                 if (amount === '') {
                     $('#topUpInVND').val('');
                 }
                 else {
+                    var topUpId = $('#topUpId').val();
+                    if(topUpId === '') topUpId = '0';
+                    
                     $.ajax({
-                        url: '<c:url value="/topUp/checkTopUpExceed"/>' + '/' + amount,
+                        url: '<c:url value="/topUp/checkTopUpExceed"/>' + '/' + topUpId  + '/' + amount,
                                 type: "get",
                         dataType: 'json',
                                 success: function (data, textStatus, jqXHR)
@@ -170,11 +98,6 @@
                 $('#btnTopUpBuyNow').prop('disabled', enable);
             }
 
-            function disableBuyCardSubmitButtons(enable) {
-                $('#btnPhoneCardKeepShopping').prop('disabled', enable);
-                $('#btnPhoneCardBuyNow').prop('disabled', enable);
-            }
-
             function editRecipient(focusId) {
                 $.get('<c:url value="/topUp/editRecipient"/>', function (data) {
                     enableEditRecipientHtmlContent(data);
@@ -190,24 +113,9 @@
              * @returns {Boolean}
              */
             function checkTopUpMobileForm() {
-                if ($.trim($('#amountTopUp').val()) === '') {
+                if ($.trim($('#amountTopUp').val()) === '0') {
                     alert(TOP_UP_EMPTY);
                     $('#amountTopUp').focus();
-                    return false;
-                }
-                else {
-                    return true
-                }
-            }
-
-            /**
-             * 
-             * @returns {Boolean}
-             */
-            function checkBuyPhoneCardForm() {
-                if ($.trim($('#numOfCard').val()) === '' || !$('#numOfCard').isInteger()) {
-                    alert(NUM_OF_CARD);
-                    $('#numOfCard').focus();
                     return false;
                 }
                 else {
@@ -244,19 +152,18 @@
                                                 Top Up Mobile Minute is success
                                             </div>
                                         </c:if>
-                                        <form class="form-horizontal" role="form" method="post" action="${pageContext.request.contextPath}/topUp/topUpMobilePhone">
+                                        <c:url value="/topUp/topUpMobilePhone" var="topUpMobilePhoneUrl"/>
+                                        <form class="form-horizontal" role="form" method="post" action="${topUpMobilePhoneUrl}">
                                             <div class="form-group">
                                                 <label class="col-md-3" for="email">Amount you want to top up</label>
                                                 <div class="col-md-7">
-
-                                                    <div class="row">
-                                                        <div class="col-md-10" style="padding-right: 0px;">
-                                                            <input type="number" name="amountTopUp" id="amountTopUp" min="10" class="form-control" placeholder="ie. 10" title="Min is $10"/>
-                                                        </div>
-                                                        <div class="col-md-2" style="padding-left: 0px;">
-                                                            <input type="text" class="form-control" value="USD" readonly="" name="currency" style="width:55px;"/>
-                                                        </div>
-                                                    </div>
+                                                    <select id="amountTopUp" name="amountTopUp" class="form-control">
+                                                        <option value="0" <c:if test="${amountTopUp eq 0}">selected=""</c:if>>Please select amount to top up</option>
+                                                        <option value="10" <c:if test="${amountTopUp eq 10}">selected=""</c:if>>10$</option>
+                                                        <option value="15" <c:if test="${amountTopUp eq 15}">selected=""</c:if>>15$</option>
+                                                        <option value="20" <c:if test="${amountTopUp eq 20}">selected=""</c:if>>20$</option>
+                                                        <option value="25" <c:if test="${amountTopUp eq 25}">selected=""</c:if>>25$</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -281,11 +188,11 @@
                                                         <div class="col-md-2" style="padding-right: 0px;">
                                                             <input type="text" name="recDialCode" class="form-control" value="${SELECTED_RECIPIENT.dialCode}" readonly="" style="padding: 6px;"/>
                                                         </div>
-                                                        <div class="col-md-7" style="padding-left: 0px;padding-right: 0px;">
+                                                        <div class="col-md-8" style="padding-left: 0px;padding-right: 0px;">
                                                             <input type="text" id="recPhone" name="recPhone" class="form-control" readonly="" value="${SELECTED_RECIPIENT.phone}"/>
                                                             <span class="help-block errors"></span>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-2">
                                                             <button type="button" class="btn btn-default" onclick="editRecipient('phone');">Change</button>
                                                         </div>
                                                     </div>
@@ -294,10 +201,11 @@
                                             <div class="row">
                                                 <div class="col-md-3"></div>
                                                 <div class="col-md-7">
+                                                    <input type="hidden" id="topUpId" name="topUpId" value="${topUpId}"/>
                                                     <input type="hidden" value="" id="topUpAction" name="topUpAction"/>
                                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                                    <button id="btnTopUpKeepShopping" type="submit" class="btn btn-primary">Buy & Keep Shopping</button>
                                                     <button id="btnTopUpBuyNow" type="submit" class="btn btn-warning">Buy Now</button>
+                                                    <button id="btnTopUpKeepShopping" type="submit" class="btn btn-primary">Buy & Keep Shopping</button>
                                                 </div>
                                             </div>
                                         </form>

@@ -34,6 +34,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserMoneyLevel;
@@ -42,6 +43,7 @@ import vn.chonsoft.lixi.model.form.UserResetPasswordForm;
 import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
 import vn.chonsoft.lixi.model.form.UserSignUpWithOutEmailForm;
+import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.MoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserMoneyLevelService;
@@ -86,6 +88,9 @@ public class UserGeneralController {
     
     @Inject
     private LixiOrderService lxorderService;
+    
+    @Autowired
+    private LixiConfigService configService;
     
     @Inject
     private ThreadPoolTaskScheduler taskScheduler;
@@ -617,7 +622,7 @@ public class UserGeneralController {
                 request.changeSessionId();
                 
                 //
-                LiXiUtils.setLoginedUser(loginedUser, u);
+                LiXiUtils.setLoginedUser(loginedUser, u, this.configService.findAll());
                 
                 // check the order that unfinished
                 LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, LiXiConstants.LIXI_ORDER_UNFINISHED);

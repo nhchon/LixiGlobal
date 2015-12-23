@@ -33,6 +33,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Orders <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="<c:url value="/Administration/Orders/newOrders"/>">New Orders</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="<c:url value="/Administration/SystemTopUp/list"/>">List Un-Submitted TopUp</a></li>
                     </ul>
                 </li>
                 <li id="m03" class="dropdown <c:if test="${m03 eq true}">active</c:if>">
@@ -41,6 +43,7 @@
                         <li><a href="<c:url value="/Administration/SystemConfig/categories"/>">Categories</a></li>
                         <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">LiXi Exchange Rate</a></li>
                         <li><a href="<c:url value="/Administration/SystemFee/list"/>">LiXi Global Fee</a></li>
+                        <li><a href="<c:url value="/Administration/SystemConfig/configs"/>">LiXi Configuration Parameters</a></li>
                     </ul>
                 </li>
                 <li id="m05" class="dropdown <c:if test="${m05 eq true}">active</c:if> ">

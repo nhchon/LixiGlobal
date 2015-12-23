@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.web.beans;
 
 import org.springframework.scheduling.annotation.Async;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.TopUpMobilePhone;
 
 /**
  *
@@ -18,6 +19,9 @@ public interface LixiAsyncMethods {
     
     @Async
     void processTopUpItems(LixiOrder order);
+    
+    @Async
+    void processTopUpItem(TopUpMobilePhone topUp);
     
     @Async
     void processBuyCardItems(LixiOrder order);

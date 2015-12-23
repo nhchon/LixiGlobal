@@ -16,9 +16,7 @@
             <div class="container">
                 <c:set var="localStep" value="7"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
-                <div class="row">
-                    <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
-                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+                <div class="section-receiver">
                         <h1>Thank you!</h1>
                         <br />
                         <p>Your order confirmation number is XYZ123456789. An email has been sent to you and the receiver of your gift in Vietnam.</p>
@@ -32,8 +30,6 @@
                             <a href="<c:url value="/user/signOut"/>" class="btn btn-primary">Log Out</a>
                         </div>
                     </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
-                </div>
             </div>
         </section>
 

@@ -10,10 +10,10 @@
     </jsp:attribute>
 
     <jsp:body>
-        <section class="section-85-0">
-            <div class="container">
-                <fieldset>
-                    <legend>Help</legend>
+        <section class="section-gift bg-default main-section">
+            <div class="container post-wrapper" style="padding-top:30px;">
+                <div class="section-receiver">
+                    <h2>Help</h2>
                     <div class="form-group">
                         <div class="desc">
                             What can we help you with
@@ -100,8 +100,6 @@
                             </div>
                         </div>
                     </form:form>
-                </fieldset>
-            </div>
-        </section>
+                </div></div></section>    
     </jsp:body>
 </template:Client>

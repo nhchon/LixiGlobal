@@ -10,6 +10,7 @@
             /** Page Script **/
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
             var DELETE_GIFT_PATH = '<c:url value="/gifts/delete/gift"/>';
+            var DELETE_TOPUP_PATH = '<c:url value="/topUp/delete"/>';
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
         </script>
     </jsp:attribute>
@@ -72,6 +73,28 @@
                                             <td data-title="Action" class="table-row-action-btn">
                                                 <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/gifts/type/${entry.recipient.id}/${g.category.id}"/>';"><spring:message code="message.change"/></button></p>
                                                 <p> <button type="button" class="btn btn-primary text-uppercase" onclick="deleteGiftOnSummary(${g.id})"><spring:message code="message.delete"/></button></p>
+                                            </td>
+                                        </tr>
+                                        </c:forEach>
+                                        <c:forEach items="${entry.topUpMobilePhones}" var="t">
+                                            <tr id="topUpRow${g.id}">
+                                            <td data-title="Select">
+                                                <input type="checkbox" class="custom-checkbox-input"/>
+                                            </td>
+                                            <td data-title="Receiver"><strong>${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</strong></td>
+                                            <td  data-title="Items">
+                                                
+                                            </td>
+                                            <td data-title="DESCRIPTION"><h4>Top Up Mobile Minutes</h4></td>
+                                            <td data-title="Quantity">
+                                            </td>
+                                            <td data-title="Unit Price">
+                                                <div><strong>USD $ <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></strong></div>
+                                                <div><strong>VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong></div>
+                                            </td>
+                                            <td data-title="Action" class="table-row-action-btn">
+                                                <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/topUp/change/${t.id}"/>';"><spring:message code="message.change"/></button></p>
+                                                <p> <button type="button" class="btn btn-primary text-uppercase" onclick="deleteTopUpOnSummary(${t.id})"><spring:message code="message.delete"/></button></p>
                                             </td>
                                         </tr>
                                         </c:forEach>

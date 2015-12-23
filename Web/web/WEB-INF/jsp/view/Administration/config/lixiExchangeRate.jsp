@@ -32,9 +32,10 @@
                         alert('<spring:message code="typeMismatch.java.lang.Double"/>');
                         $('#buyPercentage').focus();
                     }
-                    else {
+                    //else 
+                    //{
                         resetBuyByPercentage();
-                    }
+                    //}
 
                 });
                 $('#sellPercentage').on('input', function () {
@@ -43,9 +44,9 @@
                         alert('<spring:message code="typeMismatch.java.lang.Double"/>');
                         $('#sellPercentage').focus();
                     }
-                    else {
+                    //else {
                         resetSellByPercentage();
-                    }
+                    //}
 
                 });
 

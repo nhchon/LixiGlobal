@@ -484,7 +484,7 @@ LixiGlobal.Theme = {
 
 jQuery(document).ready(function () {
     
-    LixiGlobal.Theme.initTheme();
+    //LixiGlobal.Theme.initTheme();
 
     //$('.nav-login-event, .nav-register-event').click(function () {
         //LixiGlobal.User.registerPopup();

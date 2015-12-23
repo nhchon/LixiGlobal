@@ -57,7 +57,7 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/lixi.global-extend-js.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/lixi.global.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/lixi-global/js/overlay.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/utils.js"/>"></script>
         <jsp:invoke fragment="javascriptContent" />
     </body>
 </html>
