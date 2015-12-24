@@ -17,13 +17,11 @@
                             <a class="hvr-underline-from-center nav-register-event" href="<c:url value="/user/signUp"/>">REGISTER</a>
                         </li>
                     </c:if>
-                    <li class="has-dropdown dropdown pull-right nav-language">
-                        <a class="hvr-underline-from-center" data-toggle="dropdown" href="#change-language"><span class="language-text">EN</span> <i class="fa fa-angle-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#">VN</a>
-                            </li>	
-                        </ul>
+                    <li>
+                        <a class="nav-lang nav-lang-en" href="?lang=en">English</a>
+                    </li>
+                    <li>
+                        <a class="nav-lang nav-lang-vn" href="?lang=vn">Vietnam</a>
                     </li>
                 </ul>
             </div>

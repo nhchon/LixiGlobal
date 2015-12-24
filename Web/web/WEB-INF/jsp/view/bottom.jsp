@@ -5,7 +5,7 @@
                 <div class="row-height">
                     <div class="col-md-4 col-sm-4 col-xs-4 col-height">
                         <div class="footer-box">
-                            <div class="footer-logo"><a href="index.html"><img src="<c:url value="/resource/theme/assets/lixi-global/images/logo-white.png"/>"/></a></div>
+                            <div class="footer-logo"><a href="<c:url value="/"/>"><img src="<c:url value="/resource/theme/assets/lixi-global/images/logo-white.png"/>"/></a></div>
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
                             </p>
@@ -13,12 +13,12 @@
                     </div>
                     <div class="col-md-4 col-sm-4 col-xs-4 col-height">
                         <div class="footer-box">
-                            <h2><span>Contact</span></h2>
+                            <h2><a href="<c:url value="/contact"/>"><span>Contact</span></a></h2>
                             <p>33329 W. Apollo Rd Phoenix,<br/>A285041 USA </p>
                             <div>
                                 <ul>
-                                    <li><a href="term-of-user.html">Term of Use</a></li>
-                                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                                    <li><a href="<c:url value="/term-of-user"/>">Terms of Use</a></li>
+                                    <li><a href="<c:url value="/privacy-policy"/>">Privacy Policy</a></li>
                                 </ul>
                             </div>
                         </div>

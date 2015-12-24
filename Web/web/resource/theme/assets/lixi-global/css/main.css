@@ -20,8 +20,20 @@ a:focus,a:hover{
     color: #0090d0;
     text-decoration: none;
 }
+/* language */
+.navbar a.nav-lang{}
+.navbar a.nav-lang-en {
+    background: rgba(0, 0, 0, 0) url("../images/flags/gb.png") no-repeat scroll 0 center;
+    border-right: 1px solid #d5d5d5;
+    margin-right: 10px;
+    padding-left: 22px;
+}
+.navbar a.nav-lang-vn {
+    background: rgba(0, 0, 0, 0) url("../images/flags/vn.png") no-repeat scroll 0 center;
+    padding-left: 22px;
+}
 .gift-item-col-content a:hover {
-  color: #fff!important;
+    color: #fff!important;
 }
 .position-relative{
     position: relative;
@@ -219,10 +231,16 @@ h2, .h2 {
     list-style: outside none none;
     padding-left: 15px;
 }
+/*
 .nav-level-2 a:before{
     font-family: FontAwesome;
     content: "\f105";
     padding-right: 10px;
+}
+*/
+.nav-level-2 a {
+    background: rgba(0, 0, 0, 0) url("../images/fa-angle-right.png") no-repeat scroll 0 11px;
+    padding-left: 10px;
 }
 #navbar-collapse-main .nav-sub-link:hover{
     background: none;
@@ -275,7 +293,7 @@ h2, .h2 {
 
 }
 .section-gift-top {
-  padding-top: 30px;
+    padding-top: 30px;
 }
 .section-gift-top h2 {
     color: #0090d0;
@@ -308,9 +326,9 @@ h2, .h2 {
 }
 
 .change-curency-box .btn-group .flag-vn {
-  background: rgba(0, 0, 0, 0) url("../images/flag-vn.png") no-repeat scroll center center;
-  border: 1px solid #66D1FF;
-  border-radius: 4px;
+    background: rgba(0, 0, 0, 0) url("../images/flag-vn.png") no-repeat scroll center center;
+    border: 1px solid #66D1FF;
+    border-radius: 4px;
 }
 .change-curency-box .btn-group .flag-en {
     background: rgba(0, 0, 0, 0) url("../images/flag-en.png") no-repeat scroll center center;
@@ -353,11 +371,11 @@ h2, .h2 {
     margin: 30px auto;
 }
 .section-gift-bottom .gif-by-step h3 {
-  color: #696969;
-  font-size: 1.2em;
-  line-height: 25px;
-  padding-top: 10px;
-  text-transform: uppercase;
+    color: #696969;
+    font-size: 1.2em;
+    line-height: 25px;
+    padding-top: 10px;
+    text-transform: uppercase;
 }
 .col-has-gift-arrow {
     width: 12.5%;
@@ -1463,7 +1481,7 @@ textarea{
 
 /* Extra Small Devices, Phones */ 
 @media only screen and (max-width : 480px) {
-     .section-slider-thumb {
+    .section-slider-thumb {
         height: 300px;
     }
     .gift-selection-icon .col-xs-3,
