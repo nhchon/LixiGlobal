@@ -136,10 +136,10 @@
                                             <div class="col-md-1" style="padding-top:40px;text-align: center;">
                                                 ${g.productQuantity}
                                             </div>
-                                            <div class="col-md-7" style="padding-top:40px;">
+                                            <div class="col-md-6" style="padding-top:40px;">
                                                 ${g.productName}
                                             </div>
-                                            <div class="col-md-2" style="padding-top:40px;">
+                                            <div class="col-md-3" style="padding-top:40px;text-align: center;">
                                                 USD <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${g.exchPrice}" pattern="###,###.##"/>
                                             </div>
                                         </div>

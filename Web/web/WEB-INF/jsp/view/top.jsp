@@ -108,8 +108,8 @@
                     <li class="nav-cart-wrapper">
                         <a class="nav-cart-event" href="#view-cart">
                             <div class="nav-cart">
-                                <div class="nav-cart-en">USD $150</div>
-                                <div class="nav-cart-vn">VND 3,000,000</div>
+                                <div class="nav-cart-en" id="topTotalCurrentOrderUsd">&nbsp;</div>
+                                <div class="nav-cart-vn" id="topTotalCurrentOrderVnd">&nbsp;</div>
                             </div>
                         </a>
                     </li>

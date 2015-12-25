@@ -32,7 +32,7 @@
                                     </div>
                                 </div>
                                 <div class="gift-item">
-                                    <div class="gift-item-col-thumb" style="background: transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-03.png"/>) no-repeat scroll 0% 0%; min-height: 182px;"></div>
+                                    <a href="<c:url value="/topUp"/>"><div class="gift-item-col-thumb" style="background: transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-03.png"/>) no-repeat scroll 0% 0%; min-height: 182px;"></div></a>
                                     <div class="gift-item-col-content">
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>
@@ -46,7 +46,7 @@
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
                                         <div class="gift-item">
-                                            <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-04.png"/>) no-repeat scroll 0% 0%; min-height: 287px;"></div>
+                                            <a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.cosmetics.id}"/>"><div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-04.png"/>) no-repeat scroll 0% 0%; min-height: 287px;"></div></a>
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-6">
                                         <div class="gift-item gift-item-text-on-left">
-                                            <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-05.png"/>) no-repeat scroll 0% 0%"></div>
+                                            <a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.candies.id}"/>"><div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-05.png"/>) no-repeat scroll 0% 0%"></div></a>
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
@@ -68,7 +68,7 @@
                                             </div>
                                         </div>
                                         <div class="gift-item gift-item-text-on-left">
-                                            <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-06.png"/>) no-repeat scroll 0% 0%"></div>
+                                            <a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.flowers.id}"/>"><div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-06.png"/>) no-repeat scroll 0% 0%"></div></a>
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
@@ -82,7 +82,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="gift-item gift-item-text-on-right">
-                                            <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-02.png"/>) no-repeat scroll 0% 0%"></div>
+                                            <a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.jewelries.id}"/>"><div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-02.png"/>) no-repeat scroll 0% 0%"></div></a>
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
@@ -98,7 +98,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="gift-item gift-item-text-on-right gift-item-text-full">
-                                    <div class="gift-item-col-thumb" style="background: url(<c:url value="/resource/theme/assets/lixi-global/images/img-07.png"/>)"></div>
+                                    <a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.childrentoy.id}"/>"><div class="gift-item-col-thumb" style="background: url(<c:url value="/resource/theme/assets/lixi-global/images/img-07.png"/>)"></div></a>
                                     <div class="gift-item-col-content">
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>

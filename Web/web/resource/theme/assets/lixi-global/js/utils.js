@@ -116,3 +116,27 @@ function isValidPassword(password){
     
     return (isAtLeast8 && hasUppercase);;
 }
+
+function loadTotalCurrentOrder() {
+
+    $.ajax({
+        url: CONTEXT_PATH + '/gifts/ajax/getTotalCurrentOrder',
+        type: "get",
+        dataType: 'json',
+        success: function (data, textStatus, jqXHR)
+        {
+            if(parseInt(data.CURRENT_PAYMENT_VND) > 0){
+                $('#topTotalCurrentOrderUsd').html("USD " + data.CURRENT_PAYMENT_USD)
+                $('#topTotalCurrentOrderVnd').html("VND " + data.CURRENT_PAYMENT_VND)
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+        
+        }
+    });
+}
+
+jQuery(document).ready(function () {
+    loadTotalCurrentOrder();
+});

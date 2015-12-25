@@ -24,7 +24,7 @@
                 <div class="section-gift-top">
                     <h2 class="title">Gift value for ${SELECTED_RECIPIENT_NAME}</h2>
                     <p>( We will select only gift at your price range )</p>
-                    <h5 class="maximum-purchase">Maximum purchase is VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 150}" pattern="###,###.##"/> or USD 150</h5>
+                    <h5 class="maximum-purchase">Maximum purchase is VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 250}" pattern="###,###.##"/> or USD 250</h5>
                     <div class="change-curency-box">
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">
@@ -44,16 +44,20 @@
                 <div class="gift-filter gift-filter-wrapper">
                     <div class="gift-filter-control">
                         <div class="gift-filter-control-slide">
-                            <input type="text" class="gift-filter-slider-input" value="" data-slider-min="10" data-slider-max="150" data-slider-step="5" data-slider-value="10"/>
+                            <c:set value="10" var="startPrice"/>
+                            <c:if test="${not empty SELECTED_AMOUNT_IN_USD}">
+                                <c:set value="${SELECTED_AMOUNT_IN_USD}" var="startPrice"/>
+                            </c:if>
+                            <input type="text" class="gift-filter-slider-input" value="" data-slider-min="10" data-slider-max="250" data-slider-step="5" data-slider-value="10"/>
                         </div>
                         <div class="gift-filter-label">
                             <span class="gift-filter-label-min">
                                 <span class="gift-filter-label-usd">USD 10</span>
-                                <span class="gift-filter-label-vn">VND 45,000</span>
+                                <span class="gift-filter-label-vn">VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 10}" pattern="###,###.##"/></span>
                             </span>
                             <span class="gift-filter-label-max text-right">
-                                <span class="gift-filter-label-usd">USD 150</span>
-                                <span class="gift-filter-label-vn">VND 300,000</span>
+                                <span class="gift-filter-label-usd">USD 250</span>
+                                <span class="gift-filter-label-vn">VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 250}" pattern="###,###.##"/></span>
                             </span>
                         </div>
                     </div>

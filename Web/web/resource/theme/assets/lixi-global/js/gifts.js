@@ -18,6 +18,48 @@ function loadPage(pageNum) {
         }
     });
 }
+function loadNewPrice(price) {
+
+    overlayOn($('.gift-filter-items'));
+    
+    $.ajax({
+        url: CONTEXT_PATH + '/gifts/ajax/loadProductsByNewPrice/1/' + price,
+        type: "get",
+        dataType: 'html',
+        success: function (data, textStatus, jqXHR)
+        {
+            //$('#divProducts').html("");
+            $('#divProducts').html(data);
+            //
+            //addHandlerToCheckboxAndSelect();
+            LixiGlobal.Gift.initSentGiftPage();
+            
+            overlayOff();
+            
+            var totalPage = $('#newTotalPages').val();
+            if(totalPage === '' || totalPage ==='0'){
+                totalPage = 1;
+            }
+            $('#pagination-data').twbsPagination('destroy');
+            $('#pagination-data').twbsPagination({
+                totalPages: totalPage,
+                visiblePages: 5,
+                onPageClick: function (event, page) {
+                    /* load products - gifts.js */
+                    loadPage(page);
+                }
+            });
+            
+            
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            alert(errorThrown);
+            //
+            overlayOff();
+        }
+    });
+}
 /**
  * 
  * check if order total is exceeded

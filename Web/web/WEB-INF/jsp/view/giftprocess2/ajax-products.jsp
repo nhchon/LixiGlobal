@@ -27,3 +27,4 @@
         </div>
     </div>
 </c:forEach>
+<input type="hidden" id="newTotalPages" value="${PAGES.totalPages}"/>

@@ -525,13 +525,12 @@ jQuery(document).ready(function () {
         sliderFilter.on("slideStop", function (slideEvt) {
             //Call filter when change value here
             if(originalSliderVal != slideEvt){
-                sliderFilter.disable();
+                //sliderFilter.disable();
                 //alert("change " + slideEvt);
                 //
                 originalSliderVal = slideEvt;
-                var overlayDiv = $('#overlay');
-                overlayDiv.positionOn($('.gift-filter-items'));
-                overlayDiv.show();
+                
+                loadNewPrice(slideEvt);
             }
             console.log(slideEvt);
         });

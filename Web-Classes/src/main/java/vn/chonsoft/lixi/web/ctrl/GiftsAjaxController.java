@@ -107,8 +107,23 @@ public class GiftsAjaxController {
         /* get category object */
         LixiCategory lxcategory = categories.getById(selectedCatId);
         
+        // get order
+        LixiOrder order = null;
+        LixiExchangeRate lxExch = null;
+        // order already created
+        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
+            
+            order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+            // get exchange rate of the order;
+            lxExch = order.getLxExchangeRate();
+        }
+        else{
+            
+            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+        }
+
         // get price, default is 0? VND
-        double price = 0;
+        double price = LiXiConstants.MINIMUM_PRICE_USD * lxExch.getBuy();
         if(request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND) != null){
             price = (double)request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND);
         };
@@ -130,6 +145,47 @@ public class GiftsAjaxController {
             products = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(pjs);
         }
         
+        // get current recipient
+        Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
+        
+        // check selected
+        LiXiUtils.checkSelected(products, order, rec);
+
+        SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        
+        model.put(LiXiConstants.PRODUCTS, products);
+        model.put(LiXiConstants.PAGES, vgps);
+        model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
+        model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
+        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
+        
+        return new ModelAndView("giftprocess2/ajax-products", model);
+        
+    }
+    
+    /**
+     * 
+     * Ajax call get products
+     * 
+     * @param model
+     * @param pageNum
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "loadProductsByNewPrice/{pageNum}/{startPrice}", method = RequestMethod.GET)
+    public ModelAndView loadProductsByNewPrice(Map<String, Object> model, @PathVariable Integer pageNum, @PathVariable Integer startPrice,  HttpServletRequest request) {
+        
+        // sender
+        User u = this.userService.findByEmail(loginedUser.getEmail());
+        
+        /* get selected category from session */
+        Integer selectedCatId = (Integer)request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID);
+        
+        /* get category object */
+        LixiCategory lxcategory = categories.getById(selectedCatId);
+        
         // get order
         LixiOrder order = null;
         LixiExchangeRate lxExch = null;
@@ -145,6 +201,29 @@ public class GiftsAjaxController {
             lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
         }
 
+        // get price, default is 0? VND
+        double price = startPrice * lxExch.getBuy();
+        /* store new value into session */
+        request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND, price);
+        request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_IN_USD, startPrice);
+        
+        List<VatgiaProduct> products = null;
+        /* zero-based page index */
+        Pageable page = new PageRequest(pageNum-1, LiXiConstants.NUM_PRODUCTS_PER_PAGE, new Sort(new Sort.Order(Sort.Direction.ASC, "price")));
+        
+        Page<VatgiaProduct> vgps = this.vgpService.findByCategoryIdAndAliveAndPrice(lxcategory.getVatgiaId().getId(), 1, price, page);
+        if(vgps.hasContent()){
+            products = vgps.getContent();
+        }
+        
+        // still null ?
+        if(products == null || products.isEmpty()){
+            // call BaoKim Rest service
+            log.info("No products in database. So call BaoKim Rest service");
+            ListVatGiaProduct pjs = LiXiVatGiaUtils.getInstance().getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
+            products = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(pjs);
+        }
+        
         // get current recipient
         Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
         
@@ -343,4 +422,32 @@ public class GiftsAjaxController {
         return new ModelAndView("giftprocess2/exceed", model);
     }
     
+    /**
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "getTotalCurrentOrder", method = RequestMethod.GET)
+    public ModelAndView getTotalCurrentOrder(Map<String, Object> model, HttpServletRequest request){
+        
+        LixiOrder order = null;
+        // check order already created
+        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
+
+            Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+
+            order = this.lxorderService.findById(orderId);
+
+        }
+        
+        SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order);
+        
+        // store current payment
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayments[0].getUsd());
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, currentPayments[0].getVnd());
+        
+        return new ModelAndView("giftprocess2/ajax-total");
+    }
 }

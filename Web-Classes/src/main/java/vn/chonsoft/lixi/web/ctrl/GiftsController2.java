@@ -319,6 +319,9 @@ public class GiftsController2 {
         
         request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, selectedCatId);   
         
+        // remove
+        request.getSession().removeAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND);
+        
         return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
     }    
     
@@ -415,7 +418,7 @@ public class GiftsController2 {
         }
         
         // get price, default is 0? VND
-        double price = 0;
+        double price = LiXiConstants.MINIMUM_PRICE_USD * lxExch.getBuy();
         if(request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND) != null){
             price = (double)request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND);
         };
