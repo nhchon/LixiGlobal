@@ -149,8 +149,6 @@ public class SystemConfigController {
      * 
      * 
      * @param model 
-     * @param name 
-     * @param value 
      * @param id
      * @return 
      */
@@ -171,11 +169,21 @@ public class SystemConfigController {
     @RequestMapping(value = "lixiExchangeRate", method = RequestMethod.GET)
     public ModelAndView lixiExchangeRate(Map<String, Object> model) {
 
-        model.put("liXiExchangeRateForm", new LiXiExchangeRateForm());
+        LiXiExchangeRateForm form = new LiXiExchangeRateForm();
+        LixiExchangeRate lastXr = this.lxrService.findLastRecord(LiXiConstants.USD);
+        form.setBuy(lastXr.getBuy());
+        form.setBuyPercentage(lastXr.getBuyPercentage());
+        form.setRoundBuy(lastXr.getBuy());
+        form.setSell(lastXr.getSell());
+        form.setSellPercentage(lastXr.getSellPercentage());
+        form.setRoundSell(lastXr.getSell());
+        
+        model.put("liXiExchangeRateForm",form);
         model.put("CURRENCIES", this.currencyService.findAll());
         model.put("VCB", LiXiUtils.getVCBExchangeRates());
         model.put("EXCHANGE_RATES", getLastERByTrader());
         model.put("LIXI_EXCHANGE_RATES", this.lxrService.findAll());
+        model.put("LAST_X_R", this.lxrService.findLastRecord(LiXiConstants.USD));
 
         return new ModelAndView("Administration/config/lixiExchangeRate");
 
@@ -194,10 +202,10 @@ public class SystemConfigController {
 
         if (errors.hasErrors()) {
 
-            model.put("CURRENCIES", this.currencyService.findAll());
-            model.put("VCB", LiXiUtils.getVCBExchangeRates());
-            model.put("EXCHANGE_RATES", getLastERByTrader());
-            model.put("LIXI_EXCHANGE_RATES", this.lxrService.findAll());
+            //model.put("CURRENCIES", this.currencyService.findAll());
+            //model.put("VCB", LiXiUtils.getVCBExchangeRates());
+            //model.put("EXCHANGE_RATES", getLastERByTrader());
+            //model.put("LIXI_EXCHANGE_RATES", this.lxrService.findAll());
 
             return new ModelAndView("Administration/config/lixiExchangeRate");
         }
@@ -231,15 +239,19 @@ public class SystemConfigController {
             log.info(e.getMessage(), e);
             //
             model.put("validationErrors", e.getConstraintViolations());
-
+            return new ModelAndView("Administration/config/lixiExchangeRate");
         }
 
-        model.put("liXiExchangeRateForm", new LiXiExchangeRateForm());
-        model.put("CURRENCIES", this.currencyService.findAll());
-        model.put("VCB", LiXiUtils.getVCBExchangeRates());
-        model.put("EXCHANGE_RATES", getLastERByTrader());
-        model.put("LIXI_EXCHANGE_RATES", this.lxrService.findAll());
-        return new ModelAndView("Administration/config/lixiExchangeRate");
+        //model.put("liXiExchangeRateForm", new LiXiExchangeRateForm());
+        //model.put("CURRENCIES", this.currencyService.findAll());
+        //model.put("VCB", LiXiUtils.getVCBExchangeRates());
+        //model.put("EXCHANGE_RATES", getLastERByTrader());
+        //model.put("LIXI_EXCHANGE_RATES", this.lxrService.findAll());
+        
+        RedirectView r = new RedirectView("/Administration/SystemConfig/lixiExchangeRate", true, true);
+        r.setExposeModelAttributes(false);
+        return new ModelAndView(r);
+        
     }
 
     /**

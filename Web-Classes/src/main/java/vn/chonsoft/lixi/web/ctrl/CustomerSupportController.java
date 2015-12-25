@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import vn.chonsoft.lixi.model.form.support.CustomerProblemForm;
 import vn.chonsoft.lixi.model.pojo.EnumCustomerProblemStatus;
@@ -42,23 +43,24 @@ public class CustomerSupportController {
     
     @Inject
     private CustomerProblemStatusService statusService;
+    
     /**
      * 
+     * @param model
      * @return 
      */
     @RequestMapping(value = "post", method = RequestMethod.GET)
-    public ModelAndView post(){
-        
-        Map<String, Object> model = new HashMap<>();
+    public ModelAndView post(Map<String, Object> model, @RequestParam String method){
         
         /* */
         model.put("customerProblemForm", new CustomerProblemForm());
         
+        model.put("method", method);
         /* */
         model.put("subjects", subjectService.findAll());
         
         /* */
-        return new ModelAndView("customer/post", model);
+        return new ModelAndView("customer/post");
     }
     
     /**
@@ -123,5 +125,45 @@ public class CustomerSupportController {
         
         /* Thank you for your information */
         return new ModelAndView("customer/thank-you");
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @RequestMapping(value = "refundPolicy", method = RequestMethod.GET)
+    public ModelAndView refundPolicy(){
+        
+        return new ModelAndView("customer/refund");
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @RequestMapping(value = "terms", method = RequestMethod.GET)
+    public ModelAndView termOfUse(){
+        
+        return new ModelAndView("customer/terms");
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @RequestMapping(value = "privacy", method = RequestMethod.GET)
+    public ModelAndView privacy(){
+        
+        return new ModelAndView("customer/privacy");
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @RequestMapping(value = "contact", method = RequestMethod.GET)
+    public ModelAndView contact(){
+        
+        return new ModelAndView("customer/contact");
     }
 }

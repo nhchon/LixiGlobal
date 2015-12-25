@@ -96,7 +96,7 @@
                                             <div class="has-error"><form:errors path="firstName" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input path="middleName" class="form-control" placeholder="${lastNameMessage}"/>
+                                            <form:input path="middleName" class="form-control" placeholder="${middleMessage}"/>
                                             <div class="has-error"><form:errors path="middleName" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
@@ -118,6 +118,10 @@
                                         <div class="form-group">
                                             <form:input type="text" class="form-control" path="phone" placeholder="Phone"/>
                                             <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label><form:checkbox path="agree" checked="" value="yes"/> <spring:message code="regis.agree" text="By Creating an Account, you agree to the Terms of Use and Privacy Policy."/></label>
+                                            <div class="has-error"><form:errors path="agree" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="button-control">
                                             <button type="submit" class="btn btn-primary">CREATE ACCOUNT</button>

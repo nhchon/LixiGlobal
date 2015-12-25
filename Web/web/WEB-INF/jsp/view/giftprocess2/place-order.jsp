@@ -42,7 +42,7 @@
                                         <c:forEach items="${entry.gifts}" var="g"  varStatus="giftCount">
                                         <div>
                                             <strong style="width:500px;">${g.productName}</strong>
-                                            <span>USD $ <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> * ${g.productQuantity} ~ VND <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></span>
+                                            <span>USD <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> * ${g.productQuantity} ~ VND <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></span>
                                             <a href="#" class="edit-info-event"></a>
                                             <!--<span>( gift / more recipient )</span>-->
                                         </div>
@@ -50,7 +50,7 @@
                                         <c:forEach items="${entry.topUpMobilePhones}" var="t"  varStatus="tCount">
                                         <div>
                                             <strong style="width:500px;">Top up mobile phone</strong>
-                                            <span>USD $ <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></span>
+                                            <span>USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></span>
                                             <a href="#" class="edit-info-event"></a>
                                             <!--<span>( gift / more recipient )</span>-->
                                         </div>
@@ -62,16 +62,16 @@
                                     <div class="receiver-order-item">
                                         <div class="receiver-order-gift-price">
                                             <div>
-                                                <strong class="receiver-order-gift-price-left text-bold">Gift Price</strong><span class="receiver-order-gift-price-right">USD $ <fmt:formatNumber value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${LIXI_GIFT_PRICE_VND}" pattern="###,###.##"/></span>
+                                                <strong class="receiver-order-gift-price-left text-bold">Gift Price</strong><span class="receiver-order-gift-price-right">USD <fmt:formatNumber value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${LIXI_GIFT_PRICE_VND}" pattern="###,###.##"/></span>
                                             </div>
                                             <div>
-                                                <strong class="receiver-order-gift-price-left">Card Processing fee</strong><span class="receiver-order-gift-price-right">USD $ <span id="CARD_PROCESSING_FEE_THIRD_PARTY"><fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></span></span>
+                                                <strong class="receiver-order-gift-price-left">Card Processing fee</strong><span class="receiver-order-gift-price-right">USD <span id="CARD_PROCESSING_FEE_THIRD_PARTY"><fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></span></span>
                                             </div>
                                             <div>
-                                                <strong class="receiver-order-gift-price-left">Lixi handing fee</strong><span class="receiver-order-gift-price-right">USD $ <fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/> (<fmt:formatNumber value="${LIXI_HANDLING_FEE}" pattern="###,###.##"/> per / person )</span>
+                                                <strong class="receiver-order-gift-price-left">Lixi handing fee</strong><span class="receiver-order-gift-price-right">USD <fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/> (<fmt:formatNumber value="${LIXI_HANDLING_FEE}" pattern="###,###.##"/> per / person )</span>
                                             </div>
                                             <div>
-                                                <strong class="receiver-order-gift-price-left text-bold">Total</strong><strong class="receiver-order-gift-price-right text-bold">USD $ <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
+                                                <strong class="receiver-order-gift-price-left text-bold">Total</strong><strong class="receiver-order-gift-price-right text-bold">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
                                             </div>
                                         </div>
                                         <h4 class="text-color-link">Payment method</h4>

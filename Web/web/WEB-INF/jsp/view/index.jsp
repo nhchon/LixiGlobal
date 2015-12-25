@@ -17,12 +17,12 @@
                 <div class="section-gift-top">
                     <h2 class="text-center ">Gifting overseas has never been easier...<br/>
                         <strong>in three easy steps</strong><br/> 
-                        with a simple fee of just <strong>USD $ 1.00<sup>*</sup></strong></h2>
+                        with a simple fee of just <strong>USD 1.00<sup>*</sup></strong></h2>
                     <div class="change-curency-box">
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">
                                 <span class="des-box">Your locked-in exchange rate</span>
-                                <span class="amount-box">USD $ 1 = <strong>VND 23,000</strong> Vietnam Dong</span>
+                                <span class="amount-box">USD 1 = <strong>VND <fmt:formatNumber value="${lastXr.buy}" pattern="###,###.##"/></strong> Vietnam Dong</span>
                             </button>
                             <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
                                 <span class="flag flag-vn"></span>

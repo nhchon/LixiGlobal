@@ -44,6 +44,9 @@ public class UserSignUpForm{
     
     private String phone;
 
+    @NotNull(message ="validate.not_null")
+    private String agree;
+    
     public String getFirstName() {
         return firstName;
     }
@@ -106,6 +109,14 @@ public class UserSignUpForm{
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAgree() {
+        return agree;
+    }
+
+    public void setAgree(String agree) {
+        this.agree = agree;
     }
     
     

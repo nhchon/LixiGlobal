@@ -67,7 +67,7 @@
                                                 </div>
                                             </td>
                                             <td data-title="Unit Price">
-                                                <div><strong>USD $ <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/></strong></div>
+                                                <div><strong>USD <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/></strong></div>
                                                 <div><strong>VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
@@ -89,7 +89,7 @@
                                             <td data-title="Quantity">
                                             </td>
                                             <td data-title="Unit Price">
-                                                <div><strong>USD $ <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></strong></div>
+                                                <div><strong>USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></strong></div>
                                                 <div><strong>VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
@@ -100,13 +100,13 @@
                                         </c:forEach>
                                         <tr class="has-colspan">
                                             <td colspan="5" class="border-right has-colspan-label"><strong class="text-uppercase title text-right float-right">Total</strong></td>
-                                            <td colspan="2"><strong class="text-uppercase  title">usd $ <span id="recPaymentUSD${entry.recipient.id}"><fmt:formatNumber value="${entry.allTotal.usd}" pattern="###,###.##"/></span> ~ VND <span id="recPaymentVND${entry.recipient.id}"><fmt:formatNumber value="${entry.allTotal.vnd}" pattern="###,###.##"/></span></strong></td>
+                                            <td colspan="2"><strong class="text-uppercase  title">usd <span id="recPaymentUSD${entry.recipient.id}"><fmt:formatNumber value="${entry.allTotal.usd}" pattern="###,###.##"/></span> ~ VND <span id="recPaymentVND${entry.recipient.id}"><fmt:formatNumber value="${entry.allTotal.vnd}" pattern="###,###.##"/></span></strong></td>
                                         </tr>
                                     </c:forEach>
                                     <tr class="has-colspan">
-                                        <td colspan="3" class="no-padding-left"><strong class="text-uppercase text-right">order limit ( USD $ 150 / vnd 3,000,000 ) </strong></td>
+                                        <td colspan="3" class="no-padding-left"><strong class="text-uppercase text-right">order limit ( USD 150 / vnd 3,000,000 ) </strong></td>
                                         <td colspan="2" class="border-right has-colspan-label"><strong class="text-uppercase text-right  float-right  title">Total</strong></td>
-                                        <td colspan="2"><strong class="text-uppercase  title">usd $ <span id="currentPaymentUSD"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.usd}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.vnd}" pattern="###,###.##"/></span></strong></td>
+                                        <td colspan="2"><strong class="text-uppercase  title">usd <span id="currentPaymentUSD"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.usd}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.vnd}" pattern="###,###.##"/></span></strong></td>
                                     </tr>
                                 </tbody>
                             </table>

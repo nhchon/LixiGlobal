@@ -22,8 +22,8 @@
                 }, 1000);
 
                 // set default value for exchange rate
-                resetBuyByPercentage();
-                resetSellByPercentage();
+                //resetBuyByPercentage();
+                //resetSellByPercentage();
 
                 // check number percentage
                 $('#buyPercentage').on('input', function () {
@@ -63,6 +63,8 @@
                         var p = parseFloat($('#buy').val()) / BUY[$("#currency option:selected").text()] * 100.0 - 100.0;
                         //alert(p + " : "+Math.round(p * 100.0) / 100.0)
                         $('#buyPercentage').val(Math.round(p * 100.0) / 100.0);
+                        
+                        resetSellByPercentage();
                     }
 
                 });
@@ -204,25 +206,25 @@
                 </div>
                 <div class="col-sm-1">
                         <label for="buyPercentage">%</label>
-                        <form:input type="number" step="0.25" path="buyPercentage" class="form-control" value="-5" style="padding:6px 3px;"/>
+                        <form:input type="number" step="0.5" path="buyPercentage" class="form-control" style="padding:6px 3px;"/>
                         <span class="help-block errors"><form:errors path="buyPercentage" /></span>
                 </div>
                 <div class="col-sm-4">
                         <label for="buy"><spring:message code="message.buy"/></label>
                         <form:input path="buy" class="form-control"/>
                         <span class="help-block errors"><form:errors path="buy" /></span>
-                        <input type="text" name="roundBuy" id="roundBuy" class="form-control" readonly=""/>
+                        <form:input path="roundBuy" id="roundBuy" class="form-control" readonly=""/>
                 </div>
                 <div class="col-sm-1">
                         <label for="sellPercentage">%</label>
-                        <form:input type="number" step="0.25" path="sellPercentage" class="form-control" value="5" style="padding:6px 3px;"/>
+                        <form:input type="number" step="0.5" path="sellPercentage" class="form-control" style="padding:6px 3px;"/>
                         <span class="help-block errors"><form:errors path="sellPercentage" /></span>
                 </div>
                 <div class="col-sm-4">
                         <label for="sell"><spring:message code="message.sell"/></label>
                         <form:input path="sell" class="form-control"/>
                         <span class="help-block errors"><form:errors path="sell" /></span>
-                        <input type="text" name="roundSell" id="roundSell" class="form-control" readonly=""/>
+                        <form:input path="roundSell" id="roundSell" class="form-control" readonly=""/>
                 </div>
             </div>
             <div class="form-group">

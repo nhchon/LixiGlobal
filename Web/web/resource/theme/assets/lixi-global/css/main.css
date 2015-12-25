@@ -255,9 +255,10 @@ h2, .h2 {
     position: relative;
 }
 .search-form input {
-    border: medium none;
+    /*border: medium none;*/
+    /*border-color: #66afe9;*/
     border-radius: 0;
-    box-shadow: none;
+    /*box-shadow: none;*/
     padding-right: 25px;
 }
 .search-form button {

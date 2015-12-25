@@ -24,12 +24,12 @@
                 <div class="section-gift-top">
                     <h2 class="title">Gift value for ${SELECTED_RECIPIENT_NAME}</h2>
                     <p>( We will select only gift at your price range )</p>
-                    <h5 class="maximum-purchase">Maximum purchase is VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 150}" pattern="###,###.##"/> or USD $ 150</h5>
+                    <h5 class="maximum-purchase">Maximum purchase is VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 150}" pattern="###,###.##"/> or USD 150</h5>
                     <div class="change-curency-box">
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">
                                 <span class="des-box">Your locked-in exchange rate</span>
-                                <span class="amount-box">USD $ 1 = <strong>VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></strong> Vietnam Dong</span>
+                                <span class="amount-box">USD 1 = <strong>VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></strong> Vietnam Dong</span>
                             </button>
                             <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
                                 <span class="flag flag-vn"></span>
@@ -48,11 +48,11 @@
                         </div>
                         <div class="gift-filter-label">
                             <span class="gift-filter-label-min">
-                                <span class="gift-filter-label-usd">USD $10</span>
+                                <span class="gift-filter-label-usd">USD 10</span>
                                 <span class="gift-filter-label-vn">VND 45,000</span>
                             </span>
                             <span class="gift-filter-label-max text-right">
-                                <span class="gift-filter-label-usd">USD $150</span>
+                                <span class="gift-filter-label-usd">USD 150</span>
                                 <span class="gift-filter-label-vn">VND 300,000</span>
                             </span>
                         </div>

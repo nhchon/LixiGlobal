@@ -22,7 +22,7 @@
                         <div class="row">
                             <div class="col-md-3 col-sm-3">
                                 <div class="gift-item">
-                                    <div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-01.png"/>) no-repeat scroll 0% 0%"></div>
+                                    <a href="<c:url value="/gifts/chooseCategory/${LIXI_CATEGORIES.perfume.id}"/>"><div class="gift-item-col-thumb" style="background:  transparent url(<c:url value="/resource/theme/assets/lixi-global/images/img-01.png"/>) no-repeat scroll 0% 0%"></div></a>
                                     <div class="gift-item-col-content">
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>

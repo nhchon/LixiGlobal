@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import vn.chonsoft.lixi.model.LixiExchangeRate;
+import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.CategoriesBean;
@@ -40,6 +42,9 @@ public class IndexController {
     @Autowired
     private CategoriesBean categories;
     
+    @Autowired
+    private LixiExchangeRateService xrService;
+    
     /**
      * 
      * @param model 
@@ -49,6 +54,9 @@ public class IndexController {
     public String index(Map<String, Object> model) {
         
         model.put(LiXiConstants.LIXI_CATEGORIES, categories);
+        
+        //LixiExchangeRate lastXr = this.xrService.findLastRecord(LiXiConstants.USD);
+        model.put("lastXr", this.xrService.findLastRecord(LiXiConstants.USD));
         
         return "index";
     }

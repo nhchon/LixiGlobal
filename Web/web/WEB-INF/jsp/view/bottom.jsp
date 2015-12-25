@@ -13,12 +13,12 @@
                     </div>
                     <div class="col-md-4 col-sm-4 col-xs-4 col-height">
                         <div class="footer-box">
-                            <h2><a href="<c:url value="/contact"/>"><span>Contact</span></a></h2>
+                            <h2><a href="<c:url value="/support/contact"/>"><span>Contact</span></a></h2>
                             <p>33329 W. Apollo Rd Phoenix,<br/>A285041 USA </p>
                             <div>
                                 <ul>
-                                    <li><a href="<c:url value="/term-of-user"/>">Terms of Use</a></li>
-                                    <li><a href="<c:url value="/privacy-policy"/>">Privacy Policy</a></li>
+                                    <li><a href="<c:url value="/support/term"/>">Terms of Use</a></li>
+                                    <li><a href="<c:url value="/support/privacy"/>">Privacy Policy</a></li>
                                 </ul>
                             </div>
                         </div>

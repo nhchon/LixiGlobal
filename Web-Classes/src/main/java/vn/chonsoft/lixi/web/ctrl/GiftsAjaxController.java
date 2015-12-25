@@ -226,9 +226,12 @@ public class GiftsAjaxController {
         currentPayments = LiXiUtils.calculateCurrentPayment(order, alreadyGift);
         
         double currentPayment = currentPayments[0].getUsd();//USD
+        double currPaymentVnd = currentPayments[0].getVnd();
         if(quantity>0){
             // add selected gift
             currentPayment += (LiXiUtils.toUsdPrice(price, buy) * quantity);
+            
+            currPaymentVnd += (price * quantity);
         }
         
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
@@ -327,12 +330,12 @@ public class GiftsAjaxController {
         }
         // store current payment
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment);
-        model.put(LiXiConstants.CURRENT_PAYMENT_VND, currentPayment * buy);
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, currPaymentVnd);
         
         if(recInOrder != null){
             
             model.put("RECIPIENT_PAYMENT_USD", recInOrder.getAllTotal().getUsd());
-            model.put("RECIPIENT_PAYMENT_VND", recInOrder.getAllTotal().getUsd() * buy);
+            model.put("RECIPIENT_PAYMENT_VND", recInOrder.getAllTotal().getVnd());
             //log.info(currentPayment + " " + recInOrder.getAllTotal().getUsd());
             //log.info((currentPayment * buy) + " " + recInOrder.getAllTotal().getVnd());
         }

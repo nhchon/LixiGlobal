@@ -552,7 +552,10 @@ public class UserGeneralController {
     @RequestMapping(value = "signIn", method = RequestMethod.GET)
     public String signIn(Map<String, Object> model) {
 
-        model.put("userSignUpForm", new UserSignUpForm());
+        UserSignUpForm signUp = new UserSignUpForm();
+        signUp.setAgree("yes");
+        
+        model.put("userSignUpForm", signUp);
         
         model.put("userSignInForm", new UserSignInForm());
         
@@ -644,7 +647,11 @@ public class UserGeneralController {
             
         }
         
-        return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true), null);
+        RedirectView r = new RedirectView("/gifts/chooseCategory", true, true);
+        r.setExposeModelAttributes(false);
+        return new ModelAndView(r);
+        
+        //return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true), null);
     }
     
     /**
