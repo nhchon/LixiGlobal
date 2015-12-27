@@ -797,12 +797,12 @@ textarea{
     font-weight: 400;
     margin: 0 auto 20px;
     overflow: hidden;
-    width: 360px;
+    width: 400px;
     background: #fff;
 }
 .gift-total-box span {
     color: #0090d0;
-    padding: 11px 10px;
+    padding: 2px;
     text-transform: uppercase;
 }
 .gift-total-box .gift-total-box-left {

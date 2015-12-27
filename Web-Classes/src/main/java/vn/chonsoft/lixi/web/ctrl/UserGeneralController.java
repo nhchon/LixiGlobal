@@ -103,7 +103,11 @@ public class UserGeneralController {
     @RequestMapping(value = "signUp", method = RequestMethod.GET)
     public String signUp(Map<String, Object> model) {
 
-        model.put("userSignUpForm", new UserSignUpForm());
+        UserSignUpForm signUp = new UserSignUpForm();
+        signUp.setAgree("yes");
+        
+        model.put("userSignUpForm", signUp);
+        //model.put("userSignUpForm", new UserSignUpForm());
         
         model.put("userSignInForm", new UserSignInForm());
         

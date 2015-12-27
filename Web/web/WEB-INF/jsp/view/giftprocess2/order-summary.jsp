@@ -46,7 +46,9 @@
                                         <c:forEach items="${entry.gifts}" var="g">
                                             <tr id="giftRow${g.id}">
                                             <td data-title="Select">
+                                            <!--    
                                                 <input type="checkbox" class="custom-checkbox-input"/>
+                                            -->
                                             </td>
                                             <td data-title="Receiver"><strong>${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</strong></td>
                                             <td  data-title="Items">
@@ -66,7 +68,7 @@
                                                     </div><!-- /input-group -->
                                                 </div>
                                             </td>
-                                            <td data-title="Unit Price">
+                                            <td data-title="Unit Price" nowrap>
                                                 <div><strong>USD <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/></strong></div>
                                                 <div><strong>VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/></strong></div>
                                             </td>
@@ -79,7 +81,9 @@
                                         <c:forEach items="${entry.topUpMobilePhones}" var="t">
                                             <tr id="topUpRow${g.id}">
                                             <td data-title="Select">
+                                            <!--
                                                 <input type="checkbox" class="custom-checkbox-input"/>
+                                            -->
                                             </td>
                                             <td data-title="Receiver"><strong>${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</strong></td>
                                             <td  data-title="Items">
@@ -88,9 +92,9 @@
                                             <td data-title="DESCRIPTION"><h4>Top Up Mobile Minutes</h4></td>
                                             <td data-title="Quantity">
                                             </td>
-                                            <td data-title="Unit Price">
-                                                <div><strong>USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></strong></div>
-                                                <div><strong>VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong></div>
+                                            <td data-title="Unit Price" nowrap>
+                                                <div nowrap><strong>USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></strong></div>
+                                                <div nowrap><strong>VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
                                                 <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/topUp/change/${t.id}"/>';"><spring:message code="message.change"/></button></p>
@@ -98,14 +102,16 @@
                                             </td>
                                         </tr>
                                         </c:forEach>
+                                        <c:if test="${fn:length(REC_GIFTS) > 1}">
                                         <tr class="has-colspan">
                                             <td colspan="5" class="border-right has-colspan-label"><strong class="text-uppercase title text-right float-right">Total</strong></td>
                                             <td colspan="2"><strong class="text-uppercase  title">usd <span id="recPaymentUSD${entry.recipient.id}"><fmt:formatNumber value="${entry.allTotal.usd}" pattern="###,###.##"/></span> ~ VND <span id="recPaymentVND${entry.recipient.id}"><fmt:formatNumber value="${entry.allTotal.vnd}" pattern="###,###.##"/></span></strong></td>
                                         </tr>
+                                        </c:if>
                                     </c:forEach>
                                     <tr class="has-colspan">
-                                        <td colspan="3" class="no-padding-left"><strong class="text-uppercase text-right">order limit ( USD 150 / vnd 3,000,000 ) </strong></td>
-                                        <td colspan="2" class="border-right has-colspan-label"><strong class="text-uppercase text-right  float-right  title">Total</strong></td>
+                                        <td colspan="4" class="no-padding-left" style="text-align: left;"><strong class="text-uppercase text-right">order limit ( USD 250 / vnd <fmt:formatNumber value="${250 * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> ) </strong></td>
+                                        <td colspan="1" class="border-right has-colspan-label"><strong class="text-uppercase text-right  float-right  title">Grand Total</strong></td>
                                         <td colspan="2"><strong class="text-uppercase  title">usd <span id="currentPaymentUSD"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.usd}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.vnd}" pattern="###,###.##"/></span></strong></td>
                                     </tr>
                                 </tbody>

@@ -13,6 +13,16 @@ $('#recId').change(function () {
     }
 });
 
+function clearRecipientForm(){
+    
+    $('#firstName').val('');
+    $('#middleName').val('');
+    $('#lastName').val('');
+    $('#email').val('');
+    $('#phone').val('');
+    $('#note').val('');
+}
+
 function loadRecipient(recId) {
 
     overlayOn($("#chooseRecipientForm"));

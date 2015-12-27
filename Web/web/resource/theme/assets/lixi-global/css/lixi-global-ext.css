@@ -598,13 +598,13 @@ Extend css
     position: relative;
     z-index: 1;
     top: 3px;
-    background: url(../images/icon-check-off.png) no-repeat;
+    /*background: url(../images/icon-check-off.png) no-repeat;*/
 }
 /*.custom-checkbox:hover{
     background: url("checkbox-hover.png") no-repeat;
 }*/
 .custom-checkbox.selected{
-    background: url(../images/icon-check-on.png) no-repeat;
+    /*background: url(../images/icon-check-on.png) no-repeat;*/
 }
 .custom-checkbox input[type="checkbox"]{
     margin: 0;

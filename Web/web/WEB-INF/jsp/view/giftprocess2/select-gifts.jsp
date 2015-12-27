@@ -73,7 +73,13 @@
                         <div class="button-control gift-total-wrapper text-center text-uppercase">
                             <div class="gift-total-box">
                                 <span class="gift-total-box-left">order Total</span>
-                                <span class="gift-total-box-right">usd $ <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span></span>
+                                <span class="gift-total-box-right">
+                                    <span>usd</span>
+                                    <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span>
+                                    <span>~</span>
+                                    <span>VND</span>
+                                    <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span>
+                                </span>
                             </div>
                             <div class="button-control-page">
                                 <button class="btn btn-default">BACK</button>

@@ -91,28 +91,28 @@
                                             <tr>
                                                 <td>Gift price</td>
                                                 <td style="text-align: right;">
-                                                    $<fmt:formatNumber value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/>
+                                                    USD <fmt:formatNumber value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Card processing fee</td>
-                                                <td style="text-align: right;">$<fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></td>
+                                                <td style="text-align: right;">USD <fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></td>
                                             </tr>
                                             <tr>
                                                 <td>Lixi handing fee</td>
-                                                <td style="text-align: right;">$<fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></td>
+                                                <td style="text-align: right;">USD <fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></td>
                                             </tr>
                                             <tr>
                                                 <td style="padding-top: 10px;">Total befor tax</td>
-                                                <td style="padding-top: 10px;text-align: right;"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></td>
+                                                <td style="padding-top: 10px;text-align: right;">USD <fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></td>
                                             </tr>
                                             <tr>
                                                 <td>Estimated tax to be collected</td>
-                                                <td style="text-align: right;">$0.0</td>
+                                                <td style="text-align: right;">USD 0.0</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding-top: 10px;"><b>Grand Total</b></td>
-                                                <td style="padding-top: 10px;text-align: right;">$<fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/>
+                                                <td style="padding-top: 10px;text-align: right;">USD <fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/>
                                                 </td>
                                             </tr>
                                         </table>
@@ -149,7 +149,7 @@
                         <div class="panel-body">
                             <c:forEach items="${REC_GIFTS}" var="rio" varStatus="theValueCount">
                                 <ul class="nav nav-pills" role="tablist">
-                                    <li role="presentation" class="active"><a href="#">${rio.recipient.firstName}&nbsp;${rio.recipient.middleName}&nbsp;${rio.recipient.lastName} <span class="badge">${fn:length(rio.gifts)}</span></a></li>
+                                    <li role="presentation" class="active"><a href="#">${rio.recipient.firstName}&nbsp;${rio.recipient.middleName}&nbsp;${rio.recipient.lastName} <span class="badge">${fn:length(rio.gifts) + fn:length(rio.topUpMobilePhones)}</span></a></li>
                                 </ul>
                                 <div>&nbsp;</div>
                                 <c:forEach items="${rio.gifts}" var="g">
@@ -168,6 +168,20 @@
                                         </div>
                                     </div>
                                 </c:forEach>
+                                <c:forEach items="${rio.topUpMobilePhones}" var="t">
+                                    <div class="row" style="margin-bottom: 5px;">
+                                        <div class="col-md-3" style="padding-left:50px;">
+                                            Top Up Mobile Phone
+                                        </div>
+                                        <div class="col-md-6" style="text-align: center;">
+                                            ${t.phone}
+                                        </div>
+                                        <div class="col-md-3" style="text-align: center;">
+                                            USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${t.amount * m.key.lxExchangeRate.buy}" pattern="###,###.##"/>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                                
                                 <c:if test="${theValueCount.count < fn:length(REC_GIFTS)}">
                                     <div class="row">
                                         <div class="col-md-8"><hr style="height:1px;border:none;color:#333;background-color:#333;"/></div>

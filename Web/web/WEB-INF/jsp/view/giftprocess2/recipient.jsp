@@ -32,7 +32,7 @@
                         <c:if test="${not empty RECIPIENTS}">
                             <div class="form-group form-group-inline">
                                 <label for="input-receiver" class="form-control-with-select-box">Select a previous receiver :</label>
-                                <select class="selectpicker" id="recId" name="recId">
+                                <select class="form-control" id="recId" name="recId">
                                     <option value="0"><spring:message code="gift.select_recipient"/></option>
                                     <c:forEach items="${RECIPIENTS}" var="rec">
                                         <option value="${rec.id}" <c:if test="${chooseRecipientForm.recId == rec.id}">selected</c:if>>${rec.firstName}&nbsp;${rec.middleName}&nbsp;${rec.lastName} </option>
@@ -98,7 +98,7 @@
                     </div>
                     <div class="button-control gift-total-wrapper text-center text-uppercase">
                         <div class="button-control-page">
-                            <button class="btn btn-default btn-has-link-event" type="button">BACK</button>
+                            <button class="btn btn-default" type="button" onclick="history.back();">BACK</button>
                             <button class="btn btn-primary btn-has-link-event" type="submit">NEXT</button>
                         </div>
                     </div>

@@ -17,7 +17,7 @@
                             <p>33329 W. Apollo Rd Phoenix,<br/>A285041 USA </p>
                             <div>
                                 <ul>
-                                    <li><a href="<c:url value="/support/term"/>">Terms of Use</a></li>
+                                    <li><a href="<c:url value="/support/terms"/>">Terms of Use</a></li>
                                     <li><a href="<c:url value="/support/privacy"/>">Privacy Policy</a></li>
                                 </ul>
                             </div>
