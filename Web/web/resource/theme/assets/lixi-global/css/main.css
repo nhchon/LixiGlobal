@@ -20,17 +20,26 @@ a:focus,a:hover{
     color: #0090d0;
     text-decoration: none;
 }
+/*testimonial*/
+.testimonial{
+
+}
+.testimonial .carousel-indicators {
+    bottom: -20px;
+}
+.testimonial .auth{
+    text-align: right;
+    font-style: italic;
+}
 /* language */
 .navbar a.nav-lang{}
 .navbar a.nav-lang-en {
-    background: rgba(0, 0, 0, 0) url("../images/flags/gb.png") no-repeat scroll 0 center;
-    border-right: 1px solid #d5d5d5;
-    margin-right: 10px;
-    padding-left: 22px;
+    background: rgba(0, 0, 0, 0) url("../images/flags/us.png") no-repeat scroll 5px center;
+    padding-left: 25px;
 }
 .navbar a.nav-lang-vn {
-    background: rgba(0, 0, 0, 0) url("../images/flags/vn.png") no-repeat scroll 0 center;
-    padding-left: 22px;
+    background: rgba(0, 0, 0, 0) url("../images/flags/vn.png") no-repeat scroll 5px center;
+    padding-left: 25px;
 }
 .gift-item-col-content a:hover {
     color: #fff!important;
@@ -203,7 +212,7 @@ h2, .h2 {
     text-align: center;
     width: 50px;
 }
-.nav-login {
+.nav-top-border-right {
     background: transparent url("../images/nav-line.png") no-repeat scroll right center;
 }
 .nav-language {
@@ -1120,6 +1129,9 @@ textarea{
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
+    .contact-form{
+        padding-right: 15px;
+    }
     .table-col-thumb {
         width: 100px;
     }
@@ -1313,6 +1325,10 @@ textarea{
 
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px) {
+    .contact-section-top {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
     .section-slider-thumb {
         height: 350px;
     }
@@ -1498,6 +1514,9 @@ textarea{
     }
     .gift-filter-items .col-for-five{
         width: 100%;
+    }
+    .testimonial{
+        margin-bottom: 20px;
     }
 }
 

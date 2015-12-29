@@ -6,9 +6,48 @@
                     <div class="col-md-4 col-sm-4 col-xs-4 col-height">
                         <div class="footer-box">
                             <div class="footer-logo"><a href="<c:url value="/"/>"><img src="<c:url value="/resource/theme/assets/lixi-global/images/logo-white.png"/>"/></a></div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
-                            </p>
+                            <div class="testimonial-wrapper">
+                                <div data-ride="carousel" class="carousel slide testimonial" id="testimonial">
+
+                                    <div role="listbox" class="carousel-inner">
+                                        <div class="item active">
+                                            <div>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
+                                            </div>
+                                            <div class="auth">
+                                                Mr ABC
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
+                                            </div>
+                                            <div class="auth">
+                                                Mr BCD
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
+                                            </div>
+                                            <div class="auth">
+                                                Mr DEF
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-controls text-right">
+                                        <ol class="carousel-indicators">
+                                            <li class="active" data-slide-to="0" data-target="#testimonial"></li>
+                                            <li data-slide-to="1" data-target="#testimonial" class=""></li>
+                                            <li data-slide-to="2" data-target="#testimonial" class=""></li>
+                                        </ol>
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-4 col-xs-4 col-height">

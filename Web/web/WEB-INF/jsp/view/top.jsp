@@ -10,18 +10,18 @@
                         </li>
                     </c:if>
                     <c:if test="${empty sessionScope['scopedTarget.loginedUser'].email}">
-                        <li class="nav-login">
+                        <li class="nav-top-border-right">
                             <a class="hvr-underline-from-center nav-login-event" href="<c:url value="/user/signIn"/>"><i class="fa fa-user"></i> LOGIN</a>
                         </li>
-                        <li>
+                        <li class="nav-top-border-right">
                             <a class="hvr-underline-from-center nav-register-event" href="<c:url value="/user/signUp"/>">REGISTER</a>
                         </li>
                     </c:if>
-                    <li>
-                        <a class="nav-lang nav-lang-en" href="?locale=en_US">English</a>
+                    <li class="nav-top-border-right">
+                        <a class="hvr-underline-from-center nav-lang nav-lang-en" href="?locale=en_US">English</a>
                     </li>
                     <li>
-                        <a class="nav-lang nav-lang-vn" href="?locale=vi_VN">Vietnam</a>
+                        <a class="hvr-underline-from-center nav-lang nav-lang-vn" href="?locale=vi_VN">Vietnam</a>
                     </li>
                 </ul>
             </div>
@@ -82,7 +82,7 @@
                         <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="javascript:void(0);">Support <i class="fa fa-angle-down"></i></a>
                         <ul class="dropdown-menu nav-level-1">
                             <li>
-                                <a class="nav-sub-link no-boder-top" href="<c:url value="/support/refundPolicy"/>">Refund and Returns Policy</a>
+                                <a class="nav-sub-link no-boder-top" href="<c:url value="/support/refundPolicy"/>">Returns and Refund Policy</a>
                             </li>
                             <li>
                                 <a class="nav-sub-link" href="#">Customer Service</a>

@@ -192,12 +192,12 @@ LixiGlobal.Gift = {
         var obj = $(_obj);
         var inputObj = obj.closest('.gift-number-box').find('.gift-number');
         inputObj.val(parseInt(inputObj.val()) + 1);
-        
+
         var giftItemObj = obj.closest('.gift-product-item');
         var productId = giftItemObj.find("input[name='item']").val();
         var quantity = giftItemObj.find("input[name='quantity']").val();
         //alert(productId + " " + quantity)
-        overlayOn($("#product"+productId));
+        overlayOn($("#product" + productId));
         checkExceed($('#recId').val(), productId, quantity);
         return  false;
     },
@@ -211,7 +211,7 @@ LixiGlobal.Gift = {
         var productId = giftItemObj.find("input[name='item']").val();
         var quantity = giftItemObj.find("input[name='quantity']").val();
         //alert(productId + " " + quantity)
-        overlayOn($("#product"+productId));
+        overlayOn($("#product" + productId));
         checkExceed($('#recId').val(), productId, quantity);
         return  false;
     },
@@ -224,24 +224,24 @@ LixiGlobal.Gift = {
             //alert('hi im checked')
             var productId = giftItemObj.find("input[name='item']").val();
             var quantity = giftItemObj.find("input[name='quantity']").val();
-            overlayOn($("#product"+productId));
+            overlayOn($("#product" + productId));
             checkExceed($('#recId').val(), productId, quantity);
         } else {
             //giftItemObj.removeClass(selectedClass);
             //buyBtnObj.html("Buy").attr('data-action', 'Buy');
             var productId = giftItemObj.find("input[name='item']").val();
             var quantity = giftItemObj.find("input[name='quantity']").val();
-            overlayOn($("#product"+productId));
+            overlayOn($("#product" + productId));
             checkExceed($('#recId').val(), productId, -quantity);
         }
     },
-    toBuyStatus: function(giftItemObj){
+    toBuyStatus: function (giftItemObj) {
         /* */
         giftItemObj.find('.gift-item-checkbox input').prop("checked", false);
         giftItemObj.find('.gift-item-checkbox .custom-checkbox').removeClass("selected");
         giftItemObj.find(".btn-buy-item-event").html("Buy").attr('data-action', 'Buy');
     },
-    toCancelStatus: function(giftItemObj){
+    toCancelStatus: function (giftItemObj) {
         /* */
         giftItemObj.find('.gift-item-checkbox input').prop("checked", true);
         giftItemObj.find('.gift-item-checkbox .custom-checkbox').addClass("selected");
@@ -256,24 +256,24 @@ LixiGlobal.Gift = {
                 /* */
                 var productId = giftItemObj.find("input[name='item']").val();
                 var quantity = giftItemObj.find("input[name='quantity']").val();
-                overlayOn($("#product"+productId));
+                overlayOn($("#product" + productId));
                 checkExceed($('#recId').val(), productId, -quantity);
             } else {
                 /* */
                 var productId = giftItemObj.find("input[name='item']").val();
                 var quantity = giftItemObj.find("input[name='quantity']").val();
-                overlayOn($("#product"+productId));
+                overlayOn($("#product" + productId));
                 checkExceed($('#recId').val(), productId, quantity);
             }
         });
-        
+
         $("gift-item-checkbox input[type='checkbox']").on('change', function () {
             if (this.checked) {
                 //do your stuff
                 console.log(1);
             }
         });
-        
+
         var items = $('.gift-filter-items').find('.gift-product-item-col');
         if (items.length > 0) {
             var selectedClass = 'gift-product-item-selected';
@@ -286,7 +286,7 @@ LixiGlobal.Gift = {
                 }
             });
         }
-        
+
         $('#pagination-data').twbsPagination({
             totalPages: TOTAL_PAGES,
             visiblePages: 5,
@@ -481,15 +481,28 @@ LixiGlobal.Theme = {
 
     }
 };
+LixiGlobal.Slider = {
+    carousel: function (element) {
+        var sliderObj = $(element);
+        if (typeof sliderObj !== "undefined" || sliderObj.length > 0) {
+            sliderObj.carousel({
+                interval: false,
+                pause: true
+            });
+        }
+    }
+};
 
 jQuery(document).ready(function () {
-    
+    if ($('#testimonial').length > 0) {
+        LixiGlobal.Slider.carousel('#testimonial');
+    }
     //LixiGlobal.Theme.initTheme();
 
     //$('.nav-login-event, .nav-register-event').click(function () {
-        //LixiGlobal.User.registerPopup();
+    //LixiGlobal.User.registerPopup();
     //});
-    
+
     $('[rel=tooltip]').tooltip();
     LixiGlobal.Menu.effectMainMenu();
     jQuery(window).resize(function () {
@@ -504,17 +517,17 @@ jQuery(document).ready(function () {
             }
         });
         /*
-        sliderFilter.on("slide", function (slideEvt) {
-            //Call filter when change value here
-            if(originalSliderVal != slideEvt){
-                sliderFilter.disable();
-                alert(slideEvt);
-                //
-                originalSliderVal = slideEvt;
-            }
-            console.log(slideEvt);
-        });
-        */
+         sliderFilter.on("slide", function (slideEvt) {
+         //Call filter when change value here
+         if(originalSliderVal != slideEvt){
+         sliderFilter.disable();
+         alert(slideEvt);
+         //
+         originalSliderVal = slideEvt;
+         }
+         console.log(slideEvt);
+         });
+         */
         sliderFilter.on("slideStart", function (slideEvt) {
             //Call filter when change value here
             //alert(slideEvt);
@@ -524,12 +537,12 @@ jQuery(document).ready(function () {
         });
         sliderFilter.on("slideStop", function (slideEvt) {
             //Call filter when change value here
-            if(originalSliderVal != slideEvt){
+            if (originalSliderVal != slideEvt) {
                 //sliderFilter.disable();
                 //alert("change " + slideEvt);
                 //
                 originalSliderVal = slideEvt;
-                
+
                 loadNewPrice(slideEvt);
             }
             console.log(slideEvt);
