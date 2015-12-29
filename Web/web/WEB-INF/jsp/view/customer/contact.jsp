@@ -46,9 +46,9 @@
                                     Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
                                 </p>
                                 <div>
-                                    33329 W. Apollo Rd Phoenix,
+                                    3329 W. Apollo Rd
                                     <br/>
-                                    A285041 USA
+                                    Phoenix, AZ 85041
                                     <br/>
                                     <p>
                                         <a href="<c:url value="/support/terms"/>">Terms of Use</a>&nbsp;|&nbsp;<a href="<c:url value="/support/refundPolicy"/>">Privacy Policy</a>

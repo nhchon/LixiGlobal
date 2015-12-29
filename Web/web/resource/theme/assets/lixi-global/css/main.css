@@ -31,6 +31,10 @@ a:focus,a:hover{
     text-align: right;
     font-style: italic;
 }
+.testimonial .date{
+    font-style: italic;
+    margin-right: 5px;
+}
 /* language */
 .navbar a.nav-lang{}
 .navbar a.nav-lang-en {

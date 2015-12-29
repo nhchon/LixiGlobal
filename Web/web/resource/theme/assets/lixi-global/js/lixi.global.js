@@ -486,8 +486,7 @@ LixiGlobal.Slider = {
         var sliderObj = $(element);
         if (typeof sliderObj !== "undefined" || sliderObj.length > 0) {
             sliderObj.carousel({
-                interval: false,
-                pause: true
+                interval: 1000*10
             });
         }
     }

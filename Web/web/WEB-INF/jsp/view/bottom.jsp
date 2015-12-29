@@ -12,7 +12,7 @@
                                     <div role="listbox" class="carousel-inner">
                                         <div class="item active">
                                             <div>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
+                                                <span class="date">(12/28)</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh.
                                             </div>
                                             <div class="auth">
                                                 Mr ABC
@@ -20,7 +20,7 @@
                                         </div>
                                         <div class="item">
                                             <div>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
+                                                <span class="date">(12/28)</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
                                             </div>
                                             <div class="auth">
                                                 Mr BCD
@@ -28,21 +28,21 @@
                                         </div>
                                         <div class="item">
                                             <div>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
+                                                <span class="date">(12/28)</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
                                             </div>
                                             <div class="auth">
                                                 Mr DEF
                                             </div>
                                         </div>
+
                                     </div>
-                                    <div class="carousel-controls text-right">
-                                        <ol class="carousel-indicators">
-                                            <li class="active" data-slide-to="0" data-target="#testimonial"></li>
-                                            <li data-slide-to="1" data-target="#testimonial" class=""></li>
-                                            <li data-slide-to="2" data-target="#testimonial" class=""></li>
-                                        </ol>
-
-
+                                    <div class="carousel-controls text-center">
+                                        <a data-slide="prev" role="button" href="#testimonial">
+                                            <i class="fa fa-chevron-circle-left"></i>
+                                        </a>
+                                        <a data-slide="next" role="button" href="#testimonial">
+                                            <i class="fa fa-chevron-circle-right"></i>
+                                        </a>
                                     </div>
 
 
@@ -53,7 +53,11 @@
                     <div class="col-md-4 col-sm-4 col-xs-4 col-height">
                         <div class="footer-box">
                             <h2><a href="<c:url value="/support/contact"/>"><span>Contact</span></a></h2>
-                            <p>33329 W. Apollo Rd Phoenix,<br/>A285041 USA </p>
+                            <p>
+                                3329 W. Apollo Rd
+                                <br/>
+                                Phoenix, AZ 85041 
+                            </p>
                             <div>
                                 <ul>
                                     <li><a href="<c:url value="/support/terms"/>">Terms of Use</a></li>
