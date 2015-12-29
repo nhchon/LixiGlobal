@@ -34,7 +34,6 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserMoneyLevel;
@@ -216,7 +215,7 @@ public class UserGeneralController {
                 Map model = new HashMap();	             
                 model.put("user", userService.findByEmail(form.getEmail()));
                 // built the path
-                String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user2/registrationConfirm/"+activeCode).build().toUriString());
+                String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString());
                 model.put("regisConfirmPath", regisConfirmPath);
                 
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -339,7 +338,7 @@ public class UserGeneralController {
                         Map model = new HashMap();	             
                         model.put("user", u);
                         // built the path
-                        String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user2/registrationConfirm/"+activeCode).build().toUriString());
+                        String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString());
                         model.put("regisConfirmPath", regisConfirmPath);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -434,7 +433,7 @@ public class UserGeneralController {
                         Map model = new HashMap();	             
                         model.put("user", u);
                         // built the path
-                        String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user2/resetPassword/"+activeCode).build().toUriString());
+                        String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword/"+activeCode).build().toUriString());
                         model.put("resetPasswordPath", resetPasswordPath);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -745,7 +744,7 @@ public class UserGeneralController {
                     Map model = new HashMap();	             
                     model.put("user", u);
                     // built the path
-                    String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user2/verifyEmail/"+activeCode).build().toUriString());
+                    String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/verifyEmail/"+activeCode).build().toUriString());
                     model.put("newAccountPath", resetPasswordPath);
 
                     String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -805,7 +804,7 @@ public class UserGeneralController {
             // store secret code into session and delete after user created account
             request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE, code);
             
-            return new ModelAndView(new RedirectView("/user2/signUpWithExistingEmail", true, true));
+            return new ModelAndView(new RedirectView("/user/signUpWithExistingEmail", true, true));
         }        
     }
     

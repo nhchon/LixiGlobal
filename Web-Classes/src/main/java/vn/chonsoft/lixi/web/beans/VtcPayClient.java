@@ -209,8 +209,10 @@ public class VtcPayClient extends WebServiceGatewaySupport {
                         ((SoapMessage) message).setSoapAction("http://tempuri.org/RequestTransaction");
                     }
                 });
-        //RequestTransactionResponse response = (RequestTransactionResponse) getWebServiceTemplate().marshalSendAndReceive(
-        //requestTransaction, new SoapActionCallback("http://tempuri.org/RequestTransaction"));
+        /*
+        RequestTransactionResponse response = (RequestTransactionResponse) getWebServiceTemplate().marshalSendAndReceive(
+        requestTransaction, new SoapActionCallback("http://tempuri.org/RequestTransaction"));
+        */
         
         return response;
     }

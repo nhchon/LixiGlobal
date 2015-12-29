@@ -142,7 +142,9 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
         VtcServiceCode serviceCode = this.vtcServiceCodeService.findByNetworkAndLxChucNang(dauSo.getNetwork(), LiXiConstants.NAP_TIEN_TRA_TRUOC);
 
         String requestData = vtcClient.topUpRequestData(topUp.getId(), serviceCode.getCode(), account, amount);
-
+        
+        log.info("request data: " + requestData);
+        
         RequestTransactionResponse response = null;
         try {
             // call vtc's service

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
@@ -54,6 +53,7 @@ public class SystemTopUpController {
     public ModelAndView submit2VTC(Map<String, Object> model, @PathVariable Long id){
         
         TopUpMobilePhone topUp = this.topUpService.findById(id);
+        
         if(topUp != null){
             
             lxAsyncMethods.processTopUpItem(topUp);

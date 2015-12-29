@@ -159,10 +159,10 @@
                                                 <div class="col-md-7">
                                                     <select id="amountTopUp" name="amountTopUp" class="form-control">
                                                         <option value="0" <c:if test="${amountTopUp eq 0}">selected=""</c:if>>Please select amount to top up</option>
-                                                        <option value="10" <c:if test="${amountTopUp eq 10}">selected=""</c:if>>10$</option>
-                                                        <option value="15" <c:if test="${amountTopUp eq 15}">selected=""</c:if>>15$</option>
-                                                        <option value="20" <c:if test="${amountTopUp eq 20}">selected=""</c:if>>20$</option>
-                                                        <option value="25" <c:if test="${amountTopUp eq 25}">selected=""</c:if>>25$</option>
+                                                        <option value="10" <c:if test="${amountTopUp eq 10}">selected=""</c:if>>10 USD</option>
+                                                        <option value="15" <c:if test="${amountTopUp eq 15}">selected=""</c:if>>15 USD</option>
+                                                        <option value="20" <c:if test="${amountTopUp eq 20}">selected=""</c:if>>20 USD</option>
+                                                        <option value="25" <c:if test="${amountTopUp eq 25}">selected=""</c:if>>25 USD</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -211,7 +211,6 @@
                                         </form>
                                     </div>
                                 </div>
-
                                 <%-- current payment --%>
                                 <div class="row">
                                     <div class="col-md-3"></div>

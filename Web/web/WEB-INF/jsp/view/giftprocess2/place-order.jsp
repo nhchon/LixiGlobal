@@ -8,6 +8,16 @@
         <script type="text/javascript">
             /** Page Script **/
             var CALCULATE_FEE_PATH = '<c:url value="/checkout/place-order/calculateFee"/>';
+            function editRecipient(focusId) {
+                $.get('<c:url value="/topUp/editRecipient"/>', function (data) {
+                    enableEditRecipientHtmlContent(data);
+                    // focus on phone field
+                    $('#editRecipientModal').on('shown.bs.modal', function () {
+                        $('#' + focusId).focus()
+                    })
+
+                });
+            }
         </script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/place-order.js"/>"></script>
     </jsp:attribute>
@@ -29,30 +39,27 @@
                             <c:forEach items="${REC_GIFTS}" var="entry">
                                 <div class="receiver-info-item">
                                     <div class="receiver-sent-to">
-                                        <h4 class="text-color-link">Send To: ${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName} <a href="#" class="edit-info-event"></a></h4>
+                                        <h4 class="text-color-link">Send To: ${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName} <a href="javascript:editRecipient();" class="edit-info-event"></a></h4>
                                         <div>
-                                            <strong>Email Address:</strong><span>${entry.recipient.email}</span> <a href="#" class="edit-info-event"></a>
+                                            <strong>Email Address:</strong><span>${entry.recipient.email}</span>
                                         </div>
                                         <div>
-                                            <strong>Mobile Phone:</strong><span>${entry.recipient.phone}</span> <a href="#" class="edit-info-event"></a>
+                                            <strong>Mobile Phone:</strong><span>${entry.recipient.phone}</span>
                                         </div>
                                     </div>
                                     <div class="receiver-order-summary">
                                         <h4>Order summary</h4>
                                         <c:forEach items="${entry.gifts}" var="g"  varStatus="giftCount">
-                                        <div>
-                                            <strong style="width:500px;">${g.productName}</strong>
-                                            <span>USD <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> * ${g.productQuantity} ~ VND <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></span>
-                                            <a href="#" class="edit-info-event"></a>
-                                            <!--<span>( gift / more recipient )</span>-->
-                                        </div>
+                                            <div class="row">
+                                                <div class="col-md-7">${g.productName} <a href="<c:url value="/gifts/type/${entry.recipient.id}/${g.category.id}"/>" class="edit-info-event"></a></div>
+                                                <div class="col-md-1">${g.productQuantity}</div>
+                                                <div class="col-md-4">USD <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></div>
+                                            </div>
                                         </c:forEach>
                                         <c:forEach items="${entry.topUpMobilePhones}" var="t"  varStatus="tCount">
-                                        <div>
-                                            <strong style="width:500px;">Top up mobile phone</strong>
-                                            <span>USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></span>
-                                            <a href="#" class="edit-info-event"></a>
-                                            <!--<span>( gift / more recipient )</span>-->
+                                            <div class="row">
+                                            <div class="col-md-8">Top up mobile phone (${t.phone}) <a href="<c:url value="/topUp/change/${t.id}"/>" class="edit-info-event"></a></div>
+                                            <div class="col-md-4">USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></div>
                                         </div>
                                         </c:forEach>
                                     </div>
@@ -74,14 +81,14 @@
                                                 <strong class="receiver-order-gift-price-left text-bold">Total</strong><strong class="receiver-order-gift-price-right text-bold">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
                                             </div>
                                         </div>
-                                        <h4 class="text-color-link">Payment method</h4>
+                                                <h4 class="text-color-link">Payment method <a href="<c:url value="/checkout/paymentMethods"/>" class="edit-info-event"></a></h4>
                                         <c:if test="${not empty LIXI_ORDER.card}">
                                             <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.card.cardNumber)}"/>
                                         <div>
-                                            <strong>${LIXI_ORDER.card.cardTypeName}:</strong> <span>ending with ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}</span> <a href="#" class="edit-info-event"></a>
+                                            <strong>${LIXI_ORDER.card.cardTypeName}:</strong> <span>ending with ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}</span> 
                                         </div>
                                         <div>
-                                            <strong>Order #:</strong><span>${LIXI_ORDER.id}</span> <a href="#" class="edit-info-event"></a>
+                                            <strong>Order #:</strong><span>${LIXI_ORDER.id}</span>
                                         </div>
                                         <div>
                                             <strong>Billing address:</strong><span>${LIXI_ORDER.card.billingAddress.firstName}&nbsp;${LIXI_ORDER.card.billingAddress.lastName}, ${LIXI_ORDER.card.billingAddress.address}</span>
@@ -133,7 +140,13 @@
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />        
                 </form>
             </div>
+            <!-- Billing Address Modal -->
+            <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" id="editRecipientContent">
+                    </div>
+                </div>
+            </div>
         </section>
-
     </jsp:body>
 </template:Client>
