@@ -44,11 +44,11 @@ a:focus,a:hover{
 /* language */
 .navbar a.nav-lang{}
 .navbar a.nav-lang-en {
-    background: rgba(0, 0, 0, 0) url("../images/flags/icon-eng.png") no-repeat scroll 5px center;
+    background: rgba(0, 0, 0, 0) url("../images/flags/us.png") no-repeat scroll 5px center;
     padding-left: 25px;
 }
 .navbar a.nav-lang-vn {
-    background: rgba(0, 0, 0, 0) url("../images/flags/icon-vie.png") no-repeat scroll 5px center;
+    background: rgba(0, 0, 0, 0) url("../images/flags/vn.png") no-repeat scroll 5px center;
     padding-left: 25px;
 }
 .gift-item-col-content a:hover {
