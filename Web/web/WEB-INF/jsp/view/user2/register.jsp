@@ -1,4 +1,4 @@
-<template:Client htmlTitle="Home - LiXi Global">
+<template:Client htmlTitle="Home - Lixi Global">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>
@@ -10,9 +10,12 @@
             var LAST_NAME_MESSAGE = '<spring:message code="validate.user.lastName"/>';
             var EMAIL_MESSAGE = '<spring:message code="validate.email_required"/>';
             var PASS_MESSAGE = '<spring:message code="validate.password_required"/>';
+            var PASSWORD_ASSISTANCE_PATH = '<c:url value="/user/passwordAssistance2"/>';
+            
             jQuery(document).ready(function () {
                 LixiGlobal.RegisterPage.init();
             })
+            
         </script>
     </jsp:attribute>
 
@@ -44,12 +47,12 @@
                                 </c:if>
                                 <c:if test="${signInFailed eq 1 || param.signInFailed eq 1}">
                                     <div class="alert alert-warning alert-dismissible bg-white" role="alert">
-                                    <div class="alert-message">
-                                        <spring:message code="signin.failed"/>
-                                    </div>
+                                        <div class="alert-message">
+                                            <spring:message code="signin.failed"/>
+                                        </div>
                                     </div>
                                 </c:if>
-                                
+
                                 <h3 class="title">Login</h3>
                                 <c:url value="/user/signIn" var="signInFormUrl"/>
                                 <form:form method="post" action="${signInFormUrl}" cssClass="form-horizontal" modelAttribute="userSignInForm" autocomplete="off">
@@ -67,7 +70,7 @@
                                         </div>
                                     </div>
                                     <p>
-                                        <a href="#">Forgotten your password?</a>
+                                        <a href="#"  data-toggle="modal" data-target="#myModal">Forgotten your password?</a>
                                     </p>
                                     <div class="button-control">
                                         <button type="submit" class="btn btn-primary">LOGIN</button>
@@ -80,8 +83,8 @@
                                 <h3 class="title">New to Lixi.Global?</h3>
                                 <c:if test="${action eq 'login'}"><button id="btnShowRegister" type="button" class="btn btn-primary">CREATE ACCOUNT</button></c:if>
                                 <div id="divRegister" style="display: <c:if test="${action eq 'login'}">none;</c:if>">
-                                    <h4>CREATE AN ACCOUNT WITH LIXI GLOBAL</h4>
-                                    <p><sup>*</sup>All form fields are mandatory</p>
+                                        <h4>CREATE AN ACCOUNT WITH LIXI GLOBAL</h4>
+                                        <p><sup>*</sup>All form fields are mandatory</p>
                                     <%-- place holder message --%>
                                     <spring:message code="message.first_name" var="firstNameMessage"/>
                                     <spring:message code="message.middle_ini" var="middleMessage"/>
@@ -120,7 +123,9 @@
                                             <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="checkbox">
-                                            <label><form:checkbox path="agree" checked="" value="yes"/> <spring:message code="regis.agree" text="By Creating an Account, you agree to the Terms of Use and Privacy Policy."/></label>
+                                            <c:url value="/support/terms" var="termsUrl"/>
+                                            <c:url value="/support/privacy" var="privacyUrl"/>
+                                            <label><form:checkbox path="agree" checked="" value="yes"/> <spring:message code="regis.agree" arguments="${termsUrl}, ${privacyUrl}"></spring:message></label>
                                             <div class="has-error"><form:errors path="agree" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="button-control">
@@ -132,6 +137,32 @@
                         </div>
                     </div>
                 </div>
-            </div></section>
-        </jsp:body>
-    </template:Client>            
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 id="headerForgotPassword" class="modal-title">Forgot Password</h4>
+                            <p id="descForgotPassword"><spring:message code="message.forgot_password_no_problem" text=""/></p>
+                        </div>
+                        <div class="modal-body" id="resetPasswordBody">
+                            <form role="form">
+                                <div class="form-group">
+                                    <label for="email">Email address:</label>
+                                    <input type="email" class="form-control" id="email4ResetPassword" placeholder="your.name@example.com">
+                                </div>
+                                <button id="resetPasswordBtn" type="button" class="btn btn-primary">Send me reset password link</button>
+                                <input type="hidden" id="csrfSpring" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </jsp:body>
+</template:Client>            

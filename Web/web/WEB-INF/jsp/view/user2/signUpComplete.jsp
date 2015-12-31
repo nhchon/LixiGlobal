@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Client htmlTitle="LiXi Global - Blank Sample Page">
+<template:Client htmlTitle="Lixi Global - Blank Sample Page">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>
@@ -20,7 +20,7 @@
                     <p>
                         Be sure to check your spam filter if you can’t find the email in
                         your inbox. You may aslo contact
-                        <a href="help.html">Customer Service</a> for help.
+                        <a href="<c:url value="/support/post"/>">Customer Service</a> for help.
                     </p>
                 </div>
             </div>

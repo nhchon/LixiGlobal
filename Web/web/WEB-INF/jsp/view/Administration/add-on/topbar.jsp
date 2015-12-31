@@ -41,9 +41,9 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">System Config <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="<c:url value="/Administration/SystemConfig/categories"/>">Categories</a></li>
-                        <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">LiXi Exchange Rate</a></li>
-                        <li><a href="<c:url value="/Administration/SystemFee/list"/>">LiXi Global Fee</a></li>
-                        <li><a href="<c:url value="/Administration/SystemConfig/configs"/>">LiXi Configuration Parameters</a></li>
+                        <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">Lixi Exchange Rate</a></li>
+                        <li><a href="<c:url value="/Administration/SystemFee/list"/>">Lixi Global Fee</a></li>
+                        <li><a href="<c:url value="/Administration/SystemConfig/configs"/>">Lixi Configuration Parameters</a></li>
                     </ul>
                 </li>
                 <li id="m05" class="dropdown <c:if test="${m05 eq true}">active</c:if> ">

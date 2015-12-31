@@ -1,4 +1,4 @@
-<template:Client htmlTitle="LiXi Global - Add a Card">
+<template:Client htmlTitle="Lixi Global - Add a Card">
 
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/pay-by-card.css"/>" type="text/css" />

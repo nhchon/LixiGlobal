@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Client htmlTitle="LiXi Global - Choose Recipient">
+<template:Client htmlTitle="Lixi Global - Choose Recipient">
 
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/intlTelInput.css"/>" type="text/css" />

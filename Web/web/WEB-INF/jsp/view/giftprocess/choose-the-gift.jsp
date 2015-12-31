@@ -1,4 +1,4 @@
-<template:Client htmlTitle="LiXi Global - Choose the Gift">
+<template:Client htmlTitle="Lixi Global - Choose the Gift">
 
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/choose-the-gift.css"/>" type="text/css" />

@@ -1,4 +1,4 @@
-<template:Client htmlTitle="LiXi Global - Email address already in use">
+<template:Client htmlTitle="Lixi Global - Email address already in use">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>

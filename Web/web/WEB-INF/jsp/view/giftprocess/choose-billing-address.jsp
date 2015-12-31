@@ -1,4 +1,4 @@
-<template:Client htmlTitle="LiXi Global - Choose a Billing Address">
+<template:Client htmlTitle="Lixi Global - Choose a Billing Address">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>

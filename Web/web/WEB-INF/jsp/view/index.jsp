@@ -1,4 +1,4 @@
-<template:Client htmlTitle="Home - LiXi Global">
+<template:Client htmlTitle="Home - Lixi Global">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>
@@ -22,7 +22,7 @@
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">
                                 <span class="des-box">Your locked-in exchange rate</span>
-                                <span class="amount-box">USD 1 = <strong>VND <fmt:formatNumber value="${lastXr.buy}" pattern="###,###.##"/></strong> Vietnam Dong</span>
+                                <span class="amount-box">USD 1 = <strong>VND <fmt:formatNumber value="${lastXr.buy}" pattern="###,###.##"/></strong> VND</span>
                             </button>
                             <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
                                 <span class="flag flag-vn"></span>

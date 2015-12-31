@@ -14,8 +14,8 @@
 </ul>
 <ul class="nav nav-sidebar">
     <li id="m03" <c:if test="${m03 eq true}">class="active"</c:if>><a href="<c:url value="/Administration/SystemConfig/categories"/>">Categories</a></li>
-    <li id="m04" <c:if test="${m04 eq true}">class="active"</c:if>><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">LiXi Exchange Rate</a></li>
-    <li id="m08" <c:if test="${m04 eq true}">class="active"</c:if>><a href="<c:url value="/Administration/SystemFee/list"/>">LiXi Global Fee</a></li>
+    <li id="m04" <c:if test="${m04 eq true}">class="active"</c:if>><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">Lixi Exchange Rate</a></li>
+    <li id="m08" <c:if test="${m04 eq true}">class="active"</c:if>><a href="<c:url value="/Administration/SystemFee/list"/>">Lixi Global Fee</a></li>
 </ul>
 <ul class="nav nav-sidebar">
     <li id="m05" <c:if test="${m05 eq true}">class="active"</c:if>><a href="<c:url value="/Administration/SystemUser/list"/>"><span class="text">User List</span></a></li>

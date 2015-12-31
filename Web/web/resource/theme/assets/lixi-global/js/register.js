@@ -8,6 +8,32 @@ LixiGlobal.RegisterPage = {
                 $('#btnShowRegister').remove();
             });
         }
+        $('#resetPasswordBtn').click(function(){
+            if($('#email4ResetPassword').isValidEmailAddress()){
+                $.ajax({
+                    url: PASSWORD_ASSISTANCE_PATH,
+                    type: "post",
+                    data: {email: $('#email4ResetPassword').val(), "_csrf":$('#csrfSpring').val()},
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR)
+                    {
+                        if(data.error === '0'){
+                            $('#resetPasswordBody').html('<p>We just sent an email with a link to easily reset your password to '+$('#email4ResetPassword').val()+'. Please make sure to check your spam folder, too.</p>')
+                            $('#headerForgotPassword').html('Check your email');
+                            $('#descForgotPassword').remove();
+                        }
+                        else{
+                            alert('Please check again your email address.')
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        alert(errorThrown);
+                    }
+                });
+                
+            }
+        });
         /**/
         $("#userSignInForm").validate({
             rules: {

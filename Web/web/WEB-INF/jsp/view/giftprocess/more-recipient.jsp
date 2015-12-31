@@ -1,4 +1,4 @@
-<template:Client htmlTitle="LiXi Global - Add Additional Recipient?">
+<template:Client htmlTitle="Lixi Global - Add Additional Recipient?">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>

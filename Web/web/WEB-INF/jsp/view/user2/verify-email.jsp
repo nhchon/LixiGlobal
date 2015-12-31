@@ -34,11 +34,11 @@
     </jsp:attribute>
 
     <jsp:body>
-        <section class="section-85-0">
-            <div class="container">
+        <section class=" main-section bg-default">
+            <div class="container post-wrapper">
                 <div class="row">
-                    <div class="col-lg-12">
-                        <h3>Verify email</h3>
+                    <div class="col-md-12">
+                        <h2 class="title">Verify email</h2>
                         <div>Before we continue, we need to verify your email address</div>
                         
                         <h5>Your email:</h5>

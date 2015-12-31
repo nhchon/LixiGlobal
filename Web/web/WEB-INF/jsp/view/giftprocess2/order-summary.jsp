@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Client htmlTitle="LiXi Global - Orde">
+<template:Client htmlTitle="Lixi Global - Orde">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>

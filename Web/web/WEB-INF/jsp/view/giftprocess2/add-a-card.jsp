@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Client htmlTitle="LiXi Global - Add A Card">
+<template:Client htmlTitle="Lixi Global - Add A Card">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>

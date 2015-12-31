@@ -47,15 +47,16 @@ public class CustomerSupportController {
     /**
      * 
      * @param model
+     * @param request 
      * @return 
      */
     @RequestMapping(value = "post", method = RequestMethod.GET)
-    public ModelAndView post(Map<String, Object> model, @RequestParam String method){
+    public ModelAndView post(Map<String, Object> model, HttpServletRequest request){
         
         /* */
         model.put("customerProblemForm", new CustomerProblemForm());
         
-        model.put("method", method);
+        model.put("method", request.getParameter("method"));
         /* */
         model.put("subjects", subjectService.findAll());
         

@@ -60,79 +60,79 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
 @WebController
 @RequestMapping("user")
 public class UserGeneralController {
-    
+
     private static final Logger log = LogManager.getLogger(UserGeneralController.class);
-    
+
     /* session bean - Login user */
     @Autowired
     private LoginedUser loginedUser;
-    
+
     @Autowired
     private JavaMailSender mailSender;
-    
+
     @Autowired
     private VelocityEngine velocityEngine;
-    
+
     @Inject
     private UserService userService;
-    
+
     @Inject
     private UserSecretCodeService uscService;
-    
+
     @Inject
     private MoneyLevelService mlService;
-    
+
     @Inject
     private UserMoneyLevelService umlService;
-    
+
     @Inject
     private LixiOrderService lxorderService;
-    
+
     @Autowired
     private LixiConfigService configService;
-    
+
     @Inject
     private ThreadPoolTaskScheduler taskScheduler;
-    
+
     /**
-     * 
+     *
      * @param model
-     * @return 
+     * @return
      */
     @RequestMapping(value = "signUp", method = RequestMethod.GET)
     public String signUp(Map<String, Object> model) {
 
         UserSignUpForm signUp = new UserSignUpForm();
         signUp.setAgree("yes");
-        
+
         model.put("userSignUpForm", signUp);
         //model.put("userSignUpForm", new UserSignUpForm());
-        
+
         model.put("userSignInForm", new UserSignInForm());
-        
+
         // forward action
         model.put("action", "join");
-        
+
         return "user2/register";
     }
-    
+
     /**
      * User submit form
-     * 
+     *
      * @param model
      * @param form
      * @param errors
      * @param request
-     * @return 
+     * @return
      */
     @RequestMapping(value = "signUp", method = RequestMethod.POST)
     public ModelAndView signUp(Map<String, Object> model,
             @Valid UserSignUpForm form, Errors errors, HttpServletRequest request) {
-        
+
         if (errors.hasErrors()) {
             return new ModelAndView("user2/signUp");
         }
-        
+
         User u = new User();
         u.setFirstName(form.getFirstName());
         u.setMiddleName(form.getMiddleName());
@@ -145,7 +145,7 @@ public class UserGeneralController {
         u.setCredentialsNonExpired(true);
         u.setEnabled(true);// enable
         u.setActivated(false);// but not active
-        
+
         // created date and by
         Date currentDate = Calendar.getInstance().getTime();
         u.setCreatedDate(currentDate);
@@ -155,32 +155,32 @@ public class UserGeneralController {
         String activeCode = UUID.randomUUID().toString();
 
         try {
-            
+
             // check if email already in use
             User temp = this.userService.findByEmail(u.getEmail(), Boolean.TRUE);
-            
+
             // Email address already in use
-            if(temp != null){
-                
+            if (temp != null) {
+
                 model.put("inUseEmail", form.getEmail());
                 //
                 return new ModelAndView("user2/email-in-use");
-                
+
             }
-            if(temp == null){
-                
+            if (temp == null) {
+
                 // get id returned
                 u = this.userService.save(u);
-                
+
                 // inser default money level
                 UserMoneyLevel uml = new UserMoneyLevel();
                 uml.setUser(u);
                 uml.setMoneyLevel(this.mlService.findByIsDefault());
                 uml.setModifiedDate(currentDate);
                 uml.setModifiedBy(LiXiConstants.SYSTEM_AUTO);
-                
+
                 this.umlService.save(uml);
-                
+
                 // inser activate code
                 UserSecretCode usc = new UserSecretCode();
                 usc.setUserId(u);
@@ -188,127 +188,123 @@ public class UserGeneralController {
                 usc.setCreatedDate(currentDate);
                 // activate code is expired after one day
                 usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
-                
+
                 this.uscService.save(usc);
             }
         } catch (ConstraintViolationException e) {
-            
+
             model.put("validationErrors", e.getConstraintViolations());
             return new ModelAndView("user2/signUp");
-            
+
         }
-        
+
         // SignUp process complete. Check oldEmail for verification
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
-            
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+
+            @SuppressWarnings({"rawtypes", "unchecked"})
             @Override
             public void prepare(MimeMessage mimeMessage) throws Exception {
-                
+
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(form.getEmail());
                 message.setCc(LiXiConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
                 message.setSubject("LiXi.Global - Confirm your registration");
                 message.setSentDate(Calendar.getInstance().getTime());
-                
-                Map model = new HashMap();	             
+
+                Map model = new HashMap();
                 model.put("user", userService.findByEmail(form.getEmail()));
                 // built the path
-                String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString());
+                String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/" + activeCode).build().toUriString());
                 model.put("regisConfirmPath", regisConfirmPath);
-                
+
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
-                   velocityEngine, "emails/registration-confirmation.vm", "UTF-8", model);
+                        velocityEngine, "emails/registration-confirmation.vm", "UTF-8", model);
                 message.setText(text, true);
-                
-              }
-            
-           };        
-        
+
+            }
+
+        };
+
         // send oldEmail
-        taskScheduler.execute(() -> mailSender.send(preparator));  
-        
+        taskScheduler.execute(() -> mailSender.send(preparator));
+
         model.put("email", form.getEmail());
         return new ModelAndView("user2/signUpComplete", model);
     }
-    
-    
+
     /**
-     * 
+     *
      * Registration confirmation
-     * 
+     *
      * @param code
-     * @return 
+     * @return
      */
     @RequestMapping(value = "registrationConfirm/{code}", method = RequestMethod.GET)
-    public ModelAndView registrationConfirm(@PathVariable String code){
+    public ModelAndView registrationConfirm(@PathVariable String code) {
 
         Map<String, Object> model = new HashMap<>();
-        
+
         // get user activation code
         UserSecretCode usc = this.uscService.findByCode(code);
-        
+
         // code is wrong
-        if(usc == null){
-            
+        if (usc == null) {
+
             model.put("codeWrong", 1);
-            
+
             return new ModelAndView("user2/regisConfirm", model);
-        }
-        else{
-            
+        } else {
+
             // check expired
             Date currentDate = Calendar.getInstance().getTime();
-            if(usc.getExpiredDate().before(currentDate)){
+            if (usc.getExpiredDate().before(currentDate)) {
 
                 // delete expired code
                 this.uscService.delete(usc.getId());
-                
+
                 model.put("codeExpired", 1);
 
                 return new ModelAndView("user2/regisConfirm", model);
-            }
-            else{
-                
+            } else {
+
                 // activate
                 this.userService.updateActivated(Boolean.TRUE, usc.getUserId().getId());
-                
+
                 // delete activated code
                 this.uscService.delete(usc.getId());
-                
+
                 // return
                 model.put("activeResult", 1);
                 return new ModelAndView("user2/regisConfirm", model);
             }
         }
     }
-    
+
     /**
-     * 
+     *
      * @param request
-     * @return 
+     * @return
      */
     @RequestMapping(value = "sendActiveCode", method = RequestMethod.POST)
-    public ModelAndView sendActiveCode(HttpServletRequest request){
-        
+    public ModelAndView sendActiveCode(HttpServletRequest request) {
+
         Map<String, Object> model = new HashMap<>();
-        
+
         String email = request.getParameter("email");
-        
+
         try {
-            
+
             User u = this.userService.findByEmail(email, Boolean.TRUE);
-            
+
             // if user already activated
-            if(u.getActivated()){
-                
+            if (u.getActivated()) {
+
                 // return
                 model.put("activeResult", 1);
                 return new ModelAndView("user2/regisConfirm", model);
-            }
-            else{
-            
+            } else {
+
                 String activeCode = UUID.randomUUID().toString();
                 Date currentDate = Calendar.getInstance().getTime();
                 // inser activate code
@@ -318,13 +314,13 @@ public class UserGeneralController {
                 usc.setCreatedDate(currentDate);
                 // activate code is expired after one day
                 usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
-                
+
                 this.uscService.save(usc);
 
                 // re-send active code
                 MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
-                    @SuppressWarnings({ "rawtypes", "unchecked" })
+                    @SuppressWarnings({"rawtypes", "unchecked"})
                     @Override
                     public void prepare(MimeMessage mimeMessage) throws Exception {
 
@@ -335,73 +331,73 @@ public class UserGeneralController {
                         message.setSubject("LiXi.Global - Resend activation code");
                         message.setSentDate(Calendar.getInstance().getTime());
 
-                        Map model = new HashMap();	             
+                        Map model = new HashMap();
                         model.put("user", u);
                         // built the path
-                        String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/"+activeCode).build().toUriString());
+                        String regisConfirmPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/registrationConfirm/" + activeCode).build().toUriString());
                         model.put("regisConfirmPath", regisConfirmPath);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
-                           velocityEngine, "emails/resend-active-code.vm", "UTF-8", model);
+                                velocityEngine, "emails/resend-active-code.vm", "UTF-8", model);
                         message.setText(text, true);
 
-                      }
+                    }
 
-                   };        
+                };
 
                 // send oldEmail
-                taskScheduler.execute(() -> mailSender.send(preparator));        
+                taskScheduler.execute(() -> mailSender.send(preparator));
                 // return page
                 model.put("email", u.getEmail());
                 return new ModelAndView("user2/signUpComplete", model);
             }
         } catch (Exception e) {
-            
+
             log.info(e.getMessage(), e);
-            
+
             // There is something wrong
             model.put("codeWrong", 1);
-            
+
             return new ModelAndView("user2/regisConfirm", model);
         }
-        
+
     }
-    
+
     /**
-     * 
+     *
      * User forgot password
-     * 
+     *
      * @param model
-     * @return 
+     * @return
      */
-    @RequestMapping(value = "passwordAssistance", method = RequestMethod.GET)
-    public String passwordAssistance(Map<String, Object> model){
-        
+    @RequestMapping(value = "passwordAssistance2", method = RequestMethod.GET)
+    public String passwordAssistance(Map<String, Object> model) {
+
         return "user2/passwordAssistance";
-        
+
     }
-    
+
     /**
-     * 
+     *
      * @param request
-     * @return 
+     * @return
      */
-    @RequestMapping(value = "passwordAssistance", method = RequestMethod.POST)
-    public ModelAndView sendPasswordAssistance(HttpServletRequest request){
-        
+    @RequestMapping(value = "passwordAssistance2", method = RequestMethod.POST)
+    public ModelAndView sendPasswordAssistance2(HttpServletRequest request) {
+
         // model
         Map<String, Object> model = new HashMap<>();
-        
+
         String captcha = request.getParameter("captcha");
         // captcha is correct
         log.info(captcha + " - " + request.getSession().getAttribute("captcha"));
-        if(captcha != null && captcha.equals((String)request.getSession().getAttribute("captcha"))){
-           
+        if (captcha != null && captcha.equals((String) request.getSession().getAttribute("captcha"))) {
+
             String email = request.getParameter("email");
             try {
-                
+
                 User u = this.userService.findByEmail(email, Boolean.TRUE);
-                
+
                 /* user is not null. Send oldEmail */
                 // update new active code
                 String activeCode = UUID.randomUUID().toString();
@@ -413,13 +409,13 @@ public class UserGeneralController {
                 usc.setCreatedDate(currentDate);
                 // activate code is expired after one day
                 usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
-                
+
                 this.uscService.save(usc);
 
                 // re-send active code
                 MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
-                    @SuppressWarnings({ "rawtypes", "unchecked" })
+                    @SuppressWarnings({"rawtypes", "unchecked"})
                     @Override
                     public void prepare(MimeMessage mimeMessage) throws Exception {
 
@@ -430,62 +426,139 @@ public class UserGeneralController {
                         message.setSubject("LiXi.Global - Reset Your Password");
                         message.setSentDate(Calendar.getInstance().getTime());
 
-                        Map model = new HashMap();	             
+                        Map model = new HashMap();
                         model.put("user", u);
                         // built the path
-                        String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword/"+activeCode).build().toUriString());
+                        String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword/" + activeCode).build().toUriString());
                         model.put("resetPasswordPath", resetPasswordPath);
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
-                           velocityEngine, "emails/reset-password.vm", "UTF-8", model);
+                                velocityEngine, "emails/reset-password.vm", "UTF-8", model);
                         message.setText(text, true);
 
-                      }
+                    }
 
-                   };        
+                };
 
                 // send oldEmail
-                taskScheduler.execute(() -> mailSender.send(preparator));        
+                taskScheduler.execute(() -> mailSender.send(preparator));
                 // complete
                 model.put("email", email);
-                
+
                 return new ModelAndView("user2/passwordAssistanceComplete", model);
-                
+
             } catch (Exception e) {
-                
+
                 log.info(e.getMessage(), e);
-                
+
             }
         }
-        
+
         // show error message
         model.put("passwordAssistance", false);
         //
         return new ModelAndView("user2/passwordAssistance", model);
-        
+
     }
-    
+
     /**
-     * 
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "passwordAssistance", method = RequestMethod.POST)
+    public ModelAndView sendPasswordAssistance(HttpServletRequest request) {
+
+        // model
+        Map<String, Object> model = new HashMap<>();
+
+        String email = request.getParameter("email");
+        try {
+
+            User u = this.userService.findByEmail(email, Boolean.TRUE);
+
+            /* user is not null. Send oldEmail */
+            // update new active code
+            String activeCode = UUID.randomUUID().toString();
+            Date currentDate = Calendar.getInstance().getTime();
+            // inser activate code
+            UserSecretCode usc = new UserSecretCode();
+            usc.setUserId(u);
+            usc.setCode(activeCode);
+            usc.setCreatedDate(currentDate);
+            // activate code is expired after one day
+            usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
+
+            this.uscService.save(usc);
+
+            // re-send active code
+            MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+                @SuppressWarnings({"rawtypes", "unchecked"})
+                @Override
+                public void prepare(MimeMessage mimeMessage) throws Exception {
+
+                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                    message.setTo(u.getEmail());
+                    message.setCc(LiXiConstants.YHANNART_GMAIL);
+                    message.setFrom("support@lixi.global");
+                    message.setSubject("LiXi.Global - Reset Your Password");
+                    message.setSentDate(Calendar.getInstance().getTime());
+
+                    Map model = new HashMap();
+                    model.put("user", u);
+                    // built the path
+                    String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/resetPassword/" + activeCode).build().toUriString());
+                    model.put("resetPasswordPath", resetPasswordPath);
+
+                    String text = VelocityEngineUtils.mergeTemplateIntoString(
+                            velocityEngine, "emails/reset-password.vm", "UTF-8", model);
+                    message.setText(text, true);
+
+                }
+
+            };
+
+            // send oldEmail
+            taskScheduler.execute(() -> mailSender.send(preparator));
+            
+            // complete
+            model.put("error", 0);
+
+        } catch (Exception e) {
+
+            log.info(e.getMessage(), e);
+
+            // show error message
+           model.put("error", 1);
+       
+        }
+
+        //
+        return new ModelAndView("user2/passwordAssistanceMessage", model);
+    }
+
+    /**
+     *
      * @param code
-     * @return 
+     * @return
      */
     @RequestMapping(value = "resetPassword/{code}", method = RequestMethod.GET)
-    public ModelAndView resetPassword(@PathVariable String code){
-        
+    public ModelAndView resetPassword(@PathVariable String code) {
+
         Map<String, Object> model = new HashMap<>();
         Date currentDate = Calendar.getInstance().getTime();
         // get reset-password code
         UserSecretCode usc = this.uscService.findByCode(code);
-        if(usc == null || usc.getExpiredDate().before(currentDate)){
+        if (usc == null || usc.getExpiredDate().before(currentDate)) {
 
             // show error message
             model.put("passwordAssistance", 1);
 
-            return new ModelAndView("user2/passwordAssistance");
+            //return new ModelAndView("user2/passwordAssistance");
+            return new ModelAndView(new RedirectView("/", true, true));
 
-        }
-        else{
+        } else {
 
             UserResetPasswordForm form = new UserResetPasswordForm();
             form.setCode(code);
@@ -495,172 +568,171 @@ public class UserGeneralController {
             return new ModelAndView("user2/resetPassword", model);
         }
     }
-    
+
     /**
-     * 
+     *
      * @param model
      * @param form
      * @param errors
-     * @return 
+     * @return
      */
     @RequestMapping(value = "resetPassword/{code}", method = RequestMethod.POST)
     public ModelAndView resetPassword(Map<String, Object> model,
             @Valid UserResetPasswordForm form, Errors errors) {
-        
+
         if (errors.hasErrors()) {
             return new ModelAndView("user2/resetPassword");
         }
-        
-        try{
-            
+
+        try {
+
             // check expired
             Date currentDate = Calendar.getInstance().getTime();
             // get reset-password code
             UserSecretCode usc = this.uscService.findByCode(form.getCode());
-            if(usc == null || usc.getExpiredDate().before(currentDate)){
-                
+            if (usc == null || usc.getExpiredDate().before(currentDate)) {
+
                 // show error message
                 model.put("passwordAssistance", 1);
-                
+
                 return new ModelAndView("user2/passwordAssistance");
-                
-            }
-            else{
+
+            } else {
                 // update password
                 this.userService.updatePassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()), usc.getUserId().getId());
 
                 // delete re-set code
                 this.uscService.delete(usc.getId());
             }
-            
+
         } catch (ConstraintViolationException e) {
-            
+
             // log
             log.info(e.getMessage(), e);
-            
+
             //
             model.put("validationErrors", e.getConstraintViolations());
             return new ModelAndView("user2/resetPassword");
-            
+
         }
-        
+
         return new ModelAndView("user2/resetPasswordComplete");
-        
+
     }
+
     /**
-     * 
+     *
      * @param model
-     * @return 
+     * @return
      */
     @RequestMapping(value = "signIn", method = RequestMethod.GET)
     public String signIn(Map<String, Object> model) {
 
         UserSignUpForm signUp = new UserSignUpForm();
         signUp.setAgree("yes");
-        
+
         model.put("userSignUpForm", signUp);
-        
+
         model.put("userSignInForm", new UserSignInForm());
-        
+
         // forward action
         model.put("action", "login");
-        
+
         return "user2/register";
     }
 
     /**
-     * 
+     *
      * @param model
      * @param form
      * @param errors
      * @param request
-     * @return 
+     * @return
      */
     @RequestMapping(value = "signIn", method = RequestMethod.POST)
     public ModelAndView signIn(Map<String, Object> model,
             @Valid UserSignInForm form, Errors errors, HttpServletRequest request) {
-        
+
         // prepare for signUp form 
         model.put("action", "login");
         model.put("userSignUpForm", new UserSignUpForm());
-        
+
         /* */
         if (errors.hasErrors()) {
             return new ModelAndView("user2/register");
         }
-        
+
         try {
             // 
             User u = this.userService.findByEmail(form.getEmail());
-            
+
             // email is not exist
-            if(u == null){
-                
+            if (u == null) {
+
                 model.put("signInFailed", 1);
                 return new ModelAndView("user2/register");
-                
+
             }
-            
+
             // check activation
-            if(!u.getActivated()){
-                
+            if (!u.getActivated()) {
+
                 model.put("notActivated", 1);
                 return new ModelAndView("user2/register");
-                
+
             }
-            
+
             // check enabled
-            if(!u.getEnabled()){
-                
+            if (!u.getEnabled()) {
+
                 model.put("notEnabled", 1);
                 return new ModelAndView("user2/register");
-                
+
             }
-            
+
             // check password
-            if(BCrypt.checkpw(form.getPassword(), u.getPassword())){
-                
+            if (BCrypt.checkpw(form.getPassword(), u.getPassword())) {
+
                 HttpSession session = request.getSession();
                 session.setAttribute(LiXiConstants.USER_LOGIN_EMAIL, u.getEmail());
                 session.setAttribute(LiXiConstants.USER_LOGIN_FIRST_NAME, u.getFirstName());
-                
+
                 // change session id
                 request.changeSessionId();
-                
+
                 //
                 LiXiUtils.setLoginedUser(loginedUser, u, this.configService.findAll());
-                
+
                 // check the order that unfinished
                 LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, LiXiConstants.LIXI_ORDER_UNFINISHED);
-                if(order != null){
+                if (order != null) {
                     // continue to finish this order
                     request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
                 }
-            }
-            else{
-                
+            } else {
+
                 model.put("signInFailed", 1);
                 return new ModelAndView("user2/register");
-                
+
             }
         } catch (ConstraintViolationException e) {
-            
+
             model.put("validationErrors", e.getConstraintViolations());
             return new ModelAndView("user2/register");
-            
+
         }
-        
+
         RedirectView r = new RedirectView("/gifts/chooseCategory", true, true);
         r.setExposeModelAttributes(false);
         return new ModelAndView(r);
-        
+
         //return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true), null);
     }
-    
+
     /**
-     * 
+     *
      * @param session
-     * @return 
+     * @return
      */
     @RequestMapping(value = "signOut", method = RequestMethod.GET)
     public ModelAndView signOut(HttpSession session) {
@@ -669,49 +741,48 @@ public class UserGeneralController {
         //
         return new ModelAndView(new RedirectView("/", true, true));
     }
-    
+
     /**
-     * 
+     *
      * verify the email
-     * 
-     * @param inUseEmail 
-     * @param request 
-     * @return 
+     *
+     * @param inUseEmail
+     * @param request
+     * @return
      */
     @RequestMapping(value = "verifyThisEmail", method = RequestMethod.POST)
-    public ModelAndView verifyThisEmail(@RequestParam String inUseEmail , HttpServletRequest request){
-        
+    public ModelAndView verifyThisEmail(@RequestParam String inUseEmail, HttpServletRequest request) {
+
         //MapUtils.debugPrint(System.out, "model", model);
-        
         // put into session
         request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL, inUseEmail);
-        
+
         //
         Map<String, Object> model = new HashMap<>();
         model.put("inUseEmail", inUseEmail);
         //
         return new ModelAndView("user2/verify-email", model);
     }
-    
+
     /**
-     * 
+     *
      * Send verification email
-     * 
+     *
      * @param model
      * @param captcha
-     * @param request 
-     * @return 
+     * @param request
+     * @return
      */
     @RequestMapping(value = "verify/sendEmail", method = RequestMethod.POST)
-    public ModelAndView verifyThisEmail(Map<String, Object> model, @RequestParam String captcha, HttpServletRequest request){
-        
-        String inUseEmail = (String)request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
-        
-        if(captcha != null && captcha.equals((String)request.getSession().getAttribute("captcha"))){
-            
+    public ModelAndView verifyThisEmail(Map<String, Object> model, @RequestParam String captcha, HttpServletRequest request) {
+
+        String inUseEmail = (String) request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
+
+        if (captcha != null && captcha.equals((String) request.getSession().getAttribute("captcha"))) {
+
             // captcha is correct
             User u = this.userService.findByEmail(inUseEmail, Boolean.TRUE);
-            
+
             /* store secret code into database */
             String activeCode = UUID.randomUUID().toString();
             Date currentDate = Calendar.getInstance().getTime();
@@ -725,11 +796,11 @@ public class UserGeneralController {
             usc.setExpiredDate(DateUtils.addDays(currentDate, 1));
 
             this.uscService.save(usc);
-            
+
             //
             MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
-                @SuppressWarnings({ "rawtypes", "unchecked" })
+                @SuppressWarnings({"rawtypes", "unchecked"})
                 @Override
                 public void prepare(MimeMessage mimeMessage) throws Exception {
 
@@ -741,85 +812,83 @@ public class UserGeneralController {
                     message.setSubject("LiXi.Global - Verify your email");
                     message.setSentDate(Calendar.getInstance().getTime());
 
-                    Map model = new HashMap();	             
+                    Map model = new HashMap();
                     model.put("user", u);
                     // built the path
-                    String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/verifyEmail/"+activeCode).build().toUriString());
+                    String resetPasswordPath = LiXiUtils.remove8080(ServletUriComponentsBuilder.fromContextPath(request).path("/user/verifyEmail/" + activeCode).build().toUriString());
                     model.put("newAccountPath", resetPasswordPath);
 
                     String text = VelocityEngineUtils.mergeTemplateIntoString(
-                       velocityEngine, "emails/newaccount-oldemail.vm", "UTF-8", model);
+                            velocityEngine, "emails/newaccount-oldemail.vm", "UTF-8", model);
                     message.setText(text, true);
 
-                  }
+                }
 
-               };        
+            };
 
             // send oldEmail
-            taskScheduler.execute(() -> mailSender.send(preparator));        
-            
-        }
-        else{
-            
+            taskScheduler.execute(() -> mailSender.send(preparator));
+
+        } else {
+
             return new ModelAndView("user2/verify-email", model);
         }
         // remove LIXI_IN_USE_EMAIL in session
         request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
-        
+
         //
         model.put("inUseEmail", inUseEmail);
         return new ModelAndView("user2/alert-verify-email", model);
     }
-    
+
     /**
-     * 
-     * 
-     * @param model 
-     * @param code 
-     * @param request 
-     * 
-     * @return 
+     *
+     *
+     * @param model
+     * @param code
+     * @param request
+     *
+     * @return
      */
     @RequestMapping(value = "verifyEmail/{code}", method = RequestMethod.GET)
-    public ModelAndView verifyTheCode(Map<String, Object> model, @PathVariable String code, HttpServletRequest request){
-        
+    public ModelAndView verifyTheCode(Map<String, Object> model, @PathVariable String code, HttpServletRequest request) {
+
         Date currentDate = Calendar.getInstance().getTime();
         UserSecretCode usc = this.uscService.findByCode(code);
-        if(usc == null || usc.getExpiredDate().before(currentDate)){
+        if (usc == null || usc.getExpiredDate().before(currentDate)) {
 
             // show error message
             model.put("wrongSecretCode", 1);
 
             return new ModelAndView("user2/verify-email-failed");
 
-        }
-        else{
-            
+        } else {
+
             // disable the current user
             this.userService.updateEnaled(Boolean.FALSE, usc.getUserId().getId());
-            
+
             // store email
             request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL, usc.getUserId().getEmail());
-            
+
             // store secret code into session and delete after user created account
             request.getSession().setAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE, code);
-            
+
             return new ModelAndView(new RedirectView("/user/signUpWithExistingEmail", true, true));
-        }        
+        }
     }
-    
+
     /**
-     * 
+     *
      * @param model
-     * @param request 
-     * @return 
+     * @param request
+     * @return
      */
     @RequestMapping(value = "signUpWithExistingEmail", method = RequestMethod.GET)
     public ModelAndView signUpWithExistingEmail(Map<String, Object> model, HttpServletRequest request) {
 
         // get email from session
-        String inUseEmail = (String)request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
-        
+        String inUseEmail = (String) request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
+
         UserSignUpWithOutEmailForm form = new UserSignUpWithOutEmailForm();
 
         form.setEmail(inUseEmail);
@@ -829,28 +898,28 @@ public class UserGeneralController {
 
         return new ModelAndView("user2/signUpWithOutEmail");
     }
-    
+
     /**
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @param model
      * @param form
      * @param errors
      * @param request
-     * @return 
+     * @return
      */
     @RequestMapping(value = "signUpWithExistingEmail", method = RequestMethod.POST)
     public ModelAndView signUpWithExistingEmail(Map<String, Object> model,
             @Valid UserSignUpWithOutEmailForm form, Errors errors, HttpServletRequest request) {
-        
+
         if (errors.hasErrors()) {
-            return new ModelAndView("user2/signUp");
+            return new ModelAndView("user2/signUpWithOutEmail");
         }
-        
+
         // get email from session
-        String inUseEmail = (String)request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
-        
+        String inUseEmail = (String) request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
+
         User u = new User();
         u.setFirstName(form.getFirstName());
         u.setMiddleName(form.getMiddleName());
@@ -863,14 +932,14 @@ public class UserGeneralController {
         u.setCredentialsNonExpired(true);
         u.setEnabled(true);// enable
         u.setActivated(true);// active
-        
+
         // created date and by
         Date currentDate = Calendar.getInstance().getTime();
         u.setCreatedDate(currentDate);
         u.setCreatedBy(u.getEmail());
 
         try {
-                
+
             u = this.userService.save(u);
 
             // inser default money level
@@ -881,23 +950,23 @@ public class UserGeneralController {
             uml.setModifiedBy(LiXiConstants.SYSTEM_AUTO);
 
             this.umlService.save(uml);
-                
+
         } catch (ConstraintViolationException e) {
-            
+
             model.put("validationErrors", e.getConstraintViolations());
             return new ModelAndView("user2/signUpWithOutEmail");
-            
+
         }
-        
+
         // delete secret code
-        this.uscService.deleteByCode((String)request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE));
-        
+        this.uscService.deleteByCode((String) request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE));
+
         // remove session
         request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
         request.getSession().removeAttribute(LiXiConstants.LIXI_IN_USE_EMAIL_SECRET_CODE);
-        
+
         //
         return new ModelAndView("user2/signUpWithOutEmailComplete", model);
     }
-    
+
 }

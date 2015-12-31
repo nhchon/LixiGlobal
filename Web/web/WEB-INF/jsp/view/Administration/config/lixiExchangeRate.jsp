@@ -117,7 +117,7 @@
             <div class="col-lg-4 ">
                 <ul class="breadcrumb">
                     <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-                    <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">LiXi Exchange Rates</a></li>
+                    <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">Lixi Exchange Rates</a></li>
                 </ul>
             </div>
         </div>

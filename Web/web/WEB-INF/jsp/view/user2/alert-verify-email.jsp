@@ -9,10 +9,10 @@
     </jsp:attribute>
 
     <jsp:body>
-        <section class="section-85-0">
-            <div class="container">
+        <section class=" main-section bg-default">
+            <div class="container post-wrapper">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-md-12">
                         <p>An email was sent to ${inUseEmail}. In order to complete the e-mail
                         verification process, you must click on the link in the e-mail we sent you</p>
                         

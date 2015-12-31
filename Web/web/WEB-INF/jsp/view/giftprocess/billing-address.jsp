@@ -1,4 +1,4 @@
-<template:Client htmlTitle="LiXi Global - Blank Sample Page">
+<template:Client htmlTitle="Lixi Global - Blank Sample Page">
 
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/billing-address.css"/>" type="text/css" />

@@ -1,4 +1,4 @@
-<template:Client htmlTitle="LiXi Global - Registration Confirmation">
+<template:Client htmlTitle="Lixi Global - Registration Confirmation">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>

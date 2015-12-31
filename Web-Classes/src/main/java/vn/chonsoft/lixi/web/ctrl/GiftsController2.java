@@ -345,10 +345,10 @@ public class GiftsController2 {
             
             if(selectedCatId == null){
                 
-                return new ModelAndView(new RedirectView("/type/" + recId.toString(), true, true));
+                return new ModelAndView(new RedirectView("/gifts/type/" + recId.toString(), true, true));
             }
             else{
-                return new ModelAndView(new RedirectView("/type/" + recId.toString() + "/" + selectedCatId.toString(), true, true));
+                return new ModelAndView(new RedirectView("/gifts/type/" + recId.toString() + "/" + selectedCatId.toString(), true, true));
             }
         }
     }

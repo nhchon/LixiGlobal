@@ -1,7 +1,6 @@
 <template:Client htmlTitle="Lixi Global - Blank Sample Page">
 
     <jsp:attribute name="extraHeadContent">
-        <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/registration.css"/>" type="text/css" />
         <style>
             .progress{
                 margin-bottom: 0px;
@@ -10,7 +9,7 @@
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
-        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixiglobal/js/plugins/pwstrength/pwstrength.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/pwstrength/pwstrength.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
             var FIRST_NAME_MESSAGE = '<spring:message code="validate.user.firstName"/>';
@@ -77,11 +76,10 @@
 
     <jsp:body>
         <!-- Page Content -->
-        <section id="registration">
-            <div class="container">
+        <section class=" main-section bg-default">
+            <div class="container post-wrapper">
                 <div class="row">
-                    <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
-                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+                    <div class="col-md-12">
                     <c:if test="${validationErrors != null}"><div class="msg msg-error">
                         <ul style="margin-bottom: 0px;">
                             <c:forEach items="${validationErrors}" var="error">
@@ -98,8 +96,7 @@
                         <spring:message code="message.password_format" var="passwordMessage"/>
                         <%-- // End place holder message --%>
                         <form:form class="form-horizontal" modelAttribute="userSignUpWithOutEmailForm">
-                            <fieldset>
-                                <legend><spring:message code="message.registration"/></legend>
+                                <h2 class="title"><spring:message code="message.registration"/></h2>
                                 <div class="desc">
                                     <spring:message code="signup.new_to_lixi"/>
                                 </div>
@@ -111,15 +108,15 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <form:input class="form-control" path="firstName" placeholder="${firstNameMessage}"/>
-                                                <span class="help-block errors "><form:errors path="firstName" /></span>
+                                                <div class="has-error"><form:errors path="firstName" cssClass="help-block" element="div"/></div>
                                             </div>
                                             <div class="col-lg-4">
                                                 <form:input class="form-control" path="middleName" placeholder="${middleMessage}"/>
-                                                <span class="help-block errors"><form:errors path="middleName" /></span>
+                                                <div class="has-error"><form:errors path="middleName" cssClass="help-block" element="div"/></div>
                                             </div>
                                             <div class="col-lg-4">
                                                 <form:input path="lastName" class="form-control" placeholder="${lastNameMessage}"/>
-                                                <span class="help-block errors"><form:errors path="lastName" /></span>
+                                                <div class="has-error"><form:errors path="lastName" cssClass="help-block" element="div"/></div>
                                             </div>
                                         </div>
                                     </div>
@@ -129,7 +126,7 @@
                                         <label class="control-label"><spring:message code="signup.my_email"/></label>
                                     </div>
                                     <div class="col-lg-8 col-md-8">
-                                        <b>${userSignUpWithOutEmailForm.email}</b>
+                                        <form:input path="email" class="form-control" readonly="true"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -137,7 +134,7 @@
                                         <label class="control-label"><spring:message code="signup.type_again"/></label>
                                     </div>
                                     <div class="col-lg-8 col-md-8">
-                                        <b>${userSignUpWithOutEmailForm.confEmail}</b>
+                                        <form:input path="confEmail" class="form-control" readonly="true"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -157,7 +154,7 @@
                                     </div>
                                     <div class="col-lg-8 col-md-8">
                                         <form:input type="password" class="form-control" path="password" placeholder="${passwordMessage}"/>
-                                        <span class="help-block errors"><form:errors path="password" /></span>
+                                        <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
                                         <div class="pwstrength_viewport_progress"></div>
                                     </div>
                                 </div>
@@ -167,22 +164,21 @@
                                     </div>
                                     <div class="col-lg-8 col-md-8">
                                         <form:input type="password" class="form-control" path="confPassword" placeholder="${passwordMessage}"/>
-                                        <span class="help-block errors"><form:errors path="confPassword" /></span>
+                                        <div class="has-error"><form:errors path="confPassword" cssClass="help-block" element="div"/></div>
                                     </div>
                                 </div>
                                 <div class="form-group right">
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-4 col-md-4"></div>
+                                    <div class="col-lg-8">
                                         <button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="signup.register"/></button>
                                     </div>
                                 </div>
-                            </fieldset>
                         </form:form>
                         <br />
                         <div id="desc">
-                            Be creating account, you agree to <a href="javascript:void(0)">lixi.global's Conditions of Use and Privacy Notice</a>.
+                            <spring:message code="regis.agree" arguments="${termsUrl}, ${privacyUrl}"></spring:message>
                         </div>
                     </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
                 </div>
             </div>
         </section>
