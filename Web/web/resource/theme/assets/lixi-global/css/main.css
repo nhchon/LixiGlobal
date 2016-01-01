@@ -475,7 +475,9 @@ h2, .h2 {
     color: #fff;
     text-transform: uppercase;
 }
-.gift-item-text-on-right{}
+.gift-item-text-on-right{
+    position: relative;
+}
 .gift-item-text-on-left{}
 
 /* gift category */
@@ -1243,22 +1245,47 @@ textarea{
         height: 185px;
         width: 40%;
     }
-    .gift-item-text-on-right .gift-item-col-thumb {
+
+    /*.gift-item-text-on-right .gift-item-col-thumb {
         float: left;
         width: 80%;
+    }*/
+    .gift-item-text-on-right .gift-item-col-thumb {
+        float: none;
+        width: 85%;
     }
+    .gift-item-text-on-right .gift-item-col-content {
+        display: block;
+        float: none;
+        height: 185px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 185px;
+    }
+    /*
     .gift-item-text-on-right .gift-item-col-content {
         display: block;
         float: right;
         height: 185px;
         width: 20%;
     }
+    */
+    .gift-item-text-on-right.gift-item-text-full .gift-item-col-content {
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 185px;
+    }
+    /*
     .gift-item-text-on-right.gift-item-text-full .gift-item-col-content {
         display: block;
         float: right;
         height: 185px;
         width: 15%;
     }
+    */
     .gift-item.gift-item-text-on-left .gift-item-col-content .gift-arrow-item-top {
         background: transparent url("../images/icon-arrow-right.png") no-repeat scroll right center;
         height: 100%;
