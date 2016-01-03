@@ -78,7 +78,7 @@
                                                 <strong class="receiver-order-gift-price-left">Lixi handing fee</strong><span class="receiver-order-gift-price-right">USD <fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/> (<fmt:formatNumber value="${LIXI_HANDLING_FEE}" pattern="###,###.##"/> per / person )</span>
                                             </div>
                                             <div>
-                                                <strong class="receiver-order-gift-price-left text-bold">Total</strong><strong class="receiver-order-gift-price-right text-bold">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
+                                                <strong class="receiver-order-gift-price-left text-bold" style="color: #000">Total</strong><strong class="receiver-order-gift-price-right text-bold" style="color: #000">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
                                             </div>
                                         </div>
                                                 <h4 class="text-color-link">Payment method <a href="<c:url value="/checkout/paymentMethods"/>" class="edit-info-event"></a></h4>
@@ -109,19 +109,18 @@
                                         <div class="row">
                                             <div class="col-md-4">
 
-                                                <span class="receiver-order-item-left">
-                                                    <input name="setting" value="0" type="radio" <c:if test="${LIXI_ORDER.setting eq 0}"> checked="checked"</c:if>  class="custom-checkbox-input"/>
-                                                    Gift only
-                                                </span>
-                                                <span class="receiver-order-item-left">
-                                                    ( Do not allow refund to receiver )
-                                                </span>
+                                                <div class="checkbox">
+                                                    <label style="padding-left: 0px;"><input name="setting" value="0" type="radio" <c:if test="${LIXI_ORDER.setting eq 0}"> checked="checked"</c:if>  class="custom-checkbox-input" style="margin-top: 6px;"/>
+                                                    Gift only ( Do not allow refund to receiver )
+                                                    </label>
+                                                </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <span class="receiver-order-item-left">
-                                                    <input name="setting" value="1" type="radio" <c:if test="${LIXI_ORDER.setting eq 1}">checked="checked"</c:if> class="custom-checkbox-input"/>
+                                                <div class="checkbox">
+                                                    <label><input name="setting" value="1" type="radio" <c:if test="${LIXI_ORDER.setting eq 1}">checked="checked"</c:if> class="custom-checkbox-input" style="margin-top: 6px;"/>
                                                     Allow refund to receiver if so choise
-                                                </span>
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                         <p>( Receiver will be notified right away! Delivery varies: settlement will be 24 to 72 hours. )</p>

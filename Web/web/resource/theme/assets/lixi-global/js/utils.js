@@ -17,7 +17,7 @@ $.fn.positionOn = function(element) {
 
         target.css({
           position: 'absolute',
-          opacity:0.9,
+          opacity:0.7,
           zIndex:   99999,
           top:      y, 
           left:     x,
@@ -82,6 +82,7 @@ $.fn.isValidPassword = function(){
     var regex = /\d/g;
     var hasNumber = regex.test(this.val());
     // only normal chars
+    // http://stackoverflow.com/questions/13840143/jquery-check-if-special-characters-exists-in-string
     var normalChars = /^[a-zA-Z0-9- ]*$/.test(this.val());
     
     return (isAtLeast8 && hasUppercase && hasNumber && !normalChars);;
@@ -99,6 +100,10 @@ function isValidEmailAddress(emailAddress) {
     
 };
 
+function isInteger(val){
+    
+    return Math.floor(val) == val && $.isNumeric(val);
+}
 /**
  * 
  * check password is At least 8 characters with Capital
@@ -108,13 +113,19 @@ function isValidEmailAddress(emailAddress) {
  */
 function isValidPassword(password){
     
-    if(password==null || password=='')
+    if(password === '')
         return false;
-    
+
     var isAtLeast8 = password.length >= 8;
     var hasUppercase = !(password === password.toLowerCase());
+    // has number
+    var regex = /\d/g;
+    var hasNumber = regex.test(password);
+    // only normal chars
+    // http://stackoverflow.com/questions/13840143/jquery-check-if-special-characters-exists-in-string
+    var normalChars = /^[a-zA-Z0-9- ]*$/.test(password);
     
-    return (isAtLeast8 && hasUppercase);;
+    return (isAtLeast8 && hasUppercase && hasNumber && !normalChars);;
 }
 
 function loadTotalCurrentOrder() {

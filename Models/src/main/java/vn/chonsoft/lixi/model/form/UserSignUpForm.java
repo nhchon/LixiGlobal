@@ -16,7 +16,7 @@ import vn.chonsoft.lixi.validations.Password;
  * @author chonnh
  */
 @FieldMatch(first = "password", second = "confPassword", message = "{validate.user.passwordConf}")
-@FieldMatch(first = "email", second = "confEmail", message = "{validate.user.emailConf}")
+//@FieldMatch(first = "email", second = "confEmail", message = "{validate.user.emailConf}")
 public class UserSignUpForm{
     
     @NotBlank(message = "{validate.user.firstName}")
@@ -42,6 +42,7 @@ public class UserSignUpForm{
     @Password(message = "{message.password_format}")
     private String confPassword;
     
+    @NotNull(message ="validate.not_null")
     private String phone;
 
     @NotNull(message ="validate.not_null")

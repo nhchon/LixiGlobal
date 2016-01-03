@@ -1,4 +1,4 @@
-<template:Client htmlTitle="Lixi Global - Blank Sample Page">
+<template:Client htmlTitle="Lixi Global - Sign Up Page">
 
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixiglobal/css/registration.css"/>" type="text/css" />
@@ -161,7 +161,7 @@
                                         <label class="control-label"><spring:message code="signup.my_mobile"/></label>
                                     </div>
                                     <div class="col-lg-8 col-md-8">
-                                        <form:input type="text" class="form-control" path="phone" placeholder="Phone"/>
+                                        <form:input  class="form-control bfh-phone" data-format="+1 (ddd) ddd-dddd" path="phone" placeholder="Phone"/>
                                     </div>
                                 </div>
                                 <div class="desc">
@@ -195,7 +195,7 @@
                         </form:form>
                         <br />
                         <div id="desc">
-                            Be creating account, you agree to <a href="javascript:void(0)">lixi.global's Conditions of Use and Privacy Notice</a>.
+                            Be creating account, you agree to <a href="<c:url value="/support/terms"/>">lixi.global's Conditions of Use</a> and <a href="<c:url value="/support/privacy"/>">Privacy Notice</a>.
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>

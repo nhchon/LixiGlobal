@@ -12,6 +12,8 @@
             var AJAX_LOAD_PRODUCTS_PATH = '<c:url value="/gifts/ajax/products"/>';
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
             var TOTAL_PAGES = ${PAGES.totalPages};
+            // maximum is 2 pages
+            if(TOTAL_PAGES > 2) TOTAL_PAGES = 2;
         </script>
     </jsp:attribute>
 
@@ -29,7 +31,7 @@
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">
                                 <span class="des-box">Your locked-in exchange rate</span>
-                                <span class="amount-box">USD 1 = <strong>VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></strong> VND</span>
+                                <span class="amount-box">USD 1 = <strong><fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></strong> VND</span>
                             </button>
                             <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
                                 <span class="flag flag-vn"></span>

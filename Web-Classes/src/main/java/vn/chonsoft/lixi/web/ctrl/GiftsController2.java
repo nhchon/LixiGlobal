@@ -35,8 +35,6 @@ import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
-import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
-import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
@@ -521,4 +519,38 @@ public class GiftsController2 {
         return new ModelAndView(new RedirectView("/gifts/order-summary", true, true));
         
     }
+    
+    /**
+     * 
+     * @param model
+     * @param giftId
+     * @param request 
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "change/{giftId}", method = RequestMethod.GET)
+    public ModelAndView changeTheGift(Map<String, Object> model, @PathVariable Long giftId, HttpServletRequest request){
+        
+        // check the order
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if(orderId == null){
+            
+            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+        }
+        else{
+            
+            //LixiOrder order = this.lxorderService.findById(orderId);
+            LixiOrderGift gift = this.lxogiftService.findById(giftId);
+            Long recId = gift.getRecipient().getId();
+            Integer catId = gift.getCategory().getId();
+            if(gift.getOrder().getId().equals(orderId)){
+                
+                this.lxogiftService.delete(giftId);
+                
+            }
+            
+            return new ModelAndView(new RedirectView("/type/" + recId + "/" + catId, true, true));
+        }
+    }
+    
 }

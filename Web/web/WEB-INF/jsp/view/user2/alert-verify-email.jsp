@@ -18,7 +18,7 @@
                         
                         <p>
                             Be sure to check your spam filters if you can't find the e-mail in your in-box. You may also 
-                            <a href="#">contact customer service</a> for help.
+                            <a href="<c:url value="/support/post?method=Email"/>">contact customer service</a> for help.
                         </p>
                     </div>
                 </div>

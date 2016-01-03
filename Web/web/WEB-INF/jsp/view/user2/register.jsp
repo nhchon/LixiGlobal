@@ -4,19 +4,19 @@
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
-        <script src="<c:url value="/resource/theme/assets/lixi-global/js/register.js"/>"></script>
         <script type="text/javascript">
             var FIRST_NAME_MESSAGE = '<spring:message code="validate.user.firstName"/>';
             var LAST_NAME_MESSAGE = '<spring:message code="validate.user.lastName"/>';
             var EMAIL_MESSAGE = '<spring:message code="validate.email_required"/>';
             var PASS_MESSAGE = '<spring:message code="validate.password_required"/>';
-            var PASSWORD_ASSISTANCE_PATH = '<c:url value="/user/passwordAssistance2"/>';
+            var PHONE_REQUIRED = '<spring:message code="validate.phone_required" text="The phone number is required."/>';
+            var PASSWORD_ASSISTANCE_PATH = '<c:url value="/user/passwordAssistance"/>';
             
             jQuery(document).ready(function () {
                 LixiGlobal.RegisterPage.init();
             })
-            
         </script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/register.js"/>"></script>
     </jsp:attribute>
 
     <jsp:body>
@@ -27,7 +27,7 @@
                         <div class="col-md-6 col-height border-right">
                             <div class="login-wrapper">
                                 <c:if test="${validationErrors != null}">
-                                    <div class="alert-message">
+                                    <div class="alert-message" style="min-height:45px;">
                                         <h4 class="text-red">There was problem</h4>
                                         <c:forEach items="${validationErrors}" var="error">
                                             <div><c:out value="${error.message}" /></div>
@@ -35,19 +35,19 @@
                                     </div>
                                 </c:if>
                                 <c:if test="${notActivated eq 1}">
-                                    <div class="alert-message">
+                                    <div class="alert-message" style="min-height:45px;">
                                         <c:url value="/user/registrationConfirm/not-activated-yet" var="registrationConfirm"/>
                                         <spring:message code="signin.not_activated" arguments="${registrationConfirm}"/>
                                     </div>
                                 </c:if>
                                 <c:if test="${notEnabled eq 1}">
-                                    <div class="alert-message">
+                                    <div class="alert-message" style="min-height:45px;">
                                         <spring:message code="signin.not_enabled"/>
                                     </div>
                                 </c:if>
                                 <c:if test="${signInFailed eq 1 || param.signInFailed eq 1}">
                                     <div class="alert alert-warning alert-dismissible bg-white" role="alert">
-                                        <div class="alert-message">
+                                        <div class="alert-message" style="min-height:45px;">
                                             <spring:message code="signin.failed"/>
                                         </div>
                                     </div>
@@ -115,11 +115,11 @@
                                             <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input type="password" class="form-control" path="confPassword" placeholder="Retype your password"/>
+                                            <form:input type="password" class="form-control" path="confPassword" placeholder="Please retype your password"/>
                                             <div class="has-error"><form:errors path="confPassword" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input type="text" class="form-control" path="phone" placeholder="Phone"/>
+                                            <form:input class="form-control bfh-phone" data-format="+1 (ddd) ddd-dddd" path="phone" placeholder="Phone"/>
                                             <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="checkbox">

@@ -12,6 +12,12 @@
             var DELETE_GIFT_PATH = '<c:url value="/gifts/delete/gift"/>';
             var DELETE_TOPUP_PATH = '<c:url value="/topUp/delete"/>';
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
+            var CONFIRM_CHANGE_MESSAGE = '<spring:message code="message.confirm_to_delete" text="This item will be deleted. Would you like to continue?"/>';
+            function change(giftId){
+                if(confirm(CONFIRM_CHANGE_MESSAGE)){
+                    location.href='<c:url value="/gifts/change/"/>' + giftId;
+                }
+            }
         </script>
     </jsp:attribute>
 
@@ -73,7 +79,7 @@
                                                 <div><strong>VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
-                                                <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/gifts/type/${entry.recipient.id}/${g.category.id}"/>';"><spring:message code="message.change"/></button></p>
+                                                <p><button type="button" class="btn btn-default text-uppercase" onclick="change(${g.id});"><spring:message code="message.change"/></button></p>
                                                 <p> <button type="button" class="btn btn-primary text-uppercase" onclick="deleteGiftOnSummary(${g.id})"><spring:message code="message.delete"/></button></p>
                                             </td>
                                         </tr>
