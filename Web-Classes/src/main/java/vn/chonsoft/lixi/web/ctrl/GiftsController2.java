@@ -549,7 +549,7 @@ public class GiftsController2 {
                 
             }
             
-            return new ModelAndView(new RedirectView("/type/" + recId + "/" + catId, true, true));
+            return new ModelAndView(new RedirectView("/gifts/type/" + recId + "/" + catId, true, true));
         }
     }
     

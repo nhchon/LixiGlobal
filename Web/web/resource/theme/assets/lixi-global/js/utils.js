@@ -17,7 +17,7 @@ $.fn.positionOn = function(element) {
 
         target.css({
           position: 'absolute',
-          opacity:0.7,
+          opacity:0.5,
           zIndex:   99999,
           top:      y, 
           left:     x,

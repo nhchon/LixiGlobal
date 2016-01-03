@@ -33,6 +33,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
@@ -45,6 +46,7 @@ import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.CountryService;
 import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
@@ -87,8 +89,8 @@ public class CheckOutController2 {
     @Autowired
     private LixiOrderService lxorderService;
 
-    //@Autowired
-    //private LixiOrderGiftService lxogiftService;
+    @Autowired
+    private LixiOrderGiftService lxogiftService;
 
     //@Autowired
     //private RecipientService recService;
@@ -541,5 +543,101 @@ public class CheckOutController2 {
         //
         return new ModelAndView("giftprocess2/thank-you");
     }
+
+    @UserSecurityAnnotation
+    @RequestMapping(value = "change/{giftId}/{quantity}", method = RequestMethod.GET)
+    public ModelAndView change(Map<String, Object> model, @PathVariable Long giftId, @PathVariable Integer quantity, HttpServletRequest request) {
+        
+        LixiOrder order = null;
+        // order already created
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if (orderId != null) {
+
+            order = this.lxorderService.findById(orderId);
+        } else {
+
+            // order not exist, go to Choose recipient page
+            return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
+        }
+        
+        // calculate fee
+        LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
+                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+
+        return new ModelAndView("giftprocess2/place-order");
+    }
     
+    /**
+     * 
+     * @param giftId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "delete/gift/{giftId}", method = RequestMethod.GET)
+    public ModelAndView delete(Map<String, Object> model, @PathVariable Long giftId, HttpServletRequest request) {
+        
+        // check the order
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if(orderId == null){
+            
+            model.put("error", 1);
+            model.put("message", "gift.wrong_with_value");
+        }
+        else{
+            
+            //LixiOrder order = this.lxorderService.findById(orderId);
+            LixiOrderGift gift = this.lxogiftService.findById(giftId);
+            Long recId = gift.getRecipient().getId();
+            Integer catId = gift.getCategory().getId();
+            if(gift.getOrder().getId().equals(orderId)){
+                
+                this.lxogiftService.delete(giftId);
+                
+            }
+            
+            model.put("error", 0);
+        }
+        
+        LixiOrder order = this.lxorderService.findById(orderId);
+        // calculate fee
+        LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
+                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+        
+        return new ModelAndView("ajax/exceed");
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "jump2", method = RequestMethod.GET)
+    public ModelAndView jump2(Map<String, Object> model, HttpServletRequest request){
+        
+        LixiOrder order = null;
+        // check order already created
+        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
+
+            Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+
+            order = this.lxorderService.findById(orderId);
+
+        }
+        
+        if(order == null){
+            
+            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+        }
+        else{
+            if(order.getCard() != null || order.getBankAccount()!=null){
+                return new ModelAndView(new RedirectView("/checkout/place-order", true, true));
+            }
+            else{
+                return new ModelAndView(new RedirectView("/gifts/order-summary", true, true));
+            }
+        }
+    }    
 }
