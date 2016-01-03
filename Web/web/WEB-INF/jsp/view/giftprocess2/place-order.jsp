@@ -39,7 +39,7 @@
                 arrQ[id] = q;
                 var editHtml = '<div class="checkbox" style="margin-bottom:0px;"><label style="padding-left:0px;">' + 
                 '<input type="text" class="form-control" value="'+q+'"  id="combo'+id+'" style="height:30px;"/>'+
-                '<a href="javascript:updateQuantity('+id+');">Change</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+
+                '<a href="javascript:updateQuantity('+id+');">Update</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+
                 '<a href="javascript:doRemove('+id+');">Remove</a>'+
                 '</label></div>';
         
@@ -71,7 +71,7 @@
              */
             function doRemove(id){
                 if(confirm(CONFIRM_DELETE_MESSAGE)){
-                    overlayOn($('#trGift'+id));
+                    overlayOn($('#placeOrderContentDiv'));
                     $.ajax({
                         url: PLACE_ORDER_DELETE_GIFT_PATH + id,
                         type: "get",
@@ -79,7 +79,16 @@
                         success: function (data, textStatus, jqXHR)
                         {
                             if(data.error == "0"){
-                                $('#trGift'+id).remove();
+                                
+                                var tBody = $('#trGift'+id).closest('tbody');
+                                if(tBody.children("tr").length === 1){
+                                    // remove the ceiver
+                                    tBody.closest('.receiver-info-item').remove();
+                                }
+                                else{
+                                    // remove the row
+                                    $('#trGift'+id).remove();
+                                }
                                 //
                                 $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);
                                 $('#giftPriceVnd').html(data.LIXI_GIFT_PRICE_VND);
@@ -117,7 +126,7 @@
                         <p class="text-uppercase">Thank you for being a customer!  </p>
                         <div class="clean-paragraph"></div>
                         <div class="receiver-info-wrapper">
-                            <div class="receiver-info-items">
+                            <div class="receiver-info-items" id="placeOrderContentDiv">
                                 <c:forEach items="${REC_GIFTS}" var="entry">
                                     <div class="receiver-info-item">
                                         <div class="receiver-sent-to">
