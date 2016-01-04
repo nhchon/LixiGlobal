@@ -302,12 +302,16 @@ h2, .h2 {
 
 /* Slider */
 .section-slider {}
+/*
 .section-slider-thumb {
     background: transparent url("../images/slider.jpg") no-repeat scroll 0 0 / cover ;
-    height: 550px;
+    height: 600px;
 }
+*/
 .section-slider img{
     max-width: 100%;
+    width: 100%;
+    height: auto;
 }
 .section-gift{
 
@@ -1334,19 +1338,22 @@ textarea{
 @media only screen and (min-width : 992px) {
 
 }
+@media only screen and (min-width : 1200px) {
+  
+}
 
 /* Large Devices, Wide Screens */
 @media only screen and (min-width : 1200px) {
-
+    
 }
 
 /*==========  Non-Mobile First Method  ==========*/
 
 /* Large Devices, Wide Screens */
 @media only screen and (max-width : 1200px) {
-    .section-slider-thumb {
+    /*.section-slider-thumb {
         height: 500px;
-    }
+    }*/
 }
 
 /* Medium Devices, Desktops */
@@ -1355,9 +1362,11 @@ textarea{
         padding-left: 10px;
         padding-right: 10px;
     }
+    /*
     .section-slider-thumb {
         height: 400px;
     }
+    */
 }
 
 /* Small Devices, Tablets */
@@ -1366,9 +1375,11 @@ textarea{
         margin-left: -10px;
         margin-right: -10px;
     }
+    /*
     .section-slider-thumb {
         height: 350px;
     }
+    */
     /* Global */
     .gift-step,
     .gift-icon{
@@ -1535,9 +1546,9 @@ textarea{
 
 /* Extra Small Devices, Phones */ 
 @media only screen and (max-width : 480px) {
-    .section-slider-thumb {
+    /*.section-slider-thumb {
         height: 300px;
-    }
+    }*/
     .gift-selection-icon .col-xs-3,
     .gift-selection-step .col-xs-3{
         width: 33.3333%;
@@ -1559,9 +1570,9 @@ textarea{
 
 /* Custom, iPhone Retina */ 
 @media only screen and (max-width : 320px) {
-    .section-slider-thumb {
+    /*.section-slider-thumb {
         height: 250px;
-    }
+    }*/
 }
 
 

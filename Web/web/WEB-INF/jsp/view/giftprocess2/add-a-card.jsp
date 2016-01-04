@@ -52,7 +52,7 @@
                                 <span title="Master Card">
                                     <label class="drinkcard-cc mastercard"for="mastercard2"></label>
                                 </span>
-                                <span title="Card">
+                                <span title="AMEX Card">
                                     <label class="drinkcard-cc card-type2"for="card-type2"></label>
                                 </span>
                             </div>

@@ -10,6 +10,7 @@
 
     <jsp:body>
         <section class="section-slider section-slider-thumb text-right">
+            <img src="<c:url value="/resource/theme/assets/lixi-global/images/slider.jpg"/>"/>
         </section>
 
         <section class="section-gift bg-default">
