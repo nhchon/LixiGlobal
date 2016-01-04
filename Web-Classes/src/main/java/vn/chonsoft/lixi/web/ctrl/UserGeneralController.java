@@ -128,9 +128,12 @@ public class UserGeneralController {
     @RequestMapping(value = "signUp", method = RequestMethod.POST)
     public ModelAndView signUp(Map<String, Object> model,
             @Valid UserSignUpForm form, Errors errors, HttpServletRequest request) {
+        
+        // put sign in form
+        model.put("userSignInForm", new UserSignInForm());
 
         if (errors.hasErrors()) {
-            return new ModelAndView("user2/signUp");
+            return new ModelAndView("user2/register");
         }
 
         User u = new User();
@@ -194,7 +197,7 @@ public class UserGeneralController {
         } catch (ConstraintViolationException e) {
 
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("user2/signUp");
+            return new ModelAndView("user2/register");
 
         }
 

@@ -12,7 +12,7 @@
                     </span>
                     <c:set var="quantity" value="1"/>
                     <c:if test="${not empty p.quantity}"><c:set var="quantity" value="${p.quantity}"/></c:if>
-                    <input min="1" name="quantity" value="${quantity}" class="form-control gift-number" placeholder="Number"/>
+                    <input type="text" min="1" name="quantity" value="${quantity}" class="form-control bfh-number gift-number" buttons="false" max="10" placeholder="Number"/>
                     <span class="input-group-btn">
                         <button onclick="LixiGlobal.Gift.initAddBtn(this);"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
                     </span>

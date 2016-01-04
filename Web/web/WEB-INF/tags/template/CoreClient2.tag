@@ -14,10 +14,12 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title><c:out value="${fn:trim(htmlTitle)}" /></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <security:csrfMetaTags/>
+        <title><c:out value="${fn:trim(htmlTitle)}" /></title>
+        
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <link rel="apple-touch-icon" sizes="57x57" href="<c:url value="/resource/theme/assets/lixi-global/images"/>/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="<c:url value="/resource/theme/assets/lixi-global/images"/>/apple-icon-60x60.png">
         <link rel="apple-touch-icon" sizes="72x72" href="<c:url value="/resource/theme/assets/lixi-global/images"/>/apple-icon-72x72.png">
@@ -44,7 +46,7 @@
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/main.css"/>">
         <link id="originalTheme" rel="stylesheet" type="text/css" href="<c:url value="/resource/theme/assets/lixi-global/themes/default/css/style.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/addon.css"/>">
-
+        <jsp:invoke fragment="headContent" />
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"/>"></script>
         <script type="text/javascript">
             var CONTEXT_PATH = "${pageContext.request.contextPath}";
@@ -68,6 +70,7 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.js"><\/script>');</script>
 
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap.min.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-formhelpers.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-dialog.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.validate.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-slider.js"/>"></script>
@@ -75,6 +78,15 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/lixi.global-extend-js.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/lixi.global.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/utils.js"/>"></script>
+        <script>
+            $(function () {
+                var token = $("input[name='_csrf']").val();
+                var header = "X-CSRF-TOKEN";
+                $(document).ajaxSend(function(e, xhr, options) {
+                    xhr.setRequestHeader(header, token);
+                });
+            });            
+        </script>
         <jsp:invoke fragment="javascriptContent" />
     </body>
 </html>

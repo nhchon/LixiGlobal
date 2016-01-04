@@ -1,3 +1,11 @@
+jQuery.validator.addMethod("lixiPasswordFormat", function(value, element){
+    if (isValidPassword(value)) {
+        return true;
+    } else {
+        return false;
+    };
+}, PASS_MESSAGE); 
+
 LixiGlobal.RegisterPage = {
     init: function () {
         if ($('#btnShowRegister').length > 0) {
@@ -39,7 +47,8 @@ LixiGlobal.RegisterPage = {
             rules: {
                 password: {
                     required: true,
-                    minlength: 8
+                    minlength: 8,
+                    lixiPasswordFormat:true
                 },
                 email: {
                     required: true,
@@ -61,12 +70,17 @@ LixiGlobal.RegisterPage = {
                 lastName: "required",
                 password: {
                     required: true,
-                    minlength: 8
+                    minlength: 8,
+                    lixiPasswordFormat:true
                 },
                 confPassword: {
                     required: true,
                     minlength: 8,
+                    lixiPasswordFormat:true,
                     equalTo: "#passwordSignUp"
+                },
+                phone:{
+                    required: true,
                 },
                 email: {
                     required: true,
@@ -76,6 +90,7 @@ LixiGlobal.RegisterPage = {
             messages: {
                 firstName: FIRST_NAME_MESSAGE,
                 lastName: LAST_NAME_MESSAGE,
+                phone:PHONE_REQUIRED,
                 password: {
                     required: PASS_MESSAGE,
                     minlength: PASS_MESSAGE

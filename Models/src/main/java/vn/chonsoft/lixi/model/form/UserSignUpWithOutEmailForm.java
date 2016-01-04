@@ -4,8 +4,6 @@
  */
 package vn.chonsoft.lixi.model.form;
 
-import javax.validation.constraints.NotNull;
-import vn.chonsoft.lixi.validations.Email;
 import vn.chonsoft.lixi.validations.FieldMatch;
 import vn.chonsoft.lixi.validations.NotBlank;
 import vn.chonsoft.lixi.validations.NotBlankButNullable;

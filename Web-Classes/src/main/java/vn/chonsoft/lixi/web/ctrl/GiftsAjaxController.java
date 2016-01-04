@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -270,8 +271,8 @@ public class GiftsAjaxController {
             order = this.lxorderService.findById(orderId);
 
         }
-        // delet gift if quantity < 0
-        if(quantity < 0){
+        // delet gift if quantity <= 0
+        if(quantity <= 0){
             
             this.lxogiftService.deleteByOrderAndProductId(order, productId);
             //re-select order

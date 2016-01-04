@@ -61,6 +61,7 @@ function subBtn(id, productId, recId){
  * @returns {undefined}
  */
 function checkExceedOnSummaryPage(id, productId, recId, quantity) {
+    if(isInteger(quantity)){
     $.ajax({
         url: AJAX_CHECK_EXCEED_PATH + '/' + recId+ '/' + productId + '/' + quantity,
         type: "get",
@@ -93,4 +94,10 @@ function checkExceedOnSummaryPage(id, productId, recId, quantity) {
             //alert('Đã có lỗi, vui lòng thử lại !'); 
         }
     });
+    }
+    else{
+        alert("Please correct the quantity value");
+        overlayOff();
+        $("#product" + productId).find("input[name='quantity']").focus();
+    }
 }

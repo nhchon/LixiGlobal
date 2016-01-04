@@ -106,7 +106,7 @@
                         </form>
                     </li>
                     <li class="nav-cart-wrapper">
-                        <a class="nav-cart-event" href="#view-cart">
+                        <a class="nav-cart-event" href="<c:url value="/checkout/jump2"/>">
                             <div class="nav-cart">
                                 <div class="nav-cart-en" id="topTotalCurrentOrderUsd">&nbsp;</div>
                                 <div class="nav-cart-vn" id="topTotalCurrentOrderVnd">&nbsp;</div>
