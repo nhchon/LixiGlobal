@@ -30,6 +30,17 @@ public class LixiGlobalFeeServiceImpl implements LixiGlobalFeeService{
     
     /**
      * 
+     * @param id 
+     */
+    @Override
+    public void delete(Long id){
+        
+        this.fRepository.delete(id);
+        
+    }
+    
+    /**
+     * 
      * @param country
      * @return 
      */

@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.web.ctrl.admin;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -43,6 +44,20 @@ public class SystemFeeController {
         model.put("countries", this.countryService.findAll());
         
         return new ModelAndView("Administration/config/fees");
+    }
+    
+    /**
+     * 
+     * @param id
+     * @param model 
+     * @return 
+     */
+    @RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
+    public ModelAndView delete(Map<String, Object> model, @PathVariable Long id){
+        
+        this.feeService.delete(id);
+        
+        return new ModelAndView(new RedirectView("/Administration/SystemFee/list", true, true));
     }
     
     /**

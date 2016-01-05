@@ -3,6 +3,12 @@
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
+            var DELETE_CONFIRM_MESS = '<spring:message code="message.want_to_delete"/>';
+            function deleteFee(id){
+                if(confirm(DELETE_CONFIRM_MESS)){
+                    document.location.href = '<c:url value="/Administration/SystemFee/delete/"/>' + id;
+                }
+            }
         </script>    
     </jsp:attribute>
     <jsp:body>
@@ -96,7 +102,7 @@
                                         <td><fmt:formatNumber value="${f.allowRefundFee}" pattern="###,###.##"/>%</td>
                                         <td>$ <fmt:formatNumber value="${f.maxFee}" pattern="###,###.##"/></td>
                                         <td>$ <fmt:formatNumber value="${f.lixiFee}" pattern="###,###.##"/></td>
-                                        <td></td>
+                                        <td><button type="button" class="btn btn-warning" onclick="deleteFee(${f.id})">Delete</button></td>
                                     </tr>
 
                                 </c:forEach>

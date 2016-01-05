@@ -17,6 +17,8 @@ public interface LixiGlobalFeeService {
     
     LixiGlobalFee save(LixiGlobalFee fee);
     
+    void delete(Long id);
+    
     List<LixiGlobalFee> findByCountry(Country country);
     
     List<LixiGlobalFee> findByCountry(Country country, Sort sort);

@@ -108,8 +108,9 @@ function checkExceed(recId, productId, quantity) {
                     $('#currentPaymentVND').html(data.CURRENT_PAYMENT_VND);
                     $('#currentPaymentUSD').html(data.CURRENT_PAYMENT_USD);
                     /* shopping cart */
-                    $('#topTotalCurrentOrderUsd').html("USD " + data.CURRENT_PAYMENT_USD)
-                    $('#topTotalCurrentOrderVnd').html("VND " + data.CURRENT_PAYMENT_VND)
+                    updateShoppingCart(data.CURRENT_PAYMENT_USD, data.CURRENT_PAYMENT_VND);
+                    //$('#topTotalCurrentOrderUsd').html("USD " + data.CURRENT_PAYMENT_USD)
+                    //$('#topTotalCurrentOrderVnd').html("VND " + data.CURRENT_PAYMENT_VND)
                     /* */
                     if(quantity>0)
                         LixiGlobal.Gift.toCancelStatus($("#gift-product-item-"+productId));

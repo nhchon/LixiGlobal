@@ -5,6 +5,7 @@
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.number.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/summary.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
@@ -18,6 +19,11 @@
                     location.href='<c:url value="/gifts/change/"/>' + giftId;
                 }
             }
+            
+            $(document).ready(function () {
+                $('.gift-number').number(true, 0, ',', '');
+            });
+            
         </script>
     </jsp:attribute>
 

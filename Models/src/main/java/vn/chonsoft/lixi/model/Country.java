@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -38,6 +39,7 @@ public class Country implements Serializable {
     private String name;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "country")
+    @OrderBy("paymentMethod ASC, amount ASC")
     private List<LixiGlobalFee> fees;
 
     public Country() {

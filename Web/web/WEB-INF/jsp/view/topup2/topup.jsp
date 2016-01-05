@@ -108,6 +108,63 @@
 
                 });
             }
+            
+            function enableEditRecipientHtmlContent(data){
+
+                $('#editRecipientContent').html(data);
+                $('#editRecipientModal').modal({show:true});
+
+                // change dial code
+                $('#iso2Code').change(function(){
+                   if($(this).val() === 'VN'){
+
+                       $('#dialCode').val('+84');
+
+                   }
+                   else if($(this).val() === 'US'){
+                       $('#dialCode').val('+1');
+                   }
+                });
+                // handler submit form
+                //callback handler for form submit
+                $("#chooseRecipientForm").submit(function(e)
+                {
+                    var postData = $(this).serializeArray();
+                    var formURL = $(this).attr("action");
+                    $.ajax(
+                    {
+                        url : formURL,
+                        type: "POST",
+                        data : postData,
+                        //contentType: "application/x-www-form-urlencoded;charset=ISO-8859-1",
+                        dataType: 'json',
+                        success:function(data, textStatus, jqXHR) 
+                        {
+                            //data: return data from server
+                            if(data.error === '0'){
+                                // save successfully
+                                // hide popup
+                                $('#editRecipientModal').modal('hide');
+                                // get new phone number
+                                $('#recPhone').val($("#chooseRecipientForm #phone").val());
+                                $('#recEmail').val($("#chooseRecipientForm #email").val());
+                            }
+                            else{
+                                alert(SOMETHING_WRONG_ERROR);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) 
+                        {
+                            //if fails      
+                        }
+                    });
+                    if(typeof e  !== 'undefined'){
+                        e.preventDefault(); //STOP default action
+                        //e.unbind(); //unbind. to stop multiple form submit.
+                    }
+                });
+            }
+            
             /**
              * 
              * @returns {Boolean}
@@ -229,7 +286,7 @@
                 </div>
             </div>
         </section>
-        <!-- Billing Address Modal -->
+        <!-- Edit Recipient Modal -->
         <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content" id="editRecipientContent">

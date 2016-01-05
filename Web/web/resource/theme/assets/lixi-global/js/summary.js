@@ -85,6 +85,9 @@ function checkExceedOnSummaryPage(id, productId, recId, quantity) {
                 // update current payment
                 $('#currentPaymentVND').html(data.CURRENT_PAYMENT_VND);
                 $('#currentPaymentUSD').html(data.CURRENT_PAYMENT_USD);
+                
+                /* */
+                updateShoppingCart(data.CURRENT_PAYMENT_USD, data.CURRENT_PAYMENT_VND);
             }
         },
         error: function (jqXHR, textStatus, errorThrown)

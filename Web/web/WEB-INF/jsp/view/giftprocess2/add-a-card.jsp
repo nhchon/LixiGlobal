@@ -187,9 +187,10 @@
                                 <div class="form-group form-group-selectpicker-full">
                                     <label for="county">County:</label><div class="clearfix"></div>
                                     <form:select class="form-control" path="country" required="true">
-                                        <option value="">Choose country</option>
-                                        <option value="USA" selected="">USA</option>
-                                        <option value="Vietnam">Vietnam</option>
+                                        <option value="" selected="">Choose country</option>
+                                        <c:forEach items="${COUNTRIES}" var="c">
+                                            <option value="${c.name}">${c.name}</option>
+                                        </c:forEach>
                                     </form:select>
                                     <div class="has-error"><form:errors path="country" cssClass="help-block" element="div"/></div>
                                 </div>

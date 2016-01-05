@@ -11,83 +11,198 @@
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.number.min.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
-            var CALCULATE_FEE_PATH = '<c:url value="/checkout/place-order/calculateFee"/>';
+            var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
+            var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
+            var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
+            var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
+            var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
+            var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
+            var CALCULATE_FEE_PATH = '<c:url value="/checkout/place-order/calculateFee"/>';
             var PLACE_ORDER_DELETE_GIFT_PATH = '<c:url value="/checkout/delete/gift/"/>';
+            var PLACE_ORDER_UPDATE_GIFT_PATH = '<c:url value="/checkout/update/gift/"/>';
             var arrQ = [];
-            function editRecipient(focusId) {
-                $.get('<c:url value="/topUp/editRecipient"/>', function (data) {
+            function editRecipient(id) {
+                $.get('<c:url value="/recipient/edit/"/>'+id, function (data) {
                     enableEditRecipientHtmlContent(data);
                     // focus on phone field
                     $('#editRecipientModal').on('shown.bs.modal', function () {
-                        $('#' + focusId).focus()
+                        // TODO
                     })
 
                 });
             }
-            
-            function returnSelected(q, value){
-                if(q == value) return " selected=''";
-                else return "";
+
+            function enableEditRecipientHtmlContent(data){
+
+                $('#editRecipientContent').html(data);
+                $('#editRecipientModal').modal({show:true});
+
+                // handler submit form
+                //callback handler for form submit
+                $("#chooseRecipientForm").submit(function(e)
+                {
+                    var postData = $(this).serializeArray();
+                    var formURL = $(this).attr("action");
+                    $.ajax(
+                    {
+                        url : formURL,
+                        type: "POST",
+                        data : postData,
+                        dataType: 'json',
+                        success:function(data, textStatus, jqXHR) 
+                        {
+                            //data: return data from server
+                            if(data.error === '0'){
+                                // save successfully
+                                // hide popup
+                                $('#editRecipientModal').modal('hide');
+                                // get new phone number
+                                var recId = $("#chooseRecipientForm #recId").val();
+                                $('#recPhone' + recId).html($("#chooseRecipientForm #phone").val());
+                                $('#recEmail' + recId).html($("#chooseRecipientForm #email").val());
+                            }
+                            else{
+                                alert(SOMETHING_WRONG_ERROR);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) 
+                        {
+                            //if fails      
+                        }
+                    });
+                    if(typeof e  !== 'undefined'){
+                        e.preventDefault(); //STOP default action
+                        //e.unbind(); //unbind. to stop multiple form submit.
+                    }
+                });
             }
-            
-            function editQuantity(id){
-                var q = $('#q'+id).html();
+
+            function returnSelected(q, value) {
+                if (q == value)
+                    return " selected=''";
+                else
+                    return "";
+            }
+
+            function editQuantity(id) {
+                var q = $('#q' + id).html();
                 // store quantity value
                 arrQ[id] = q;
-                var editHtml = '<div class="checkbox" style="margin-bottom:0px;"><label style="padding-left:0px;">' + 
-                '<input type="text" class="form-control" value="'+q+'"  id="combo'+id+'" style="height:30px;"/>'+
-                '<a href="javascript:updateQuantity('+id+');">Update</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+
-                '<a href="javascript:doRemove('+id+');">Remove</a>'+
-                '</label></div>';
-        
+                var editHtml = '<div class="checkbox" style="margin-bottom:0px;"><label style="padding-left:0px;">' +
+                        '<input type="text" class="form-control" value="' + q + '"  id="combo' + id + '" style="height:30px;"/>' +
+                        '<a href="javascript:updateQuantity(' + id + ');">Update</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;' +
+                        '<a href="javascript:doRemove(' + id + ');">Remove</a>' +
+                        '</label></div>';
+
                 $('#gift' + id).html(editHtml);
-                
-                $('#combo'+id).focus();
+
+                $('#combo' + id).number(true, 0, ',', '');
+
+                $('#combo' + id).focus();
             }
-            
-            function removeEditQuantity(id){
-                var editHtml = '<span id="q'+id+'">'+arrQ[id]+'</span> <a href="javascript:editQuantity('+id+');" class="edit-info-event"></a>';
-                 $('#gift' + id).html(editHtml);
+
+            function removeEditQuantity(id) {
+                var editHtml = '<span id="q' + id + '">' + arrQ[id] + '</span> <a href="javascript:editQuantity(' + id + ');" class="edit-info-event"></a>';
+                $('#gift' + id).html(editHtml);
             }
-            
-            function updateQuantity(id){
-                var combo = $('#combo'+id);
-                if(combo.length){
-                    if(combo.val() <= 0){
-                        if(confirm(CONFIRM_DELETE_MESSAGE)){
-                            
-                        }
+
+            function updateQuantity(id) {
+                var combo = $('#combo' + id);
+                if (combo.length) {
+                    if (combo.val() <= 0) {
+                        // call delete 
+                        doRemove(id);
                     }
+                    else {
+                        overlayOn($('#placeOrderContentDiv'));
+                        $.ajax({
+                            url: PLACE_ORDER_UPDATE_GIFT_PATH + id + '/' + combo.val(),
+                            type: "get",
+                            dataType: 'json',
+                            success: function (data, textStatus, jqXHR)
+                            {
+                                if (data.exceed == "0") {
+
+                                    removeEditQuantity(id);
+                                    $('#q'+id).html(data.NEW_QUANTITY);
+                                    $('#itemTotalUsd'+id).html(data.NEW_TOTAL_ITEM_USD);
+                                    $('#itemTotalVnd'+id).html(data.NEW_TOTAL_ITEM_VND);
+                                    //var tBody = $('#trGift' + id).closest('tbody');
+                                    //if (tBody.children("tr").length === 1) {
+                                        // remove the ceiver
+                                        //tBody.closest('.receiver-info-item').remove();
+                                    //}
+                                    //else {
+                                        // remove the row
+                                        //$('#trGift' + id).remove();
+                                    //}
+                                    //
+                                    $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);
+                                    $('#giftPriceVnd').html(data.LIXI_GIFT_PRICE_VND);
+                                    $('#CARD_PROCESSING_FEE_THIRD_PARTY').html(data.CARD_PROCESSING_FEE_THIRD_PARTY);
+                                    $('#lixiHandlingFeeTotal').html(data.LIXI_HANDLING_FEE_TOTAL);
+                                    $('#LIXI_FINAL_TOTAL').html(data.LIXI_FINAL_TOTAL);
+                                    /* */
+                                    updateShoppingCart(data.LIXI_GIFT_PRICE, data.LIXI_GIFT_PRICE_VND);
+                                }
+                                else {
+                                    alert(data.message);
+                                }
+                                overlayOff();
+                            },
+                            error: function (jqXHR, textStatus, errorThrown)
+                            {
+                                alert(errorThrown);
+                                overlayOff();
+                            }
+                        });
+                    }
+
                 }
             }
-            
+
             /**
              * 
              * @param {type} id
              * @returns {undefined}
              */
-            function doRemove(id){
-                if(confirm(CONFIRM_DELETE_MESSAGE)){
+            function doRemove(id) {
+                if (confirm(CONFIRM_DELETE_MESSAGE)) {
                     overlayOn($('#placeOrderContentDiv'));
                     $.ajax({
                         url: PLACE_ORDER_DELETE_GIFT_PATH + id,
                         type: "get",
                         dataType: 'json',
-                        success: function (data, textStatus, jqXHR)
-                        {
-                            if(data.error == "0"){
-                                
-                                var tBody = $('#trGift'+id).closest('tbody');
-                                if(tBody.children("tr").length === 1){
-                                    // remove the ceiver
-                                    tBody.closest('.receiver-info-item').remove();
+                                success: function (data, textStatus, jqXHR)
+                                {
+                            if (data.error == "0") {
+
+                                var tBody = $('#trGift' + id).closest('tbody');
+                                if (tBody.children("tr").length === 1) {
+                                    if($('.receiver-info-item').length === 2){
+                                        
+                                        $('.receiver-info-item').remove();
+                                        
+                                        $('#thankyouBeing').html("Your Shopping Cart is empty !");
+                                        
+                                        $('#thankyouBeing').after("<p>Tang qua. Tang niem vui.</p>")
+                                        
+                                        $('#btnSubmit').remove();
+                                        
+                                        $('#btnLogOut').show();
+                                    }
+                                    else{
+                                        // remove the ceiver
+                                        tBody.closest('.receiver-info-item').remove();
+                                    }
                                 }
-                                else{
+                                else {
                                     // remove the row
-                                    $('#trGift'+id).remove();
+                                    $('#trGift' + id).remove();
                                 }
                                 //
                                 $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);
@@ -95,8 +210,10 @@
                                 $('#CARD_PROCESSING_FEE_THIRD_PARTY').html(data.CARD_PROCESSING_FEE_THIRD_PARTY);
                                 $('#lixiHandlingFeeTotal').html(data.LIXI_HANDLING_FEE_TOTAL);
                                 $('#LIXI_FINAL_TOTAL').html(data.LIXI_FINAL_TOTAL);
+                                /* */
+                                updateShoppingCart(data.LIXI_GIFT_PRICE, data.LIXI_GIFT_PRICE_VND);
                             }
-                            else{
+                            else {
                                 alert(data.message);
                             }
                             overlayOff();
@@ -111,6 +228,7 @@
             }
         </script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/place-order.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
     </jsp:attribute>
 
     <jsp:body>
@@ -123,19 +241,31 @@
                 <form method="post" class="receiver-form" action="${placeOrderUrl}">
                     <div class="section-receiver">
                         <h2 class="title">review your order</h2>
-                        <p class="text-uppercase">Thank you for being a customer!  </p>
+                        
+                            <c:if test="${LIXI_FINAL_TOTAL eq 0}">
+                                <p class="text-uppercase" id="thankyouBeing">
+                                    Your Shopping Cart is empty !
+                                </p>
+                                <p>Tang qua. Tang niem vui.</p>
+                            </c:if>
+                            <c:if test="${LIXI_FINAL_TOTAL gt 0}">
+                                <p class="text-uppercase" id="thankyouBeing">
+                                    Thank you for being a customer!  
+                                </p>
+                            </c:if>
                         <div class="clean-paragraph"></div>
                         <div class="receiver-info-wrapper">
                             <div class="receiver-info-items" id="placeOrderContentDiv">
+                                <c:if test="${LIXI_FINAL_TOTAL gt 0}">
                                 <c:forEach items="${REC_GIFTS}" var="entry">
                                     <div class="receiver-info-item">
                                         <div class="receiver-sent-to">
-                                            <h4 class="text-color-link">Send To: ${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName} <a href="javascript:editRecipient();" class="edit-info-event"></a></h4>
+                                            <h4 class="text-color-link">Send To: ${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName} <a href="javascript:editRecipient(${entry.recipient.id});" class="edit-info-event"></a></h4>
                                             <div>
-                                                <strong>Email Address:</strong><span>${entry.recipient.email}</span>
+                                                <strong>Email Address:</strong><span id="recEmail${entry.recipient.id}">${entry.recipient.email}</span>
                                             </div>
                                             <div>
-                                                <strong>Mobile Phone:</strong><span>${entry.recipient.phone}</span>
+                                                <strong>Mobile Phone:</strong><span id="recPhone${entry.recipient.id}">${entry.recipient.phone}</span>
                                             </div>
                                         </div>
                                         <div class="receiver-order-summary">
@@ -143,9 +273,9 @@
                                             <table class="table table-striped">
                                                 <thead>
                                                 <th style="padding:0px;">
-                                                    <div class="col-md-6"></div>
-                                                    <div class="col-md-3">Quantity</div>
-                                                    <div class="col-md-3">Price</div>
+                                                <div class="col-md-6"></div>
+                                                <div class="col-md-3">Quantity</div>
+                                                <div class="col-md-3">Price</div>
                                                 </th>
                                                 </thead>
                                                 <tbody>
@@ -155,7 +285,7 @@
                                                                 <div class="row">
                                                                     <div class="col-md-6" style="padding-left:40px">${g.productName}</div>
                                                                     <div class="col-md-3" id="gift${g.id}"><span id="q${g.id}">${g.productQuantity}</span> <a href="javascript:editQuantity(${g.id});" class="edit-info-event"></a></div>
-                                                                    <div class="col-md-3">USD <fmt:formatNumber value="${g.usdPrice * g.productQuantity}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></div>
+                                                                    <div class="col-md-3">USD <span id="itemTotalUsd${g.id}"><fmt:formatNumber value="${g.usdPrice * g.productQuantity}" pattern="###,###.##"/></span> ~ VND <span id="itemTotalVnd${g.id}"><fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></span></div>
                                                                 </div>    
                                                             </td>
                                                         </tr>
@@ -237,15 +367,22 @@
                                             </div>
                                             <p>(Receiver will be notified right away. Delivery varies by vendor. Settlement of refund will be 48 to 72 hours)</p>
                                             <p> By placing this order, you agree to <a href="<c:url value="/support/terms"/>" target="_blank">Lixi.Global Terms of Use</a> and <a href="<c:url value="/support/privacy"/>" target="_blank">Privacy Policy</a>.</p>
-                                        </div>
                                     </div>
                                 </div>
+                                </c:if>
                             </div>
                         </div>
-                        <div class="button-control gift-total-wrapper text-center text-uppercase" style="padding-bottom: 20px;">
-                            <div class="button-control-page">
-                                <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/order-summary"/>">Cancel</button>
-                            <button type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>
+                    </div>
+                    <div class="button-control gift-total-wrapper text-center text-uppercase" style="padding-bottom: 20px;">
+                        <div class="button-control-page" id="btnDiv">
+                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/recipient"/>">Keep Shopping</button>
+                            <c:if test="${LIXI_FINAL_TOTAL gt 0}">
+                            <button id="btnSubmit" type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>
+                            <button id="btnLogOut" style="display:none;" class="btn btn-primary" type="button" onclick="location.href='<c:url value="/user/signOut"/>'">Log Out</button>
+                            </c:if>
+                            <c:if test="${LIXI_FINAL_TOTAL eq 0}">
+                            <button id="btnLogOut" class="btn btn-primary" type="button" onclick="location.href='<c:url value="/user/signOut"/>'">Log Out</button>
+                            </c:if>
                         </div>
                     </div>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />        

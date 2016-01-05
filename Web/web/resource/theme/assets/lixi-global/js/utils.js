@@ -1,5 +1,22 @@
 /**
  * 
+ * @param {type} usd
+ * @param {type} vnd
+ * @returns {undefined}
+ */
+function updateShoppingCart(usd, vnd){
+    /* shopping cart */
+    if(usd > 0){
+        $('#topTotalCurrentOrderUsd').html("USD " + usd)
+        $('#topTotalCurrentOrderVnd').html("VND " + vnd)
+    }
+    else{
+        $('#topTotalCurrentOrderUsd').html("&nbsp;");
+        $('#topTotalCurrentOrderVnd').html("&nbsp;");
+    }
+}
+/**
+ * 
  * @param {type} element
  * @param {type} align
  * @returns {unresolved}
