@@ -104,7 +104,7 @@
                                     <div class="col-md-4"></div>
                                     <div class="col-md-4" style="text-align: right;">
                                         <button class="btn btn-default btn-sm" onclick="deleteCard(${c.id})">Delete</button>
-                                        <button class="btn btn-default btn-sm">Edit</button>
+                                        <button class="btn btn-default btn-sm" onclick="alert('In consideration')">Edit</button>
                                     </div>
                                 </div>
                             </div>

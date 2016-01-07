@@ -117,7 +117,9 @@ public class UserManagementController {
     @RequestMapping(value = "yourAccount", method = RequestMethod.GET)
     public ModelAndView yourAccount(Map<String, Object> model, HttpServletRequest request) {
 
-        return new ModelAndView("user/yourAccount", model);
+        model.put("user", this.userService.findByEmail(loginedUser.getEmail()));
+        
+        return new ModelAndView("user2/yourAccount", model);
     }
     
     /**
@@ -132,9 +134,9 @@ public class UserManagementController {
     @RequestMapping(value = "editName", method = RequestMethod.GET)
     public ModelAndView editName(Map<String, Object> model, HttpServletRequest request) {
         
-        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+        //String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         // Already login
-        User u = this.userService.findByEmail(email);
+        User u = this.userService.findByEmail(loginedUser.getEmail());
         
         UserEditNameForm form = new UserEditNameForm();
         
@@ -143,7 +145,7 @@ public class UserManagementController {
         form.setLastName(u.getLastName());
         
         model.put("userEditNameForm", form);
-        return new ModelAndView("user/editName", model);
+        return new ModelAndView("user2/editName", model);
     }
  
     /**
@@ -160,7 +162,7 @@ public class UserManagementController {
             @Valid UserEditNameForm form, Errors errors, HttpServletRequest request) {
         
         if (errors.hasErrors()) {
-            return new ModelAndView("user/editName");
+            return new ModelAndView("user2/editName");
         }
         
         try {
@@ -180,7 +182,7 @@ public class UserManagementController {
         } catch (ConstraintViolationException e) {
             
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("user/editName");
+            return new ModelAndView("user2/editName");
             
         }
         
@@ -199,7 +201,7 @@ public class UserManagementController {
     public ModelAndView editPassword(Map<String, Object> model, HttpServletRequest request) {
         
         model.put("userEditPasswordForm", new UserEditPasswordForm());
-        return new ModelAndView("user/editPassword", model);
+        return new ModelAndView("user2/editPassword", model);
         
     }
     
@@ -217,7 +219,7 @@ public class UserManagementController {
             @Valid UserEditPasswordForm form, Errors errors, HttpServletRequest request) {
         
         if (errors.hasErrors()) {
-            return new ModelAndView("user/editPassword");
+            return new ModelAndView("user2/editPassword");
         }
         
         try {
@@ -244,13 +246,13 @@ public class UserManagementController {
                 log.info("wrong password");
                 // wrong password
                 model.put("editSuccess", 0);
-                return new ModelAndView("user/editPassword", model);
+                return new ModelAndView("user2/editPassword", model);
             }
             
         } catch (ConstraintViolationException e) {
             
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("user/editPassword");
+            return new ModelAndView("user2/editPassword");
         }
     }
     
@@ -265,7 +267,7 @@ public class UserManagementController {
     public ModelAndView editEmail(Map<String, Object> model, HttpServletRequest request) {
 
         model.put("userEditEmailForm", new UserEditEmailForm());
-        return new ModelAndView("user/editEmail", model);
+        return new ModelAndView("user2/editEmail", model);
         
     }
     
@@ -283,7 +285,7 @@ public class UserManagementController {
             @Valid UserEditEmailForm form, Errors errors, HttpServletRequest request) {
         
         if (errors.hasErrors()) {
-            return new ModelAndView("user/editEmail");
+            return new ModelAndView("user2/editEmail");
         }
         
         try {
@@ -298,7 +300,7 @@ public class UserManagementController {
             if(oldEmail != null && oldEmail.equals(form.getEmail())){
                 
                 model.put("reUseEmail", 1);
-                return new ModelAndView("user/editEmail", model);
+                return new ModelAndView("user2/editEmail", model);
                 
             }
             // check password
@@ -350,17 +352,17 @@ public class UserManagementController {
                 else{
                     // email already in use
                     model.put("reUseEmail", 1);
-                    return new ModelAndView("user/editEmail", model);
+                    return new ModelAndView("user2/editEmail", model);
                 }
             }
             // wrong password
             model.put("editSuccess", 0);
-            return new ModelAndView("user/editEmail", model);
+            return new ModelAndView("user2/editEmail", model);
             
         } catch (ConstraintViolationException e) {
             
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("user/editEmail");
+            return new ModelAndView("user2/editEmail");
         }
     }
     
@@ -380,7 +382,7 @@ public class UserManagementController {
         User u = this.userService.findByEmail(email);
         // get current phone number
         model.put("phone", u.getPhone());
-        return new ModelAndView("user/editPhoneNumber", model);
+        return new ModelAndView("user2/editPhoneNumber", model);
     }
     
     /**

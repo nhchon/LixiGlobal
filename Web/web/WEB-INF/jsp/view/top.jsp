@@ -73,7 +73,7 @@
                             <li>
                                 <a class="nav-sub-link" href="#">Account setting</a>
                                 <ul class="nav-level-2">
-                                    <li><a href="javascript:void(0);">Change email, password,<br/> name and mobile phone</a></li>
+                                    <li><a href="<c:url value="/user/yourAccount"/>">Change email, password,<br/> name and mobile phone</a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -42,7 +42,7 @@ public class CheckLoginedUserAspectJ {
             
             if(StringUtils.isEmpty(loginedUser.getEmail())){
                 
-                return new ModelAndView(new RedirectView("/user/signIn?signInFailed=2", true, true));
+                return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
                 
                 /* igonred login step */
                 //LiXiUtils.setLoginedUser(loginedUser, this.userService.findByEmail("daothidam88@gmail.com"));

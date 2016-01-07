@@ -201,11 +201,6 @@
                                 <button style="color:#fff;" class="btn btn-warning" type="button" onclick="location.href='<c:url value="/user/payments"/>'">Cancel</button>
                             </div>
                         </div>
-                        <div class="clearfix border-bottom"></div>
-                        <h4 class="title">add a bank account</h4>
-                        <p>
-                            <strong class="text-color-link"><a href="<c:url value="/checkout/addBankAccount"/>">Add a checking account</a></strong>.
-                        </p>
                     </form:form>
                 </div>
             </div>
