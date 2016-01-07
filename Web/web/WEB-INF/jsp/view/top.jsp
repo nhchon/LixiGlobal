@@ -66,8 +66,8 @@
                             <li>
                                 <a class="nav-sub-link" href="#payment-link">Payment Method</a>
                                 <ul class="nav-level-2">
-                                    <li><a href="<c:url value="/checkout/paymentMethods"/>">Manage payment options</a></li>
-                                    <li><a href="<c:url value="/checkout/addCard"/>">Add a Credit/ Debit cards</a></li>
+                                    <li><a href="<c:url value="/user/payments"/>">Manage payment options</a></li>
+                                    <li><a href="<c:url value="/user/addCard"/>">Add a Credit/ Debit cards</a></li>
                                 </ul>
                             </li>
                             <li>

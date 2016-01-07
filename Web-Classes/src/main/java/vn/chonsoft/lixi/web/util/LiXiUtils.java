@@ -38,10 +38,12 @@ import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiGlobalFee;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
@@ -99,6 +101,31 @@ public class LiXiUtils {
 
     }
 
+    /**
+     * 
+     * @param card
+     * @return 
+     */
+    public static LixiOrderCard toLxOrderCard(UserCard card){
+        
+        if(card == null)
+            return null;
+        //
+        LixiOrderCard c = new LixiOrderCard();
+        c.setId(card.getId());
+        c.setUserId(card.getUser().getId());
+        c.setAuthorizePaymentId(card.getAuthorizePaymentId());
+        c.setCardType(card.getCardType());
+        c.setCardName(card.getCardName());
+        c.setCardNumber(card.getCardNumber());
+        c.setExpMonth(card.getExpMonth());
+        c.setExpYear(card.getExpYear());
+        c.setCardCvv(card.getCardCvv());
+        c.setModifiedDate(card.getModifiedDate());
+        c.setBillingAddress(card.getBillingAddress());
+        
+        return c;
+    }
     /**
      *
      * @param object
@@ -228,6 +255,11 @@ public class LiXiUtils {
         return calculateCurrentPayment(order)[0];
     }
     
+    /**
+     * 
+     * @param order
+     * @return 
+     */
     public static BillingAddress getBillingAddress(LixiOrder order){
         
         /* get billing address */

@@ -40,6 +40,7 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
@@ -71,7 +72,7 @@ import vn.chonsoft.lixi.web.beans.LoginedUser;
 @ComponentScan(
         basePackages = {"vn.chonsoft.lixi.web.ctrl"},
         useDefaultFilters = false,
-        includeFilters = @ComponentScan.Filter(WebController.class)
+        includeFilters = @ComponentScan.Filter(value = {WebController.class, ControllerAdvice.class})
 )
 @EnableGlobalMethodSecurity(
         prePostEnabled = true, order = 0, mode = AdviceMode.PROXY,

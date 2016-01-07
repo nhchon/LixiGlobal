@@ -56,6 +56,7 @@ import vn.chonsoft.lixi.model.AuthorizePaymentResult;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiInvoicePayment;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
@@ -459,7 +460,7 @@ public class PaymentServiceImpl implements PaymentService{
         TransactionRequestType txnRequest = new TransactionRequestType();
         if (order.getCard() != null) {
             // get credit card
-            UserCard card = order.getCard();
+            LixiOrderCard card = order.getCard();
             String expireMonth = StringUtils.leftPad(card.getExpMonth() + "", 2, "0");
             String expireYear = StringUtils.leftPad(card.getExpYear() + "", 2, "0");
 

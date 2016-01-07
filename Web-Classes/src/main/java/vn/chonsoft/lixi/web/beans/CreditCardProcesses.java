@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import javax.inject.Inject;
 
 import net.authorize.Environment;
 import net.authorize.api.contract.v1.*;
@@ -21,12 +20,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import vn.chonsoft.lixi.model.AuthorizeCustomerResult;
 import vn.chonsoft.lixi.model.AuthorizePaymentResult;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiInvoicePayment;
+import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
@@ -431,7 +430,7 @@ public class CreditCardProcesses{
         TransactionRequestType txnRequest = new TransactionRequestType();
         if (order.getCard() != null) {
             // get credit card
-            UserCard card = order.getCard();
+            LixiOrderCard card = order.getCard();
             String expireMonth = StringUtils.leftPad(card.getExpMonth() + "", 2, "0");
             String expireYear = StringUtils.leftPad(card.getExpYear() + "", 2, "0");
 

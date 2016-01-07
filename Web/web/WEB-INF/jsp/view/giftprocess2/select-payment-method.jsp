@@ -25,7 +25,7 @@
                 </div>
                 </c:if>
                 <c:url value="/checkout/paymentMethods" var="choosePaymentMethodUrl"/>
-                <form id="changePaymentForm" action="${choosePaymentMethodUrl}" method="post" class="receiver-form">
+                <form id="changePaymentForm" action="${choosePaymentMethodUrl}" method="post" class="receiver-form" onsubmit="return checkSelectedPayment()">
                     <div class="section-receiver">
                         <h2 class="title">Select a payment method</h2>
 
@@ -104,7 +104,7 @@
                         <div class="row">
                             <div class="col-md-6 text-left">
                                 <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/chooseCategory"/>">Keep shopping</button>
-                                <button  onclick="return checkSelectedPayment();"  class="btn btn-primary btn-has-link-event text-uppercase"  type="submit">use this payment method</button>
+                                <button class="btn btn-primary text-uppercase"  type="submit">use this payment method</button>
                             </div>
                             <div class="col-md-6 text-right">
                                 <button class="btn btn-primary btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/checkout/addCard"/>">add new card</button>

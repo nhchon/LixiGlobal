@@ -67,7 +67,7 @@ public class LixiOrder implements Serializable {
 
     @JoinColumn(name = "card_id", referencedColumnName = "id")
     @ManyToOne
-    private UserCard card;
+    private LixiOrderCard card;
 
     @JoinColumn(name = "bank_account_id", referencedColumnName = "id")
     @ManyToOne
@@ -164,11 +164,11 @@ public class LixiOrder implements Serializable {
         this.lxExchangeRate = lxExchangeRate;
     }
 
-    public UserCard getCard() {
+    public LixiOrderCard getCard() {
         return card;
     }
 
-    public void setCard(UserCard card) {
+    public void setCard(LixiOrderCard card) {
         this.card = card;
     }
 

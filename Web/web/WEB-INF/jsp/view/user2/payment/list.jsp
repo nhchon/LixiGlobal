@@ -9,159 +9,104 @@
             /** Page Script **/
             jQuery(document).ready(function () {
 
-                $('#timeCombo').change(function () {
-
-                    document.location.href = '<c:url value="/user/orderHistory"/>' + '/' + this.value;
-
-                });
             });
+            var deleteMessage = '<spring:message code="message.want_to_delete"/>';
+            
+            function deleteCard(id){
+                
+                if(confirm(deleteMessage)){
+                    location.href = '<c:url value="/user/delete/card/"/>' + id;
+                }
+            }
+            
+            function toogleDetail(id){
+                if($('#panelBody'+id).is(":visible")){
+                    
+                    $('#iconDetail'+id).removeClass();
+                    $('#iconDetail'+id).addClass("fa fa-caret-down");
+                    //
+                    $('#panelBody'+id).hide();
+                }
+                else{
+                    $('#iconDetail'+id).removeClass();
+                    $('#iconDetail'+id).addClass("fa fa-caret-up");
+                    //
+                    $('#panelBody'+id).show();
+                }
+            }
+            
         </script>
     </jsp:attribute>
     <jsp:body>
         <section class="section-gift bg-default main-section">
             <div class="container post-wrapper" style="padding-top:30px;">
                 <div class="section-receiver">
-                    <h2 class="title">order history</h2>
-                    <h4 class="title">
-                        <c:if test="${not empty orders.content}">${fn:length(orders.content)} orders place in</c:if>
-                        <c:if test="${empty orders.content}">There is no order place in</c:if>
-                        </h4>
-                        <div class="form-group">
-                            <select id="timeCombo" class="selectpicker">
-                                <option value="lastWeek" <c:if test="${when eq 'lastWeek'}">selected=""</c:if>>Last week</option>
-                            <option value="last30Days" <c:if test="${when eq 'last30Days'}">selected=""</c:if>>Last 30 days</option>
-                            <option value="last6Months" <c:if test="${when eq 'last6Months'}">selected=""</c:if>>Last 6 months</option>
-                            <option value="allOrders" <c:if test="${when eq 'allOrders'}">selected=""</c:if>>All</option>
-                            </select>
-                        </div>
-                    <c:forEach items="${mOs}" var="m">
+                    <h2 class="title">Your Payment Methods</h2>
+                    <c:if test="${param.add eq 1}">
+                        <div class="alert alert-success" role="alert"> <strong>Well done!</strong> You successfully add a new card. </div>
+                    </c:if>
+                    <c:if test="${param.error eq 1}">
+                        <div class="alert alert-warning" role="alert"> <strong>Error!</strong> Something wrong with your card information. </div>
+                    </c:if>
+                        
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-4"><b>Credit & Debit Cards</b></div>
+                        <div class="col-md-4"><b>Expires</b></div>
+                        <div class="col-md-4" style="text-align: right;"><a href="<c:url value="/user/addCard"/>"><i class="fa fa-plus-circle"></i> Add credit/Debit card</a></div>
+                    </div>
+                    <c:forEach items="${cards}" var="c">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <div class="row">
-                                    <div class="col-md-2">
-                                        <div style="font-size:16px;" class="badge">
-                                                ORDER NO ${m.key.id}
-                                            </div>
-                                        <div style="font-size:14px;padding-top: 8px;">
-                                            <a href="<c:url value="/user/orderDetail/${m.key.id}"/>">Order Detail</a> |  <a href="javascript:alert('Comming Soon');" >Order Again</a>
-                                        </div>
+                                    <div class="col-md-4">
+                                        <c:set var="lengthCard" value="${fn:length(c.cardNumber)}"/>
+                                        <c:choose>
+                                            <c:when test="${c.cardType eq 1}">
+                                                <img src="<c:url value="/resource/theme/assets/lixi-global/images/icon-card-visa.png"/>"/> Visa
+                                            </c:when>
+                                            <c:when test="${c.cardType eq 2}">
+                                                <img src="<c:url value="/resource/theme/assets/lixi-global/images/icon-card-master.png"/>"/> Master
+                                            </c:when>
+                                            <c:when test="${c.cardType eq 3}">
+                                                <img src="<c:url value="/resource/theme/assets/lixi-global/images/icon-card-discover.png"/>"/> Discover
+                                            </c:when>
+                                            <c:when test="${c.cardType eq 4}">
+                                                <img width="47" height="29" src="<c:url value="/resource/theme/assets/lixi-global/images/card-amex.jpg"/>"/> Amex
+                                            </c:when>
+                                        </c:choose>                                                    
+                                        <span> ending in ${fn:substring(c.cardNumber, lengthCard-4, lengthCard)}</span>
+
                                     </div>
-                                    <div class="col-md-2" style="text-align:center;">
-                                        <div style="font-size:16px;">ORDER DATE</div>
-                                        <div style="font-size:14px;padding-top: 8px;">
-                                        <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>
-                                        </div>
+                                    <div class="col-md-4">
+                                        <c:if test="${c.expMonth < 10}">0${c.expMonth}</c:if><c:if test="${c.expMonth > 9}">${c.expMonth}</c:if>/${c.expYear}
                                     </div>
-                                    <div class="col-md-3" style="text-align:center;">
-                                        <div style="font-size:16px;">STATUS</div>
-                                        <div style="font-size:14px;padding-top: 8px;">
-                                            <c:if test="${empty m.key.invoice}">
-                                                <a href="<c:url value="/gifts/order-summary"/>">In Creation</a>
-                                            </c:if>
-                                            <c:if test="${not empty m.key.invoice}">
-                                                <c:if test="${empty m.key.invoice.netTransStatus}">
-                                                    <c:choose>
-                                                        <c:when test="${m.key.invoice.netResponseCode eq '1'}">
-                                                            In Progress
-                                                        </c:when>
-                                                        <c:when test="${m.key.invoice.netResponseCode eq '2'}">
-                                                            Canceled
-                                                        </c:when>
-                                                        <c:when test="${m.key.invoice.netResponseCode eq '3'}">
-                                                            Canceled
-                                                        </c:when>
-                                                        <c:when test="${m.key.invoice.netResponseCode eq '4'}">
-                                                            In Progress
-                                                        </c:when>
-                                                    </c:choose>
-                                                </c:if>
-                                                <c:if test="${not empty m.key.invoice.netTransStatus}">
-                                                    ${m.key.invoice.netTransStatus}
-                                                </c:if>             
-                                            </c:if>
-                                            <c:set var="lastCheck" value="Last check: "/>
-                                            <c:if test="${m.key.invoice.netTransStatus eq 'settledSuccessfully'}">
-                                                <c:set var="lastCheck" value=""/>
-                                            </c:if>
-                                            <c:if test="${empty m.key.invoice}">
-                                                &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>)
-                                            </c:if>
-                                            <c:if test="${not empty m.key.invoice}">
-                                                <c:if test="${empty m.key.invoice.netTransStatus}">
-                                                    &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.invoiceDate}"/>)
-                                                </c:if>
-                                                <c:if test="${not empty m.key.invoice.netTransStatus}">
-                                                    &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.lastCheckDate}"/>)
-                                                </c:if>             
-                                            </c:if>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2" style="text-align:center;">
-                                        <div style="font-size:16px;">TOTAL</div>
-                                        <div style="font-size:14px;padding-top: 8px;">
-                                            <c:if test="${empty m.key.invoice}">
-                                                --
-                                            </c:if>
-                                            <c:if test="${not empty m.key.invoice}">    
-                                                USD <fmt:formatNumber value="${m.key.invoice.totalAmount}" pattern="###,###.##"/> - 
-                                                <fmt:formatNumber value="${m.key.invoice.totalAmountVnd}" pattern="###,###.##"/> VND
-                                            </c:if>
-                                        </div>
-                                    </div>
-                                        <div class="col-md-3" style="text-align: center;">
-                                        <div style="font-size:16px;">SETTING</div>
-                                            <div style="font-size:14px;padding-top: 8px;">
-                                            <c:if test="${m.key.setting eq 0}">
-                                                Gift Only
-                                            </c:if>
-                                            <c:if test="${m.key.setting eq 1}">
-                                                Allow Refund
-                                            </c:if>
-                                            </div>    
+                                    <div class="col-md-4" style="text-align: right;">
+                                            <a href="javascript:toogleDetail(${c.id})"><i id="iconDetail${c.id}" class="fa fa-caret-down"></i></a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel-body">
-                                <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                                    <ul class="nav nav-pills" role="tablist">
-                                        <li role="presentation" class="active"><a href="#">${rio.recipient.firstName}&nbsp;${rio.recipient.middleName}&nbsp;${rio.recipient.lastName} <span class="badge">${fn:length(rio.gifts) + fn:length(rio.topUpMobilePhones)}</span></a></li>
-                                    </ul>
-                                    <div>&nbsp;</div>
-                                    <c:forEach items="${rio.gifts}" var="g">
-                                        <div class="row" style="margin-bottom: 5px;">
-                                            <div class="col-md-2" style="padding-left:50px;">
-                                                <img width="122" height="107" src="<c:url value="${g.productImage}"/>"/>
-                                            </div>
-                                            <div class="col-md-1" style="padding-top:40px;text-align: center;">
-                                                ${g.productQuantity}
-                                            </div>
-                                            <div class="col-md-6" style="padding-top:40px;">
-                                                ${g.productName}
-                                            </div>
-                                            <div class="col-md-3" style="padding-top:40px;text-align: center;">
-                                                USD <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${g.exchPrice}" pattern="###,###.##"/>
-                                            </div>
-                                        </div>
-                                    </c:forEach>
-                                    <c:forEach items="${rio.topUpMobilePhones}" var="t">
-                                        <div class="row" style="margin-bottom: 5px;">
-                                            <div class="col-md-3" style="padding-left:50px;">
-                                                Top Up Mobile Phone
-                                            </div>
-                                            <div class="col-md-6" style="text-align: center;">
-                                                ${t.phone}
-                                            </div>
-                                            <div class="col-md-3" style="text-align: center;">
-                                                USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${t.amount * m.key.lxExchangeRate.buy}" pattern="###,###.##"/>
-                                            </div>
-                                        </div>
-                                    </c:forEach>
-                                    <c:if test="${theValueCount.count < fn:length(m.value)}">
-                                    <div class="row">
-                                        <div class="col-md-8"><hr style="height:1px;border:none;color:#333;background-color:#333;"/></div>
+                            <div class="panel-body" style="display:none;" id="panelBody${c.id}">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <b>Name o card</b><br/>
+                                        ${c.cardName}
                                     </div>
-                                    </c:if>
-                                </c:forEach>
+                                    <div class="col-md-4">
+                                        <b>Billing address</b><br/>
+                                        <b>${c.billingAddress.firstName}&nbsp;${c.billingAddress.lastName}</b><br/>
+                                        ${c.billingAddress.address}<br/>
+                                        ${c.billingAddress.city}, ${c.billingAddress.state}, ${c.billingAddress.zipCode}, ${c.billingAddress.country}<br/>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4" style="text-align: right;">
+                                        <button class="btn btn-default btn-sm" onclick="deleteCard(${c.id})">Delete</button>
+                                        <button class="btn btn-default btn-sm">Edit</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </c:forEach>

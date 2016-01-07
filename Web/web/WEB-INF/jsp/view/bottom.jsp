@@ -12,26 +12,34 @@
                                     <div role="listbox" class="carousel-inner">
                                         <div class="item active">
                                             <div>
-                                                <span class="date">(12/28)</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh.
+                                                <span class="date">(12/28/15)</span>I really like this gifting service. If my friend doesn't like it, she can receive a refund to her bank account.
                                             </div>
                                             <div class="auth">
-                                                Mr ABC
+                                                Huynhxxxx@gmail.com
                                             </div>
                                         </div>
                                         <div class="item">
                                             <div>
-                                                <span class="date">(12/28)</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
+                                                <span class="date">(12/30/15)</span>This is really cheap. I bought a $30 gift, and it costs me only $1.90 total. All other services cost at least $5.00
                                             </div>
                                             <div class="auth">
-                                                Mr BCD
+                                                Linhxxxx@yahoo.com
                                             </div>
                                         </div>
                                         <div class="item">
                                             <div>
-                                                <span class="date">(12/28)</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum elit erat, eget mattis nisl euismod a. Sed dictum, dolor sit amet posuere snibh. 
+                                                <span class="date">(12/31/15)</span>Wow, I can buy flowers for my girl friend in Vietnam and it gets to her real quick. 
                                             </div>
                                             <div class="auth">
-                                                Mr DEF
+                                                Tylerxxxx@gmail.com
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div>
+                                                <span class="date">(01/02/16)</span>Now, I can top up mobile phone for my friend in Vietnam as a gift so she can talk to me.
+                                            </div>
+                                            <div class="auth">
+                                                Lamxxxx@gmail.com
                                             </div>
                                         </div>
 

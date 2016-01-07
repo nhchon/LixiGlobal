@@ -34,6 +34,7 @@ import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
@@ -52,6 +53,7 @@ import vn.chonsoft.lixi.repositories.service.CountryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderCardService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
@@ -89,6 +91,9 @@ public class CheckOutController2 {
 
     @Autowired
     private UserCardService ucService;
+
+    @Autowired
+    private LixiOrderCardService ocService;
 
     @Autowired
     private BillingAddressService baService;
@@ -186,7 +191,12 @@ public class CheckOutController2 {
         
         if(cardId != null){
             
-            order.setCard(this.ucService.findById(cardId));
+            LixiOrderCard c = this.ocService.findById(cardId);
+            if(c == null){
+                c = this.ocService.save(LiXiUtils.toLxOrderCard(this.ucService.findById(cardId)));
+            }
+            
+            order.setCard(c);
             order.setBankAccount(null);
             
         }
@@ -312,7 +322,8 @@ public class CheckOutController2 {
                 
                 // update order, add card
                 LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-                order.setCard(uc);
+                order.setCard(this.ocService.save(LiXiUtils.toLxOrderCard(uc)));
+                
                 //remove bank account IF it has
                 order.setBankAccount(null);
 

@@ -7,6 +7,8 @@ package vn.chonsoft.lixi.model.form;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import vn.chonsoft.lixi.model.BillingAddress;
+import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.validations.NotBlank;
 
 /**
@@ -65,6 +67,32 @@ public class AddCardForm {
     @NotBlank(message = "{validate.not_null}")
     private String country;
 
+    public AddCardForm(){}
+    
+    public AddCardForm(UserCard card){
+        
+        if(card != null){
+            
+            this.cardId = card.getId();
+            this.cardType = card.getCardType();
+            this.cardName = card.getCardName();
+            this.cardNumber = card.getCardNumber();
+            this.expMonth = card.getExpMonth();
+            this.expYear = card.getExpYear();
+            this.cvv = card.getCardCvv();
+            /* billing address */
+            BillingAddress bl = card.getBillingAddress();
+            this.blId = bl.getId();
+            this.firstName = bl.getFirstName();
+            this.lastName = bl.getLastName();
+            this.address = bl.getAddress();
+            this.city = bl.getCity();
+            this.state = bl.getState();
+            this.zipCode = bl.getZipCode();
+            this.country = bl.getCountry();
+        }
+    }
+    
     public Long getCardId() {
         return cardId;
     }

@@ -15,6 +15,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
@@ -35,15 +36,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.model.UserBankAccount;
+import vn.chonsoft.lixi.model.UserCard;
+import vn.chonsoft.lixi.model.form.AddCardForm;
 import vn.chonsoft.lixi.model.form.UserEditEmailForm;
 import vn.chonsoft.lixi.model.form.UserEditNameForm;
 import vn.chonsoft.lixi.model.form.UserEditPasswordForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
+import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.CountryService;
 import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
+import vn.chonsoft.lixi.repositories.service.PaymentService;
+import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
+import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -84,6 +93,19 @@ public class UserManagementController {
     
     @Autowired
     private LixiGlobalFeeService feeService;
+    
+    @Autowired
+    private UserCardService cardService;
+    
+    @Autowired
+    private UserBankAccountService bankService;
+    
+    @Autowired
+    private BillingAddressService baService;
+
+    @Autowired
+    private PaymentService paymentService;
+
     
     /**
      * 
@@ -502,5 +524,187 @@ public class UserManagementController {
         
         /* return */
         return new ModelAndView("user2/orderDetail");
+    }
+    
+    /**
+     * 
+     * @param model
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "payments", method = RequestMethod.GET)
+    public ModelAndView payments(Map<String, Object> model) {
+        
+        User u = this.userService.findByEmail(loginedUser.getEmail());
+        List<UserCard> cards = this.cardService.findByUser(u);
+        List<UserBankAccount> accounts = this.bankService.findByUser(u);
+        
+        model.put("cards", cards);
+        model.put("banks", accounts);
+        
+        return new ModelAndView("user2/payment/list");
+    }
+
+    /**
+     * 
+     * @param model
+     * @param id
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "edit/card/{id}", method = RequestMethod.GET)
+    public ModelAndView addCard(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
+        
+        User u = this.userService.findByEmail(loginedUser.getEmail());
+        UserCard card = this.cardService.findByIdAndUser(id, u);
+        
+        if(card == null){
+            return new ModelAndView(new RedirectView("/user/payments?error=1", true, true));
+        }
+        /* */
+        AddCardForm addCardForm = new AddCardForm(card);
+        
+        model.put("addCardForm", addCardForm);
+        
+        model.put("COUNTRIES", this.countryService.findAll());
+        
+        return new ModelAndView("user2/payment/add-a-card");
+    }
+    /**
+     * 
+     * @param model
+     * @param request 
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "addCard", method = RequestMethod.GET)
+    public ModelAndView addCard(Map<String, Object> model, HttpServletRequest request) {
+        
+        /* card form */
+        AddCardForm addCardForm = new AddCardForm();
+        addCardForm.setCardType(1);
+        addCardForm.setFirstName(loginedUser.getFirstName());
+        addCardForm.setLastName(loginedUser.getLastName());
+        
+        model.put("addCardForm", addCardForm);
+        
+        model.put("COUNTRIES", this.countryService.findAll());
+        
+        return new ModelAndView("user2/payment/add-a-card");
+    }
+    
+    /**
+     *
+     * submit a new card
+     *
+     * @param model
+     * @param form
+     * @param errors
+     * @param request
+     * @return
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "addCard", method = RequestMethod.POST)
+    public ModelAndView addACard(Map<String, Object> model,
+            @Valid AddCardForm form, Errors errors, HttpServletRequest request) {
+        
+        /* for turn back */
+        //model.put("COUNTRIES", this.countryService.findAll());
+        
+        if (errors.hasErrors()) {
+            return new ModelAndView("user2/payment/add-a-card");
+        }
+
+        try {
+
+            if (!LiXiUtils.checkMonthYearGreaterThanCurrent(form.getExpMonth(), form.getExpYear())) {
+
+                model.put("expiration_failed", 1);
+
+                return new ModelAndView("user2/payment/add-a-card");
+            }
+
+            User u = this.userService.findByEmail(loginedUser.getEmail());
+            
+            // billing address
+            BillingAddress bl = new BillingAddress();
+            bl.setFirstName(form.getFirstName());
+            bl.setLastName(form.getLastName());
+            bl.setAddress(form.getAddress());
+            bl.setCity(form.getCity());
+            bl.setState(form.getState());
+            bl.setZipCode(form.getZipCode());
+            bl.setCountry(form.getCountry());
+            bl.setUser(u);
+            
+            bl = this.baService.save(bl);
+            
+            // Add a card
+            UserCard uc = new UserCard();
+            uc.setUser(u);
+            uc.setCardType(form.getCardType());
+            uc.setCardName(form.getCardName());
+            uc.setBillingAddress(bl);
+            uc.setModifiedDate(Calendar.getInstance().getTime());
+            // pass real information to authorize.net
+            uc.setCardNumber(form.getCardNumber());
+            uc.setExpMonth(form.getExpMonth());
+            uc.setExpYear(form.getExpYear());
+            uc.setCardCvv(form.getCvv());
+            
+            /* Create authorize.net profile */
+            String returned = LiXiConstants.OK;
+            if(StringUtils.isEmpty(u.getAuthorizeProfileId())){
+                returned = this.paymentService.createCustomerProfile(u, uc);
+            }
+            else{
+                returned = this.paymentService.createPaymentProfile(uc);
+            }
+            
+            /* if we store card information on authorize.net OK */
+            if(LiXiConstants.OK.equals(returned)){
+
+                /* Don't store full card information */
+                String secretCardNumber= "XXXX"+StringUtils.right(form.getCardNumber(), 4);
+                uc.setCardNumber(secretCardNumber);
+                uc.setCardCvv("000");
+                
+                this.cardService.save(uc);
+                
+                return new ModelAndView(new RedirectView("/user/payments?add=1", true, true));
+            }
+            else{
+                model.put("authorizeError", returned);
+
+                return new ModelAndView("user2/payment/add-a-card");
+            }
+            
+        } catch (ConstraintViolationException e) {
+
+            log.info("Insert card failed", e);
+            //
+            model.put("validationErrors", e.getConstraintViolations());
+            return new ModelAndView("user2/payment/add-a-card");
+
+        }
+        
+        
+    }
+
+    /**
+     * 
+     * @param model
+     * @param id
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "delete/card/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteCard(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
+        
+        this.cardService.delete(id);
+        
+        return new ModelAndView(new RedirectView("/user/payments", true, true));
     }
 }

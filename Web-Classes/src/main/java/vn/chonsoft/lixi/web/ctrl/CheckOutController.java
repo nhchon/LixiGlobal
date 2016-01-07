@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,7 @@ import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiCardFee;
 import vn.chonsoft.lixi.model.LixiFee;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
@@ -55,6 +57,7 @@ import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 import vn.chonsoft.lixi.repositories.service.LixiCardFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiFeeService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderCardService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
@@ -97,6 +100,9 @@ public class CheckOutController {
 
     @Inject
     private RecipientService recService;
+    
+    @Autowired
+    private LixiOrderCardService ocService;
 
     @Inject
     private UserBankAccountService ubcService;
@@ -224,7 +230,7 @@ public class CheckOutController {
             
             // update order, add card
             LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-            order.setCard(uc);
+            order.setCard(this.ocService.save(LiXiUtils.toLxOrderCard(uc)));
             //remove bank account IF it has
             order.setBankAccount(null);
 
@@ -461,7 +467,7 @@ public class CheckOutController {
         LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
         if (cardId > 0) {
             //
-            order.setCard(this.ucService.findById(cardId));
+            order.setCard(this.ocService.findById(cardId));
             order.setBankAccount(null);
         } else {
             //
@@ -587,11 +593,11 @@ public class CheckOutController {
             // update bill address attr for selected card
             LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
 
-            UserCard uc = order.getCard();
+            LixiOrderCard uc = order.getCard();
             if (uc != null) {
                 //
                 uc.setBillingAddress(this.baService.findById(baId));
-                order.setCard(this.ucService.save(uc));
+                order.setCard(this.ocService.save(uc));
                 // update order
                 this.lxorderService.save(order);
             } else {
@@ -676,7 +682,7 @@ public class CheckOutController {
 
             // update billing address for card or bank account
             LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-
+            /*
             UserCard uc = order.getCard();
             if (uc != null) {
                 //
@@ -691,7 +697,7 @@ public class CheckOutController {
                     this.ubcService.save(ubc);
                 }
             }
-
+            */
         } catch (ConstraintViolationException e) {
 
             model.put("validationErrors", e.getConstraintViolations());

@@ -36,6 +36,16 @@ public class UserCardServiceImpl implements UserCardService{
     
     /**
      * 
+     * @param id 
+     */
+    @Override
+    public void delete(Long id){
+        
+        this.ucRepository.delete(id);
+    }
+    
+    /**
+     * 
      * @param id
      * @return 
      */

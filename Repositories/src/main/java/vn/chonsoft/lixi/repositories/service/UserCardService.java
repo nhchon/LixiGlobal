@@ -18,6 +18,8 @@ public interface UserCardService {
     
     UserCard save(UserCard uc);
     
+    void delete(Long id);
+    
     UserCard findById(Long id);
     
     List<UserCard> findByUser(User u);
