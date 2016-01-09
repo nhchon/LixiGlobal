@@ -62,6 +62,8 @@
                                 $('#editRecipientModal').modal('hide');
                                 // get new phone number
                                 var recId = $("#chooseRecipientForm #recId").val();
+                                var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+                                $('#recName' + recId).html(name);
                                 $('#recPhone' + recId).html($("#chooseRecipientForm #phone").val());
                                 $('#recEmail' + recId).html($("#chooseRecipientForm #email").val());
                             }
@@ -260,7 +262,7 @@
                                 <c:forEach items="${REC_GIFTS}" var="entry">
                                     <div class="receiver-info-item">
                                         <div class="receiver-sent-to">
-                                            <h4 class="text-color-link">Send To: ${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName} <a href="javascript:editRecipient(${entry.recipient.id});" class="edit-info-event"></a></h4>
+                                            <h4 class="text-color-link">Send To: <span id="recName${entry.recipient.id}">${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</span> <a href="javascript:editRecipient(${entry.recipient.id});" class="edit-info-event"></a></h4>
                                             <div>
                                                 <strong>Email Address:</strong><span id="recEmail${entry.recipient.id}">${entry.recipient.email}</span>
                                             </div>

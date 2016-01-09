@@ -6,6 +6,16 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            jQuery(document).ready(function () {
+                $('#subject').change(function(){
+                    if($(this).val() == '-1'){
+                        $('#newSubjectDiv').show();
+                    }
+                    else{
+                        $('#newSubjectDiv').hide();
+                    }
+                });
+            });
         </script>
     </jsp:attribute>
 
@@ -32,7 +42,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" id="newSubjectDiv" style="display:none;">
                             <div class="col-md-3">
                             </div>
                             <div class="col-md-6">

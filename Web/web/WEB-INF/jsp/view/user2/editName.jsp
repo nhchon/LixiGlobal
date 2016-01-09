@@ -31,7 +31,7 @@
                         return false;
 
                     }
-                    
+
                     return true;
                 });
             });
@@ -39,50 +39,46 @@
     </jsp:attribute>
 
     <jsp:body>
-        <section class="section-85-0">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
-                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
-                        <c:if test="${validationErrors != null}"><div class="msg msg-error">
-                                <ul>
-                                    <c:forEach items="${validationErrors}" var="error">
-                                        <li><c:out value="${error.message}" /></li>
-                                        </c:forEach>
-                                </ul>
-                            </div></c:if>
-                        <%-- place holder message --%>
-                        <%-- // End place holder message --%>
-                        <form:form class="form-horizontal" modelAttribute="userEditNameForm">
-                            <fieldset>
-                                <legend><spring:message code="signup.change_your_name"/></legend>
-                                <div class="form-group">
-                                    <div class="col-lg-12 col-md-12">
-                                        <label class="control-label"><spring:message code="signup.my_new_name"/></label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                        <div class="col-lg-4">
-                                            <form:input class="form-control" path="firstName" placeholder="${firstNameMessage}"/>
-                                            <span class="help-block errors "><form:errors path="firstName" /></span>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <form:input class="form-control" path="middleName" placeholder="${middleMessage}"/>
-                                            <span class="help-block errors"><form:errors path="middleName" /></span>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <form:input path="lastName" class="form-control" placeholder="${lastNameMessage}"/>
-                                            <span class="help-block errors"><form:errors path="lastName" /></span>
-                                        </div>
-                                </div>
-                                <div class="form-group right">
-                                    <div class="col-lg-12">
-                                        <button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="message.save_changes"/></button>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form:form>
-                    </div>
+        <section class="main-section bg-default">
+            <div class="container post-wrapper" style="padding-top:30px;">
+                <div class="section-receiver">
+                    <c:if test="${validationErrors != null}"><div class="msg msg-error">
+                            <ul>
+                                <c:forEach items="${validationErrors}" var="error">
+                                    <li><c:out value="${error.message}" /></li>
+                                    </c:forEach>
+                            </ul>
+                        </div></c:if>
+                    <%-- place holder message --%>
+                    <%-- // End place holder message --%>
+                    <form:form class="form-horizontal" modelAttribute="userEditNameForm">
+                        <h2 class="title"><spring:message code="signup.change_your_name"/>:</h2>
+                        <div class="form-group">
+                            <div class="col-lg-12 col-md-12">
+                                <label class="control-label"><spring:message code="signup.my_new_name"/></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-4">
+                                <form:input class="form-control" path="firstName" placeholder="${firstNameMessage}"/>
+                                <div class="has-error"><form:errors path="firstName" cssClass="help-block" element="div"/></div>
+                            </div>
+                            <div class="col-lg-4">
+                                <form:input class="form-control" path="middleName" placeholder="${middleMessage}"/>
+                                <div class="has-error"><form:errors path="middleName" cssClass="help-block" element="div"/></div>
+                            </div>
+                            <div class="col-lg-4">
+                                <form:input path="lastName" class="form-control" placeholder="${lastNameMessage}"/>
+                                <div class="has-error"><form:errors path="lastName" cssClass="help-block" element="div"/></div>
+                            </div>
+                        </div>
+                        <div class="form-group right">
+                            <div class="col-lg-12">
+                                <button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="message.save_changes"/></button>
+                                <button type="button" class="btn btn-warning btn-has-link-event" data-link="<c:url value="/user/yourAccount"/>">Cancel</button>
+                            </div>
+                        </div>
+                    </form:form>
                 </div>
             </div>
         </section>

@@ -42,11 +42,11 @@
                                 <div class="col-md-9 col-sm-9">
                                     <label>Mobile Phone Number:</label><div class="clearfix"></div>
                                     <div>${user.phone}</div>
-                                    <div>Why verify your phone mobile?</div>
+                                    <!--<div>Why verify your phone mobile?</div>-->
                                 </div>
                                 <div class="col-md-3 col-sm-3 text-right">
                                     <button class="btn btn-primary text-uppercase btn-has-link-event" data-link="<c:url value="/user/editPhoneNumber"/>">Edit</button><br/>
-                                    <button class="btn btn-default text-uppercase">Verify</button>
+                                    <!--<button class="btn btn-default text-uppercase">Verify</button>-->
                                 </div>
                             </div>
                         </div>

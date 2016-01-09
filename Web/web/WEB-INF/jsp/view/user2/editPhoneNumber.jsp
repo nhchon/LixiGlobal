@@ -10,45 +10,37 @@
     </jsp:attribute>
 
     <jsp:body>
-        <section class="section-85-0">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
-                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
-                        <c:if test="${validationErrors != null}"><div class="msg msg-error">
-                                <ul>
-                                    <c:forEach items="${validationErrors}" var="error">
-                                        <li><c:out value="${error.message}" /></li>
-                                        </c:forEach>
-                                </ul>
-                            </div></c:if>
-                        <%-- place holder message --%>
-                        <%-- // End place holder message --%>
-                        <c:url value="/user/editPhoneNumber" var="formEditPhoneNumberUrl"/>
-                        <form class="form-horizontal" method="post" action="${formEditPhoneNumberUrl}">
-                            <fieldset>
-                                <legend><spring:message code="message.change_mobile_number"/></legend>
-                                <div class="form-group">
-                                    <div class="col-lg-4 col-md-4">
-                                        <label class="control-label"><spring:message code="message.mobile_number"/></label>
-                                    </div>
-                                    <div class="col-lg-8 col-md-8">
-                                        <input type="text" class="form-control" name="phone" id="phone" value="${phone}"/>
-                                    </div>
-                                </div>
-                                <div class="form-group right">
-                                    <div class="col-lg-4 col-md-4"></div>
-                                    <div class="col-lg-8">
-                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                        <button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="message.save_changes"/></button>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
+        <section class="main-section bg-default">
+            <div class="container post-wrapper" style="padding-top:30px;">
+                <div class="section-receiver">
+                    <c:if test="${validationErrors != null}"><div class="msg msg-error">
+                            <ul>
+                                <c:forEach items="${validationErrors}" var="error">
+                                    <li><c:out value="${error.message}" /></li>
+                                    </c:forEach>
+                            </ul>
+                        </div></c:if>
+                    <%-- place holder message --%>
+                    <%-- // End place holder message --%>
+                    <c:url value="/user/editPhoneNumber" var="formEditPhoneNumberUrl"/>
+                    <h2 class="title"><spring:message code="message.change_mobile_number"/></h2>
+                    <form role="form" method="post" action="${formEditPhoneNumberUrl}">
+                        <div class="form-group">
+                            <div class="col-md-8" style="margin-bottom: 10px;">
+                                <label class="control-label"><spring:message code="message.mobile_number"/></label>
+                                <input type="text" class="form-control" name="phone" id="phone" value="${phone}"/>
+                            </div>
+                        </div>
+                        <div class="form-group right">
+                            <div class="col-md-8">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <button id="btnSubmit" type="submit" class="btn btn-primary"><spring:message code="message.save_changes"/></button>
+                                <button type="button" class="btn btn-warning btn-has-link-event" data-link="<c:url value="/user/yourAccount"/>">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </section>
-
     </jsp:body>
 </template:Client>
