@@ -18,7 +18,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <security:csrfMetaTags/>
         <title><c:out value="${fn:trim(htmlTitle)}" /></title>
-        
+
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <link rel="apple-touch-icon" sizes="57x57" href="<c:url value="/resource/theme/assets/lixi-global/images"/>/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="<c:url value="/resource/theme/assets/lixi-global/images"/>/apple-icon-60x60.png">
@@ -37,14 +37,29 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="<c:url value="/resource/theme/assets/lixi-global/images"/>/ms-icon-144x144.png">
         <meta name="theme-color" content="#ffffff">
-        
+
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/bootstrap.min.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/lixi-global-ext.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/fonts/font-awesome/css/font-awesome.min.css"/>">
         <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:100,300,300italic,400,700|Julius+Sans+One|Roboto+Condensed:300,400">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/hover-min.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/main.css"/>">
-        <link id="originalTheme" rel="stylesheet" type="text/css" href="<c:url value="/resource/theme/assets/lixi-global/themes/default/css/style.css"/>">
+        <c:set var="currentDate" value="<%=new java.util.Date()%>"/>
+        <fmt:setLocale value="en_US" />
+        <fmt:parseDate var="tetDateMilestone" value="Wed Jan 20 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+        <fmt:parseDate var="valentinceDateMilestone" value="Mon Feb 01 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+        <fmt:parseDate var="endValentinceDateMilestone" value="Mon Feb 15 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+        <c:choose>
+            <c:when test="${(currentDate gt tetDateMilestone) && (currentDate lt valentinceDateMilestone)}">
+                <link id="originalTheme" rel="stylesheet" type="text/css" href="<c:url value="/resource/theme/assets/lixi-global/themes/tet/css/style.css"/>">
+            </c:when>
+            <c:when test="${(currentDate gt valentinceDateMilestone) && (currentDate lt endValentinceDateMilestone)}">
+                <link id="originalTheme" rel="stylesheet" type="text/css" href="<c:url value="/resource/theme/assets/lixi-global/themes/valentine/css/style.css"/>">
+            </c:when>
+            <c:otherwise>
+                <link id="originalTheme" rel="stylesheet" type="text/css" href="<c:url value="/resource/theme/assets/lixi-global/themes/default/css/style.css"/>">
+            </c:otherwise>
+        </c:choose>
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/addon.css"/>">
         <jsp:invoke fragment="headContent" />
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"/>"></script>
@@ -82,10 +97,10 @@
             $(function () {
                 var token = $("input[name='_csrf']").val();
                 var header = "X-CSRF-TOKEN";
-                $(document).ajaxSend(function(e, xhr, options) {
+                $(document).ajaxSend(function (e, xhr, options) {
                     xhr.setRequestHeader(header, token);
                 });
-            });            
+            });
         </script>
         <jsp:invoke fragment="javascriptContent" />
     </body>
