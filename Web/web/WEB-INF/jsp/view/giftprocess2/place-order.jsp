@@ -40,7 +40,7 @@
             }
 
             function editRecipient(id){
-                $('#editRecipientSpan'+id).html('<span style="font-size:12px;"><a style="font-size:12px;" href="javascript:doEditRecipient('+id+');"> Change </a>|<a style="font-size:12px;" href="javascript:deleteReceiver('+id+');"> Delete </a> | <a style="font-size:12px;" href="javascript:cancelEditReceiver('+id+');"> Cancel </a></span>')
+                $('#editRecipientSpan'+id).html('<span style="font-size:12px;"><a style="font-size:12px;" href="javascript:doEditRecipient('+id+');"> Change </a>|<a style="font-size:12px;" href="javascript:deleteReceiver('+id+');"> Remove </a> | <a style="font-size:12px;" href="javascript:cancelEditReceiver('+id+');"> Cancel </a></span>')
             }
             
             function deleteReceiver(id){
@@ -159,7 +159,8 @@
                 var editHtml = '<div class="checkbox" style="margin-bottom:0px;"><label style="padding-left:0px;">' +
                         '<input type="text" class="form-control" value="' + q + '"  id="combo' + id + '" style="height:30px;"/>' +
                         '<a href="javascript:updateQuantity(' + id + ');">Update</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;' +
-                        '<a href="javascript:doRemove(' + id + ');">Remove</a>' +
+                        '<a href="javascript:doRemove(' + id + ');">Remove</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;' +
+                        '<a href="javascript:removeEditQuantity(' + id + ');">Cancel</a>' +
                         '</label></div>';
 
                 $('#gift' + id).html(editHtml);
@@ -303,7 +304,7 @@
             
             function editTopUp(id){
                 
-                $('#topUpDiv'+id).html('<a href="javascript:changeTopUp('+id+');"> Change </a>|<a href="javascript:deleteTopUp('+id+');"> Delete </a> | <a href="javascript:cancelEditTopUp('+id+');"> Cancel </a>');
+                $('#topUpDiv'+id).html('<a href="javascript:changeTopUp('+id+');"> Change </a>|<a href="javascript:deleteTopUp('+id+');"> Remove </a> | <a href="javascript:cancelEditTopUp('+id+');"> Cancel </a>');
                 
             }
             

@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.web.util;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -20,10 +21,28 @@ public class TestEverything {
         int no = f > s ? r[0]++ : (f == s ? r[1]++ : r[2]++);
     }
     
+    public static String getBeautyOrderId(Long id){
+        
+        String newId = id.toString();
+        
+        newId = StringUtils.leftPad(newId, 9, '0');
+        
+        newId = "LG" + newId;
+
+        StringBuilder idBuffer = new StringBuilder();
+        
+        for(int i=0; i< newId.length();i++){
+            idBuffer.append(newId.charAt(i));
+            if(((i+1)%4) == 0 && (i<newId.length()))
+                idBuffer.append('-');
+        }
+        
+        return idBuffer.toString();
+    }    
     public static void main(String[] args) {
         
-        System.out.println(LiXiUtils.getTestTotalAmount(9));
-        System.out.println(LiXiUtils.getTestTotalAmount(102.34));
+        System.out.println(getBeautyOrderId(19l));
+        //System.out.println(LiXiUtils.getTestTotalAmount(102.34));
         //System.out.println(Math.floor(21766.8/100)*100);
         /*
         String result = "Manchester United 1 Chelsea 0, Manchester United 2 Liverpool 0, Manchester United 1 Totemham 1, Asernal 4 Manchester United 2";

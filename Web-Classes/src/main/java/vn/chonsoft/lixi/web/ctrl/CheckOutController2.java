@@ -569,7 +569,7 @@ public class CheckOutController2 {
     @RequestMapping(value = "thank-you", method = RequestMethod.GET)
     public ModelAndView thankYou(Map<String, Object> model, HttpServletRequest request) {
 
-        model.put("LIXI_ORDER_ID", (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID)));
         
         // remove Lixi order id
         request.getSession().removeAttribute(LiXiConstants.LIXI_ORDER_ID);
