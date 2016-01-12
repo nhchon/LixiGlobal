@@ -40,7 +40,7 @@
             }
 
             function editRecipient(id){
-                $('#editRecipientSpan'+id).html('<span style="font-size:12px;"><a style="font-size:12px;" href="javascript:doEditRecipient('+id+');"> Change </a>|<a style="font-size:12px;" href="javascript:deleteReceiver('+id+');"> Remove </a> | <a style="font-size:12px;" href="javascript:cancelEditReceiver('+id+');"> Cancel </a></span>')
+                $('#editRecipientSpan'+id).html('<span style="font-size:12px;"><a style="font-size:12px;" href="javascript:doEditRecipient('+id+');"> Update </a>|<a style="font-size:12px;" href="javascript:deleteReceiver('+id+');"> Remove </a> | <a style="font-size:12px;" href="javascript:cancelEditReceiver('+id+');"> Cancel </a></span>')
             }
             
             function deleteReceiver(id){
