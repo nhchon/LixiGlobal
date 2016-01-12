@@ -22,7 +22,9 @@ public class TestEverything {
     
     public static void main(String[] args) {
         
-        System.out.println(Math.floor(21766.8/100)*100);
+        System.out.println(LiXiUtils.getTestTotalAmount(9));
+        System.out.println(LiXiUtils.getTestTotalAmount(102.34));
+        //System.out.println(Math.floor(21766.8/100)*100);
         /*
         String result = "Manchester United 1 Chelsea 0, Manchester United 2 Liverpool 0, Manchester United 1 Totemham 1, Asernal 4 Manchester United 2";
         String[] arrs = result.split(",");

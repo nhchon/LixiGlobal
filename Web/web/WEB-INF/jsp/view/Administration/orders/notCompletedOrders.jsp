@@ -26,6 +26,17 @@
         <!-- main -->
         <h2 class="sub-header">Orders Not Submitted Yet</h2>
         <div class="table-responsive">
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-info active">In Process</button> 
+                    <button type="button" class="btn btn-success">Processed</button> 
+                    <button type="button" class="btn btn-primary">Settled</button> 
+                    <button type="button" class="btn btn-danger">Completed</button> 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1">#</div>
+            </div>
             <form action="${pageContext.request.contextPath}/Administration/Orders/sendToBaoKim" method="post">
                 <table class="table table-striped table-hover">
                     <thead>

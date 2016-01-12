@@ -28,7 +28,7 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @ComponentScan(
-        basePackages = "com.wrox.site",
+        basePackages = "vn.chonsoft.lixi.web.ctrl",
         useDefaultFilters = false,
         includeFilters =
         @ComponentScan.Filter({RestEndpoint.class, RestEndpointAdvice.class})

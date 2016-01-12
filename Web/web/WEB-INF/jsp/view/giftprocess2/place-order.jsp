@@ -21,11 +21,14 @@
             var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
             var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
+            var DELETE_RECEIVER_MESSAGE = '<spring:message code="message.delete_receiver"/>';
             var CALCULATE_FEE_PATH = '<c:url value="/checkout/place-order/calculateFee"/>';
+            var PLACE_ORDER_DELETE_RECEIVER_PATH = '<c:url value="/checkout/delete/receiver/"/>';
+            var PLACE_ORDER_DELETE_TOPUP_PATH = '<c:url value="/checkout/delete/topUp/"/>';
             var PLACE_ORDER_DELETE_GIFT_PATH = '<c:url value="/checkout/delete/gift/"/>';
             var PLACE_ORDER_UPDATE_GIFT_PATH = '<c:url value="/checkout/update/gift/"/>';
             var arrQ = [];
-            function editRecipient(id) {
+            function doEditRecipient(id) {
                 $.get('<c:url value="/recipient/edit/"/>'+id, function (data) {
                     enableEditRecipientHtmlContent(data);
                     // focus on phone field
@@ -36,6 +39,65 @@
                 });
             }
 
+            function editRecipient(id){
+                $('#editRecipientSpan'+id).html('<span style="font-size:12px;"><a style="font-size:12px;" href="javascript:doEditRecipient('+id+');"> Change </a>|<a style="font-size:12px;" href="javascript:deleteReceiver('+id+');"> Delete </a> | <a style="font-size:12px;" href="javascript:cancelEditReceiver('+id+');"> Cancel </a></span>')
+            }
+            
+            function deleteReceiver(id){
+                if (confirm(DELETE_RECEIVER_MESSAGE)) {
+                    overlayOn($('#placeOrderContentDiv'));
+                    $.ajax({
+                        url: PLACE_ORDER_DELETE_RECEIVER_PATH + id,
+                        type: "get",
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR)
+                        {
+                            if (data.error == "0") {
+
+                                    if($('.receiver-info-item').length === 2){
+                                        
+                                        $('.receiver-info-item').remove();
+                                        
+                                        $('#thankyouBeing').html("Your Shopping Cart is empty !");
+                                        
+                                        $('#thankyouBeing').after("<p>Tang qua. Tang niem vui.</p>")
+                                        
+                                        $('#btnSubmit').remove();
+                                        
+                                        $('#btnLogOut').show();
+                                    }
+                                    else{
+                                        // remove the ceiver
+                                        $('#receiver'+id).remove();
+                                    }
+                                //
+                                $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);
+                                $('#giftPriceVnd').html(data.LIXI_GIFT_PRICE_VND);
+                                $('#CARD_PROCESSING_FEE_THIRD_PARTY').html(data.CARD_PROCESSING_FEE_THIRD_PARTY);
+                                $('#lixiHandlingFeeTotal').html(data.LIXI_HANDLING_FEE_TOTAL);
+                                $('#LIXI_FINAL_TOTAL').html(data.LIXI_FINAL_TOTAL);
+                                /* */
+                                updateShoppingCart(data.LIXI_GIFT_PRICE, data.LIXI_GIFT_PRICE_VND);
+                            }
+                            else {
+                                alert(data.message);
+                            }
+                            overlayOff();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown)
+                        {
+                            alert(errorThrown);
+                            overlayOff();
+                        }
+                    });
+                }
+                
+            }
+            
+            function cancelEditReceiver(id){
+                $('#editRecipientSpan'+id).html('<a href="javascript:editRecipient('+id+');" class="edit-info-event"></a>');
+            }
+            
             function enableEditRecipientHtmlContent(data){
 
                 $('#editRecipientContent').html(data);
@@ -179,8 +241,8 @@
                         url: PLACE_ORDER_DELETE_GIFT_PATH + id,
                         type: "get",
                         dataType: 'json',
-                                success: function (data, textStatus, jqXHR)
-                                {
+                        success: function (data, textStatus, jqXHR)
+                        {
                             if (data.error == "0") {
 
                                 var tBody = $('#trGift' + id).closest('tbody');
@@ -205,6 +267,79 @@
                                 else {
                                     // remove the row
                                     $('#trGift' + id).remove();
+                                }
+                                //
+                                $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);
+                                $('#giftPriceVnd').html(data.LIXI_GIFT_PRICE_VND);
+                                $('#CARD_PROCESSING_FEE_THIRD_PARTY').html(data.CARD_PROCESSING_FEE_THIRD_PARTY);
+                                $('#lixiHandlingFeeTotal').html(data.LIXI_HANDLING_FEE_TOTAL);
+                                $('#LIXI_FINAL_TOTAL').html(data.LIXI_FINAL_TOTAL);
+                                /* */
+                                updateShoppingCart(data.LIXI_GIFT_PRICE, data.LIXI_GIFT_PRICE_VND);
+                            }
+                            else {
+                                alert(data.message);
+                            }
+                            overlayOff();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown)
+                        {
+                            alert(errorThrown);
+                            overlayOff();
+                        }
+                    });
+                }
+            }
+            
+            function changeTopUp(id){
+                document.location.href = '<c:url value="/topUp/change/"/>' + id;
+            }
+            
+            function cancelEditTopUp(id){
+                
+                var amount = $('#topUpDiv'+id).attr("amount");
+                $('#topUpDiv'+id).html('USD <span id="topUp'+id+'">'+amount+'</span> <a href="javascript:editTopUp('+id+');" class="edit-info-event"></a>');
+            }
+            
+            function editTopUp(id){
+                
+                $('#topUpDiv'+id).html('<a href="javascript:changeTopUp('+id+');"> Change </a>|<a href="javascript:deleteTopUp('+id+');"> Delete </a> | <a href="javascript:cancelEditTopUp('+id+');"> Cancel </a>');
+                
+            }
+            
+            function deleteTopUp(id){
+                if (confirm(CONFIRM_DELETE_MESSAGE)) {
+                    overlayOn($('#placeOrderContentDiv'));
+                    $.ajax({
+                        url: PLACE_ORDER_DELETE_TOPUP_PATH + id,
+                        type: "get",
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR)
+                        {
+                            if (data.error == "0") {
+
+                                var tBody = $('#trTopUp' + id).closest('tbody');
+                                if (tBody.children("tr").length === 1) {
+                                    if($('.receiver-info-item').length === 2){
+                                        
+                                        $('.receiver-info-item').remove();
+                                        
+                                        $('#thankyouBeing').html("Your Shopping Cart is empty !");
+                                        
+                                        $('#thankyouBeing').after("<p>Tang qua. Tang niem vui.</p>")
+                                        
+                                        $('#btnSubmit').remove();
+                                        
+                                        $('#btnLogOut').show();
+                                    }
+                                    else{
+                                        // remove the ceiver
+                                        tBody.closest('.receiver-info-item').remove();
+                                    }
+                                }
+                                else {
+                                    // remove the row
+                                    $('#trTopUp' + id).remove();
                                 }
                                 //
                                 $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);
@@ -260,9 +395,9 @@
                             <div class="receiver-info-items" id="placeOrderContentDiv">
                                 <c:if test="${LIXI_FINAL_TOTAL gt 0}">
                                 <c:forEach items="${REC_GIFTS}" var="entry">
-                                    <div class="receiver-info-item">
+                                    <div class="receiver-info-item" id="receiver${entry.recipient.id}">
                                         <div class="receiver-sent-to">
-                                            <h4 class="text-color-link">Send To: <span id="recName${entry.recipient.id}">${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</span> <a href="javascript:editRecipient(${entry.recipient.id});" class="edit-info-event"></a></h4>
+                                            <h4 class="text-color-link">Send To: <span id="recName${entry.recipient.id}">${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</span> <span id="editRecipientSpan${entry.recipient.id}"><a href="javascript:editRecipient(${entry.recipient.id});" class="edit-info-event"></a></span></h4>
                                             <div>
                                                 <strong>Email Address:</strong><span id="recEmail${entry.recipient.id}">${entry.recipient.email}</span>
                                             </div>
@@ -293,11 +428,12 @@
                                                         </tr>
                                                     </c:forEach>
                                                     <c:forEach items="${entry.topUpMobilePhones}" var="t"  varStatus="tCount">
-                                                        <tr>
+                                                        <tr id="trTopUp${t.id}">
                                                             <td>
                                                                 <div class="row">
-                                                                    <div class="col-md-8">Top up mobile phone (${t.phone}) <a href="<c:url value="/topUp/change/${t.id}"/>" class="edit-info-event"></a></div>
-                                                                    <div class="col-md-4">USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></div>
+                                                                    <div class="col-md-6" style="padding-left:40px">Top up mobile phone (${t.phone})</div>
+                                                                    <div class="col-md-3" id="topUpDiv${t.id}" amount="<fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>">USD <span id="topUp${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span> <a href="javascript:editTopUp(${t.id});" class="edit-info-event"></a></div>
+                                                                    <div class="col-md-3">USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></div>
                                                                 </div>
                                                             </td>
                                                         </tr>

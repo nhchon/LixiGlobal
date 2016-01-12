@@ -96,19 +96,19 @@
                                             </tr>
                                             <tr>
                                                 <td>Card processing fee</td>
-                                                <td style="text-align: right;">USD <fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></td>
+                                                <td style="text-align: right;"><fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></td>
                                             </tr>
                                             <tr>
                                                 <td>Lixi handing fee</td>
-                                                <td style="text-align: right;">USD <fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></td>
+                                                <td style="text-align: right;"><fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></td>
                                             </tr>
                                             <tr>
                                                 <td style="padding-top: 10px;">Total befor tax</td>
-                                                <td style="padding-top: 10px;text-align: right;">USD <fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></td>
+                                                <td style="padding-top: 10px;text-align: right;"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></td>
                                             </tr>
                                             <tr>
-                                                <td>Estimated tax to be collected</td>
-                                                <td style="text-align: right;">USD 0.0</td>
+                                                <td>Sale tax</td>
+                                                <td style="text-align: right;">0.0</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding-top: 10px;"><b>Grand Total</b></td>
@@ -164,7 +164,7 @@
                                             ${g.productName}
                                         </div>
                                         <div class="col-md-2" style="padding-top:40px;text-align: right;">
-                                            $<fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> - <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> đ
+                                            USD <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/>
                                         </div>
                                     </div>
                                 </c:forEach>

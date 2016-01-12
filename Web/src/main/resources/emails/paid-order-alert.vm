@@ -4,7 +4,7 @@
         
         <h2>Thank you for your payment</h2>
         
-        <h3>Your order id: ${LIXI_ORDER.id}</h3>
+        <h3>Your order id: ${LIXI_ORDER_ID}</h3>
 
         <div>
             <table class="recipient">

@@ -382,7 +382,7 @@ public class GiftsAjaxController {
                     lxogift.setProductName(vgp.getName());
                     lxogift.setProductImage(vgp.getImageUrl());
                     lxogift.setProductQuantity(quantity);
-                    lxogift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED);// not yet submitted
+                    lxogift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED+"");// not yet submitted
                     lxogift.setModifiedDate(Calendar.getInstance().getTime());
 
                     this.lxogiftService.save(lxogift);

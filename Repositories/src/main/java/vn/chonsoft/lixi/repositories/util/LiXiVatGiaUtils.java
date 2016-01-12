@@ -296,13 +296,13 @@ public class LiXiVatGiaUtils {
                     log.info("///////////////////////////////////////////////////");
                     LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
                     
-                    gift.setBkStatus(EnumLixiOrderStatus.PROCESSING.getValue());
+                    gift.setBkStatus(EnumLixiOrderStatus.PROCESSING.getValue()+"");
                     gift.setBkMessage(result.getData().getMessage());
                     // update
                     orderGiftService.save(gift);
                 } catch (Exception e) {
                     // error
-                    gift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
+                    gift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue()+"");
                     gift.setBkMessage(e.getMessage());
                     // update
                     orderGiftService.save(gift);

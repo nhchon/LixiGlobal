@@ -64,7 +64,7 @@ public class LixiOrderGift implements Serializable {
     
     @Basic
     @Column(name = "bk_status")
-    private int bkStatus;
+    private String bkStatus;
     
     @Basic
     @Column(name = "bk_message")
@@ -76,8 +76,7 @@ public class LixiOrderGift implements Serializable {
     
     @Basic
     @Column(name = "bk_updated")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date bkUpdated;
+    private String bkUpdated;
 
     @Basic(optional = false)
     @Column(name = "modified_date")
@@ -222,11 +221,11 @@ public class LixiOrderGift implements Serializable {
         this.amountCurrency = amountCurrency;
     }
     */
-    public int getBkStatus() {
+    public String getBkStatus() {
         return bkStatus;
     }
 
-    public void setBkStatus(int bkStatus) {
+    public void setBkStatus(String bkStatus) {
         this.bkStatus = bkStatus;
     }
 
@@ -246,11 +245,11 @@ public class LixiOrderGift implements Serializable {
         this.bkReceiveMethod = bkReceiveMethod;
     }
 
-    public Date getBkUpdated() {
+    public String getBkUpdated() {
         return bkUpdated;
     }
 
-    public void setBkUpdated(Date bkUpdated) {
+    public void setBkUpdated(String bkUpdated) {
         this.bkUpdated = bkUpdated;
     }
 

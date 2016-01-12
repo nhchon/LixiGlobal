@@ -39,7 +39,7 @@ public abstract class LiXiConstants {
     public static final int LIXI_ORDER_UNFINISHED = -2;
     public static final int LIXI_ORDER_NOT_YET_SUBMITTED = -1;
     public static final int LIXI_ORDER_SUBMITTED = 0;
-    public static final int LIXI_ORDER_GIFT_NOT_SUBMITTED = -1;
+    public static final String LIXI_ORDER_GIFT_NOT_SUBMITTED = "-1";
     // TYPE
     public static final String TOTAL_ALL_TYPE = "TOTAL_ALL_TYPE";
     public static final String LIXI_GIFT_TYPE = "LIXI_GIFT_TYPE";

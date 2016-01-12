@@ -37,6 +37,7 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
@@ -58,6 +59,7 @@ import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
+import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
@@ -118,6 +120,9 @@ public class CheckOutController2 {
 
     @Autowired
     private LixiInvoiceService invoiceService;
+    
+    @Autowired
+    private TopUpMobilePhoneService topUpService;
     
     @Autowired
     private CountryService countryService;
@@ -480,7 +485,7 @@ public class CheckOutController2 {
                 invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
                 invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
                 invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
-                invoice.setTotalAmount(1.0);//(Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)
+                invoice.setTotalAmount(LiXiUtils.getTestTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)));//
                 invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
                 invoice.setNetTransStatus(EnumTransactionStatus.begin.getValue());
                 invoice.setInvoiceDate(currDate);
@@ -511,6 +516,7 @@ public class CheckOutController2 {
 
                         Map<String, Object> model = new HashMap<>();
                         model.put("sender", u);
+                        model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId(refOrder.getId()));
                         model.put("LIXI_ORDER", refOrder);
                         model.put("REC_GIFTS", recGifts);
                         /* get billing address */
@@ -561,8 +567,10 @@ public class CheckOutController2 {
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "thank-you", method = RequestMethod.GET)
-    public ModelAndView thankYou(HttpServletRequest request) {
+    public ModelAndView thankYou(Map<String, Object> model, HttpServletRequest request) {
 
+        model.put("LIXI_ORDER_ID", (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        
         // remove Lixi order id
         request.getSession().removeAttribute(LiXiConstants.LIXI_ORDER_ID);
 
@@ -681,7 +689,7 @@ public class CheckOutController2 {
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "delete/gift/{giftId}", method = RequestMethod.GET)
-    public ModelAndView delete(Map<String, Object> model, @PathVariable Long giftId, HttpServletRequest request) {
+    public ModelAndView deleteGift(Map<String, Object> model, @PathVariable Long giftId, HttpServletRequest request) {
         
         // check the order
         Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
@@ -713,6 +721,82 @@ public class CheckOutController2 {
         return new ModelAndView("ajax/exceed");
     }
     
+    /**
+     * 
+     * @param model
+     * @param id
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "delete/topUp/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteTopUp(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
+        // check the order
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if(orderId == null){
+            
+            model.put("error", 1);
+            model.put("message", "gift.wrong_with_value");
+        }
+        else{
+            // check top up belong to current order
+            TopUpMobilePhone topUp = this.topUpService.findById(id);
+            if(topUp.getOrder().getId().equals(orderId)){
+                
+                this.topUpService.deleteById(id);
+                
+            }
+            
+            model.put("error", 0);
+        }
+        
+        LixiOrder order = this.lxorderService.findById(orderId);
+        
+        // calculate fee
+        LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
+                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+        
+        return new ModelAndView("ajax/exceed");
+        
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param id
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "delete/receiver/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteReceiver(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
+        // check the order
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if(orderId == null){
+            
+            model.put("error", 1);
+            model.put("message", "gift.wrong_with_value");
+        }
+        else{
+            
+            LixiOrder order = this.lxorderService.findById(orderId);
+            Recipient recipient = this.reciService.findById(id);
+            
+            this.lxogiftService.deleteByOrderAndRecipient(order, recipient);
+            this.topUpService.deleteByOrderAndRecipient(order, recipient);
+            
+            model.put("error", 0);
+        }
+        
+        LixiOrder order = this.lxorderService.findById(orderId);
+        
+        // calculate fee
+        LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
+                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+        
+        return new ModelAndView("ajax/exceed");
+        
+    }    
     /**
      * 
      * @param model

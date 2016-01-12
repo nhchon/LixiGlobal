@@ -8,6 +8,8 @@ import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.repositories.TopUpMobilePhoneRepository;
 
@@ -71,6 +73,19 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
     public void deleteById(Long id){
         
         this.topUpRepository.delete(id);
+        
+    }
+    
+    /**
+     * 
+     * @param order
+     * @param recipient
+     * @return 
+     */
+    @Override
+    public Long deleteByOrderAndRecipient(LixiOrder order, Recipient recipient){
+        
+        return this.topUpRepository.deleteByOrderAndRecipient(order, recipient);
         
     }
 }

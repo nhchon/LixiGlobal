@@ -88,7 +88,7 @@
                             <div class="panel-body" style="display:none;" id="panelBody${c.id}">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <b>Name o card</b><br/>
+                                        <b>Name on card</b><br/>
                                         ${c.cardName}
                                     </div>
                                     <div class="col-md-4">

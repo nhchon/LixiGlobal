@@ -25,6 +25,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -610,6 +611,39 @@ public class LiXiUtils {
 
     }
 
+    /**
+     * 
+     * @param total
+     * @return 
+     */
+    public static double getTestTotalAmount(double total){
+        
+        if(total < 10) return 1.0;
+        
+        return round2Decimal(total/10.0);
+    }
+    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    public static String getBeautyOrderId(Long id){
+        
+        String newId = id.toString();
+        
+        newId = StringUtils.leftPad(newId, 9, '0');
+        
+        StringBuilder idBuffer = new StringBuilder();
+        
+        for(int i=0; i< newId.length();i++){
+            idBuffer.append(newId.charAt(i));
+            if(i%4 == 0)
+                idBuffer.append('-');
+        }
+        
+        return idBuffer.toString();
+    }
     /**
      *
      * remove part ":8080" in path, but not "localhost:8080"
