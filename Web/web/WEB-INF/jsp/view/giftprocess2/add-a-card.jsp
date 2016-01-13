@@ -203,11 +203,13 @@
                             <button class="btn btn-primary" type="submit">NEXT</button>
                         </div>
                     </div>
+                            <!--
                     <div class="clearfix border-bottom"></div>
                     <h4 class="title">add a bank account</h4>
                     <p>
                         <strong class="text-color-link"><a href="<c:url value="/checkout/addBankAccount"/>">Add a checking account</a></strong>.(You can review your order before it’s final)
                     </p>
+                            -->
                 </form:form>
             </div>
         </section>

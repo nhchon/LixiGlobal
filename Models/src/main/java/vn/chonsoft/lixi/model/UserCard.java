@@ -59,7 +59,7 @@ public class UserCard implements Serializable {
     @Column(name = "exp_year")
     private int expYear;
     
-    @Basic(optional = false)
+    @Basic
     @Column(name = "card_cvv")
     private String cardCvv;
     

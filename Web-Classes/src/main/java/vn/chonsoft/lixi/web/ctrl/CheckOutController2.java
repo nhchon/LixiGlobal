@@ -116,14 +116,14 @@ public class CheckOutController2 {
     private UserBankAccountService ubcService;
 
     @Autowired
-    private LixiGlobalFeeService feeService;
-
-    @Autowired
     private LixiInvoiceService invoiceService;
     
     @Autowired
     private TopUpMobilePhoneService topUpService;
     
+    @Autowired
+    private LixiGlobalFeeService feeService;
+
     @Autowired
     private CountryService countryService;
     
@@ -322,7 +322,7 @@ public class CheckOutController2 {
                 /* Don't store full card information */
                 String secretCardNumber= "XXXX"+StringUtils.right(form.getCardNumber(), 4);
                 uc.setCardNumber(secretCardNumber);
-                uc.setCardCvv("000");
+                uc.setCardCvv(null);
                 uc = this.ucService.save(uc);
                 
                 // update order, add card
@@ -482,6 +482,7 @@ public class CheckOutController2 {
                 
                 invoice = new LixiInvoice();
                 invoice.setOrder(order);
+                invoice.setInvoiceCode(LiXiUtils.getBeautyOrderId(orderId));
                 invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
                 invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
                 invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));

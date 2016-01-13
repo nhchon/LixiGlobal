@@ -33,6 +33,8 @@ public interface UserCardRepository  extends JpaRepository<UserCard, Long>{
     
     UserCard findByCardNumber(String cardNumber);
     
+    UserCard findByAuthorizePaymentId(String authorizePaymentId);
+    
     /**
      * 
      * @param paymentId

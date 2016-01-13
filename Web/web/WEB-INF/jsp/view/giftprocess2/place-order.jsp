@@ -14,6 +14,7 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.number.min.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
+            var AJAX_CHECK_TOPUP_EXCEED_PATH = '<c:url value="/topUp/update"/>';
             var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
             var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
             var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
@@ -158,8 +159,8 @@
                 arrQ[id] = q;
                 var editHtml = '<div class="checkbox" style="margin-bottom:0px;"><label style="padding-left:0px;">' +
                         '<input type="text" class="form-control" value="' + q + '"  id="combo' + id + '" style="height:30px;"/>' +
-                        '<a href="javascript:updateQuantity(' + id + ');">Update</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;' +
-                        '<a href="javascript:doRemove(' + id + ');">Remove</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;' +
+                        '<a href="javascript:updateQuantity(' + id + ');">Update</a> | ' +
+                        '<a href="javascript:doRemove(' + id + ');">Remove</a> | ' +
                         '<a href="javascript:removeEditQuantity(' + id + ');">Cancel</a>' +
                         '</label></div>';
 
@@ -293,18 +294,26 @@
             }
             
             function changeTopUp(id){
-                document.location.href = '<c:url value="/topUp/change/"/>' + id;
+                
+                checkExceedTopUpOnPlaceOrder(id, $('#amount'+id).val());
+                
             }
             
             function cancelEditTopUp(id){
                 
                 var amount = $('#topUpDiv'+id).attr("amount");
+                
                 $('#topUpDiv'+id).html('USD <span id="topUp'+id+'">'+amount+'</span> <a href="javascript:editTopUp('+id+');" class="edit-info-event"></a>');
             }
             
             function editTopUp(id){
+                var amount = parseInt($('#topUpDiv'+id).attr("amount"));
                 
-                $('#topUpDiv'+id).html('<a href="javascript:changeTopUp('+id+');"> Change </a>|<a href="javascript:deleteTopUp('+id+');"> Remove </a> | <a href="javascript:cancelEditTopUp('+id+');"> Cancel </a>');
+                $('#topUpDiv'+id).html('<select class="form-control" id="amount'+id+'"><option value="10" '+(amount===10?"selected":"")+'>10 USD</option>'+
+                        '<option value="15" '+(amount===15?"selected":"")+'>15 USD</option>'+
+                        '<option value="20" '+(amount===20?"selected":"")+'>20 USD</option>'+
+                        '<option value="25" '+(amount===25?"selected":"")+'>25 USD</option>'+
+                    '</select><a href="javascript:changeTopUp('+id+');"> Update </a>|<a href="javascript:deleteTopUp('+id+');"> Remove </a> | <a href="javascript:cancelEditTopUp('+id+');"> Cancel </a>');
                 
             }
             
@@ -433,8 +442,8 @@
                                                             <td>
                                                                 <div class="row">
                                                                     <div class="col-md-6" style="padding-left:40px">Top up mobile phone (${t.phone})</div>
-                                                                    <div class="col-md-3" id="topUpDiv${t.id}" amount="<fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>">USD <span id="topUp${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span> <a href="javascript:editTopUp(${t.id});" class="edit-info-event"></a></div>
-                                                                    <div class="col-md-3">USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></div>
+                                                                    <div class="col-md-3" id="topUpDiv${t.id}" amount="<fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>"><span id="topUp${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span> USD <a href="javascript:editTopUp(${t.id});" class="edit-info-event"></a></div>
+                                                                    <div class="col-md-3">USD <span id="topUpUsd${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span> ~ VND <span id="topUpVnd${t.id}"><fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></span></div>
                                                                 </div>
                                                             </td>
                                                         </tr>

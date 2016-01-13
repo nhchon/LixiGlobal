@@ -22,6 +22,10 @@ import net.authorize.api.contract.v1.CustomerPaymentProfileType;
 import net.authorize.api.contract.v1.CustomerProfilePaymentType;
 import net.authorize.api.contract.v1.CustomerProfileType;
 import net.authorize.api.contract.v1.CustomerTypeEnum;
+import net.authorize.api.contract.v1.DeleteCustomerPaymentProfileRequest;
+import net.authorize.api.contract.v1.DeleteCustomerPaymentProfileResponse;
+import net.authorize.api.contract.v1.GetCustomerPaymentProfileRequest;
+import net.authorize.api.contract.v1.GetCustomerPaymentProfileResponse;
 import net.authorize.api.contract.v1.GetTransactionDetailsRequest;
 import net.authorize.api.contract.v1.GetTransactionDetailsResponse;
 import net.authorize.api.contract.v1.MerchantAuthenticationType;
@@ -38,6 +42,8 @@ import net.authorize.api.contract.v1.ValidationModeEnum;
 import net.authorize.api.controller.CreateCustomerPaymentProfileController;
 import net.authorize.api.controller.CreateCustomerProfileController;
 import net.authorize.api.controller.CreateTransactionController;
+import net.authorize.api.controller.DeleteCustomerPaymentProfileController;
+import net.authorize.api.controller.GetCustomerPaymentProfileController;
 import net.authorize.api.controller.GetTransactionDetailsController;
 import net.authorize.api.controller.base.ApiOperationBase;
 import org.apache.commons.lang3.StringUtils;
@@ -220,6 +226,105 @@ public class PaymentServiceImpl implements PaymentService{
         }
         
     }
+    
+    /**
+     * 
+     * @param card 
+     */
+    @Override
+    public void getPaymentProfile(UserCard card){
+        
+        //Common code to set for all requests
+        ApiOperationBase.setEnvironment(getEnvironment());
+
+        MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType();
+        merchantAuthenticationType.setName(apiLoginId);
+        merchantAuthenticationType.setTransactionKey(transactionKey);
+        ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
+
+        GetCustomerPaymentProfileRequest apiRequest = new GetCustomerPaymentProfileRequest();
+        apiRequest.setCustomerProfileId(card.getUser().getAuthorizeProfileId());
+        apiRequest.setCustomerPaymentProfileId(card.getAuthorizePaymentId());
+
+        GetCustomerPaymentProfileController controller = new GetCustomerPaymentProfileController(apiRequest);
+        controller.execute();
+
+        GetCustomerPaymentProfileResponse response = new GetCustomerPaymentProfileResponse();
+        response = controller.getApiResponse();
+
+        if (response != null) {
+
+            if (response.getMessages().getResultCode() == MessageTypeEnum.OK) {
+
+                //System.out.println(response.getMessages().getMessage().get(0).getCode());
+                //System.out.println(response.getMessages().getMessage().get(0).getText());
+
+                //System.out.println(response.getPaymentProfile().getBillTo().getFirstName());
+                //System.out.println(response.getPaymentProfile().getBillTo().getLastName());
+                //System.out.println(response.getPaymentProfile().getBillTo().getCompany());
+                //System.out.println(response.getPaymentProfile().getBillTo().getAddress());
+                //System.out.println(response.getPaymentProfile().getBillTo().getCity());
+                //System.out.println(response.getPaymentProfile().getBillTo().getState());
+                //System.out.println(response.getPaymentProfile().getBillTo().getZip());
+                //System.out.println(response.getPaymentProfile().getBillTo().getCountry());
+                //System.out.println(response.getPaymentProfile().getBillTo().getPhoneNumber());
+                //System.out.println(response.getPaymentProfile().getBillTo().getFaxNumber());
+
+                //System.out.println(response.getPaymentProfile().getCustomerPaymentProfileId());
+
+                //System.out.println(response.getPaymentProfile().getPayment().getCreditCard().getCardNumber());
+                //System.out.println(response.getPaymentProfile().getPayment().getCreditCard().getExpirationDate());
+                
+                card.setCardNumber(response.getPaymentProfile().getPayment().getCreditCard().getCardNumber());
+            } else {
+                log.info("Failed to get customer payment profile:  " + response.getMessages().getResultCode());
+                log.info("Failed to get customer payment profile:  " + response.getMessages().getMessage().get(0).getText());
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @param card 
+     */
+    @Override
+    public void deletePaymentProfile(UserCard card){
+
+        //Common code to set for all requests
+        ApiOperationBase.setEnvironment(getEnvironment());
+
+        MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType();
+        merchantAuthenticationType.setName(apiLoginId);
+        merchantAuthenticationType.setTransactionKey(transactionKey);
+        ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
+
+        DeleteCustomerPaymentProfileRequest apiRequest = new DeleteCustomerPaymentProfileRequest();
+        apiRequest.setCustomerProfileId(card.getUser().getAuthorizeProfileId());
+        apiRequest.setCustomerPaymentProfileId(card.getAuthorizePaymentId());
+
+        DeleteCustomerPaymentProfileController controller = new DeleteCustomerPaymentProfileController(apiRequest);
+        controller.execute();
+
+        DeleteCustomerPaymentProfileResponse response = new DeleteCustomerPaymentProfileResponse();
+        response = controller.getApiResponse();
+
+        if (response != null) {
+            
+            log.info("=========================================================");
+            log.info("Delete card id: " + card.getId());
+            
+            if (response.getMessages().getResultCode() == MessageTypeEnum.OK) {
+                
+                log.info(response.getMessages().getMessage().get(0).getCode());
+                log.info(response.getMessages().getMessage().get(0).getText());
+            } else {
+                log.info("Failed to delete customer payment profile:  " + response.getMessages().getResultCode());
+                log.info(response.getMessages().getMessage().get(0).getText());
+            }
+            log.info("=========================================================");
+        }
+    }
+    
     /**
      *
      * Add a new card

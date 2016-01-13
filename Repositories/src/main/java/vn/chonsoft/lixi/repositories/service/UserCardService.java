@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserCard;
@@ -24,9 +25,12 @@ public interface UserCardService {
     
     List<UserCard> findByUser(User u);
     
+    @Transactional
     UserCard findByIdAndUser(Long id, User u);
     
     UserCard findByCardNumber(String cardNumber);
+    
+    UserCard findByAuthorizePaymentId(String authorizePaymentId);
     
     int updateAuthorizeProfileId(String paymentId, Long id);
 }

@@ -83,9 +83,16 @@ public class UserCardServiceImpl implements UserCardService{
      * @return 
      */
     @Override
+    @Transactional
     public UserCard findByIdAndUser(Long id, User u){
         
-        return this.ucRepository.findByIdAndUser(id, u);
+        UserCard c = this.ucRepository.findByIdAndUser(id, u);
+        if(c != null){
+            c.getUser();
+            c.getBillingAddress();
+        }
+        
+        return c;
         
     }
     
@@ -102,6 +109,24 @@ public class UserCardServiceImpl implements UserCardService{
         return this.ucRepository.findByCardNumber(cardNumber);
     }
     
+    /**
+     * 
+     * @param authorizePaymentId
+     * @return 
+     */
+    @Override
+    public UserCard findByAuthorizePaymentId(String authorizePaymentId){
+       
+        return this.ucRepository.findByAuthorizePaymentId(authorizePaymentId);
+        
+    }
+    
+    /**
+     * 
+     * @param paymentId
+     * @param id
+     * @return 
+     */
     @Override
     @Transactional
     public int updateAuthorizeProfileId(String paymentId, Long id){

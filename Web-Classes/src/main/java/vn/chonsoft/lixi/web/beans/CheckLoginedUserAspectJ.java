@@ -36,9 +36,9 @@ public class CheckLoginedUserAspectJ {
     public void annotatedUserSecurityAnnotation(){}
     
     @Around(value = "annotatedUserSecurityAnnotation()")
-    public Object doCheckLoginedUser(ProceedingJoinPoint jp){
+    public Object doCheckLoginedUser(ProceedingJoinPoint jp) throws Throwable {
         
-        try {
+        //try {
             
             if(StringUtils.isEmpty(loginedUser.getEmail())){
                 
@@ -52,13 +52,13 @@ public class CheckLoginedUserAspectJ {
             /* continue to process */
             return jp.proceed();
             
-        } catch (Throwable e) {
+        //} catch (Throwable e) {
             /**/
-            log.info(e.getMessage(), e);
+        //    log.info(e.getMessage(), e);
             /**/
-            e.printStackTrace();
-        }
+        //    e.printStackTrace();
+        //}
         
-        return null; // keeps in the same page
+        //return null; // keeps in the same page
     }
 }
