@@ -29,6 +29,14 @@
             var PLACE_ORDER_DELETE_GIFT_PATH = '<c:url value="/checkout/delete/gift/"/>';
             var PLACE_ORDER_UPDATE_GIFT_PATH = '<c:url value="/checkout/update/gift/"/>';
             var arrQ = [];
+            
+            function showPageBillAdd(page){
+                $.get( '<c:url value="/checkout/choose-billing-address-modal?paging.page"/>='+page, function( data ) {
+                    $('#billingAddressListContent').html(data);
+                    $('#billingAddressListModal').modal({show:true});
+                });
+            }
+            
             function doEditRecipient(id) {
                 $.get('<c:url value="/recipient/edit/"/>'+id, function (data) {
                     enableEditRecipientHtmlContent(data);

@@ -634,13 +634,11 @@ public class LiXiUtils {
         
         newId = StringUtils.leftPad(newId, 9, '0');
         
-        newId = LiXiConstants.LG + newId;
-
         StringBuilder idBuffer = new StringBuilder();
         
         for(int i=0; i< newId.length();i++){
             idBuffer.append(newId.charAt(i));
-            if(((i+1)%4) == 0 && (i<newId.length()))
+            if(((i+1)%3) == 0 && (i<newId.length()))
                 idBuffer.append('-');
         }
         

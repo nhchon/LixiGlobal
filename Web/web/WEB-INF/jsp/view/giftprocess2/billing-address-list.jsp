@@ -12,11 +12,9 @@
             Please choose a billing address from your address book below<!--, or <a href="javascript:newBillingAddress();">enter a new billing address</a>-->
         </div>
     </div>
-    <!--
     <div class="page-header" style="margin:20px 10px 20px">
         <h3>Your address book</h3>
     </div>
-    -->
     <div class="row">
         <div class="col-md-12" style="padding-left: 30px;">
             <c:forEach items="${BILLING_ADDRESS_ES.content}" var="ba" varStatus="theCount">
@@ -24,17 +22,13 @@
                     <div class="row">
                 </c:if>
                     <div class="col-lg-4">
-                        <b>${ba.fullName}</b>
+                        <b>${ba.firstName} ${ba.lastName}</b>
                         <br/>
-                        ${fn:substring(ba.add1, 0, 35)}...<br/>
-                        <c:if test="${not empty ba.add2}">${ba.add2}<br/></c:if>
-                        ${ba.city}
+                        ${ba.address}, ${ba.city}, ${ba.state}, ${ba.zipCode}
                         <br/>
-                        ${ba.state}&nbsp;${ba.zipCode}
-                        <br/>
-                        Phone: ${ba.phone}
+                        ${ba.country}
                         <br/><br/>
-                        <button type="button" onclick="document.location.href='<c:url value="/checkout/billing-address/${ba.id}"/>';" class="btn btn-primary">Use this address</button>
+                        <button type="button" onclick="useThisAddress(${ba.id})" class="btn btn-primary">Use this address</button>
                     </div>
                 <c:if test="${theCount.count%3 eq 0 or theCount.last}">
                         <p>&nbsp;</p>
@@ -45,7 +39,7 @@
 </div>
 <div class="modal-footer">
     <nav>
-        <ul class="pagination">
+        <ul class="pagination" style="margin: 0px;">
             <c:forEach begin="1" end="${BILLING_ADDRESS_ES.totalPages}" var="i">
                 <c:choose>
                     <c:when test="${(i - 1) == BILLING_ADDRESS_ES.number}">

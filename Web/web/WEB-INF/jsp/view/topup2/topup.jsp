@@ -186,9 +186,11 @@
         <!-- Page Content -->
         <c:import url="/categories"/>
         <section class="section-gift bg-default main-section">
-            <div class="container post-wrapper" style="padding-top:30px;">
+            <div class="container">
+                <c:set var="localStep" value="4"/>
+                <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="section-receiver">      
-                    <h2 class="title">Top up mobile phone</h2>
+                    <h2 class="title">Top up mobile phone <span style="font-size: 18px;text-transform: none;">(for ${SELECTED_RECIPIENT.firstName})</span></h2>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-12">

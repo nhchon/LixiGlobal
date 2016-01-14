@@ -18,6 +18,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -283,6 +286,7 @@ public class CheckOutController2 {
             
             // billing address
             BillingAddress bl = new BillingAddress();
+            bl.setId(form.getBlId());
             bl.setFirstName(form.getFirstName());
             bl.setLastName(form.getLastName());
             bl.setAddress(form.getAddress());
@@ -380,6 +384,50 @@ public class CheckOutController2 {
         return new ModelAndView("giftprocess2/add-bank-account");
     }
 
+    /**
+     *
+     * Show user's list billing address on a popup modal
+     *
+     * @param page
+     * @param model
+     * @param request
+     * @return
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "choose-billing-address-modal", method = RequestMethod.GET)
+    public ModelAndView chooseBillingAddressModal(Map<String, Object> model, @PageableDefault(value = 6) Pageable page, HttpServletRequest request) {
+
+        //Pageable just2rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
+        User u = this.userService.findByEmail(loginedUser.getEmail());
+
+        Page<BillingAddress> addresses = this.baService.findByUser(u, page);
+
+        model.put(LiXiConstants.BILLING_ADDRESS_ES, addresses);
+        model.put(LiXiConstants.USER_LOGIN_ID, u.getId());
+
+        return new ModelAndView("giftprocess2/billing-address-list", model);
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param id
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "billing-address/{id}", method = RequestMethod.GET)
+    public ModelAndView getBillingAddress(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
+
+        //Pageable just2rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
+        User u = this.userService.findByEmail(loginedUser.getEmail());
+
+        BillingAddress address = this.baService.findByIdAndUser(id, u);
+
+        model.put(LiXiConstants.BILLING_ADDRESS, address);
+
+        return new ModelAndView("giftprocess2/billing-address");
+    }
+    
     /**
      * 
      * @param model
