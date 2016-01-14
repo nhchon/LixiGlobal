@@ -45,10 +45,9 @@
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/hover-min.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/main.css"/>">
         <c:set var="currentDate" value="<%=new java.util.Date()%>"/>
-        <fmt:setLocale value="en_US" />
-        <fmt:parseDate var="tetDateMilestone" value="Wed Jan 20 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
-        <fmt:parseDate var="valentinceDateMilestone" value="Mon Feb 01 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
-        <fmt:parseDate var="endValentinceDateMilestone" value="Mon Feb 15 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+        <fmt:parseDate parseLocale="en_US" var="tetDateMilestone" value="Wed Jan 20 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+        <fmt:parseDate parseLocale="en_US" var="valentinceDateMilestone" value="Mon Feb 01 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+        <fmt:parseDate parseLocale="en_US" var="endValentinceDateMilestone" value="Mon Feb 15 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
         <c:choose>
             <c:when test="${(currentDate gt tetDateMilestone) && (currentDate lt valentinceDateMilestone)}">
                 <link id="originalTheme" rel="stylesheet" type="text/css" href="<c:url value="/resource/theme/assets/lixi-global/themes/tet/css/style.css"/>">
