@@ -346,7 +346,12 @@ public class GiftsController2 {
                 return new ModelAndView(new RedirectView("/gifts/type/" + recId.toString(), true, true));
             }
             else{
-                return new ModelAndView(new RedirectView("/gifts/type/" + recId.toString() + "/" + selectedCatId.toString(), true, true));
+                if(selectedCatId == 0){
+                    return new ModelAndView(new RedirectView("/topUp", true, true));
+                }
+                else{
+                    return new ModelAndView(new RedirectView("/gifts/type/" + recId.toString() + "/" + selectedCatId.toString(), true, true));
+                }
             }
         }
     }
