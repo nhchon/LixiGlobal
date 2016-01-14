@@ -10,6 +10,7 @@
         <script type="text/javascript">
             /** Page Script **/
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
+            var AJAX_CHECK_TOPUP_EXCEED_PATH = '<c:url value="/topUp/update"/>';
             var DELETE_GIFT_PATH = '<c:url value="/gifts/delete/gift"/>';
             var DELETE_TOPUP_PATH = '<c:url value="/topUp/delete"/>';
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
@@ -73,7 +74,7 @@
                                                         <span class="input-group-btn">
                                                             <button onclick="subBtn(${g.id}, ${g.productId}, ${entry.recipient.id});" class="btn btn-default gift-sub-event" type="button"><i class="fa fa-chevron-down"></i></button>
                                                         </span>
-                                                        <input id="quantity${g.id}" min="1" name="number" value="${g.productQuantity}" class="form-control gift-number" placeholder="Number">
+                                                            <input id="quantity${g.id}" min="1" name="number" value="${g.productQuantity}" class="form-control gift-number" readonly="" style="background-color: #fff;">
                                                         <span class="input-group-btn">
                                                             <button onclick="addBtn(${g.id}, ${g.productId}, ${entry.recipient.id});"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
                                                         </span>
@@ -91,25 +92,33 @@
                                         </tr>
                                         </c:forEach>
                                         <c:forEach items="${entry.topUpMobilePhones}" var="t">
-                                            <tr id="topUpRow${g.id}">
+                                            <tr id="topUpRow${t.id}">
                                             <td data-title="Select">
-                                            <!--
-                                                <input type="checkbox" class="custom-checkbox-input"/>
-                                            -->
                                             </td>
                                             <td data-title="Receiver"><strong>${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</strong></td>
                                             <td  data-title="Items">
                                                 
                                             </td>
-                                            <td data-title="DESCRIPTION"><h4>Top Up Mobile Minutes</h4></td>
+                                            <td data-title="DESCRIPTION"><h4>Top Up Mobile Minutes</h4>${t.phone}</td>
                                             <td data-title="Quantity">
+                                                <div class="gift-number-box">
+                                                    <div class="input-group add-sub-item text-center">
+                                                        <span class="input-group-btn">
+                                                            <button onclick="subBtnTopUp(${t.id});" class="btn btn-default gift-sub-event" type="button"><i class="fa fa-chevron-down"></i></button>
+                                                        </span>
+                                                            <input id="amount${t.id}" value="<fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>" class="form-control" readonly="" style="background-color: #fff;padding:6px;">
+                                                        <span class="input-group-btn">
+                                                            <button onclick="addBtnTopUp(${t.id});"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
+                                                        </span>
+                                                    </div><!-- /input-group -->
+                                                </div>
                                             </td>
                                             <td data-title="Unit Price" nowrap>
-                                                <div nowrap><strong>USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></strong></div>
-                                                <div nowrap><strong>VND <fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong></div>
+                                                <div nowrap><strong>USD <span id="topUpUsd${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span></strong></div>
+                                                <div nowrap><strong>VND <span id="topUpVnd${t.id}"><fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></span></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
-                                                <p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/topUp/change/${t.id}"/>';"><spring:message code="message.change"/></button></p>
+                                                <!--<p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/topUp/change/${t.id}"/>';"><spring:message code="message.change"/></button></p>-->
                                                 <p> <button type="button" class="btn btn-primary text-uppercase" onclick="deleteTopUpOnSummary(${t.id})"><spring:message code="message.delete"/></button></p>
                                             </td>
                                         </tr>

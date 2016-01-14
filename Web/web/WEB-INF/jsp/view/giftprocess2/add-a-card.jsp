@@ -7,7 +7,10 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            var GET_BL_PATH = '<c:url value="/checkout/billing-address/"/>';
+            var GET_BLS_PATH = '<c:url value="/checkout/choose-billing-address-modal?paging.page"/>';
         </script>
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/billing-address.js"/>"></script>
     </jsp:attribute>
 
     <jsp:body>
@@ -135,7 +138,7 @@
                             </div>
 
                         </div>
-                        <h4 class="text-color-link text-uppercase">Billing address</h4>
+                            <h4 class="text-color-link text-uppercase">Billing address <a href="javascript:showPageBillAdd(1);" style="font-size: 13px;text-transform: none;cursor: pointer;">(choose one)</a></h4>
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group">
@@ -199,18 +202,27 @@
                     </div>
                     <div class="button-control text-center text-uppercase">
                         <div class="button-control-page">
+                            <form:hidden path="blId"/>
                             <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="${returnUrl}"/>">BACK</button>
                             <button class="btn btn-primary" type="submit">NEXT</button>
                         </div>
                     </div>
+                            <!--
                     <div class="clearfix border-bottom"></div>
                     <h4 class="title">add a bank account</h4>
                     <p>
                         <strong class="text-color-link"><a href="<c:url value="/checkout/addBankAccount"/>">Add a checking account</a></strong>.(You can review your order before it’s final)
                     </p>
+                            -->
                 </form:form>
             </div>
+            <!-- Billing Address Modal -->
+            <div class="modal fade" id="billingAddressListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" id="billingAddressListContent">
+                    </div>
+                </div>
+            </div>
         </section>
-
     </jsp:body>
 </template:Client>

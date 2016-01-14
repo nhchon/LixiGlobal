@@ -83,6 +83,7 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
      * @return 
      */
     @Override
+    @Transactional
     public Long deleteByOrderAndRecipient(LixiOrder order, Recipient recipient){
         
         return this.topUpRepository.deleteByOrderAndRecipient(order, recipient);

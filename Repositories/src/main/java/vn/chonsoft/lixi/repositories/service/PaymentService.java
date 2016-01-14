@@ -24,6 +24,10 @@ public interface PaymentService {
     
     String createCustomerProfile(User u, UserCard card);
     
+    void deletePaymentProfile(UserCard card);
+    
+    void getPaymentProfile(UserCard card);
+    
     boolean charge(LixiInvoice lxInvoice);
     
     boolean chargeByCustomerProfile(LixiInvoice lxInvoice);

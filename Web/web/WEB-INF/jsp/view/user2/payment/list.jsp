@@ -50,9 +50,9 @@
                     </c:if>
                         
                     <div class="row" style="margin-bottom: 5px;">
-                        <div class="col-md-4"><b>Credit & Debit Cards</b></div>
-                        <div class="col-md-4"><b>Expires</b></div>
-                        <div class="col-md-4" style="text-align: right;"><a href="<c:url value="/user/addCard"/>"><i class="fa fa-plus-circle"></i> Add credit/Debit card</a></div>
+                        <div class="col-md-4"><c:if test="${not empty cards}"><b>Credit & Debit Cards</b></c:if></div>
+                        <div class="col-md-4"><c:if test="${not empty cards}"><b>Expires</b></c:if></div>
+                        <div class="col-md-4" style="text-align: right;"><a href="<c:url value="/user/addCard"/>"><i class="fa fa-plus-circle"></i> Add Credit/Debit Card</a></div>
                     </div>
                     <c:forEach items="${cards}" var="c">
                         <div class="panel panel-default">
@@ -104,12 +104,13 @@
                                     <div class="col-md-4"></div>
                                     <div class="col-md-4" style="text-align: right;">
                                         <button class="btn btn-default btn-sm" onclick="deleteCard(${c.id})">Delete</button>
-                                        <button class="btn btn-default btn-sm" onclick="alert('In consideration')">Edit</button>
+                                        <!--<button class="btn btn-default btn-sm btn-has-link-event">Edit</button>-->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </c:forEach>
+                    <p style="color:black;font-weight: bold;">* In order to change credit card information, you need to delete the old card and reenter your new card under "Add Card"</p>
                 </div>
             </div>
         </section>

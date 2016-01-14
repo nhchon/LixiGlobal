@@ -27,5 +27,6 @@ public interface TopUpMobilePhoneService {
             
     void deleteById(Long id);
     
+    @Transactional
     Long deleteByOrderAndRecipient(LixiOrder order, Recipient recipient);
 }

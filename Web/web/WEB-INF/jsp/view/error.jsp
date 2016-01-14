@@ -3,16 +3,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Error Page</title>
+        <title>Lixi.Global - Error Page</title>
     </head>
     <body>
         <h1>Error Page</h1>
-        <p>Application has encountered an error. Please contact support on ...</p>
+        <p>Application has encountered an error. Please contact support on support@lixi.global</p>
 
         <!--
         Failed URL: ${url}
         Exception:  ${exception.message}
-        <c:forEach items="${exception.stackTrace}" var="ste">    ${ste} 
+        <c:forEach items="${exception.stackTrace}" var="ste">
+            <pre>${ste}</pre>
         </c:forEach>
         -->
     </body>

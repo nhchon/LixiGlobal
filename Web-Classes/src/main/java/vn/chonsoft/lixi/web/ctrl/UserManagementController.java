@@ -564,6 +564,9 @@ public class UserManagementController {
         if(card == null){
             return new ModelAndView(new RedirectView("/user/payments?error=1", true, true));
         }
+
+        paymentService.getPaymentProfile(card);
+        
         /* */
         AddCardForm addCardForm = new AddCardForm(card);
         
@@ -705,6 +708,12 @@ public class UserManagementController {
     @RequestMapping(value = "delete/card/{id}", method = RequestMethod.GET)
     public ModelAndView deleteCard(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
         
+        UserCard card = this.cardService.findById(id);
+        
+        /* delete card on authorize.net */
+        paymentService.deletePaymentProfile(card);
+        
+        /* delete on our database */
         this.cardService.delete(id);
         
         return new ModelAndView(new RedirectView("/user/payments", true, true));

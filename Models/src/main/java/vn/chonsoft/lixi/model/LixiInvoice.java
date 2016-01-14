@@ -35,6 +35,9 @@ public class LixiInvoice implements Serializable {
     @Column(name = "id")
     private Long id;
     
+    @Column(name = "invoice_code")
+    private String invoiceCode;
+    
     @Column(name = "invoice_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date invoiceDate;
@@ -89,6 +92,14 @@ public class LixiInvoice implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getInvoiceCode() {
+        return invoiceCode;
+    }
+
+    public void setInvoiceCode(String invoiceCode) {
+        this.invoiceCode = invoiceCode;
     }
 
     public Date getInvoiceDate() {
