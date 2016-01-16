@@ -486,7 +486,7 @@
                                                 <strong>${LIXI_ORDER.card.cardTypeName}:</strong> <span>ending with ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}</span> 
                                             </div>
                                             <div>
-                                                <strong>Order #:</strong><span>${LIXI_ORDER.id}</span>
+                                                <strong>Order #:</strong><span>${LIXI_ORDER_ID}</span>
                                             </div>
                                             <div>
                                                 <strong>Billing address:</strong><span>${LIXI_ORDER.card.billingAddress.firstName}&nbsp;${LIXI_ORDER.card.billingAddress.lastName}, ${LIXI_ORDER.card.billingAddress.address}</span>
@@ -531,7 +531,7 @@
                     </div>
                     <div class="button-control gift-total-wrapper text-center text-uppercase" style="padding-bottom: 20px;">
                         <div class="button-control-page" id="btnDiv">
-                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/recipient"/>">Keep Shopping</button>
+                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/choose"/>">Keep Shopping</button>
                             <c:if test="${LIXI_FINAL_TOTAL gt 0}">
                             <button id="btnSubmit" type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>
                             <button id="btnLogOut" style="display:none;" class="btn btn-primary" type="button" onclick="location.href='<c:url value="/user/signOut"/>'">Log Out</button>
@@ -544,7 +544,6 @@
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />        
                 </form>
             </div>
-            <!-- Billing Address Modal -->
             <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content" id="editRecipientContent">

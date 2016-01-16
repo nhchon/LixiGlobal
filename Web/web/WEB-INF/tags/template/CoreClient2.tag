@@ -44,6 +44,7 @@
         <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:100,300,300italic,400,700|Julius+Sans+One|Roboto+Condensed:300,400">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/hover-min.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/main.css"/>">
+        <%--
         <c:set var="currentDate" value="<%=new java.util.Date()%>"/>
         <fmt:parseDate parseLocale="en_US" var="tetDateMilestone" value="Wed Jan 20 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
         <fmt:parseDate parseLocale="en_US" var="valentinceDateMilestone" value="Mon Feb 01 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
@@ -59,6 +60,7 @@
                 <link id="originalTheme" rel="stylesheet" type="text/css" href="<c:url value="/resource/theme/assets/lixi-global/themes/default/css/style.css"/>">
             </c:otherwise>
         </c:choose>
+        --%>
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/addon.css"/>">
         <jsp:invoke fragment="headContent" />
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"/>"></script>

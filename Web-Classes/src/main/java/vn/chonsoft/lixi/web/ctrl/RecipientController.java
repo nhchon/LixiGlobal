@@ -56,19 +56,23 @@ public class RecipientController {
     @RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
     public ModelAndView editRecipient(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
 
-        /* get recipient */
-        Recipient rec = this.reciService.findById(id);
-        
         ChooseRecipientForm form = new ChooseRecipientForm();
-        if (rec != null) {
-            form.setRecId(rec.getId());
-            form.setFirstName(rec.getFirstName());
-            form.setMiddleName(rec.getMiddleName());
-            form.setLastName(rec.getLastName());
-            form.setEmail(rec.getEmail());
-            form.setDialCode(rec.getDialCode());
-            form.setPhone(rec.getPhone());
-            form.setNote(rec.getNote());
+        if (id > 0) {
+            /* get recipient */
+            Recipient rec = this.reciService.findById(id);
+            if(rec != null){
+                form.setRecId(rec.getId());
+                form.setFirstName(rec.getFirstName());
+                form.setMiddleName(rec.getMiddleName());
+                form.setLastName(rec.getLastName());
+                form.setEmail(rec.getEmail());
+                form.setDialCode(rec.getDialCode());
+                form.setPhone(rec.getPhone());
+                form.setNote(rec.getNote());
+            }
+        }
+        else{
+            form.setNote("Happy Birthday");
         }
 
         model.put("chooseRecipientForm", form);
@@ -96,14 +100,13 @@ public class RecipientController {
         
         if (errors.hasErrors()) {
 
-            return new ModelAndView("ajax/simple-message");
+            return new ModelAndView("recipient/message");
         }
 
         try {
             // save or update the recipient
             Recipient rec = new Recipient();
             rec.setId(form.getRecId());
-            System.out.println("rec id: " + form.getRecId());
             rec.setSender(u);
             rec.setFirstName(form.getFirstName());
             rec.setMiddleName(form.getMiddleName());
@@ -121,11 +124,12 @@ public class RecipientController {
             request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, form.getFirstName() + " " + StringUtils.defaultIfEmpty(form.getMiddleName(), "") + " " + form.getLastName());
 
             model.put("error", 0);
-            return new ModelAndView("ajax/simple-message", model);
+            model.put("recId", rec.getId());
+            return new ModelAndView("recipient/message");
 
         } catch (ConstraintViolationException e) {
 
-            return new ModelAndView("ajax/simple-message");
+            return new ModelAndView("recipient/message");
 
         }
 

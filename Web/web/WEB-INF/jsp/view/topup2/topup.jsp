@@ -218,10 +218,10 @@
                                                 <div class="col-md-7">
                                                     <select id="amountTopUp" name="amountTopUp" class="form-control">
                                                         <option value="0" <c:if test="${amountTopUp eq 0}">selected=""</c:if>>Please select amount to top up</option>
-                                                        <option value="10" <c:if test="${amountTopUp eq 10}">selected=""</c:if>>10 USD</option>
-                                                        <option value="15" <c:if test="${amountTopUp eq 15}">selected=""</c:if>>15 USD</option>
-                                                        <option value="20" <c:if test="${amountTopUp eq 20}">selected=""</c:if>>20 USD</option>
-                                                        <option value="25" <c:if test="${amountTopUp eq 25}">selected=""</c:if>>25 USD</option>
+                                                        <option value="100000" <c:if test="${amountTopUp eq 100000}">selected=""</c:if>>100,000 VND</option>
+                                                        <option value="200000" <c:if test="${amountTopUp eq 200000}">selected=""</c:if>>200,000 VND</option>
+                                                        <option value="300000" <c:if test="${amountTopUp eq 300000}">selected=""</c:if>>300,000 VND</option>
+                                                        <option value="500000" <c:if test="${amountTopUp eq 500000}">selected=""</c:if>>500,000 VND</option>
                                                     </select>
                                                 </div>
                                             </div>

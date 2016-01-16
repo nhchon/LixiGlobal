@@ -52,7 +52,7 @@
                         <a class="hvr-underline-from-center nav-link" href="<c:url value="/"/>">Home</a>
                     </li>
                     <li>
-                        <a class="hvr-underline-from-center nav-link" href="<c:url value="/gifts/chooseCategory"/>">Send gift</a>
+                        <a class="hvr-underline-from-center nav-link" href="<c:url value="/gifts/choose"/>">Send gift</a>
                     </li>
                     <li class="has-dropdown dropdown">
                         <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="account.html">Account <i class="fa fa-angle-down"></i></a>

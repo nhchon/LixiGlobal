@@ -88,6 +88,7 @@ public abstract class LiXiConstants {
     public static final String SELECTED_RECIPIENT_ID = "SELECTED_RECIPIENT_ID";
     public static final String SELECTED_RECIPIENT_IDS = "SELECTED_RECIPIENT_IDS";
     public static final String SELECTED_RECIPIENT_NAME = "SELECTED_RECIPIENT_NAME";
+    public static final String SELECTED_RECIPIENT_FIRST_NAME = "SELECTED_RECIPIENT_FIRST_NAME";
     public static final String SELECTED_AMOUNT = "SELECTED_AMOUNT";
     public static final String SELECTED_AMOUNT_IN_VND = "SELECTED_AMOUNT_IN_VND";
     public static final String SELECTED_AMOUNT_IN_USD = "SELECTED_AMOUNT_IN_USD";

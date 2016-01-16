@@ -60,7 +60,7 @@ import vn.chonsoft.lixi.web.beans.LoginedUser;
  * @author chonnh
  */
 @WebController
-@RequestMapping("gifts")
+@RequestMapping("gifts2")
 public class GiftsController {
 
     private static final Logger log = LogManager.getLogger(GiftsController.class);

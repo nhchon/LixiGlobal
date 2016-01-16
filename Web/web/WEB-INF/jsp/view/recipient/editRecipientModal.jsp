@@ -90,8 +90,8 @@
         <div class="form-group row">
             <div class="col-lg-12" style="text-align: right;">
                 <form:hidden path="recId"/>
-                <button id="btnCancel" type="button" class="btn btn-warning"  data-dismiss="modal"><spring:message code="message.cancel"/></button>
                 <button onclick="return checkSubmitRecipientFormOnModal();" id="btnSave" type="button" class="btn btn-primary"><spring:message code="message.save"/></button>
+                <button id="btnCancel" type="button" class="btn btn-warning"  data-dismiss="modal"><spring:message code="message.cancel"/></button>
             </div>
         </div>
     </form:form>

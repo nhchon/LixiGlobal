@@ -638,7 +638,7 @@ public class LiXiUtils {
         
         for(int i=0; i< newId.length();i++){
             idBuffer.append(newId.charAt(i));
-            if(((i+1)%3) == 0 && (i<newId.length()))
+            if(((i+1)%3) == 0 && ((i+1)<newId.length()))
                 idBuffer.append('-');
         }
         

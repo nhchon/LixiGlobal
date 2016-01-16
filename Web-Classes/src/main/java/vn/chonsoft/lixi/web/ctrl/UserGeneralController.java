@@ -725,7 +725,8 @@ public class UserGeneralController {
 
         }
 
-        RedirectView r = new RedirectView("/gifts/chooseCategory", true, true);
+        //RedirectView r = new RedirectView("/gifts/chooseCategory", true, true);
+        RedirectView r = new RedirectView("/gifts/choose", true, true);
         r.setExposeModelAttributes(false);
         return new ModelAndView(r);
 

@@ -491,6 +491,8 @@ public class CheckOutController2 {
         LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
                 this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
 
+        model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId(orderId));
+        
         return new ModelAndView("giftprocess2/place-order");
     }
     

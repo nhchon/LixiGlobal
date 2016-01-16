@@ -146,7 +146,7 @@
                     <c:if test="${not empty REC_GIFTS}">
                     <div class="button-control text-center text-uppercase">
                         <div class="button-control-page">
-                            <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/recipient"/>">Keep shopping</button>
+                            <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/choose"/>">Keep shopping</button>
                             <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/checkout/paymentMethods"/>">NEXT</button>
                         </div>
                     </div>
