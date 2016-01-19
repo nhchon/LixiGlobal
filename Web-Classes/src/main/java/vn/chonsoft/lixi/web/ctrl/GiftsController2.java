@@ -612,6 +612,7 @@ public class GiftsController2 {
     public ModelAndView chooseGift(Map<String, Object> model, @PathVariable Integer selectedCatId, @PathVariable Long recId, HttpServletRequest request){
         
         model.put("recId", recId);
+        model.put(LiXiConstants.SELECTED_RECIPIENT_FIRST_NAME, this.reciService.findById(recId).getFirstName());
         
         return chooseGift(model, selectedCatId, request);
     }    

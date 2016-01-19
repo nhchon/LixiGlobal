@@ -67,13 +67,14 @@
                     #end
                     #foreach ($t in $entry.topUpMobilePhones)
                         #set ($recGiftIndex = $recGiftIndex + $foreach.count)
-                        #set ($totalVnd = $t.amount * $LIXI_ORDER.lxExchangeRate.buy)
+                        #set ($totalVnd = $t.amount)
+                        #set ($totalUsd = $t.amountUsd)
                         <tr>
                             <td></td>
                             <td colspan="3">
                                 <table>
                                     <tr>
-                                        <td>${recGiftIndex}</td>
+                                        <td>${foreach.count + recGiftIndex}</td>
                                         <td class="col-md-1">Item</td>
                                         <td>
                                             Top Up
@@ -81,7 +82,7 @@
 
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             ${String.format("%.2f", ${totalVnd})} VND
-                                            or ${String.format("%.2f", ${t.amount})} USD
+                                            or ${String.format("%.2f", ${t.amountUsd})} USD
                                         </td>
                                         <td style="text-align: right"></td>
                                     </tr>
@@ -118,7 +119,7 @@
                 <tr>
                     <td></td>
                     <td><b>Gift Price:</b></td>
-                    <td><b>$${String.format("%.2f", ${LIXI_ALL_TOTAL[0].usd})}</b></td>
+                    <td><b>$${String.format("%.2f", ${LIXI_GIFT_PRICE})}</b></td>
                     <td></td>
                 </tr>
                 #if ($CARD_PROCESSING_FEE_THIRD_PARTY)
@@ -143,7 +144,7 @@
                 <tr>
                     <td></td>
                     <td><b>Lixi Handling Fee:</b></td>
-                    <td><b>$<span>${LIXI_HANDLING_FEE_TOTAL}</span></b> ($${LIXI_HANDLING_FEE.fee} per person)<br/>
+                    <td><b>$<span>${LIXI_HANDLING_FEE_TOTAL}</span></b> ($${LIXI_HANDLING_FEE} per person)<br/>
 
                     </td>
                     <td></td>

@@ -160,11 +160,11 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <button id="btnEditReceiver" style="display: none;" class="btn btn-primary" onclick="doEditRecipient()">Edit receiver info</button>
+                            <button id="btnEditReceiver" style="<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>" class="btn btn-primary" onclick="doEditRecipient()">Edit receiver info</button>
                             <button class="btn btn-primary" onclick="createNewRecipient()">Create new receiver</button>
                         </div>
                     </div>
-                    <h2 id="giftValueFor" class="title" style="text-transform: none;display: none;">Gift value for <span id="recFirstName">${SELECTED_RECIPIENT_NAME}</span></h2>
+                    <h2 id="giftValueFor" class="title" style="text-transform: none;<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>">Gift value for <span id="recFirstName">${SELECTED_RECIPIENT_FIRST_NAME}</span></h2>
                     <p>( We will select only gift at your price range )</p>
                     <h5 class="maximum-purchase">Maximum purchase is VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 250}" pattern="###,###.##"/> or USD 250</h5>
                     <div class="change-curency-box">
