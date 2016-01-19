@@ -52,6 +52,7 @@ public abstract class LiXiConstants {
     // MOBILE TOP UP
     public static final String PHONE_COMPANIES = "PHONE_COMPANIES";
     public static final String TOP_UP_IN_VND = "TOP_UP_IN_VND";
+    public static final String TOP_UP_IN_USD = "TOP_UP_IN_USD";
     public static final String TOP_UP_AMOUNT = "TOP_UP_AMOUNT";
     public static final String NUM_OF_CARD = "NUM_OF_CARD";
     public static final String VALUE_OF_CARD = "VALUE_OF_CARD";
@@ -84,6 +85,7 @@ public abstract class LiXiConstants {
     public static final String CURRENT_PAYMENT_USD = "CURRENT_PAYMENT_USD";
     
     // current recipient
+    public static final String RECIPIENTS = "RECIPIENTS";
     public static final String SELECTED_RECIPIENT = "SELECTED_RECIPIENT";
     public static final String SELECTED_RECIPIENT_ID = "SELECTED_RECIPIENT_ID";
     public static final String SELECTED_RECIPIENT_IDS = "SELECTED_RECIPIENT_IDS";

@@ -311,16 +311,17 @@
                 
                 var amount = $('#topUpDiv'+id).attr("amount");
                 
-                $('#topUpDiv'+id).html('USD <span id="topUp'+id+'">'+amount+'</span> <a href="javascript:editTopUp('+id+');" class="edit-info-event"></a>');
+                $('#topUpDiv'+id).html('VND <span id="topUp'+id+'">'+amount+'</span> <a href="javascript:editTopUp('+id+');" class="edit-info-event"></a>');
             }
             
             function editTopUp(id){
-                var amount = parseInt($('#topUpDiv'+id).attr("amount"));
-                
-                $('#topUpDiv'+id).html('<select class="form-control" id="amount'+id+'"><option value="10" '+(amount===10?"selected":"")+'>10 USD</option>'+
-                        '<option value="15" '+(amount===15?"selected":"")+'>15 USD</option>'+
-                        '<option value="20" '+(amount===20?"selected":"")+'>20 USD</option>'+
-                        '<option value="25" '+(amount===25?"selected":"")+'>25 USD</option>'+
+                var amount = $('#topUpDiv'+id).attr("amount");
+                //alert(amount)
+                $('#topUpDiv'+id).html('<select class="form-control" id="amount'+id+'">'+
+                        '<option value="100000" '+(amount==="100,000"?"selected":"")+'>100,000 VND</option>'+
+                        '<option value="200000" '+(amount==="200,000"?"selected":"")+'>200,000 VND</option>'+
+                        '<option value="300000" '+(amount==="300,000"?"selected":"")+'>300,000 VND</option>'+
+                        '<option value="500000" '+(amount==="500,000"?"selected":"")+'>500,000 VND</option>'+
                     '</select><a href="javascript:changeTopUp('+id+');"> Update </a>|<a href="javascript:deleteTopUp('+id+');"> Remove </a> | <a href="javascript:cancelEditTopUp('+id+');"> Cancel </a>');
                 
             }
@@ -450,8 +451,8 @@
                                                             <td>
                                                                 <div class="row">
                                                                     <div class="col-md-6" style="padding-left:40px">Top up mobile phone (${t.phone})</div>
-                                                                    <div class="col-md-3" id="topUpDiv${t.id}" amount="<fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>"><span id="topUp${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span> USD <a href="javascript:editTopUp(${t.id});" class="edit-info-event"></a></div>
-                                                                    <div class="col-md-3">USD <span id="topUpUsd${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span> ~ VND <span id="topUpVnd${t.id}"><fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></span></div>
+                                                                    <div class="col-md-3" id="topUpDiv${t.id}" amount="<fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>"><span id="topUp${t.id}">VND <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span> <a href="javascript:editTopUp(${t.id});" class="edit-info-event"></a></div>
+                                                                    <div class="col-md-3">USD <span id="topUpUsd${t.id}"><fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/></span> ~ VND <span id="topUpVnd${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span></div>
                                                                 </div>
                                                             </td>
                                                         </tr>

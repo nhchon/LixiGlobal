@@ -141,12 +141,14 @@ public class RecipientInOrder {
         
         // top up mobile phone
         double sumTopUpUSD = 0;
+        double sumTopUpVND = 0;
         if (getTopUpMobilePhones() != null) {
             for (TopUpMobilePhone topUp : getTopUpMobilePhones()) {
-                sumTopUpUSD += topUp.getAmount();
+                sumTopUpUSD += topUp.getAmountUsd();
+                sumTopUpVND += topUp.getAmount();
             }
         }
-        return new SumVndUsd("LIXI_TOP_UP_TYPE", sumTopUpUSD * buy, sumTopUpUSD);
+        return new SumVndUsd("LIXI_TOP_UP_TYPE", sumTopUpVND, sumTopUpUSD);
     }
     
     public SumVndUsd getAllTotal(){

@@ -48,7 +48,7 @@ function checkExceedTopUpOnPlaceOrder(id, amount) {
                     $('#topUpUsd'+id).html(data.TOP_UP_AMOUNT);
                     $('#topUpVnd'+id).html(data.TOP_UP_IN_VND);
                     
-                    $('#topUpDiv'+id).attr("amount", data.TOP_UP_AMOUNT);
+                    $('#topUpDiv'+id).attr("amount", data.TOP_UP_IN_VND);
                     cancelEditTopUp(id);
                     
                     $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);

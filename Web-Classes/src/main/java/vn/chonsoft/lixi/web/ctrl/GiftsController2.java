@@ -100,7 +100,7 @@ public class GiftsController2 {
         User u = this.userService.findByEmail(email);
         if (u != null) {
 
-            model.put("RECIPIENTS", u.getRecipients());
+            model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         }
 
     }
@@ -114,7 +114,7 @@ public class GiftsController2 {
 
         if (u != null) {
 
-            model.put("RECIPIENTS", u.getRecipients());
+            model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         }
 
     }
@@ -150,7 +150,7 @@ public class GiftsController2 {
         User u = this.userService.findByEmail(loginedUser.getEmail());
         if (u != null) {
 
-            model.put("RECIPIENTS", u.getRecipients());
+            model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         }
 
         // default value for message note
@@ -404,7 +404,7 @@ public class GiftsController2 {
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
         
-        model.put("RECIPIENTS", u.getRecipients());
+        model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         
         // load list products
         LixiCategory lxcategory = categories.getById(selectedCatId);
@@ -487,7 +487,7 @@ public class GiftsController2 {
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
         
-        model.put("RECIPIENTS", u.getRecipients());
+        model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         model.put(LiXiConstants.LIXI_CATEGORIES, categories);
         
         // get order
@@ -529,7 +529,7 @@ public class GiftsController2 {
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
         
-        model.put("RECIPIENTS", u.getRecipients());
+        model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         
         // load list products
         LixiCategory lxcategory = categories.getById(selectedCatId);
@@ -600,6 +600,21 @@ public class GiftsController2 {
 
     }
     
+    /**
+     * @param model
+     * @param selectedCatId
+     * @param recId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "choose/{selectedCatId}/{recId}", method = RequestMethod.GET)
+    public ModelAndView chooseGift(Map<String, Object> model, @PathVariable Integer selectedCatId, @PathVariable Long recId, HttpServletRequest request){
+        
+        model.put("recId", recId);
+        
+        return chooseGift(model, selectedCatId, request);
+    }    
     /**
      *
      * @param model 
@@ -676,7 +691,7 @@ public class GiftsController2 {
         Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
         if(orderId == null){
             
-            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+            return new ModelAndView(new RedirectView("/gifts/choose", true, true));
         }
         else{
             
@@ -690,7 +705,7 @@ public class GiftsController2 {
                 
             }
             
-            return new ModelAndView(new RedirectView("/gifts/type/" + recId + "/" + catId, true, true));
+            return new ModelAndView(new RedirectView("/gifts/choose/" + catId + "/" + recId, true, true));
         }
     }
     

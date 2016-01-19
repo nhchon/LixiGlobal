@@ -155,7 +155,7 @@
                             <select class="form-control" id="recId" name="recId">
                                 <option value="0"><spring:message code="gift.select_recipient"/></option>
                                 <c:forEach items="${RECIPIENTS}" var="rec">
-                                    <option firstname="${rec.firstName}" value="${rec.id}" <c:if test="${chooseRecipientForm.recId == rec.id}">selected</c:if>>${rec.firstName}&nbsp;${rec.middleName}&nbsp;${rec.lastName} </option>
+                                    <option firstname="${rec.firstName}" value="${rec.id}" <c:if test="${recId == rec.id}">selected</c:if>>${rec.firstName}&nbsp;${rec.middleName}&nbsp;${rec.lastName} </option>
                                 </c:forEach>
                             </select>
                         </div>

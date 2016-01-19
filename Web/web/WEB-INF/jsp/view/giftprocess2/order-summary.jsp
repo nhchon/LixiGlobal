@@ -6,7 +6,6 @@
 
     <jsp:attribute name="extraJavascriptContent">
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.number.min.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/lixi-global/js/summary.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
@@ -26,6 +25,7 @@
             });
             
         </script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/summary.js"/>"></script>
     </jsp:attribute>
 
     <jsp:body>
@@ -106,7 +106,17 @@
                                                         <span class="input-group-btn">
                                                             <button onclick="subBtnTopUp(${t.id});" class="btn btn-default gift-sub-event" type="button"><i class="fa fa-chevron-down"></i></button>
                                                         </span>
-                                                            <input id="amount${t.id}" value="<fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>" class="form-control" readonly="" style="background-color: #fff;padding:6px;">
+                                                            <c:set var="topUpDisplay" value="100K"/>
+                                                            <c:choose>
+                                                                <c:when test="${t.amount eq 100000}">
+                                                                   <c:set var="topUpDisplay" value="100K"/>
+                                                                </c:when>
+                                                                <c:when test="${salary > 1000}">
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                </c:otherwise>
+                                                            </c:choose>                                                            
+                                                            <input id="amount${t.id}" value="<fmt:formatNumber value="${t.amount/1000}" pattern="###,###.##"/>K" class="form-control" readonly="" style="background-color: #fff;padding:6px;">
                                                         <span class="input-group-btn">
                                                             <button onclick="addBtnTopUp(${t.id});"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
                                                         </span>
@@ -114,8 +124,8 @@
                                                 </div>
                                             </td>
                                             <td data-title="Unit Price" nowrap>
-                                                <div nowrap><strong>USD <span id="topUpUsd${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span></strong></div>
-                                                <div nowrap><strong>VND <span id="topUpVnd${t.id}"><fmt:formatNumber value="${t.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></span></strong></div>
+                                                <div nowrap><strong>USD <span id="topUpUsd${t.id}"><fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/></span></strong></div>
+                                                <div nowrap><strong>VND <span id="topUpVnd${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
                                                 <!--<p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/topUp/change/${t.id}"/>';"><spring:message code="message.change"/></button></p>-->

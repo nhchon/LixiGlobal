@@ -42,6 +42,10 @@ public class TopUpMobilePhone implements Serializable {
     @Column(name = "amount")
     private double amount;
     
+    @Basic
+    @Column(name = "amount_usd")
+    private Double amountUsd;
+    
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     @Basic(optional = false)
     @Column(name = "phone")
@@ -102,6 +106,14 @@ public class TopUpMobilePhone implements Serializable {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public Double getAmountUsd() {
+        return amountUsd;
+    }
+
+    public void setAmountUsd(Double amountUsd) {
+        this.amountUsd = amountUsd;
     }
 
     public String getPhone() {

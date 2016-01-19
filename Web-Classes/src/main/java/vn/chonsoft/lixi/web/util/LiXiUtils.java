@@ -395,7 +395,7 @@ public class LiXiUtils {
 
                 if (LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() == excludeId) {
                 } else {
-                    sumTopUpUSD += topUp.getAmount();
+                    sumTopUpUSD += topUp.getAmountUsd();
                 }
 
             }

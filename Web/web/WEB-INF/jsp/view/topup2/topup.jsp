@@ -11,6 +11,7 @@
             var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
             var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
             var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
+            var SELECT_RECEIVER = '<spring:message code="gift.select_recipient" text="Please select a receiver"/>';
             var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
             var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
             var TOP_UP_EMPTY = '<spring:message code="validate.topup.no_empty"/>';
@@ -50,7 +51,7 @@
 
             function checkTopUpExceed(amount) {
                 if (amount === '') {
-                    $('#topUpInVND').val('');
+                    $('#topUpInUSD').val('');
                 }
                 else {
                     var topUpId = $('#topUpId').val();
@@ -58,10 +59,10 @@
                     
                     $.ajax({
                         url: '<c:url value="/topUp/checkTopUpExceed"/>' + '/' + topUpId  + '/' + amount,
-                                type: "get",
+                        type: "get",
                         dataType: 'json',
-                                success: function (data, textStatus, jqXHR)
-                                {
+                        success: function (data, textStatus, jqXHR)
+                        {
                             if (data.exceed == '1') {
                                 $('#divError').remove();
                                 $('#topUpPanelBody').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
@@ -77,7 +78,7 @@
                                 //
                                 disableTopUpSubmitButtons(false);
                             }
-                            $('#topUpInVND').val(data.TOP_UP_IN_VND + " VND");
+                            $('#topUpInUSD').val(data.TOP_UP_AMOUNT + " USD");
                         },
                                 error: function (jqXHR, textStatus, errorThrown)
                                 {
@@ -99,7 +100,8 @@
             }
 
             function editRecipient(focusId) {
-                $.get('<c:url value="/topUp/editRecipient"/>', function (data) {
+                if($('#recId').val() !== '0'){
+                $.get('<c:url value="/recipient/edit/"/>' + $('#recId').val(), function (data) {
                     enableEditRecipientHtmlContent(data);
                     // focus on phone field
                     $('#editRecipientModal').on('shown.bs.modal', function () {
@@ -107,6 +109,10 @@
                     })
 
                 });
+                }
+                else{
+                    alert(SELECT_RECEIVER)
+                }
             }
             
             function enableEditRecipientHtmlContent(data){
@@ -146,8 +152,10 @@
                                 // hide popup
                                 $('#editRecipientModal').modal('hide');
                                 // get new phone number
-                                $('#recPhone').val($("#chooseRecipientForm #phone").val());
-                                $('#recEmail').val($("#chooseRecipientForm #email").val());
+                                var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+                                var phone = $("#chooseRecipientForm #phone").val();
+                                
+                                $("#recId option:selected").html(name + ' - ' + phone);
                             }
                             else{
                                 alert(SOMETHING_WRONG_ERROR);
@@ -170,14 +178,18 @@
              * @returns {Boolean}
              */
             function checkTopUpMobileForm() {
+                if($('#recId').val() === '0'){
+                    alert(SELECT_RECEIVER);
+                    return false;
+                }
+                
                 if ($.trim($('#amountTopUp').val()) === '0') {
                     alert(TOP_UP_EMPTY);
                     $('#amountTopUp').focus();
                     return false;
                 }
-                else {
-                    return true
-                }
+                
+                return true
             }
         </script>
     </jsp:attribute>
@@ -189,8 +201,9 @@
             <div class="container">
                 <c:set var="localStep" value="4"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
-                <div class="section-receiver">      
-                    <h2 class="title">Top up mobile phone <span style="font-size: 18px;text-transform: none;">(for ${SELECTED_RECIPIENT.firstName})</span></h2>
+                <div class="section-receiver">
+                    <!--  <span style="font-size: 18px;text-transform: none;">(for ${SELECTED_RECIPIENT.firstName})</span> -->
+                    <h2 class="title">Top up mobile phone</h2>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-12">
@@ -213,6 +226,25 @@
                                         </c:if>
                                         <c:url value="/topUp/topUpMobilePhone" var="topUpMobilePhoneUrl"/>
                                         <form class="form-horizontal" role="form" method="post" action="${topUpMobilePhoneUrl}">
+                                          <div class="form-group">
+                                                <label class="col-md-3" for="email">Select a receiver</label>
+                                                <div class="col-md-7">
+                                                    <div class="row">
+                                                        <div class="col-md-10" style="padding-right: 0px;">
+                                                            <select class="form-control" id="recId" name="recId">
+                                                                <option value="0"><spring:message code="gift.select_recipient"/></option>
+                                                                <c:forEach items="${RECIPIENTS}" var="rec">
+                                                                    <option value="${rec.id}">${rec.firstName}&nbsp;${rec.middleName}&nbsp;${rec.lastName}&nbsp;-&nbsp;${rec.phone}</option>
+                                                                </c:forEach>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2" style="padding-left: 5px;">
+                                                            <button type="button" class="btn btn-primary" onclick="editRecipient('phone');">Edit</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                          </div>
+                                            
                                             <div class="form-group">
                                                 <label class="col-md-3" for="email">Amount you want to top up</label>
                                                 <div class="col-md-7">
@@ -235,11 +267,12 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-md-3" for="pwd">Top up in VND</label>
+                                                <label class="col-md-3" for="pwd">Top up in USD</label>
                                                 <div class="col-md-7"> 
-                                                    <input type="text" name="topUpInVND" id="topUpInVND" class="form-control" placeholder="<fmt:formatNumber value="${10 * LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> VND" readonly="">
+                                                    <input type="text" name="topUpInUSD" id="topUpInUSD" class="form-control" placeholder="O USD" readonly="">
                                                 </div>
                                             </div>
+                                                <!--
                                             <div class="form-group">
                                                 <label class="col-md-3"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
                                                 <div class="col-md-7">
@@ -257,6 +290,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                                -->
                                             <div class="row">
                                                 <div class="col-md-3"></div>
                                                 <div class="col-md-7">

@@ -5,6 +5,40 @@ function deleteGiftOnSummary(giftId){
     }
 }
 
+/**
+ * 
+ * @param Integer amount
+ * @returns {String}
+ */
+function getDisplayTopUp(amount){
+    
+    return (amount / 1000) + "K";
+}
+
+function increaseTopUpAmount(amount){
+    
+    switch(amount){
+        case 100:
+            return 200000;
+        case 200:
+            return 300000;
+        case 300:
+            return 500000;
+    }
+}
+
+function decreaseTopUpAmount(amount){
+    
+    switch(amount){
+        case 500:
+            return 300000;
+        case 300:
+            return 200000;
+        case 200:
+            return 100000;
+    }
+}
+
 function deleteTopUpOnSummary(id){
    
     if(confirm(CONFIRM_DELETE_MESSAGE)){
@@ -16,11 +50,12 @@ function addBtnTopUp(id){
     
     var amount = parseInt($('#amount'+id).val());
     
-    if(amount < 25){
+    
+    if(amount < 500){
         
         overlayOn($("#topUpRow"+id));
         // increase
-        amount += 5;
+        amount = increaseTopUpAmount(amount);
         
         checkExceedTopUpOnSummaryPage(id, amount);
     }
@@ -33,11 +68,11 @@ function subBtnTopUp(id){
     
     var amount = parseInt($('#amount'+id).val());
     
-    if(amount > 10){
+    if(amount > 100){
         
         overlayOn($("#topUpRow"+id));
         // increase
-        amount -= 5;
+        amount = decreaseTopUpAmount(amount);
         
         checkExceedTopUpOnSummaryPage(id, amount);
     }
@@ -152,7 +187,7 @@ function checkExceedTopUpOnSummaryPage(id, amount) {
                     alert(data.message);
                 } else {
                     // update amount
-                    $('#amount'+id).val(amount);
+                    $('#amount'+id).val(getDisplayTopUp(amount));
                     $('#topUpUsd'+id).html(data.TOP_UP_AMOUNT);
                     $('#topUpVnd'+id).html(data.TOP_UP_IN_VND);
                     // update recipient's total
