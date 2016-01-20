@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.trader.Trader;
 import vn.chonsoft.lixi.repositories.TraderRepository;
-import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -93,7 +93,7 @@ public class TraderServiceImpl implements TraderService{
     @Override
     public List<Trader> findAll() {
         
-        return LiXiRepoUtils.toList(this.traderRepository.findAll());
+        return LiXiGlobalUtils.toList(this.traderRepository.findAll());
         
     }
     

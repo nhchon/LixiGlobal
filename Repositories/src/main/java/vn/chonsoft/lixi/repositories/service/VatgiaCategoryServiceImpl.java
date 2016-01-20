@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.repositories.VatgiaCategoryRepository;
-import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -82,7 +82,7 @@ public class VatgiaCategoryServiceImpl implements VatgiaCategoryService{
     @Override
     public List<VatgiaCategory> findAll() {
         
-        List<VatgiaCategory> vgcs = LiXiRepoUtils.toList(this.vgcRepository.findAll());
+        List<VatgiaCategory> vgcs = LiXiGlobalUtils.toList(this.vgcRepository.findAll());
         for(VatgiaCategory vgc : vgcs){
             
             if(vgc != null){

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import vn.chonsoft.lixi.model.trader.CurrencyType;
 import vn.chonsoft.lixi.repositories.CurrencyTypeRepository;
-import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -29,7 +29,7 @@ public class CurrencyTypeServiceImpl implements CurrencyTypeService{
     @Override
     public List<CurrencyType> findAll() {
 
-        return LiXiRepoUtils.toList(this.currencyRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "sortOrder"))));
+        return LiXiGlobalUtils.toList(this.currencyRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "sortOrder"))));
         
     }
 

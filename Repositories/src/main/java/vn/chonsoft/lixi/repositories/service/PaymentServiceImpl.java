@@ -57,6 +57,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.AuthorizeCustomerResult;
 import vn.chonsoft.lixi.model.AuthorizePaymentResult;
 import vn.chonsoft.lixi.model.LixiInvoice;
@@ -68,7 +69,7 @@ import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.pojo.EnumTransactionResponseCode;
 import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
-import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -391,7 +392,7 @@ public class PaymentServiceImpl implements PaymentService{
         if (response != null) {
 
             String resultCode = response.getMessages().getResultCode().value();
-            String resultText = LiXiRepoUtils.marshalWithoutRootElement(response.getMessages());
+            String resultText = LiXiGlobalUtils.marshalWithoutRootElement(response.getMessages());
 
             payResult.setResponseCode(resultCode);
             payResult.setResponseText(resultText);
@@ -402,7 +403,7 @@ public class PaymentServiceImpl implements PaymentService{
                 // set card payment id
                 card.setAuthorizePaymentId(response.getCustomerPaymentProfileId());
                 //
-                returned = LiXiRepoUtils.OK;
+                returned = LiXiGlobalConstants.OK;
             } else {
 
                 System.out.println("Failed to create payment profile:  " + response.getMessages().getResultCode());
@@ -500,7 +501,7 @@ public class PaymentServiceImpl implements PaymentService{
         if (response != null) {
 
             String resultCode = response.getMessages().getResultCode().value();
-            String resultText = LiXiRepoUtils.marshalWithoutRootElement(response.getMessages());
+            String resultText = LiXiGlobalUtils.marshalWithoutRootElement(response.getMessages());
 
             cus.setResponseCode(resultCode);
             cus.setResponseText(resultText);
@@ -518,7 +519,7 @@ public class PaymentServiceImpl implements PaymentService{
                 //this.cardService.save(card);
 
                 // return
-                returned = LiXiRepoUtils.OK;
+                returned = LiXiGlobalConstants.OK;
             } else {
 
                 System.out.println("Failed to create customer profile:  " + response.getMessages().getResultCode());
@@ -728,7 +729,7 @@ public class PaymentServiceImpl implements PaymentService{
             }
             
             payment.setResponseCode(result.getResponseCode());
-            payment.setResponseText(LiXiRepoUtils.marshal(response));
+            payment.setResponseText(LiXiGlobalUtils.marshal(response));
             payment.setNetTransId(result.getTransId());
             
             lxInvoice.setNetResponseCode(result.getResponseCode());

@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import vn.chonsoft.lixi.model.Authority;
 import vn.chonsoft.lixi.repositories.AuthorityRepository;
-import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -23,7 +23,7 @@ public class AuthorityServiceImpl implements AuthorityService{
     @Override
     public List<Authority> findAll() {
         
-        return LiXiRepoUtils.toList(this.authRepository.findAll());
+        return LiXiGlobalUtils.toList(this.authRepository.findAll());
         
     }
     

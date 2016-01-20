@@ -6,12 +6,11 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.inject.Inject;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.repositories.LixiCategoryRepository;
-import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -41,7 +40,7 @@ public class LixiCategoryServiceImpl implements LixiCategoryService{
     @Override
     public List<LixiCategory> findAll() {
 
-        return LiXiRepoUtils.toList(this.lxcRepository.findAll());
+        return LiXiGlobalUtils.toList(this.lxcRepository.findAll());
     
     }
     

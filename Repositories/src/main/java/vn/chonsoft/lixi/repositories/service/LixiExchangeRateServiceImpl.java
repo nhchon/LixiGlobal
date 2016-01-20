@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.repositories.LixiExchangeRateRepository;
-import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -50,7 +50,7 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
     @Override
     public List<LixiExchangeRate> findAll() {
 
-        return LiXiRepoUtils.toList(this.lxrRepository.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "id"))));
+        return LiXiGlobalUtils.toList(this.lxrRepository.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "id"))));
         
     }
     

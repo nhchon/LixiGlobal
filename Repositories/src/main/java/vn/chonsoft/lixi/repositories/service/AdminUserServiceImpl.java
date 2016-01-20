@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.AdminUser;
 import vn.chonsoft.lixi.repositories.AdminUserRepository;
-import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -69,7 +69,7 @@ public class AdminUserServiceImpl implements AdminUserService{
     @Override
     public List<AdminUser> findAll() {
 
-        return LiXiRepoUtils.toList(this.adminUserRepository.findAll());
+        return LiXiGlobalUtils.toList(this.adminUserRepository.findAll());
         
     }
     

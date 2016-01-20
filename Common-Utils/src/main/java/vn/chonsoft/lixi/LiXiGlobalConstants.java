@@ -8,6 +8,8 @@ package vn.chonsoft.lixi;
  *
  * @author chonnh
  */
-public class LiXiGlobalConstants {
+public abstract class LiXiGlobalConstants {
+    
+    public static final String OK = "OK";
     
 }

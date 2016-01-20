@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import vn.chonsoft.lixi.model.SupportLocale;
 import vn.chonsoft.lixi.repositories.SupportLocaleRepository;
-import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -27,7 +27,7 @@ public class SupportLocaleServiceImpl implements SupportLocaleService{
     @Override
     public List<SupportLocale> findAll() {
 
-        return LiXiRepoUtils.toList(this.supportLocaleRepository.findAll());
+        return LiXiGlobalUtils.toList(this.supportLocaleRepository.findAll());
         
     }
     

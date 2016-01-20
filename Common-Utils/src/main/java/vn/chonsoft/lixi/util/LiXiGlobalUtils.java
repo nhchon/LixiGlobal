@@ -17,7 +17,7 @@ import javax.xml.namespace.QName;
  *
  * @author chonnh
  */
-public class LiXiGlobalUtils {
+public abstract class LiXiGlobalUtils {
     
     /**
      *
@@ -41,6 +41,12 @@ public class LiXiGlobalUtils {
         }
     }
 
+    /**
+     * 
+     * @param <T>
+     * @param object
+     * @return 
+     */
     public static <T> String marshalWithoutRootElement(T object) {
         try {
             StringWriter stringWriter = new StringWriter();
