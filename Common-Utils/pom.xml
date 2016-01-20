@@ -9,9 +9,9 @@
     </parent>
   
     <groupId>vn.chonsoft</groupId>
-    <artifactId>Web-Classes</artifactId>
+    <artifactId>Common-Utils</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Web-Classes</name>
+    <name>Common-Utils</name>
     <url>http://maven.apache.org</url>
   
     <properties>
@@ -19,26 +19,6 @@
     </properties>
   
     <dependencies>
-        <dependency>
-            <groupId>vn.chonsoft</groupId>
-            <artifactId>Common-Utils</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>vn.chonsoft</groupId>
-            <artifactId>Models</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>vn.chonsoft</groupId>
-            <artifactId>Validations</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>vn.chonsoft</groupId>
-            <artifactId>Repositories</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
     
     <build>

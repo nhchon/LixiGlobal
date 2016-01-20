@@ -9,12 +9,10 @@
         <h1>Error Page</h1>
         <p>Application has encountered an error. Please contact support on support@lixi.global</p>
 
-        <!--
-        Failed URL: ${url}
-        Exception:  ${exception.message}
+        <p>Failed URL: ${url}</p>
+        <p>Exception:  ${exception.message}</p>
         <c:forEach items="${exception.stackTrace}" var="ste">
             <pre>${ste}</pre>
         </c:forEach>
-        -->
     </body>
 </html>

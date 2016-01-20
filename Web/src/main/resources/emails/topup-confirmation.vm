@@ -4,7 +4,7 @@
         
         <div>
             <p>
-            ${sender.firstName} ${sender.middleName} ${sender.lastName} top up ${amount} USD to mobile number ${rec.phone}
+            ${sender.firstName} ${sender.middleName} ${sender.lastName} top up ${amount} VND to mobile number ${rec.phone}
             </p>
         </div>
         

@@ -390,22 +390,24 @@ public class LiXiUtils {
         
         // top up mobile phone
         double sumTopUpUSD = 0;
+        double sumTopUpVND = 0;
         if (order.getTopUpMobilePhones() != null) {
             for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
 
                 if (LiXiConstants.LIXI_TOP_UP_TYPE.equals(type) && topUp.getId() == excludeId) {
                 } else {
                     sumTopUpUSD += topUp.getAmountUsd();
+                    sumTopUpVND += topUp.getAmount();
                 }
 
             }
         }
         // plus to total
         totalUSD += sumTopUpUSD;
-        totalVND += sumTopUpUSD * buy;
+        totalVND += sumTopUpVND;
         
         // index 2
-        returnAllSum[2] = new SumVndUsd(LiXiConstants.LIXI_TOP_UP_TYPE, sumTopUpUSD * buy, sumTopUpUSD);
+        returnAllSum[2] = new SumVndUsd(LiXiConstants.LIXI_TOP_UP_TYPE, sumTopUpVND, sumTopUpUSD);
         
         // buy phone card
         double sumBuyCardUSD = 0;

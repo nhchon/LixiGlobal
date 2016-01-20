@@ -42,6 +42,7 @@ import vn.chonsoft.lixi.repositories.service.VtcResponseCodeService;
 import vn.chonsoft.lixi.repositories.service.VtcServiceCodeService;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.vtc.pay.RequestTransactionResponse;
 
 /**
@@ -203,7 +204,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                         Map model = new HashMap();
                         model.put("rec", rec);
                         model.put("sender", topUp.getOrder().getSender());
-                        model.put("amount", topUp.getAmount());
+                        model.put("amount", LiXiUtils.getNumberFormat().format(topUp.getAmount()));
 
                         String text = VelocityEngineUtils.mergeTemplateIntoString(
                                 velocityEngine, "emails/topup-confirmation.vm", "UTF-8", model);

@@ -66,7 +66,7 @@
                         </tr>
                     #end
                     #foreach ($t in $entry.topUpMobilePhones)
-                        #set ($recGiftIndex = $recGiftIndex + $foreach.count)
+                        #set ($recTopUpIndex = $recGiftIndex + $foreach.count)
                         #set ($totalVnd = $t.amount)
                         #set ($totalUsd = $t.amountUsd)
                         <tr>
@@ -74,40 +74,14 @@
                             <td colspan="3">
                                 <table>
                                     <tr>
-                                        <td>${foreach.count + recGiftIndex}</td>
+                                        <td>${recTopUpIndex}</td>
                                         <td class="col-md-1">Item</td>
                                         <td>
                                             Top Up
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            ${String.format("%.2f", ${totalVnd})} VND
-                                            or ${String.format("%.2f", ${t.amountUsd})} USD
-                                        </td>
-                                        <td style="text-align: right"></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    #end
-                    #foreach ($p in $entry.buyPhoneCards)
-                        #set ($recGiftIndex = $recGiftIndex + $foreach.count)
-                        #set ($priceInUSD = $p.getValueInUSD($LIXI_ORDER.lxExchangeRate.buy))
-                        #set ($totalUsd = $priceInUSD * $p.numOfCard)
-                        <tr>
-                            <td></td>
-                            <td colspan="3">
-                                <table>
-                                    <tr>
-                                        <td>${recGiftIndex}</td>
-                                        <td class="col-md-1">Item</td>
-                                        <td>
-                                            Phone Card
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            ${p.numOfCard} x ${String.format("%.2f", ${p.valueOfCard})} VND
-                                            or ${String.format("%.2f", ${p.totalUsd})} USD
+                                            ${String.format("%.2f", ${totalVnd})} VND or ${t.amountUsd} USD
                                         </td>
                                         <td style="text-align: right"></td>
                                     </tr>
@@ -119,7 +93,7 @@
                 <tr>
                     <td></td>
                     <td><b>Gift Price:</b></td>
-                    <td><b>$${String.format("%.2f", ${LIXI_GIFT_PRICE})}</b></td>
+                    <td><b>$${LIXI_GIFT_PRICE}</b></td>
                     <td></td>
                 </tr>
                 #if ($CARD_PROCESSING_FEE_THIRD_PARTY)
@@ -136,7 +110,7 @@
                             </b>
                         </td>
                         <td>
-                            <b>$<span>${String.format("%.2f", ${CARD_PROCESSING_FEE_THIRD_PARTY})}</span></b>
+                            <b>$<span>${CARD_PROCESSING_FEE_THIRD_PARTY}</span></b>
                         </td>
                         <td></td>
                     </tr>
@@ -152,7 +126,7 @@
                 <tr>
                     <td></td>
                     <td><b>TOTAL:</b></td>
-                    <td><b>$<span>${String.format("%.2f", ${LIXI_FINAL_TOTAL})}</span></b></td>
+                    <td><b>$<span>${LIXI_FINAL_TOTAL}</span></b></td>
                     <td></td>
                 </tr>
             </div>

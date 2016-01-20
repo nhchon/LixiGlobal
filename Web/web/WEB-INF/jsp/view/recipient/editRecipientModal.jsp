@@ -18,6 +18,10 @@
             </spring:message>
         </div>
     </c:if>                        
+    <spring:message code="message.first_name" var="firstNameMessage"/>
+    <spring:message code="message.middle_ini" var="middleMessage"/>
+    <spring:message code="message.last_name" var="lastNameMessage"/>
+    <spring:message code="message.email_place_holder" var="emailMessage"/>
     <c:url value="/recipient/editRecipient" var="editRecipientUrl"/>
     <form:form action="${editRecipientUrl}" modelAttribute="chooseRecipientForm" class="form-horizontal">
         <div class="form-group name">

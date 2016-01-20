@@ -18,6 +18,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  *
@@ -170,6 +171,12 @@ public class LixiInvoice implements Serializable {
         return netTransStatus;
     }
 
+    @Transient
+    public String getTranslatedStatus() {
+        return netTransStatus;
+    }
+
+    
     public void setNetTransStatus(String netTransStatus) {
         this.netTransStatus = netTransStatus;
     }

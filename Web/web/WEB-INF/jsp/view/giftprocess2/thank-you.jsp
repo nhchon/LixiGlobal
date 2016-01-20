@@ -19,7 +19,7 @@
                 <div class="section-receiver">
                         <h1>Thank you!</h1>
                         <br />
-                        <p>Your order confirmation number is ${LIXI_ORDER_ID}. An email has been sent to you and the receiver of your gift in Vietnam.</p>
+                        <p>Your order confirmation number is <strong>${LIXI_ORDER_ID}</strong>. An email has been sent to you and the receiver of your gift in Vietnam.</p>
                         <br />
                         <p>The recipient will be notified within the hour of the gift waiting for them at www.baokim.vn. He or she will need to log in to claim the gift. Once the gift is reveived by the receiver, you will be notified.</p>
                         <br />

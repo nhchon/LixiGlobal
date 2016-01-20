@@ -724,6 +724,7 @@ public class PaymentServiceImpl implements PaymentService{
                 log.info("###############################################");
             } else {
                 log.info("Failed Transaction:  " + response.getMessages().getResultCode());
+                log.info("Failed Transaction:  " + response.getMessages().getMessage().get(0).getText());
             }
             
             payment.setResponseCode(result.getResponseCode());
