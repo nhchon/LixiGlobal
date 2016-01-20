@@ -37,6 +37,8 @@ public class ChooseRecipientForm{
 
     private String nextUrl;
     
+    private String action;
+    
     public Long getRecId() {
         return recId;
     }
@@ -107,6 +109,14 @@ public class ChooseRecipientForm{
 
     public void setNextUrl(String nextUrl) {
         this.nextUrl = nextUrl;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 
 }

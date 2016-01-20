@@ -69,10 +69,12 @@ public class RecipientController {
                 form.setDialCode(rec.getDialCode());
                 form.setPhone(rec.getPhone());
                 form.setNote(rec.getNote());
+                form.setAction("edit");
             }
         }
         else{
             form.setNote("Happy Birthday");
+            form.setAction("create");
         }
 
         model.put("chooseRecipientForm", form);
@@ -97,6 +99,7 @@ public class RecipientController {
         
         // for error
         model.put("error", 1);
+        model.put("action", form.getAction());
         
         if (errors.hasErrors()) {
 
@@ -125,6 +128,7 @@ public class RecipientController {
 
             model.put("error", 0);
             model.put("recId", rec.getId());
+            
             return new ModelAndView("recipient/message");
 
         } catch (ConstraintViolationException e) {

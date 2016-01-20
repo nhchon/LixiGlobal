@@ -49,6 +49,19 @@
 
             });
 
+            function createNewRecipient() {
+                $.get('<c:url value="/recipient/edit/0"/>', function (data) {
+                    enableEditRecipientHtmlContent(data);
+                    // focus on phone field
+                    $('#editRecipientModal').on('shown.bs.modal', function () {
+                        // TODO
+                        $("#chooseRecipientForm #firstName").focus();
+                    })
+
+                });
+            }
+
+
             function checkTopUpExceed(amount) {
                 if (amount === '') {
                     $('#topUpInUSD').val('');
@@ -154,8 +167,22 @@
                                 // get new phone number
                                 var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
                                 var phone = $("#chooseRecipientForm #phone").val();
-                                
-                                $("#recId option:selected").html(name + ' - ' + phone);
+                                /* new recipient */
+                                if (parseInt(data.recId) > 0) {
+                                    if(data.action === 'create'){
+                                        $('#recId')
+                                                .append($("<option></option>")
+                                                        .attr("value", data.recId)
+                                                        .text(name + ' - ' + phone));
+
+                                        $('#recId').val(data.recId);
+                                    }
+                                    else{
+                                        $("#recId option:selected").html(name + ' - ' + phone);
+                                    }
+                                }
+                                else{
+                                }
                             }
                             else{
                                 alert(SOMETHING_WRONG_ERROR);
@@ -230,7 +257,7 @@
                                                 <label class="col-md-3" for="email">Select a receiver</label>
                                                 <div class="col-md-7">
                                                     <div class="row">
-                                                        <div class="col-md-10" style="padding-right: 0px;">
+                                                        <div class="col-md-6" style="padding-right: 0px;">
                                                             <select class="form-control" id="recId" name="recId">
                                                                 <option value="0"><spring:message code="gift.select_recipient"/></option>
                                                                 <c:forEach items="${RECIPIENTS}" var="rec">
@@ -239,8 +266,11 @@
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2" style="padding-left: 5px;">
-                                                            <button type="button" class="btn btn-primary" onclick="editRecipient('phone');">Edit</button>
+                                                            <button type="button" class="btn btn-primary" onclick="editRecipient('phone');">Edit receiver</button>
                                                         </div>
+                                                            <div class="col-md-4">
+                                                                <button type="button" class="btn btn-primary" onclick="createNewRecipient()">Create new receiver</button>
+                                                            </div>
                                                     </div>
                                                 </div>
                                           </div>
