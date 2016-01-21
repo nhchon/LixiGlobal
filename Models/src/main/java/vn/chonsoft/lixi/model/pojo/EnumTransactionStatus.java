@@ -11,6 +11,7 @@ package vn.chonsoft.lixi.model.pojo;
 public enum EnumTransactionStatus {
 
     beforePayment("beforePayment"),
+    paymentError("paymentError"),
     inProgress("inProgress"),
     authorizedPendingCapture("authorizedPendingCapture"),
     capturedPendingSettlement("capturedPendingSettlement"),
@@ -27,6 +28,7 @@ public enum EnumTransactionStatus {
     settlementError("settlementError"),
     underReview("underReview"),
     voided("voided"),
+    voidedByUser("voidedByUser"),
     FDSPendingReview("FDSPendingReview"),
     FDSAuthorizedPendingReview("FDSAuthorizedPendingReview"),
     returnedItem("returnedItem");

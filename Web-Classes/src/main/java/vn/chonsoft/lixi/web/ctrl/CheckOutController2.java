@@ -547,9 +547,19 @@ public class CheckOutController2 {
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
             boolean chargeResult = paymentService.chargeByCustomerProfile(invoice);
             if (chargeResult == false) {
+                
+                /* update invoice's status */
+                invoice.setNetTransStatus(EnumTransactionStatus.paymentError.getValue());
+                this.invoiceService.save(invoice);
+                
                 return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
             } 
             else {
+                
+                /* update invoice's status */
+                invoice.setNetTransStatus(EnumTransactionStatus.inProgress.getValue());
+                this.invoiceService.save(invoice);
+                
                 // send mail to sender
                 final String emailSender = order.getSender().getEmail();
                 final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);

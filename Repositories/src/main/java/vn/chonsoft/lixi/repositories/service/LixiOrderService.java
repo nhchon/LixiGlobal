@@ -30,6 +30,9 @@ public interface LixiOrderService {
     LixiOrder findById(Long id);
 
     @Transactional
+    LixiOrder findByIdAndSender(Long id, User sender);
+
+    @Transactional
     LixiOrder findLastOrder(User user);
     
     @Transactional

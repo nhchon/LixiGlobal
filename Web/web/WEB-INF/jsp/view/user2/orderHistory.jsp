@@ -7,6 +7,7 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            var CANCEL_ORDER_MESSAGE = '<spring:message code="message.cancel_order" text="Are you sure want to cancel this order ?"/>';
             jQuery(document).ready(function () {
 
                 $('#timeCombo').change(function () {
@@ -15,6 +16,12 @@
 
                 });
             });
+            
+            function cancelOrder(id){
+                if(confirm(CANCEL_ORDER_MESSAGE)){
+                    document.location.href = '<c:url value="/user/cancelOrder"/>' + '/' + id;
+                }
+            }
         </script>
     </jsp:attribute>
 
@@ -35,8 +42,17 @@
                             <option value="allOrders" <c:if test="${when eq 'allOrders'}">selected=""</c:if>>All</option>
                             </select>
                         </div>
+                    <c:if test="${param.voidRs eq 3}">
+                        <div class="alert alert-danger" role="alert">Unsuccessfully Voided The Order</div>
+                    </c:if>
+                    <c:if test="${param.voidRs eq 1}">
+                        <div class="alert alert-success" role="alert">Successfully Voided The Order</div>
+                    </c:if>
+                    <c:if test="${param.voidRs eq 0}">
+                        <div class="alert alert-danger" role="alert">Your order was processed. It can no longer be cancelled.</div>
+                    </c:if>
                     <c:forEach items="${mOs}" var="m">
-                        <c:if test="${m.key.invoice.netTransStatus ne 'beforePayment'}">
+                        <c:if test="${m.key.invoice.netTransStatus ne 'beforePayment' && m.key.invoice.netTransStatus ne 'paymentError' && m.key.invoice.netTransStatus ne 'voidedByUser'}">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <div class="row">
@@ -47,7 +63,7 @@
                                         <div style="font-size:14px;padding-top: 8px;">
                                             <a href="<c:url value="/user/orderDetail/${m.key.id}"/>">Order Detail</a>
                                             <c:if test="${m.key.invoice.translatedStatus eq 'In Progress'}">
-                                                 | <a href="javascript:void(0);" >Cancel Order</a>
+                                                 | <a href="javascript:cancelOrder(${m.key.id});">Cancel Order</a>
                                             </c:if>
                                             <c:if test="${m.key.invoice.translatedStatus eq 'Complete'}">
                                                  | <a href="javascript:void(0);" >Order Again</a>

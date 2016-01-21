@@ -231,7 +231,7 @@ public class PaymentServiceImpl implements PaymentService{
     /**
      * 
      * @param invoice
-     * @return 
+     * @return String "1", "3"
      */
     @Override
     public String voidTransaction(LixiInvoice invoice){
@@ -264,23 +264,27 @@ public class PaymentServiceImpl implements PaymentService{
 
                 TransactionResponse result = response.getTransactionResponse();
                 if (result.getResponseCode().equals("1")) {
-                    //System.out.println(result.getResponseCode());
-                    //System.out.println("Successfully Voided Transaction");
-                    //System.out.println(result.getAuthCode());
-                    //System.out.println(result.getTransId());
+                    System.out.println(result.getResponseCode());
+                    System.out.println("Successfully Voided Transaction");
+                    System.out.println(result.getAuthCode());
+                    System.out.println(result.getTransId());
                     invoice.setNetTransStatus(EnumTransactionStatus.voided.getValue());
                     
                     this.invoiceService.save(invoice);
+                    
+                    return "1";
                 }
                 else
                 {
-                    //System.out.println("Failed Transaction"+result.getResponseCode());
+                    System.out.println("Failed Transaction"+result.getResponseCode());
+                    System.out.println("Failed Transaction"+result.getMessages().getMessage().get(0).getDescription());
                     return "3";
                 }
             }
             else
             {
-                //System.out.println("Failed Transaction:  "+response.getMessages().getResultCode());
+                System.out.println("Failed Transaction:  "+response.getMessages().getResultCode());
+                System.out.println("Failed Transaction"+response.getMessages().getMessage().get(0).getText());
                 return "3";
             }
         }

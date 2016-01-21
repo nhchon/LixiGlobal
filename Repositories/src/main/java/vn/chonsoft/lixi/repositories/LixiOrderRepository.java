@@ -30,6 +30,7 @@ public interface LixiOrderRepository  extends JpaRepository<LixiOrder, Long>{
     //@Transactional
     //@Query("SELECT o FROM LixiOrder o WHERE o.modifiedDate BETWEEN :begin AND :end")
     //Page<LixiOrder> findByModifiedDate(@Param("begin") Date begin, @Param("end") Date end, Pageable page);
+    LixiOrder findByIdAndSender(Long id, User sender);    
     
     Page<LixiOrder> findByModifiedDateBetween(Date begin, Date end, Pageable page);
     

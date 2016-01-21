@@ -92,6 +92,45 @@ public class LixiOrderServiceImpl implements LixiOrderService{
     
     /**
      * 
+     * @param id
+     * @param sender
+     * @return 
+     */
+    @Override
+    @Transactional
+    public LixiOrder findByIdAndSender(Long id, User sender){
+        
+        LixiOrder order = this.lxorderRepository.findByIdAndSender(id, sender);
+        if(order != null){
+            
+            // make sure load gifts
+            order.getGifts().size();
+            
+            // top up
+            order.getTopUpMobilePhones().size();
+            
+            // phone card
+            order.getBuyCards().size();
+            
+            // exchange rate
+            order.getLxExchangeRate();
+            
+            //
+            order.getCard();
+            
+            //
+            order.getBankAccount();
+            
+            // invoice
+            order.getInvoice();
+        }
+        
+        return order;
+        
+        
+    }
+    /**
+     * 
      * @param user
      * @return 
      */

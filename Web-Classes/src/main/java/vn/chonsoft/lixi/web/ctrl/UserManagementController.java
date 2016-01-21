@@ -36,7 +36,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.BillingAddress;
+import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
@@ -45,10 +47,13 @@ import vn.chonsoft.lixi.model.form.AddCardForm;
 import vn.chonsoft.lixi.model.form.UserEditEmailForm;
 import vn.chonsoft.lixi.model.form.UserEditNameForm;
 import vn.chonsoft.lixi.model.form.UserEditPasswordForm;
+import vn.chonsoft.lixi.model.pojo.EnumTransactionResponseCode;
+import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.CountryService;
 import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
+import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
@@ -106,7 +111,10 @@ public class UserManagementController {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private LixiInvoiceService invoiceService;
     
+
     /**
      * 
      * @param model
@@ -717,5 +725,50 @@ public class UserManagementController {
         this.cardService.delete(id);
         
         return new ModelAndView(new RedirectView("/user/payments", true, true));
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param id
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "cancelOrder/{id}", method = RequestMethod.GET)
+    public ModelAndView cancelOrder(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
+        
+        User u = this.userService.findByEmail(loginedUser.getEmail());
+        
+        LixiOrder order = this.orderService.findByIdAndSender(id, u);
+        
+        if(order != null){
+            
+            LixiInvoice invoice = order.getInvoice();
+            
+            log.info("status before update: " + invoice.getNetTransStatus() + " - " + invoice.getTranslatedStatus());
+            
+            this.paymentService.updateInvoiceStatus(invoice);
+            
+            log.info("status after update: " + invoice.getNetTransStatus() + " - " + invoice.getTranslatedStatus());
+            
+            if(LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS.equals(invoice.getTranslatedStatus())){
+                
+                String rs = this.paymentService.voidTransaction(invoice);
+                if(EnumTransactionResponseCode.APPROVED.getValue().equals(rs)){
+                    /* invoice status */
+                    invoice.setNetTransStatus(EnumTransactionStatus.voidedByUser.getValue());
+                    this.invoiceService.save(invoice);
+                }
+
+                return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek?voidRs="+rs, true, true));
+            }
+            else{
+                return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek?voidRs=0", true, true));
+            }
+        }
+        else{
+            return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek", true, true));
+        }
     }
 }
