@@ -226,10 +226,10 @@ public class GiftsAjaxController {
         }
         
         // get current recipient
-        Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
+        //Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
         
         // check selected
-        LiXiUtils.checkSelected(products, order, rec);
+        //LiXiUtils.checkSelected(products, order, rec);
 
         SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
         

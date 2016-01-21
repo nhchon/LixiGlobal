@@ -10,7 +10,8 @@ package vn.chonsoft.lixi.model.pojo;
  */
 public enum EnumTransactionStatus {
 
-    begin("begin"),
+    beforePayment("beforePayment"),
+    inProgress("inProgress"),
     authorizedPendingCapture("authorizedPendingCapture"),
     capturedPendingSettlement("capturedPendingSettlement"),
     communicationError("communicationError"),
@@ -39,4 +40,15 @@ public enum EnumTransactionStatus {
     public String getValue() {
         return value;
     }
+    
+    public static EnumTransactionStatus getStatusFromResponseCode(String code){
+        
+        if("1".equals(code) || "4".equals(code)){
+            return EnumTransactionStatus.inProgress;
+        }
+        else{
+            return EnumTransactionStatus.declined;
+        }
+    }
+    
 }

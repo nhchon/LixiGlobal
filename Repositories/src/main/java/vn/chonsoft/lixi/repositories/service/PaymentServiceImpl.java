@@ -163,7 +163,7 @@ public class PaymentServiceImpl implements PaymentService{
     @Scheduled(fixedDelay=3*60*60*1000, initialDelay=60*1000)
     public void updateAllInvoiceStatus(){
         
-        List<String> continueStatus = Arrays.asList(EnumTransactionStatus.begin.getValue(),
+        List<String> continueStatus = Arrays.asList(EnumTransactionStatus.inProgress.getValue(),
                 EnumTransactionStatus.underReview.getValue(),
                 EnumTransactionStatus.FDSPendingReview.getValue(),
                 EnumTransactionStatus.FDSAuthorizedPendingReview.getValue(),
@@ -228,6 +228,65 @@ public class PaymentServiceImpl implements PaymentService{
         
     }
     
+    /**
+     * 
+     * @param invoice
+     * @return 
+     */
+    @Override
+    public String voidTransaction(LixiInvoice invoice){
+        
+        //Common code to set for all requests
+        ApiOperationBase.setEnvironment(getEnvironment());
+
+        MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType();
+        merchantAuthenticationType.setName(apiLoginId);
+        merchantAuthenticationType.setTransactionKey(transactionKey);
+        ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
+
+        // Create the payment transaction request
+        TransactionRequestType txnRequest = new TransactionRequestType();
+        txnRequest.setTransactionType(TransactionTypeEnum.VOID_TRANSACTION.value());
+        txnRequest.setRefTransId(invoice.getNetTransId());
+
+        // Make the API Request
+        CreateTransactionRequest apiRequest = new CreateTransactionRequest();
+        apiRequest.setTransactionRequest(txnRequest);
+        CreateTransactionController controller = new CreateTransactionController(apiRequest);
+        controller.execute(); 
+
+        CreateTransactionResponse response = controller.getApiResponse();
+
+        if (response!=null) {
+
+            // If API Response is ok, go ahead and check the transaction response
+            if (response.getMessages().getResultCode() == MessageTypeEnum.OK) {
+
+                TransactionResponse result = response.getTransactionResponse();
+                if (result.getResponseCode().equals("1")) {
+                    //System.out.println(result.getResponseCode());
+                    //System.out.println("Successfully Voided Transaction");
+                    //System.out.println(result.getAuthCode());
+                    //System.out.println(result.getTransId());
+                    invoice.setNetTransStatus(EnumTransactionStatus.voided.getValue());
+                    
+                    this.invoiceService.save(invoice);
+                }
+                else
+                {
+                    //System.out.println("Failed Transaction"+result.getResponseCode());
+                    return "3";
+                }
+            }
+            else
+            {
+                //System.out.println("Failed Transaction:  "+response.getMessages().getResultCode());
+                return "3";
+            }
+        }
+        /* */
+        return "3";
+    }
     /**
      * 
      * @param card 
@@ -734,6 +793,7 @@ public class PaymentServiceImpl implements PaymentService{
             
             lxInvoice.setNetResponseCode(result.getResponseCode());
             lxInvoice.setNetTransId(result.getTransId());
+            lxInvoice.setNetTransStatus(EnumTransactionStatus.getStatusFromResponseCode(result.getResponseCode()).getValue());
         } else {
 
             payment.setResponseCode("-999");

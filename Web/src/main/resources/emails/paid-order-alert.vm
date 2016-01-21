@@ -37,8 +37,9 @@
                         <td></td>
                         <td></td>
                     </tr>
+                    #set ($String = "abc")
+                    #set ($recGiftIndex = 0)
                     #foreach ($g in $entry.gifts)
-                        #set ($String = "abc")
                         #set ($recGiftIndex = $foreach.count)
                         #set ($priceInUSD = $g.getPriceInUSD($LIXI_ORDER.lxExchangeRate.buy))
                         #set ($totalVnd = $g.productPrice * $g.productQuantity)
@@ -118,7 +119,7 @@
                 <tr>
                     <td></td>
                     <td><b>Lixi Handling Fee:</b></td>
-                    <td><b>$<span>${LIXI_HANDLING_FEE_TOTAL}</span></b> ($${LIXI_HANDLING_FEE} per person)<br/>
+                    <td><b>$<span>${String.format("%.2f", ${LIXI_HANDLING_FEE_TOTAL})}</span></b> ($${LIXI_HANDLING_FEE} per person)<br/>
 
                     </td>
                     <td></td>

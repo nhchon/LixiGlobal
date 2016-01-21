@@ -63,7 +63,30 @@
                                     <div class="col-md-2" style="text-align:center;">
                                         <div style="font-size:16px;">STATUS</div>
                                         <div style="font-size:14px;padding-top: 8px;">
-                                            ${m.key.invoice.translatedStatus}
+                                            <c:if test="${empty m.key.invoice}">
+                                                <a href="<c:url value="/gifts/order-summary"/>">In Creation</a>
+                                            </c:if>
+                                            <c:if test="${not empty m.key.invoice}">
+                                                <c:if test="${empty m.key.invoice.netTransStatus}">
+                                                    <c:choose>
+                                                        <c:when test="${m.key.invoice.netResponseCode eq '1'}">
+                                                            In Progress
+                                                        </c:when>
+                                                        <c:when test="${m.key.invoice.netResponseCode eq '2'}">
+                                                            Canceled
+                                                        </c:when>
+                                                        <c:when test="${m.key.invoice.netResponseCode eq '3'}">
+                                                            Canceled
+                                                        </c:when>
+                                                        <c:when test="${m.key.invoice.netResponseCode eq '4'}">
+                                                            In Progress
+                                                        </c:when>
+                                                    </c:choose>
+                                                </c:if>
+                                                <c:if test="${not empty m.key.invoice.netTransStatus}">
+                                                    ${m.key.invoice.netTransStatus}
+                                                </c:if>             
+                                            </c:if>
                                             <c:set var="lastCheck" value="Last check: "/>
                                             <c:if test="${m.key.invoice.netTransStatus eq 'settledSuccessfully'}">
                                                 <c:set var="lastCheck" value=""/>
@@ -108,7 +131,9 @@
                             </div>
                             <div class="panel-body">
                                 <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                                    <b>${rio.recipient.firstName}&nbsp;${rio.recipient.middleName}&nbsp;${rio.recipient.lastName}</b> <span class="badge">${fn:length(rio.gifts) + fn:length(rio.topUpMobilePhones)}</span>
+                                    <ul class="nav nav-pills" role="tablist">
+                                        <li role="presentation" class="active"><a href="#">${rio.recipient.firstName}&nbsp;${rio.recipient.middleName}&nbsp;${rio.recipient.lastName} <span class="badge">${fn:length(rio.gifts) + fn:length(rio.topUpMobilePhones)}</span></a></li>
+                                    </ul>
                                     <div>&nbsp;</div>
                                     <c:forEach items="${rio.gifts}" var="g">
                                         <div class="row" style="margin-bottom: 5px;">
@@ -144,7 +169,7 @@
                                     </c:forEach>
                                     <c:if test="${theValueCount.count < fn:length(m.value)}">
                                     <div class="row">
-                                        <div class="col-md-12"><hr style="height:1px;border:none;color:#333;background-color:#333;"/></div>
+                                        <div class="col-md-8"><hr style="height:1px;border:none;color:#333;background-color:#333;"/></div>
                                     </div>
                                     </c:if>
                                 </c:forEach>

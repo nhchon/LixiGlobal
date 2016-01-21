@@ -130,7 +130,7 @@ public class CreditCardProcesses{
      */
     public void updateAllInvoiceStatus(){
         
-        List<String> continueStatus = Arrays.asList(EnumTransactionStatus.begin.getValue(),
+        List<String> continueStatus = Arrays.asList(EnumTransactionStatus.inProgress.getValue(),
                 EnumTransactionStatus.underReview.getValue(),
                 EnumTransactionStatus.FDSPendingReview.getValue(),
                 EnumTransactionStatus.FDSAuthorizedPendingReview.getValue(),

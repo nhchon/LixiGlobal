@@ -28,6 +28,8 @@ public interface PaymentService {
     
     void getPaymentProfile(UserCard card);
     
+    String voidTransaction(LixiInvoice invoice);
+    
     boolean charge(LixiInvoice lxInvoice);
     
     boolean chargeByCustomerProfile(LixiInvoice lxInvoice);

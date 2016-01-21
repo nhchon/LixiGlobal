@@ -13,12 +13,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
 
 /**
  *
@@ -171,8 +172,51 @@ public class LixiInvoice implements Serializable {
         return netTransStatus;
     }
 
+    /**
+     * 
+     * @return 
+     */
     @Transient
     public String getTranslatedStatus() {
+        
+        if(EnumTransactionStatus.authorizedPendingCapture.getValue().equals(netTransStatus)||
+           EnumTransactionStatus.capturedPendingSettlement.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.refundPendingSettlement.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.approvedReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.underReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.FDSPendingReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.FDSAuthorizedPendingReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.inProgress.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS;
+            
+        }
+        
+        if(EnumTransactionStatus.communicationError.getValue().equals(netTransStatus)||
+           EnumTransactionStatus.declined.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.expired.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.generalError.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.failedReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.settlementError.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.returnedItem.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.voided.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_DECLINED;
+            
+        }
+        
+        if(EnumTransactionStatus.refundSettledSuccessfully.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_REFUNED;
+            
+        }
+        
+        if(EnumTransactionStatus.settledSuccessfully.getValue().equals(netTransStatus) || EnumTransactionStatus.couldNotVoid.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_PROCESSED;
+            
+        }
+        
         return netTransStatus;
     }
 

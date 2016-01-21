@@ -535,10 +535,10 @@ public class CheckOutController2 {
                 invoice.setInvoiceCode(LiXiUtils.getBeautyOrderId(orderId));
                 invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
                 invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
-                invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
+                invoice.setLixiFee(LiXiUtils.round2Decimal((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL)));
                 invoice.setTotalAmount(LiXiUtils.getTestTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)));//
                 invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
-                invoice.setNetTransStatus(EnumTransactionStatus.begin.getValue());
+                invoice.setNetTransStatus(EnumTransactionStatus.beforePayment.getValue());
                 invoice.setInvoiceDate(currDate);
                 invoice.setCreatedDate(currDate);
 

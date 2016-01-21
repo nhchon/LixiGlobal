@@ -12,7 +12,7 @@
         <p>Failed URL: ${url}</p>
         <p>Exception:  ${exception.message}</p>
         <c:forEach items="${exception.stackTrace}" var="ste">
-            <pre>${ste}</pre>
+            <p>${ste}</p>
         </c:forEach>
     </body>
 </html>

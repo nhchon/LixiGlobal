@@ -24,4 +24,5 @@ public enum EnumTransactionResponseCode {
     public String getValue() {
         return value;
     }
+    
 }
