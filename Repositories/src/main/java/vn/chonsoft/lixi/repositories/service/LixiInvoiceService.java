@@ -24,6 +24,8 @@ public interface LixiInvoiceService {
     
     LixiInvoice findByOrder(LixiOrder order);
     
+    List<LixiInvoice> findAll();
+    
     List<LixiInvoice> findByNetResponseCode(Iterable<String> code);
     
     List<LixiInvoice> findByNetTransStatusIn(Iterable<String> status);

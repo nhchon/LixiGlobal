@@ -99,4 +99,18 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
         return this.invoiceRepository.findByNetTransStatusIn(status);
         
     }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public List<LixiInvoice> findAll(){
+        
+        List<LixiInvoice> invs = this.invoiceRepository.findAll();
+        invs.forEach(i -> {i.getOrder();});
+        
+        return invs;
+        
+    }
 }

@@ -513,13 +513,9 @@ public class CheckOutController2 {
         Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
         if (orderId != null) {
 
-            order = this.lxorderService.findById(orderId);
             Date currDate = Calendar.getInstance().getTime();
-            
-            order.setLixiStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
-            order.setModifiedDate(currDate);
-            this.lxorderService.save(order);
-            
+
+            order = this.lxorderService.findById(orderId);
             LixiInvoice invoice = order.getInvoice();
             if(invoice == null){
                 /* create invoice */
@@ -560,6 +556,11 @@ public class CheckOutController2 {
                 invoice.setNetTransStatus(EnumTransactionStatus.inProgress.getValue());
                 this.invoiceService.save(invoice);
                 
+                /* update order status */
+                order.setLixiStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
+                order.setModifiedDate(currDate);
+                this.lxorderService.save(order);
+            
                 // send mail to sender
                 final String emailSender = order.getSender().getEmail();
                 final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
@@ -881,7 +882,7 @@ public class CheckOutController2 {
         
         if(order == null){
             
-            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+            return new ModelAndView(new RedirectView("/gifts/choose", true, true));
         }
         else{
             if(order.getCard() != null || order.getBankAccount()!=null){
@@ -891,5 +892,30 @@ public class CheckOutController2 {
                 return new ModelAndView(new RedirectView("/gifts/order-summary", true, true));
             }
         }
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "updateInvoiceCode", method = RequestMethod.GET)
+    public ModelAndView updateInvoiceCode(Map<String, Object> model, HttpServletRequest request){
+        
+        List<LixiInvoice> invoices = this.invoiceService.findAll();
+        
+        for(LixiInvoice inv : invoices){
+            
+            if(inv.getInvoiceCode() == null){
+                
+                inv.setInvoiceCode(LiXiUtils.getBeautyOrderId(inv.getOrder().getId()));
+                
+                this.invoiceService.save(inv);
+            }
+        }
+        
+        return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek", true, true));
     }    
 }
