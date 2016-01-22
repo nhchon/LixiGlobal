@@ -22,7 +22,7 @@
                 <button class="btn btn-default title buy btn-buy-item-event"><spring:message code="message.buy"/></button>
             </div>
             <span class="gift-item-checkbox">
-                <input type="checkbox" class="custom-checkbox-input" onclick="LixiGlobal.Gift.chooseGiftItem(this);" name="item" value="${p.id}" <c:if test="${p.selected eq true}">checked</c:if>/>
+                <input type="checkbox" class="custom-checkbox-input" onclick="LixiGlobal.Gift.chooseGiftItem(this);" name="item" id="item${p.id}" value="${p.id}" <c:if test="${p.selected eq true}">checked</c:if>/>
             </span>
         </div>
     </div>

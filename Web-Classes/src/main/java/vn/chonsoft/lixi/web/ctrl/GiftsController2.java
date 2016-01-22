@@ -580,11 +580,15 @@ public class GiftsController2 {
             products = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(pjs);
         }
         
-        // get current recipient
-        //Recipient rec = this.reciService.findById(recId);//(Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID)
-        /* check already selected product */
-        //LiXiUtils.checkSelected(products, order, rec);
-        
+        if(model.get("recId") != null){
+            try{
+                // get current recipient
+                Recipient rec = this.reciService.findById((Long)model.get("recId"));
+                /* check already selected product */
+                LiXiUtils.checkSelected(products, order, rec);
+            }
+            catch(Exception ex){}
+        }
         /* forward recipient's id */
         //model.put(LiXiConstants.SELECTED_RECIPIENT_ID, recId);
         model.put(LiXiConstants.PRODUCTS, products);

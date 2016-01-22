@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -91,13 +90,14 @@ public class GiftsAjaxController {
      * Ajax call get products
      * 
      * @param model
+     * @param recId 
      * @param pageNum
      * @param request
      * @return 
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "products/{pageNum}", method = RequestMethod.GET)
-    public ModelAndView getProducts(Map<String, Object> model, @PathVariable Integer pageNum,  HttpServletRequest request) {
+    @RequestMapping(value = "products/{recId}/{pageNum}", method = RequestMethod.GET)
+    public ModelAndView getProducts(Map<String, Object> model, @PathVariable Long recId, @PathVariable Integer pageNum,  HttpServletRequest request) {
         
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
@@ -146,12 +146,17 @@ public class GiftsAjaxController {
             products = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(pjs);
         }
         
-        // get current recipient
-        Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
-        
-        // check selected
-        LiXiUtils.checkSelected(products, order, rec);
+        if(recId > 0){
+            try {
+                // get current recipient
+                Recipient rec = this.reciService.findById(recId);
 
+                // check selected
+                LiXiUtils.checkSelected(products, order, rec);
+            } catch (Exception e) {
+            }
+        }
+        
         SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
         
         model.put(LiXiConstants.PRODUCTS, products);
@@ -170,13 +175,14 @@ public class GiftsAjaxController {
      * Ajax call get products
      * 
      * @param model
+     * @param recId 
      * @param pageNum
      * @param request
      * @return 
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "loadProductsByNewPrice/{pageNum}/{startPrice}", method = RequestMethod.GET)
-    public ModelAndView loadProductsByNewPrice(Map<String, Object> model, @PathVariable Integer pageNum, @PathVariable Integer startPrice,  HttpServletRequest request) {
+    @RequestMapping(value = "loadProductsByNewPrice/{recId}/{pageNum}/{startPrice}", method = RequestMethod.GET)
+    public ModelAndView loadProductsByNewPrice(Map<String, Object> model, @PathVariable Long recId, @PathVariable Integer pageNum, @PathVariable Integer startPrice,  HttpServletRequest request) {
         
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
@@ -225,11 +231,16 @@ public class GiftsAjaxController {
             products = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(pjs);
         }
         
-        // get current recipient
-        //Recipient rec = this.reciService.findById((Long) request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID));
-        
-        // check selected
-        //LiXiUtils.checkSelected(products, order, rec);
+        if(recId > 0){
+            try {
+                // get current recipient
+                Recipient rec = this.reciService.findById(recId);
+
+                // check selected
+                LiXiUtils.checkSelected(products, order, rec);
+            } catch (Exception e) {
+            }
+        }
 
         SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
         

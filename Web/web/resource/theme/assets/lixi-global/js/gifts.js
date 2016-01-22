@@ -1,11 +1,11 @@
 function loadPage(pageNum) {
 
     $.ajax({
-        url: AJAX_LOAD_PRODUCTS_PATH + '/' + pageNum,
+        url: AJAX_LOAD_PRODUCTS_PATH + '/' + $('#recId').val() + '/' + pageNum,
         type: "get",
         dataType: 'html',
-                success: function (data, textStatus, jqXHR)
-                {
+        success: function (data, textStatus, jqXHR)
+        {
             //$('#divProducts').html("");
             $('#divProducts').html(data);
             //
@@ -23,7 +23,7 @@ function loadNewPrice(price) {
     overlayOn($('.gift-filter-items'));
     
     $.ajax({
-        url: CONTEXT_PATH + '/gifts/ajax/loadProductsByNewPrice/1/' + price,
+        url: CONTEXT_PATH + '/gifts/ajax/loadProductsByNewPrice/' + $('#recId').val() + '/1/' + price,
         type: "get",
         dataType: 'html',
         success: function (data, textStatus, jqXHR)
@@ -131,6 +131,7 @@ function checkExceed(recId, productId, quantity) {
         }
         else{
             alert("Please select a receiver !");
+            $('#item'+productId).attr('checked', false);
             $('#recId').focus();
             overlayOff();
         }

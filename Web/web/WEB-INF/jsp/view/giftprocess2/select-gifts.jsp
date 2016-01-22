@@ -34,6 +34,8 @@
                 $('#recId').change(function () {
                     if ($(this).val() !== "0") {
                         showGiftValueFor();
+                        /* */
+                        loadPage(1);
                     }
                     else {
                         $('#giftValueFor').hide();
@@ -101,23 +103,25 @@
                                         var firstName = $("#chooseRecipientForm #firstName").val();
                                         /* new recipient */
                                         if (parseInt(data.recId) > 0) {
-                                            $('#recId')
-                                                    .append($("<option></option>")
-                                                            .attr("value", data.recId)
-                                                            .attr("firstname", firstName)
-                                                            .text(name));
+                                            if(data.action === 'create'){
+                                                $('#recId')
+                                                        .append($("<option></option>")
+                                                                .attr("value", data.recId)
+                                                                .attr("firstname", firstName)
+                                                                .text(name));
 
-                                            $('#recId').val(data.recId);
-                                            /* */
-                                            showGiftValueFor();
-                                        }
-                                        else {
-                                            // save successfully
-                                            var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+                                                $('#recId').val(data.recId);
+                                                /* */
+                                                showGiftValueFor();
+                                            }
+                                            else {
+                                                // save successfully
+                                                var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
 
-                                            $("#recId option:selected").attr("firstname", $("#chooseRecipientForm #firstName").val());
-                                            $("#recId option:selected").html(name);
-                                            $('#recFirstName').html(firstName);
+                                                $("#recId option:selected").attr("firstname", $("#chooseRecipientForm #firstName").val());
+                                                $("#recId option:selected").html(name);
+                                                $('#recFirstName').html(firstName);
+                                            }
                                         }
                                     }
                                     else {
