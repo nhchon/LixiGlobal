@@ -20,6 +20,7 @@ public interface TopUpMobilePhoneService {
     
     TopUpMobilePhone save(TopUpMobilePhone topUp);
     
+    @Transactional
     TopUpMobilePhone findById(Long id);
     
     @Transactional

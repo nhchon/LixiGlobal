@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.inject.Inject;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -40,9 +41,15 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
      * @return 
      */
     @Override
+    @Transactional
     public TopUpMobilePhone findById(Long id){
         
-        return this.topUpRepository.findOne(id);
+        TopUpMobilePhone t = this.topUpRepository.findOne(id);
+        if(t != null){
+            t.getOrder().getInvoice();
+            t.getRecipient();
+        }
+        return t;
         
     }
     
@@ -55,7 +62,8 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
     @Transactional
     public List<TopUpMobilePhone> findByIsSubmitted(Iterable<Integer> isSubmitted){
         
-        List<TopUpMobilePhone>  l = this.topUpRepository.findByIsSubmittedIn(isSubmitted);
+        
+        List<TopUpMobilePhone>  l = this.topUpRepository.findByIsSubmittedIn(isSubmitted, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
         
         l.forEach(t -> {
             t.getOrder().getInvoice();

@@ -21,7 +21,9 @@ public interface LixiAsyncMethods {
     void processTopUpItems(LixiOrder order);
     
     @Async
-    void processTopUpItem(TopUpMobilePhone topUp);
+    String processTopUpItem(TopUpMobilePhone topUp);
+    
+    String processTopUpItemNoAsync(TopUpMobilePhone topUp);
     
     @Async
     void processBuyCardItems(LixiOrder order);

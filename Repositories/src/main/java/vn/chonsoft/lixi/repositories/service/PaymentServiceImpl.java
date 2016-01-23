@@ -167,6 +167,8 @@ public class PaymentServiceImpl implements PaymentService{
                 EnumTransactionStatus.underReview.getValue(),
                 EnumTransactionStatus.FDSPendingReview.getValue(),
                 EnumTransactionStatus.FDSAuthorizedPendingReview.getValue(),
+                EnumTransactionStatus.approvedReview.getValue(),
+                EnumTransactionStatus.refundPendingSettlement.getValue(),
                 EnumTransactionStatus.authorizedPendingCapture.getValue(),
                 EnumTransactionStatus.capturedPendingSettlement.getValue()
                 );

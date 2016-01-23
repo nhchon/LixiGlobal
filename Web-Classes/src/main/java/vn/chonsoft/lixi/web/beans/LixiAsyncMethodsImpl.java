@@ -127,12 +127,11 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
 
     /**
      * 
-     * @param topUp 
+     * @param topUp
+     * @return 
      */
-    @Override
-    @Async
-    public void processTopUpItem(TopUpMobilePhone topUp) {
-
+    private String doProcessTopUp(TopUpMobilePhone topUp){
+        
         Recipient rec = topUp.getRecipient();
         String amount = "10000"; // new Long((long)topUp.getAmount()).toString();
         String account = rec.getPhone(); // phone number
@@ -162,6 +161,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
             this.topUpService.save(topUp);
 
             // email to sender, receiver, admin
+            return "-1";
         }
 
         if (response != null) {
@@ -197,6 +197,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
                         message.setTo(rec.getEmail());
                         message.setCc(LiXiConstants.CHONNH_GMAIL);
+                        message.addCc(LiXiConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Top Up Mobile Minutes Alert");
                         message.setSentDate(Calendar.getInstance().getTime());
@@ -213,6 +214,8 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                 };
                 // send oldEmail
                 taskScheduler.execute(() -> mailSender.send(preparator));
+                
+                return LiXiConstants.VTC_OK;
             }// enf if TOP UP is OK
             else {
 
@@ -227,9 +230,30 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                 this.topUpService.save(topUp);
             }
         }
-
+        /* */
+        return "-1";
+    }
+    /**
+     * 
+     * @param topUp 
+     * @return
+     */
+    @Override
+    @Async
+    public String processTopUpItem(TopUpMobilePhone topUp) {
+        
+        return doProcessTopUp(topUp);
     }
 
+    /**
+     * 
+     * @param topUp
+     * @return 
+     */
+    @Override
+    public String processTopUpItemNoAsync(TopUpMobilePhone topUp){
+         return doProcessTopUp(topUp);
+    }
     /**
      *
      * @param order

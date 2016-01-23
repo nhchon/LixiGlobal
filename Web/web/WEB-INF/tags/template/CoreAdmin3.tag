@@ -48,6 +48,14 @@
         <div class="container">
             <jsp:doBody />
         </div>
+        <div id="overlay" style="display:none;background-color: gray">
+            <div style="padding: 20px 10px;width:100%;display: inline-block;position: relative">
+                <div class="progress progress-striped active">
+                    <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
@@ -55,6 +63,7 @@
         <script src="<c:url value="/resource/theme/assets/js/bootstrap/bootstrap.min.js"/>"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="<c:url value="/resource/theme/assets/js/ie10-viewport-bug-workaround.js"/>"></script>
+<script src="<c:url value="/resource/theme/assets/lixi-global/js/utils.js"/>"></script>        
         <!-- javascript at end of page-->
         <jsp:invoke fragment="javascriptContent" />
         <!-- // -->

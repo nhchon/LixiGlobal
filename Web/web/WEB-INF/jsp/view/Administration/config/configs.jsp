@@ -3,12 +3,17 @@
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
+            function deleteConfig(id){
+                if(confirm('Are you sure want to delete this config ???')){
+                    document.location.href = '<c:url value="/Administration/SystemConfig/configs/delete/"/>' + id;
+                }
+            }
         </script>    
     </jsp:attribute>
     <jsp:body>
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-            <li><a href="<c:url value="/Administration/SystemFee/list"/>">Fees</a></li>
+            <li><a href="<c:url value="/Administration/SystemConfig/configs"/>">Lixi Configuration Parameters</a></li>
         </ul>
 
         <!-- main -->
@@ -48,13 +53,24 @@
                             <form action="${saveFeeUrl}" method="post">
                                 <tr>
                                     <td><b>${c.id}</b></td>
-                                    <td><input type="text" name="name" value="${c.name}" class="form-control"/></td>
-                                    <td><input type="text" name="value" value="${c.value}" class="form-control"/></td>
+                                    <td><input type="text" name="name" value="${c.name}" class="form-control" readonly=""/></td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${c.name eq 'VTC_AUTO'}">
+                                                <select class="form-control">
+                                                    <option value="YES" <c:if test="${c.value eq 'YES'}">selected=""</c:if>>YES</option>
+                                                    <option value="NO" <c:if test="${c.value eq 'NO'}">selected=""</c:if>>NO</option>
+                                                </select>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="text" name="value" value="${c.value}" class="form-control"/></td>
+                                            </c:otherwise>
+                                        </c:choose>       
                                     <td>
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                         <input type="hidden" name="id" value="${c.id}" />
                                         <button type="submit" class="btn btn-warning">Save</button>
-                                        <button type="button" class="btn btn-default" onclick="document.location.href='<c:url value="/Administration/SystemConfig/configs/delete/${c.id}"/>'">Delete</button>
+                                        <button type="button" class="btn btn-default" onclick="deleteConfig(${c.id})">Delete</button>
                                     </td>
                                 </tr>
                             </form>

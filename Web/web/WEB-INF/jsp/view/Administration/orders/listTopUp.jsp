@@ -5,11 +5,120 @@
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
-            function submit2VTC(id){
-                if(confirm('Send tthis top up to VTC ?')){
-                    document.location.href = '<c:url value="/Administration/SystemTopUp/send2VTC"/>' + "/" + id;
-                }
+            
+            function cancel(id){
+                overlayOn($('#rowTopUp'+id));
+                $("#topUpForm input[name=id]").val(id);
+                
+                $.ajax(
+                {
+                    url: '<c:url value="/Administration/SystemTopUp/cancel"/>',
+                    type: "POST",
+                    data: $('#topUpForm').serializeArray(),
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR)
+                    {
+                        //data: return data from server
+                        if (data.error === '0') {
+                            
+                            $('#status'+id).html('Canceled');
+                            $('#statusDate'+id).html(data.statusDate);
+                        }
+                        else {
+                            alert('There is something wrong ! Please try again !');
+                        }
+                        overlayOff();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        //if fails  
+                        overlayOff();
+                    }
+                });
             }
+            
+            function check(id){
+                overlayOn($('#rowTopUp'+id));
+                $("#topUpForm input[name=id]").val(id);
+                $.ajax(
+                {
+                    url: '<c:url value="/Administration/SystemTopUp/check"/>',
+                    type: "POST",
+                    data: $('#topUpForm').serializeArray(),
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR)
+                    {
+                        //data: return data from server
+                        if (data.error === '0') {
+                            
+                            if(data.status === 'In Progress' || data.status === 'Processed'){
+                                if(confirm('This transaction ' + data.orderId + ' is in ' + data.status + '. Are you sure want to Cancel this top up ?')){
+                                    
+                                    cancel(id);
+                                }
+                            }
+                            else{
+                                cancel(id);
+                            }
+                        }
+                        else {
+                            alert('There is something wrong ! Please try again !');
+                            overlayOff();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        //if fails  
+                        overlayOff();
+                    }
+                });
+            }
+            function sent(id){
+                overlayOn($('#rowTopUp'+id));
+                $("#topUpForm input[name=id]").val(id);
+                $.ajax(
+                {
+                    url: '<c:url value="/Administration/SystemTopUp/send"/>',
+                    type: "POST",
+                    data: $('#topUpForm').serializeArray(),
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR)
+                    {
+                        //data: return data from server
+                        if (data.error === '1') {
+                            
+                            if(data.status === 'Declined' || data.status === 'Refunded'){
+                                alert('Can not sent this top up of order Id '+ data.orderId+'. The transaction is in ' + data.status)
+                            }
+                        }
+                        else {
+                            $('#status'+id).html('Sent');
+                        }
+                        overlayOff();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        //if fails  
+                        overlayOff();
+                    }
+                });
+            }
+            jQuery(document).ready(function () {
+                var url = '';
+                var fields = {id:0};
+                var form = $('<form id="topUpForm" method="post"></form>')
+                        .attr({action: url, style: 'display: none;'});
+                for (var key in fields) {
+                    if (fields.hasOwnProperty(key))
+                        form.append($('<input type="hidden">').attr({
+                            name: key, value: fields[key]
+                        }));
+                }
+                form.append($('<input type="hidden">').attr({
+                    name: '${_csrf.parameterName}', value: '${_csrf.token}'
+                }));
+                $('body').append(form);
+            });
         </script>    
     </jsp:attribute>
     <jsp:body>
@@ -27,12 +136,12 @@
                 <div class="tab-content">
                     <div class="tab-pane fade active in" id="home">
                         <div class="table-responsive">
-                            <table class="table table-hover table-responsive">
+                            <table class="table table-hover table-responsive table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Order ID</th>
-                                        <th>Authorize Trans ID</th>
+                                        <th>Trans ID</th>
                                         <th>Created Date</th>
                                         <th>Receiver</th>
                                         <th>Phone</th>
@@ -45,7 +154,7 @@
                                 </thead>
                                 <tbody>
                                     <c:forEach items="${topUps}" var="t">
-                                        <tr>
+                                        <tr id="rowTopUp${t.id}">
                                             <td>${t.id}</td>
                                             <td>${t.order.invoice.invoiceCode}</td>
                                             <td>${t.order.invoice.netTransId}</td>
@@ -61,15 +170,28 @@
                                                 <br/>
                                                 USD <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/>
                                             </td>
-                                            <td>
-                                                
+                                            <td id="status${t.id}">
+                                                <c:choose>
+                                                    <c:when test="${t.isSubmitted eq 0}">
+                                                       Not Sent
+                                                    </c:when>
+                                                    <c:when test="${t.isSubmitted eq -1}">
+                                                        Not Sent
+                                                    </c:when>
+                                                    <c:when test="${t.isSubmitted eq 1}">
+                                                        Sent
+                                                    </c:when>
+                                                    <c:when test="${t.isSubmitted eq 2}">
+                                                        Canceled
+                                                    </c:when>
+                                                </c:choose>                                                
                                             </td>
-                                            <td></td>
+                                            <td id="statusDate${t.id}">
+                                            </td>
                                             <td>${t.responseMessage}</td>
                                             <td style="text-align: right;" nowrap>
-                                                <!--<button onclick="submit2VTC(${t.id})" class="btn btn-warning" style="width:98px;">Send To VTC</button>-->
-                                                <button class="btn btn-primary" onclick="alert('In Implementation')">Send</button>
-                                                <button class="btn btn-warning" onclick="alert('In Implementation')">Cancel</button>
+                                                <button class="btn btn-primary" onclick="sent(${t.id})">Send</button>
+                                                <button class="btn btn-warning" onclick="check(${t.id})">Cancel</button>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -87,9 +209,5 @@
                 </div>
             </div>
         </div>
-
-        <!-- /main-content -->
-        <!-- /main -->
-        <!-- /content-wrapper -->
     </jsp:body>
 </template:Admin>

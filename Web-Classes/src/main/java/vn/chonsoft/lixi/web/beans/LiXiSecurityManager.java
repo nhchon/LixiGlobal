@@ -121,34 +121,4 @@ public class LiXiSecurityManager {
 
         return false;
     }
-
-  //public static void main(String args[])
-    //{
-    //  LiXiSecurityManager sm = new LiXiSecurityManager();
-
-    /*
-     Uncomment next line for first time when you run the code,it will generate the keys.
-     Afterwards,the application will read the generated key files from the given location.
-     If you want to generate the key files each time, then you should keep it uncommented always.
-
-     Note: Location of key files have been hardocded i.e. c:\\public.rsa... etc
-     You can change the location to what ever you want.
-
-     */
-    //sm.generateKeys(1024);
-//    String dataToBesigned = "This data will be signed .... you can provide any data here.";
-//    byte[] signature = sm.signData(dataToBesigned.getBytes());
-//
-//    BASE64Encoder encoder = new BASE64Encoder();
-//    String signedB64 = encoder.encode(signature);// You may store this signature in a text file.
-//    String dataB64 = encoder.encode(dataToBesigned.getBytes());// You may store the data as well in a text file.
-//
-//    //writing data to file, which will be read later by C# program for verification
-//    sm.writeBytesToFile(dataB64.getBytes(),"/home/chonnh/Documents/VTC/data.dat");
-//    //writing signature to file, which will be read later by C# program for verification
-//    sm.writeBytesToFile(signedB64.getBytes(),"/home/chonnh/Documents/VTC/signature.dat");
-//
-//    System.out.println("Signature: \n"+signedB64 + "\n\n\n\n" + "Data that was signed : \n"+dataB64);
-//    System.out.println("Verifying the data using Public Key:\n Data is Verified : "+sm.verifySignature(signature,dataToBesigned.getBytes()));
-//  }
 }
