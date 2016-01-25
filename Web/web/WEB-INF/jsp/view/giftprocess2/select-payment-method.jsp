@@ -108,7 +108,6 @@
                             </div>
                             <div class="col-md-6 text-right">
                                 <button class="btn btn-primary btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/checkout/addCard"/>">add new card</button>
-                                <button class="btn btn-primary text-uppercase btn-has-link-event"  type="button" data-link="<c:url value="/checkout/addBankAccount"/>">add new bank account</button>
                             </div>
                         </div>
                     </div>

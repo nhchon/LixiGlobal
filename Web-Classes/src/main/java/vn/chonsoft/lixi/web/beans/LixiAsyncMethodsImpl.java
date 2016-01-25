@@ -134,7 +134,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
         
         Recipient rec = topUp.getRecipient();
         String amount = "10000"; // new Long((long)topUp.getAmount()).toString();
-        String account = rec.getPhone(); // phone number
+        String account = LiXiUtils.checkZeroAtBeginOfPhoneNumber(topUp.getPhone()); // phone number
 
         DauSo dauSo = getDauSo(account);
         //if(!dauSos.isEmpty()){
@@ -223,7 +223,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                 // update topup
                 VtcResponseCode vtcResponse = this.responseCodeService.findByCode(Integer.parseInt(results[0]));
 
-                topUp.setIsSubmitted(1);
+                topUp.setIsSubmitted(-1);// error, can not sent
                 topUp.setResponseCode(vtcResponse.getCode());//OK
                 topUp.setResponseMessage(vtcResponse.getDescription());
 

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
+import vn.chonsoft.lixi.model.pojo.EnumTopUpStatus;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -83,6 +84,7 @@ public class SystemTopUpController {
         model.put("status", invoice.getTranslatedStatus());
         model.put("statusDate", Calendar.getInstance().getTime());
         model.put("orderId", invoice.getInvoiceCode());
+        model.put("vtcMessage", t.getResponseMessage());
         
         return new ModelAndView("Administration/ajax/topup-message");
     }
@@ -127,7 +129,7 @@ public class SystemTopUpController {
         
         LixiInvoice invoice = t.getOrder().getInvoice();
         
-        t.setIsSubmitted(2); // cancel by admin
+        t.setIsSubmitted(EnumTopUpStatus.CANCEL_BY_ADMIN.getValue()); // cancel by admin
         this.topUpService.save(t);
         
         model.put("status", invoice.getTranslatedStatus());

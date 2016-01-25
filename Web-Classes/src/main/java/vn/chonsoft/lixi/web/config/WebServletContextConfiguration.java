@@ -129,7 +129,7 @@ public class WebServletContextConfiguration  extends WebMvcConfigurerAdapter{
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        Sort defaultSort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
+        Sort defaultSort = new Sort(new Sort.Order(Sort.Direction.DESC, "id"));
         Pageable defaultPageable = new PageRequest(0, 50, defaultSort);
 
         SortHandlerMethodArgumentResolver sortResolver
@@ -146,6 +146,8 @@ public class WebServletContextConfiguration  extends WebMvcConfigurerAdapter{
 
         resolvers.add(sortResolver);
         resolvers.add(pageableResolver);
+        
+        super.addArgumentResolvers(resolvers);
     }
 
     @Override

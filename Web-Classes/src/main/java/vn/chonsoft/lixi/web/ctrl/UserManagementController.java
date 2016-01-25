@@ -8,6 +8,7 @@ import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -436,7 +437,7 @@ public class UserManagementController {
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "orderHistory/{when}", method = RequestMethod.GET)
-    public ModelAndView orderHistory(Map<String, Object> model, @PathVariable String when, @PageableDefault(sort = {"modifiedDate"}, value = 50, direction = Sort.Direction.DESC) Pageable page) {
+    public ModelAndView orderHistory(Map<String, Object> model, @PathVariable String when, @PageableDefault(page=0, value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page) {
         
         /**/
         User sender = this.userService.findByEmail(loginedUser.getEmail());
@@ -484,9 +485,13 @@ public class UserManagementController {
             ps = this.orderService.findBySender(sender, page);
         }
         
-        Map<LixiOrder, List<RecipientInOrder>> mOs = new HashMap<>();
+        log.info("page sort: " + page.getSort().toString());
+        
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         if(ps.hasContent()){
             ps.getContent().forEach(o -> {
+                log.info("order id : " + o.getId());
+                
                 mOs.put(o, LiXiUtils.genMapRecGifts(o));
             });
         }

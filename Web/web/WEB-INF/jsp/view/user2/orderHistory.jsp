@@ -16,12 +16,30 @@
 
                 });
             });
-            
-            function cancelOrder(id){
-                if(confirm(CANCEL_ORDER_MESSAGE)){
+
+            function cancelOrder(id) {
+                if (confirm(CANCEL_ORDER_MESSAGE)) {
                     document.location.href = '<c:url value="/user/cancelOrder"/>' + '/' + id;
                 }
             }
+            
+            function toogleDetail(id){
+                if($('#panelBody'+id).is(":visible")){
+                    
+                    $('#iconDetail'+id).removeClass();
+                    $('#iconDetail'+id).addClass("fa fa-caret-down");
+                    //
+                    $('#panelBody'+id).hide();
+                }
+                else{
+                    $('#iconDetail'+id).removeClass();
+                    $('#iconDetail'+id).addClass("fa fa-caret-up");
+                    //
+                    $('#panelBody'+id).show();
+                }
+            }
+            
+            
         </script>
     </jsp:attribute>
 
@@ -53,121 +71,147 @@
                     </c:if>
                     <c:forEach items="${mOs}" var="m">
                         <c:if test="${m.key.invoice.netTransStatus ne 'beforePayment' && m.key.invoice.netTransStatus ne 'paymentError' && m.key.invoice.netTransStatus ne 'voidedByUser'}">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div style="font-size:16px;">
-                                            <b>Order Number:</b> ${m.key.invoice.invoiceCode}
-                                        </div>
-                                        <div style="font-size:14px;padding-top: 8px;">
-                                            <a href="<c:url value="/user/orderDetail/${m.key.id}"/>">Order Detail</a>
-                                            <c:if test="${m.key.invoice.translatedStatus eq 'In Progress'}">
-                                                 | <a href="javascript:cancelOrder(${m.key.id});">Cancel Order</a>
-                                            </c:if>
-                                            <c:if test="${m.key.invoice.translatedStatus eq 'Complete'}">
-                                                 | <a href="javascript:void(0);" >Order Again</a>
-                                            </c:if>    
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2" style="text-align:center;">
-                                        <div style="font-size:16px;">ORDER DATE</div>
-                                        <div style="font-size:14px;padding-top: 8px;">
-                                        <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2" style="text-align:center;">
-                                        <div style="font-size:16px;">STATUS</div>
-                                        <div style="font-size:14px;padding-top: 8px;">
-                                            ${m.key.invoice.translatedStatus}
-                                            <c:set var="lastCheck" value="Last check: "/>
-                                            <c:if test="${m.key.invoice.netTransStatus eq 'settledSuccessfully'}">
-                                                <c:set var="lastCheck" value=""/>
-                                            </c:if>
-                                            <c:if test="${empty m.key.invoice}">
-                                                &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>)
-                                            </c:if>
-                                            <c:if test="${not empty m.key.invoice}">
-                                                <c:if test="${empty m.key.invoice.netTransStatus}">
-                                                    &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.invoiceDate}"/>)
-                                                </c:if>
-                                                <c:if test="${not empty m.key.invoice.netTransStatus}">
-                                                    &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.lastCheckDate}"/>)
-                                                </c:if>             
-                                            </c:if>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2" style="text-align:center;">
-                                        <div style="font-size:16px;">TOTAL</div>
-                                        <div style="font-size:14px;padding-top: 8px;">
-                                            <c:if test="${empty m.key.invoice}">
-                                                --
-                                            </c:if>
-                                            <c:if test="${not empty m.key.invoice}">    
-                                                USD <fmt:formatNumber value="${m.key.invoice.totalAmount}" pattern="###,###.##"/> - 
-                                                <fmt:formatNumber value="${m.key.invoice.totalAmountVnd}" pattern="###,###.##"/> VND
-                                            </c:if>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3" style="text-align: center;">
-                                        <div style="font-size:16px;">SETTING</div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div style="font-size:16px;">
+                                                <b>Order Number:</b> ${m.key.invoice.invoiceCode}
+                                            </div>
                                             <div style="font-size:14px;padding-top: 8px;">
-                                            <c:if test="${m.key.setting eq 0}">
-                                                <spring:message code="gift.gift_only" text="Gift Only"/>
-                                            </c:if>
-                                            <c:if test="${m.key.setting eq 1}">
-                                                <spring:message code="gift.allow_refund" text="Allow Refund"/>
-                                            </c:if>
+                                                <a href="<c:url value="/user/orderDetail/${m.key.id}"/>">Order Detail</a>
+                                                <c:if test="${m.key.invoice.translatedStatus eq 'In Progress'}">
+                                                    | <a href="javascript:cancelOrder(${m.key.id});">Cancel Order</a>
+                                                </c:if>
+                                                <c:if test="${m.key.invoice.translatedStatus eq 'Complete'}">
+                                                    | <a href="javascript:void(0);" >Order Again</a>
+                                                </c:if>    
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" style="text-align:center;">
+                                            <div style="font-size:16px;">ORDER DATE</div>
+                                            <div style="font-size:14px;padding-top: 8px;">
+                                                <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" style="text-align:center;">
+                                            <div style="font-size:16px;">STATUS</div>
+                                            <div style="font-size:14px;padding-top: 8px;">
+                                                ${m.key.invoice.translatedStatus}
+                                                <c:set var="lastCheck" value="Last check: "/>
+                                                <c:if test="${m.key.invoice.netTransStatus eq 'settledSuccessfully'}">
+                                                    <c:set var="lastCheck" value=""/>
+                                                </c:if>
+                                                <c:if test="${empty m.key.invoice}">
+                                                    &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>)
+                                                </c:if>
+                                                <c:if test="${not empty m.key.invoice}">
+                                                    <c:if test="${empty m.key.invoice.netTransStatus}">
+                                                        &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.invoiceDate}"/>)
+                                                    </c:if>
+                                                    <c:if test="${not empty m.key.invoice.netTransStatus}">
+                                                        &nbsp;(${lastCheck}<fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.lastCheckDate}"/>)
+                                                    </c:if>             
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" style="text-align:center;">
+                                            <div style="font-size:16px;">TOTAL</div>
+                                            <div style="font-size:14px;padding-top: 8px;">
+                                                <c:if test="${empty m.key.invoice}">
+                                                    --
+                                                </c:if>
+                                                <c:if test="${not empty m.key.invoice}">    
+                                                    USD <fmt:formatNumber value="${m.key.invoice.totalAmount}" pattern="###,###.##"/> - 
+                                                    <fmt:formatNumber value="${m.key.invoice.totalAmountVnd}" pattern="###,###.##"/> VND
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="text-align: center;">
+                                            <div style="font-size:16px;">SETTING <span class="pull-right"><a href="javascript:toogleDetail(${m.key.id})"><i id="iconDetail${m.key.id}" class="fa fa-caret-down"></i></a></span></div>
+                                            <div style="font-size:14px;padding-top: 8px;">
+                                                <c:if test="${m.key.setting eq 0}">
+                                                    <spring:message code="gift.gift_only" text="Gift Only"/>
+                                                </c:if>
+                                                <c:if test="${m.key.setting eq 1}">
+                                                    <spring:message code="gift.allow_refund" text="Allow Refund"/>
+                                                </c:if>
                                             </div>    
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="panel-body">
-                                <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                                    <b>${rio.recipient.firstName}&nbsp;${rio.recipient.middleName}&nbsp;${rio.recipient.lastName}</b> <span class="badge">${fn:length(rio.gifts) + fn:length(rio.topUpMobilePhones)}</span>
-                                    <div>&nbsp;</div>
-                                    <c:forEach items="${rio.gifts}" var="g">
-                                        <div class="row" style="margin-bottom: 5px;">
-                                            <div class="col-md-3" style="padding-left:50px;">
-                                                <img width="122" height="107" src="<c:url value="${g.productImage}"/>"/>
+                                <div class="panel-body"  style="display:none;"  id="panelBody${m.key.id}">
+                                    <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
+                                        <b>${rio.recipient.firstName}&nbsp;${rio.recipient.middleName}&nbsp;${rio.recipient.lastName}</b> <span class="badge">${fn:length(rio.gifts) + fn:length(rio.topUpMobilePhones)}</span>
+                                        <div>&nbsp;</div>
+                                        <c:forEach items="${rio.gifts}" var="g">
+                                            <div class="row" style="margin-bottom: 5px;">
+                                                <div class="col-md-3" style="padding-left:50px;">
+                                                    <img width="122" height="107" src="<c:url value="${g.productImage}"/>"/>
+                                                </div>
+                                                <div class="col-md-2" style="padding-top:40px;text-align: center;">
+                                                    ${g.productQuantity}
+                                                </div>
+                                                <div class="col-md-4" style="padding-top:40px;">
+                                                    ${g.productName}
+                                                </div>
+                                                <div class="col-md-3" style="padding-top:40px;text-align: center;">
+                                                    USD <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${g.exchPrice}" pattern="###,###.##"/>
+                                                </div>
                                             </div>
-                                            <div class="col-md-2" style="padding-top:40px;text-align: center;">
-                                                ${g.productQuantity}
+                                        </c:forEach>
+                                        <c:forEach items="${rio.topUpMobilePhones}" var="t">
+                                            <div class="row" style="margin-bottom: 5px;">
+                                                <div class="col-md-3" style="padding-left:50px;">
+                                                    Top Up Mobile Phone
+                                                </div>
+                                                <div class="col-md-2" style="text-align: center;">
+                                                    USD <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    ${t.phone}
+                                                </div>
+                                                <div class="col-md-3" style="text-align: center;">
+                                                    USD <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>
+                                                </div>
                                             </div>
-                                            <div class="col-md-4" style="padding-top:40px;">
-                                                ${g.productName}
+                                        </c:forEach>
+                                        <c:if test="${theValueCount.count < fn:length(m.value)}">
+                                            <div class="row">
+                                                <div class="col-md-12"><hr style="height:1px;border:none;color:#333;background-color:#333;"/></div>
                                             </div>
-                                            <div class="col-md-3" style="padding-top:40px;text-align: center;">
-                                                USD <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${g.exchPrice}" pattern="###,###.##"/>
-                                            </div>
-                                        </div>
+                                        </c:if>
                                     </c:forEach>
-                                    <c:forEach items="${rio.topUpMobilePhones}" var="t">
-                                        <div class="row" style="margin-bottom: 5px;">
-                                            <div class="col-md-3" style="padding-left:50px;">
-                                                Top Up Mobile Phone
-                                            </div>
-                                            <div class="col-md-2" style="text-align: center;">
-                                                USD <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                ${t.phone}
-                                            </div>
-                                            <div class="col-md-3" style="text-align: center;">
-                                                USD <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>
-                                            </div>
-                                        </div>
-                                    </c:forEach>
-                                    <c:if test="${theValueCount.count < fn:length(m.value)}">
-                                    <div class="row">
-                                        <div class="col-md-12"><hr style="height:1px;border:none;color:#333;background-color:#333;"/></div>
-                                    </div>
-                                    </c:if>
-                                </c:forEach>
+                                </div>
                             </div>
-                        </div>
                         </c:if>
                     </c:forEach>
+                    <div class="row">
+                        <div class="col-md-12" style="text-align: right;">
+                            <%-- Paging --%>
+                            <nav>
+                                <ul class="pagination pull-right">
+                                    <c:forEach begin="1" end="${orders.totalPages}" var="i">
+                                        <c:choose>
+                                            <c:when test="${(i - 1) == orders.number}">
+                                                <li class="active">
+                                                    <a href="javascript:void(0)">${i}</a>
+                                                </li>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <li>
+                                                    <a href="<c:url value="/user/orderHistory/${when}">
+                                                           <c:param name="paging.page" value="${i}" />
+                                                           <c:param name="paging.size" value="50" />
+                                                       </c:url>">${i}</a>
+                                                </li>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </ul>
+                            </nav>                                
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

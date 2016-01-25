@@ -33,12 +33,12 @@
                 });
 
                 // submit
-                $('#btnTopUpKeepShopping').click(function () {
+                //$('#btnTopUpKeepShopping').click(function () {
                     // set action
-                    $('#topUpAction').val('KEEP_SHOPPING_ACTION');
+                    //$('#topUpAction').val('KEEP_SHOPPING_ACTION');
                     //
-                    return checkTopUpMobileForm();
-                });
+                    //return checkTopUpMobileForm();
+                //});
 
                 $('#btnTopUpBuyNow').click(function () {
                     // set action
@@ -218,6 +218,11 @@
                 
                 return true
             }
+            
+            function cancelTopUp(){
+                
+                document.location.href = '<c:url value="/gifts/choose"/>';
+            }
         </script>
     </jsp:attribute>
 
@@ -327,8 +332,8 @@
                                                     <input type="hidden" id="topUpId" name="topUpId" value="${topUpId}"/>
                                                     <input type="hidden" value="" id="topUpAction" name="topUpAction"/>
                                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                                    <button id="btnTopUpBuyNow" type="submit" class="btn btn-warning">Buy Now</button>
-                                                    <button id="btnTopUpKeepShopping" type="submit" class="btn btn-primary">Buy & Keep Shopping</button>
+                                                    <button id="btnTopUpBuyNow" type="submit" class="btn btn-primary">Buy Now</button>
+                                                    <button id="btnTopUpKeepShopping" type="button" class="btn btn-warning" onclick="cancelTopUp()">Cancel</button>
                                                 </div>
                                             </div>
                                         </form>

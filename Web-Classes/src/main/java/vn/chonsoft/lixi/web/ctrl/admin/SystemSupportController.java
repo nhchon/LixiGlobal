@@ -73,15 +73,15 @@ public class SystemSupportController {
     }
     /**
      * 
-     * 
+     * @param page
      * @param model 
      * @return 
      */
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public ModelAndView listIssue(Map<String, Object> model){
+    public ModelAndView listIssue(Map<String, Object> model, @PageableDefault(sort = {"id"}, value = 50, direction = Sort.Direction.DESC) Pageable page){
         
         /* */
-        Pageable page = new PageRequest(0, 50, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
+        //Pageable page = new PageRequest(0, 50, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
         
         /* */
         return listIssue(model, EnumCustomerProblemStatus.OPEN.getValue(), page);
@@ -96,7 +96,7 @@ public class SystemSupportController {
      * @return 
      */
     @RequestMapping(value = "list/{status}", method = RequestMethod.GET)
-    public ModelAndView listIssue(Map<String, Object> model, @PathVariable Integer status, @PageableDefault(sort = {"id"}, value = 50, direction = Sort.Direction.DESC) Pageable page){
+    public ModelAndView listIssue(Map<String, Object> model, @PathVariable Integer status, @PageableDefault(page = 0, value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page){
         
         /* list status of problem */
         model.put("statuses", this.statusService.findAll());
@@ -194,7 +194,7 @@ public class SystemSupportController {
         this.probService.save(prob);
         
         /* turn back list page */
-        return listIssue(model);
+        return listIssue(model, new PageRequest(0, 50, new Sort(new Sort.Order(Sort.Direction.DESC, "id"))));
     }
     
     /**

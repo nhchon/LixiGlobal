@@ -90,9 +90,14 @@
                             if(data.status === 'Declined' || data.status === 'Refunded'){
                                 alert('Can not sent this top up of order Id '+ data.orderId+'. The transaction is in ' + data.status)
                             }
+                            else{
+                                alert(data.vtcMessage);
+                                $('#vtcMessage'+id).html(data.vtcMessage);
+                            }
                         }
                         else {
                             $('#status'+id).html('Sent');
+                            $('#statusDate'+id).html(data.statusDate);
                         }
                         overlayOff();
                     },
@@ -188,7 +193,7 @@
                                             </td>
                                             <td id="statusDate${t.id}">
                                             </td>
-                                            <td>${t.responseMessage}</td>
+                                            <td id="vtcMessage${t.id}">${t.responseMessage}</td>
                                             <td style="text-align: right;" nowrap>
                                                 <button class="btn btn-primary" onclick="sent(${t.id})">Send</button>
                                                 <button class="btn btn-warning" onclick="check(${t.id})">Cancel</button>

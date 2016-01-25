@@ -43,6 +43,7 @@ import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
 import vn.chonsoft.lixi.model.form.UserSignUpWithOutEmailForm;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
+import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.MoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserMoneyLevelService;
@@ -87,6 +88,9 @@ public class UserGeneralController {
 
     @Inject
     private LixiOrderService lxorderService;
+
+    @Autowired
+    private LixiExchangeRateService lxexrateService;
 
     @Autowired
     private LixiConfigService configService;
@@ -709,6 +713,11 @@ public class UserGeneralController {
                 // check the order that unfinished
                 LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, LiXiConstants.LIXI_ORDER_UNFINISHED);
                 if (order != null) {
+                    /**/
+                    order.setLxExchangeRate(this.lxexrateService.findLastRecord(LiXiConstants.USD));
+                    
+                    this.lxorderService.save(order);
+                    
                     // continue to finish this order
                     request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
                 }

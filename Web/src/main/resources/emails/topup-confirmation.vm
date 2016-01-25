@@ -8,6 +8,12 @@
             </p>
         </div>
         
+        <div>
+            <p>
+            His message to you is:  ${rec.note}
+            </p>
+        </div>
+        <div><p>Please let him know you have received his gift.</p></div>
         <div><p>Please enjoy !</p></div>
 
         <div>
