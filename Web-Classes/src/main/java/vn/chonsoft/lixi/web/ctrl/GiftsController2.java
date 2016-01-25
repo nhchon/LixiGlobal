@@ -637,7 +637,7 @@ public class GiftsController2 {
         if(orderId == null){
             
             // to do
-            return new ModelAndView(new RedirectView("/gifts/recipient", true, true));
+            return new ModelAndView(new RedirectView("/gifts/choose", true, true));
         }
         
         LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));

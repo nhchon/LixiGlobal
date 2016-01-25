@@ -158,9 +158,17 @@ public class CheckOutController2 {
     @RequestMapping(value = "paymentMethods", method = RequestMethod.GET)
     public ModelAndView choosePaymentMethod(Map<String, Object> model, HttpServletRequest request) {
         
+        // check order created
+        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if(orderId == null){
+            
+            // to do
+            return new ModelAndView(new RedirectView("/gifts/choose", true, true));
+        }
+        
         User u = this.userService.findByEmail(loginedUser.getEmail());
 
-        LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+        LixiOrder order = this.lxorderService.findById(orderId);
 
         List<UserBankAccount> accs = this.ubcService.findByUser(u);
         List<UserCard> cards = this.ucService.findByUser(u);
@@ -484,7 +492,7 @@ public class CheckOutController2 {
         } else {
 
             // order not exist, go to Choose recipient page
-            return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
+            return new ModelAndView(new RedirectView("/gifts/choose", true, true));
         }
         
         // calculate fee
