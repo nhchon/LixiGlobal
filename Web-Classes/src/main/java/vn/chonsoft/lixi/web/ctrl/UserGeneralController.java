@@ -34,7 +34,10 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderGift;
+import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserMoneyLevel;
 import vn.chonsoft.lixi.model.UserSecretCode;
@@ -44,8 +47,10 @@ import vn.chonsoft.lixi.model.form.UserSignUpForm;
 import vn.chonsoft.lixi.model.form.UserSignUpWithOutEmailForm;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.MoneyLevelService;
+import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.repositories.service.UserMoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserSecretCodeService;
 import vn.chonsoft.lixi.repositories.service.UserService;
@@ -89,6 +94,12 @@ public class UserGeneralController {
     @Inject
     private LixiOrderService lxorderService;
 
+    @Autowired
+    private LixiOrderGiftService lxogiftService;
+
+    @Autowired
+    private TopUpMobilePhoneService topUpService;
+    
     @Autowired
     private LixiExchangeRateService lxexrateService;
 
@@ -713,11 +724,30 @@ public class UserGeneralController {
                 // check the order that unfinished
                 LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, LiXiConstants.LIXI_ORDER_UNFINISHED);
                 if (order != null) {
-                    /**/
-                    order.setLxExchangeRate(this.lxexrateService.findLastRecord(LiXiConstants.USD));
+                    /* get latest exchange rate */
+                    LixiExchangeRate exRate = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+                    order.setLxExchangeRate(exRate);
                     
                     this.lxorderService.save(order);
                     
+                    /* update gifts*/
+                    if(order.getGifts() != null){
+                        
+                        for(LixiOrderGift gift : order.getGifts()){
+                            
+                            gift.setUsdPrice(LiXiUtils.toUsdPrice(gift.getProductPrice(), exRate.getBuy()));
+                            
+                            this.lxogiftService.save(gift);
+                        }
+                    }
+                    /* update top up */
+                    if(order.getTopUpMobilePhones()!=null){
+                        for(TopUpMobilePhone t : order.getTopUpMobilePhones()){
+                            
+                            t.setAmountUsd(LiXiUtils.toUsdPrice(t.getAmount(), exRate.getBuy()));
+                            this.topUpService.save(t);
+                        }
+                    }
                     // continue to finish this order
                     request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
                 }

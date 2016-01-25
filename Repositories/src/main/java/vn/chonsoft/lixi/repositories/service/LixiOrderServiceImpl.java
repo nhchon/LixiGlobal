@@ -163,12 +163,38 @@ public class LixiOrderServiceImpl implements LixiOrderService{
     }
     
     @Override
+    @Transactional
     public LixiOrder findLastBySenderAndLixiStatus(User sender, Integer status){
         
         List<LixiOrder> ls = this.lxorderRepository.findBySenderAndLixiStatus(sender, status);
         if(ls != null && !ls.isEmpty()){
                 
-                return ls.get(0);
+            LixiOrder order = ls.get(0);
+            if(order != null){
+
+                // make sure load gifts
+                order.getGifts().size();
+
+                // top up
+                order.getTopUpMobilePhones().size();
+
+                // phone card
+                order.getBuyCards().size();
+
+                // exchange rate
+                order.getLxExchangeRate();
+
+                //
+                order.getCard();
+
+                //
+                order.getBankAccount();
+
+                // invoice
+                order.getInvoice();
+            }  
+            
+            return order;
                 
         }
         //
