@@ -4,11 +4,19 @@
  */
 package vn.chonsoft.lixi.web.ctrl.admin;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiInvoice;
+import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.pojo.EnumTopUpStatus;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
@@ -139,7 +148,74 @@ public class SystemTopUpController {
         return new ModelAndView("Administration/ajax/topup-message");
     }
     
+    /**
+     * 
+     * @param model
+     * @return 
+     */
+    @RequestMapping(value = "report", method = RequestMethod.GET)
+    public ModelAndView report(Map<String, Object> model){
     
+        return new ModelAndView("Administration/orders/topUpReport");
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param page
+     * @return 
+     */
+    @RequestMapping(value = "report", method = RequestMethod.POST)
+    public ModelAndView report(Map<String, Object> model, @PageableDefault(value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page, HttpServletRequest request){
+    
+        String statusStr = request.getParameter("status");
+        String fromDateStr = request.getParameter("fromDate");
+        String toDateStr = request.getParameter("toDate");
+        
+        Integer status = 0;
+        Date fromDate = null;
+        Date toDate = null;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            status = Integer.valueOf(statusStr);
+            
+            if(!StringUtils.isEmpty(fromDateStr)){
+                fromDate = df.parse(fromDateStr);
+            }
+            
+            if(!StringUtils.isEmpty(toDateStr)){
+                toDate = df.parse(toDateStr);
+            }
+        } catch (Exception e) {
+        }
+        
+        Page<TopUpMobilePhone> ps = null;
+        if(fromDate == null && toDate == null){
+            // TODO
+        }
+        else{
+            if(fromDate == null){
+                ps = this.topUpService.findByIsSubmittedAndEndDate(status, toDate, page);
+            }
+            else{
+                if(toDate == null){
+                    ps = this.topUpService.findByIsSubmittedAndFromDate(status, fromDate, page);
+                }
+                else{
+                    ps = this.topUpService.findByIsSubmittedAndModifiedDate(status, fromDate, toDate, page);
+                }
+            }
+        }
+        
+        model.put("topUps", ps);
+        model.put("status", statusStr);
+        model.put("fromDate", fromDateStr);
+        model.put("toDate", toDateStr);
+        model.put("pagingPage", request.getParameter("paging.page"));
+        model.put("pagingSize", request.getParameter("paging.size"));
+
+        return new ModelAndView("Administration/orders/topUpReport");
+    }
     
     /**
      * 

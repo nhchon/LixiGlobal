@@ -134,7 +134,7 @@ public class WebServletContextConfiguration  extends WebMvcConfigurerAdapter{
 
         SortHandlerMethodArgumentResolver sortResolver
                 = new SortHandlerMethodArgumentResolver();
-        sortResolver.setSortParameter("paging.sort");
+        sortResolver.setSortParameter("paging.sort");// for direction: paging.sort.dir ???
         sortResolver.setFallbackSort(defaultSort);
 
         PageableHandlerMethodArgumentResolver pageableResolver

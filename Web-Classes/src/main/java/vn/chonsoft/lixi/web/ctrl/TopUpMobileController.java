@@ -9,13 +9,10 @@ import java.util.Calendar;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,8 +23,8 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
-import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.model.pojo.EnumTopUpStatus;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
@@ -225,7 +222,7 @@ public class TopUpMobileController {
             topUp.setAmount(amountTopUp);
             topUp.setAmountUsd(amountUsd);
             topUp.setPhone(recPhone);
-            topUp.setIsSubmitted(0);// not yet submit
+            topUp.setIsSubmitted(EnumTopUpStatus.ORDER_UNFINISHED.getValue());// not yet submit
             topUp.setOrder(order);
             topUp.setRecipient(rec);
             topUp.setModifiedDate(Calendar.getInstance().getTime());

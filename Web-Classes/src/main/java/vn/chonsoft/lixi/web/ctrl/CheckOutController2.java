@@ -49,6 +49,7 @@ import vn.chonsoft.lixi.model.form.AddCardForm;
 import vn.chonsoft.lixi.model.form.BankAccountAddForm;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.model.pojo.EnumTopUpStatus;
 import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
@@ -526,28 +527,30 @@ public class CheckOutController2 {
             order = this.lxorderService.findById(orderId);
             LixiInvoice invoice = order.getInvoice();
             if(invoice == null){
-                /* create invoice */
-                Map<String, Object> model = new HashMap<>();
-                /* get billing address */
-                BillingAddress bl = LiXiUtils.getBillingAddress(order);
-
-                // calculate fee
-                LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(this.countryService.findByName(bl.getCountry())));
-                
                 invoice = new LixiInvoice();
-                invoice.setOrder(order);
-                invoice.setInvoiceCode(LiXiUtils.getBeautyOrderId(orderId));
-                invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
-                invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
-                invoice.setLixiFee(LiXiUtils.round2Decimal((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL)));
-                invoice.setTotalAmount(LiXiUtils.getTestTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)));//
-                invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
-                invoice.setNetTransStatus(EnumTransactionStatus.beforePayment.getValue());
-                invoice.setInvoiceDate(currDate);
-                invoice.setCreatedDate(currDate);
-
-                invoice = this.invoiceService.save(invoice);
             }
+            
+            /* update invoice */
+            Map<String, Object> model = new HashMap<>();
+            /* get billing address */
+            BillingAddress bl = LiXiUtils.getBillingAddress(order);
+
+            // calculate fee
+            LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(this.countryService.findByName(bl.getCountry())));
+
+            invoice.setOrder(order);
+            invoice.setInvoiceCode(LiXiUtils.getBeautyOrderId(orderId));
+            invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
+            invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
+            invoice.setLixiFee(LiXiUtils.round2Decimal((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL)));
+            invoice.setTotalAmount(LiXiUtils.getTestTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)));//
+            invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
+            invoice.setNetTransStatus(EnumTransactionStatus.beforePayment.getValue());
+            invoice.setInvoiceDate(currDate);
+            invoice.setCreatedDate(currDate);
+
+            this.invoiceService.save(invoice);
+            //}
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
             boolean chargeResult = paymentService.chargeByCustomerProfile(invoice);
             if (chargeResult == false) {
@@ -563,6 +566,12 @@ public class CheckOutController2 {
                 /* update invoice's status */
                 invoice.setNetTransStatus(EnumTransactionStatus.inProgress.getValue());
                 this.invoiceService.save(invoice);
+                
+                /* update top up status */
+                if(order.getTopUpMobilePhones()!= null){
+                    order.getTopUpMobilePhones().forEach(t -> {t.setIsSubmitted(EnumTopUpStatus.NOT_YET_SEND.getValue());});
+                    this.topUpService.save(order.getTopUpMobilePhones());
+                }
                 
                 /* update order status */
                 order.setLixiStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());

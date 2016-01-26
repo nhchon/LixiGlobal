@@ -4,7 +4,10 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.Date;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -21,11 +24,23 @@ public interface TopUpMobilePhoneService {
     TopUpMobilePhone save(TopUpMobilePhone topUp);
     
     @Transactional
+    void save(List<TopUpMobilePhone> ts);
+    
+    @Transactional
     TopUpMobilePhone findById(Long id);
     
     @Transactional
     List<TopUpMobilePhone> findByIsSubmitted(Iterable<Integer> isSubmitted);
-            
+
+    @Transactional
+    Page<TopUpMobilePhone> findByIsSubmittedAndModifiedDate(Integer isSubmitted, Date begin, Date end, Pageable page);
+    
+    @Transactional
+    Page<TopUpMobilePhone> findByIsSubmittedAndFromDate(Integer isSubmitted, Date begin, Pageable page);
+    
+    @Transactional
+    Page<TopUpMobilePhone> findByIsSubmittedAndEndDate(Integer isSubmitted, Date end, Pageable page);
+    
     void deleteById(Long id);
     
     @Transactional

@@ -31,6 +31,7 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.TopUpResult;
 import vn.chonsoft.lixi.model.VtcResponseCode;
 import vn.chonsoft.lixi.model.VtcServiceCode;
+import vn.chonsoft.lixi.model.pojo.EnumTopUpStatus;
 import vn.chonsoft.lixi.repositories.service.BuyCardResultService;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.DauSoService;
@@ -154,10 +155,11 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
             log.info(e.getMessage(), e);
             /* handle exception */
             // update topup
-            topUp.setIsSubmitted(-1);// submit failed
+            topUp.setIsSubmitted(EnumTopUpStatus.SEND_FAILED.getValue());// submit failed
             topUp.setResponseCode(-1);
             topUp.setResponseMessage(e.getMessage());
-
+            topUp.setModifiedDate(Calendar.getInstance().getTime());
+            
             this.topUpService.save(topUp);
 
             // email to sender, receiver, admin
@@ -183,9 +185,10 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
             String[] results = vtcReturned.split("\\|");
             if (LiXiConstants.VTC_OK.equals(results[0])) {
                 // update topup
-                topUp.setIsSubmitted(1);
+                topUp.setIsSubmitted(EnumTopUpStatus.SENT.getValue());
                 topUp.setResponseCode(1);//OK
                 topUp.setResponseMessage("OK");
+                topUp.setModifiedDate(Calendar.getInstance().getTime());
 
                 this.topUpService.save(topUp);
 
@@ -223,9 +226,10 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                 // update topup
                 VtcResponseCode vtcResponse = this.responseCodeService.findByCode(Integer.parseInt(results[0]));
 
-                topUp.setIsSubmitted(-1);// error, can not sent
+                topUp.setIsSubmitted(EnumTopUpStatus.SEND_FAILED.getValue());// error, can not sent
                 topUp.setResponseCode(vtcResponse.getCode());//OK
                 topUp.setResponseMessage(vtcResponse.getDescription());
+                topUp.setModifiedDate(Calendar.getInstance().getTime());
 
                 this.topUpService.save(topUp);
             }

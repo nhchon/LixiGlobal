@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h5>Hi ${rec.firstName} ${rec.middleName} ${rec.lastName} !</h5>
+        <h5>Hi ${rec.firstName} !</h5>
         
         <div>
             <p>
@@ -10,15 +10,14 @@
         
         <div>
             <p>
-            His message to you is:  ${rec.note}
+            Message for you:  ${rec.note}
             </p>
         </div>
-        <div><p>Please let him know you have received his gift.</p></div>
-        <div><p>Please enjoy !</p></div>
+        <div><p>Please let ${sender.firstName} know you have received the gift.</p></div>
 
         <div>
             Thank you<br/>
-            <h5> LiXi.Global Team</h5>
+            <h5> Lixi.Global Team</h5>
         </div>
     </body>
 </html>

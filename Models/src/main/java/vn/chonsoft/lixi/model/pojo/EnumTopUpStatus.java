@@ -10,6 +10,7 @@ package vn.chonsoft.lixi.model.pojo;
  */
 public enum EnumTopUpStatus {
     
+    ORDER_UNFINISHED(-2),
     SEND_FAILED(-1),
     NOT_YET_SEND(0),
     SENT(1),
