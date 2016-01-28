@@ -35,6 +35,8 @@
                         <li><a href="<c:url value="/Administration/SystemTopUp/report"/>">TopUp Report</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<c:url value="/Administration/SystemRecipient/report"/>">Receiver Report</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="<c:url value="/Administration/SystemSender/report"/>">Sender Report</a></li>
                     </ul>
                 </li>
                 <li id="m02" class="dropdown<c:if test="${m02 eq true}"> active</c:if>">
@@ -43,7 +45,6 @@
                         <li><a href="<c:url value="/Administration/Orders/newOrders"/>">New Orders</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<c:url value="/Administration/SystemTopUp/list"/>">List Un-Submitted TopUp</a></li>
-                        <li><a href="<c:url value="/Administration/SystemTopUp/report"/>">TopUp Reports</a></li>
                     </ul>
                 </li>
                 <li id="m03" class="dropdown <c:if test="${m03 eq true}">active</c:if>">

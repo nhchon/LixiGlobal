@@ -6,7 +6,9 @@
 package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.User;
@@ -19,8 +21,29 @@ import vn.chonsoft.lixi.repositories.UserRepository;
 @Service
 public class UserServiceImpl implements UserService{
     
-    @Inject UserRepository userRepository; 
+    @Autowired
+    private UserRepository userRepository; 
     
+    /**
+     * 
+     * @param activated
+     * @param page
+     * @return 
+     */
+    @Override
+    @Transactional
+    public Page<User> findByActivated(boolean activated, Pageable page){
+    
+        Page<User> ps = this.userRepository.findByActivated(activated, page);
+        
+        if(ps != null && ps.hasContent()){
+            ps.getContent().forEach(s -> {
+                // TO DO
+            });
+        }
+        
+        return ps;    
+    }
     /**
      * 
      * @param user

@@ -6,6 +6,9 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.User;
 
@@ -19,6 +22,9 @@ public interface UserService {
     User save(@NotNull(message = "{validate.userService.save.user}") User user);
     
     List<User> findAllByEmail(String email);
+    
+    @Transactional
+    Page<User> findByActivated(boolean activated, Pageable page);
     
     User findByEmail(String email, boolean enabled);
     

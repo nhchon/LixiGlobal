@@ -13,4 +13,8 @@ public interface ScalarFunctionService {
     double sumGiftOfRecipient(Long id);
     
     double sumTopUpOfRecipient(Long id);
+    
+    double sumGiftOfSender(Long id);
+    
+    double sumTopUpOfSender(Long id);
 }

@@ -22,6 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -52,6 +53,10 @@ public class User implements Serializable {
     private Date modifiedDate;
     private String modifiedBy;
 
+    private double sumGift;
+    
+    private double sumTopUp;
+    
     private List<Recipient> recipients;
     
     private UserMoneyLevel userMoneyLevel;
@@ -269,6 +274,37 @@ public class User implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
+    @Transient
+    public double getSumGift() {
+        return sumGift;
+    }
+
+    public void setSumGift(double sumGift) {
+        this.sumGift = sumGift;
+    }
+
+    @Transient
+    public double getSumTopUp() {
+        return sumTopUp;
+    }
+
+    public void setSumTopUp(double sumTopUp) {
+        this.sumTopUp = sumTopUp;
+    }
+
+    @Transient
+    public String getBeautyId(){
+        
+        return LiXiGlobalUtils.getBeautySId(id);
+    }
+    
+    @Transient
+    public Double getSumAll(){
+        
+        return new Double(this.getSumGift() + this.getSumTopUp());
+    }
+    
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     public List<UserCard> getUserCards() {
         return userCards;

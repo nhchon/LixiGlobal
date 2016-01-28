@@ -14,7 +14,7 @@
         <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-            <li><a href="<c:url value="/Administration/SystemTopUp/list"/>">Receivers</a></li>
+            <li><a href="<c:url value="/Administration/SystemRecipient/report"/>">Receivers</a></li>
         </ul>
 
         <!-- main -->

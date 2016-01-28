@@ -5,6 +5,8 @@
 package vn.chonsoft.lixi.repositories;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +19,9 @@ import vn.chonsoft.lixi.model.User;
  * @author chonnh
  */
 public interface UserRepository extends JpaRepository<User, Long>{
+    
+    @Transactional
+    Page<User> findByActivated(boolean activated, Pageable page);
     
     List<User> findByEmail(String email);
     

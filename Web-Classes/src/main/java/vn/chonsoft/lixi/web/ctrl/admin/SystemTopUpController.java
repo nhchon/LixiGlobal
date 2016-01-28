@@ -154,7 +154,7 @@ public class SystemTopUpController {
     @RequestMapping(value = "report", method = RequestMethod.GET)
     public ModelAndView report(Map<String, Object> model){
     
-        return new ModelAndView("Administration/orders/topUpReport");
+        return new ModelAndView("Administration/reports/topUpReport");
     }
     
     /**
@@ -213,6 +213,6 @@ public class SystemTopUpController {
         model.put("pagingPage", request.getParameter("paging.page"));
         model.put("pagingSize", request.getParameter("paging.size"));
 
-        return new ModelAndView("Administration/orders/topUpReport");
+        return new ModelAndView("Administration/reports/topUpReport");
     }
 }

@@ -55,4 +55,42 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
             return 0d;
         }
     }
+
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public double sumGiftOfSender(Long id){
+        
+        String sql = "SELECT sum(g.usd_price) FROM lixi_order_gifts g, lixi_orders o, users u WHERE g.order_id = o.id and o.sender = u.id and u.id = ?";
+        
+        Double rs = scalarDao.singleResult(sql, id);
+        if(rs != null){
+            return rs.doubleValue();
+        }
+        else{
+            return 0d;
+        }
+    }
+    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public double sumTopUpOfSender(Long id){
+        
+        String sql = "SELECT sum(t.amount_usd) FROM top_up_mobile_phone t, lixi_orders o, users u WHERE t.order_id = o.id and o.sender = u.id and u.id = ?";
+        Double rs = scalarDao.singleResult(sql, id);
+        if(rs != null){
+            return rs.doubleValue();
+        }
+        else{
+            return 0d;
+        }
+    }
+
 }
