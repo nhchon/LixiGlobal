@@ -145,14 +145,14 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Order ID</th>
-                                        <th>Trans ID</th>
-                                        <th>Created Date</th>
+                                        <th nowrap>Order ID</th>
+                                        <th nowrap>Trans ID</th>
+                                        <th nowrap>Modified Date</th>
                                         <th>Receiver</th>
                                         <th>Phone</th>
                                         <th>Amount</th>
                                         <th>Status</th>
-                                        <th>Sent Date</th>
+                                        <th nowrap>Sent Date</th>
                                         <th>Message</th>
                                         <th></th>
                                     </tr>

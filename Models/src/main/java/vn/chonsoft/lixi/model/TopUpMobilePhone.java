@@ -51,7 +51,12 @@ public class TopUpMobilePhone implements Serializable {
     @Column(name = "phone")
     private String phone;
     
-    @Basic(optional = false)
+    @Basic
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
+    
+    @Basic
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
@@ -122,6 +127,14 @@ public class TopUpMobilePhone implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Date getModifiedDate() {

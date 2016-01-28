@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.web.ctrl;
 
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -225,7 +226,10 @@ public class TopUpMobileController {
             topUp.setIsSubmitted(EnumTopUpStatus.ORDER_UNFINISHED.getValue());// not yet submit
             topUp.setOrder(order);
             topUp.setRecipient(rec);
-            topUp.setModifiedDate(Calendar.getInstance().getTime());
+            //
+            Date currentDate = Calendar.getInstance().getTime();
+            topUp.setCreatedDate(currentDate);
+            topUp.setModifiedDate(currentDate);
 
             // save
             this.topUpService.save(topUp);

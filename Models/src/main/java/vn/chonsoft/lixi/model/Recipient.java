@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -73,6 +74,12 @@ public class Recipient implements Serializable {
     @ManyToOne(optional = false)
     private User sender;
 
+    @Transient
+    private double sumGift;
+    
+    @Transient
+    private double sumTopUp;
+    
     public Recipient() {
     }
 
@@ -130,7 +137,6 @@ public class Recipient implements Serializable {
         return this.getFirstName()+ (this.getMiddleName()==null?" ":" " + this.getMiddleName() + " ") + this.getLastName();
     }
     
-    
     public String getEmail() {
         return email;
     }
@@ -179,6 +185,34 @@ public class Recipient implements Serializable {
         this.sender = sender;
     }
 
+    public double getSumGift() {
+        return sumGift;
+    }
+
+    public void setSumGift(double sumGift) {
+        this.sumGift = sumGift;
+    }
+
+    public double getSumTopUp() {
+        return sumTopUp;
+    }
+
+    public void setSumTopUp(double sumTopUp) {
+        this.sumTopUp = sumTopUp;
+    }
+
+    @Transient
+    public String getBeautyId(){
+        
+        return LiXiGlobalUtils.getBeautyRId(id);
+    }
+    
+    @Transient
+    public Double getSumAll(){
+        
+        return new Double(this.getSumGift() + this.getSumTopUp());
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -7,124 +7,7 @@
         <!-- Javascript -->
         <script type="text/javascript">
 
-            function cancel(id) {
-                overlayOn($('#rowTopUp' + id));
-                $("#topUpForm input[name=id]").val(id);
-
-                $.ajax(
-                        {
-                            url: '<c:url value="/Administration/SystemTopUp/cancel"/>',
-                            type: "POST",
-                            data: $('#topUpForm').serializeArray(),
-                            dataType: 'json',
-                            success: function (data, textStatus, jqXHR)
-                            {
-                                //data: return data from server
-                                if (data.error === '0') {
-
-                                    $('#status' + id).html('Canceled');
-                                    $('#statusDate' + id).html(data.statusDate);
-                                }
-                                else {
-                                    alert('There is something wrong ! Please try again !');
-                                }
-                                overlayOff();
-                            },
-                            error: function (jqXHR, textStatus, errorThrown)
-                            {
-                                //if fails  
-                                overlayOff();
-                            }
-                        });
-            }
-
-            function check(id) {
-                overlayOn($('#rowTopUp' + id));
-                $("#topUpForm input[name=id]").val(id);
-                $.ajax(
-                        {
-                            url: '<c:url value="/Administration/SystemTopUp/check"/>',
-                            type: "POST",
-                            data: $('#topUpForm').serializeArray(),
-                            dataType: 'json',
-                            success: function (data, textStatus, jqXHR)
-                            {
-                                //data: return data from server
-                                if (data.error === '0') {
-
-                                    if (data.status === 'In Progress' || data.status === 'Processed') {
-                                        if (confirm('This transaction ' + data.orderId + ' is in ' + data.status + '. Are you sure want to Cancel this top up ?')) {
-
-                                            cancel(id);
-                                        }
-                                    }
-                                    else {
-                                        cancel(id);
-                                    }
-                                }
-                                else {
-                                    alert('There is something wrong ! Please try again !');
-                                    overlayOff();
-                                }
-                            },
-                            error: function (jqXHR, textStatus, errorThrown)
-                            {
-                                //if fails  
-                                overlayOff();
-                            }
-                        });
-            }
-            function sent(id) {
-                overlayOn($('#rowTopUp' + id));
-                $("#topUpForm input[name=id]").val(id);
-                $.ajax(
-                        {
-                            url: '<c:url value="/Administration/SystemTopUp/send"/>',
-                            type: "POST",
-                            data: $('#topUpForm').serializeArray(),
-                            dataType: 'json',
-                            success: function (data, textStatus, jqXHR)
-                            {
-                                //data: return data from server
-                                if (data.error === '1') {
-
-                                    if (data.status === 'Declined' || data.status === 'Refunded') {
-                                        alert('Can not sent this top up of order Id ' + data.orderId + '. The transaction is in ' + data.status)
-                                    }
-                                    else {
-                                        alert(data.vtcMessage);
-                                        $('#vtcMessage' + id).html(data.vtcMessage);
-                                    }
-                                }
-                                else {
-                                    $('#status' + id).html('Sent');
-                                    $('#statusDate' + id).html(data.statusDate);
-                                }
-                                overlayOff();
-                            },
-                            error: function (jqXHR, textStatus, errorThrown)
-                            {
-                                //if fails  
-                                overlayOff();
-                            }
-                        });
-            }
             jQuery(document).ready(function () {
-                var url = '';
-                var fields = {id: 0};
-                var form = $('<form id="topUpForm" method="post"></form>')
-                        .attr({action: url, style: 'display: none;'});
-                for (var key in fields) {
-                    if (fields.hasOwnProperty(key))
-                        form.append($('<input type="hidden">').attr({
-                            name: key, value: fields[key]
-                        }));
-                }
-                form.append($('<input type="hidden">').attr({
-                    name: '${_csrf.parameterName}', value: '${_csrf.token}'
-                }));
-                $('body').append(form);
-
                 $('#btnSubmit').click(function () {
 
                     if ($('#status').val() === '') {
@@ -144,7 +27,7 @@
                         return false;
                     }
 
-                    if (fromDate > toDate) {
+                    if ((fromDate !== '' && toDate !== '') && (fromDate > toDate)) {
 
                         alert('The value of from date must be smaller or equal end date');
                         $('#fromDate').focus();
@@ -206,7 +89,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="pwd">To Date:</label>
-                                <div class="input-group date" data-provide="datepicker" data-date-auto-close="true" data-date-end-date="new Date()" data-date="new Date()" data-date-format="yyyy-mm-dd">
+                                <div class="input-group date" data-provide="datepicker" data-date-auto-close="true" data-date="new Date()" data-date-format="yyyy-mm-dd">
                                     <input type="text" class="form-control" id="toDate" name="toDate" value="${toDate}">
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
@@ -240,7 +123,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${topUps.content}" var="t">
+                                    <c:set var="transNum" value="0"/>
+                                    <c:set var="customerPurchaseVnd" value="0"/>
+                                    <c:set var="customerPurchaseUsd" value="0"/>
+                                    <c:forEach items="${topUps.content}" var="t" varStatus="theCount">
+                                        <c:set var="transNum" value="${theCount.count}"/>
+                                        <c:set var="customerPurchaseVnd" value="${customerPurchaseVnd + t.amount}"/>
+                                        <c:set var="customerPurchaseUsd" value="${customerPurchaseUsd + t.amountUsd}"/>
                                         <tr id="rowTopUp${t.id}">
                                             <td>${t.id}</td>
                                             <td>${t.order.invoice.invoiceCode}</td>
@@ -283,9 +172,9 @@
                                             <%-- Paging --%>
                                             <nav>
                                                 <ul class="pagination pull-right">
-                                                    <c:forEach begin="1" end="${issues.totalPages}" var="i">
+                                                    <c:forEach begin="1" end="${topUps.totalPages}" var="i">
                                                         <c:choose>
-                                                            <c:when test="${(i - 1) == issues.number}">
+                                                            <c:when test="${(i - 1) == topUps.number}">
                                                                 <li class="active">
                                                                     <a href="javascript:void(0)">${i}</a>
                                                                 </li>
@@ -308,6 +197,67 @@
                 </div>
             </div>
         </div>
-
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <table class="table table-responsive" style="font-size: 14px;">
+                    <thead>
+                    <th colspan="3">Summary:</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Count</td>
+                            <td style="text-align: right;">${transNum}</td>
+                            <td>Transactions</td>
+                        </tr>
+                        <tr>
+                            <td>Customer Purchase</td>
+                            <td style="text-align: right;"><fmt:formatNumber value="${customerPurchaseVnd}" pattern="###,###.##"/></td>
+                            <td>VND</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="text-align: right;"><fmt:formatNumber value="${customerPurchaseUsd}" pattern="###,###.##"/></td>
+                            <td>USD</td>
+                        </tr>
+                        <%-- Sent status --%>
+                        <c:if test="${status eq '1'}">
+                        <tr>
+                            <td>Paid to VTC</td>
+                            <td style="text-align: right;">
+                                <c:set var="paidToVTCVnd" value="${(customerPurchaseVnd * 95.0)/100.0}"/>
+                                <c:set var="paidToVTCUsd" value="${(customerPurchaseUsd * 95.0)/100.0}"/>
+                                <fmt:formatNumber value="${paidToVTCVnd}" pattern="###,###.##"/>
+                            </td>
+                            <td>VND (95%)</td>
+                        </tr>
+                        <tr>
+                            <td>Profit</td>
+                            <td style="text-align: right;"><fmt:formatNumber value="${customerPurchaseVnd - paidToVTCVnd}" pattern="###,###.##"/></td>
+                            <td>VND</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="text-align: right;"><fmt:formatNumber value="${customerPurchaseUsd - paidToVTCUsd}" pattern="###,###.##"/></td>
+                            <td>USD</td>
+                        </tr>
+                        </c:if>
+                        <c:if test="${not empty VCB}">
+                        <tr>
+                            <td nowrap>Current FX Rate<br/>(${VCB.time})</td>
+                            <c:set var="currentFX" value="0"/>
+                            <c:forEach items="${VCB.exrates}" var="ex">
+                            <c:if test="${ex.code == 'USD'}">
+                                <c:set var="currentFX" value="${ex.buy}"/>
+                            </c:if>
+                        </c:forEach>                            
+                            <td nowrap style="text-align: right;">1 USD = <fmt:formatNumber value="${currentFX}" pattern="###,###.##"/></td>
+                            <td>VND</td>
+                        </tr>
+                        </c:if>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </jsp:body>
 </template:Admin>

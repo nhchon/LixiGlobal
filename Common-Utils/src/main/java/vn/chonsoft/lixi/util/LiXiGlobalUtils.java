@@ -12,6 +12,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
+import org.apache.commons.lang3.StringUtils;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 
 /**
  *
@@ -77,4 +79,51 @@ public abstract class LiXiGlobalUtils {
         return list;
     }
     
+    /**
+     * 
+     * @param rId
+     * @return 
+     */
+    public static String getBeautyRId(Long rId){
+        
+        if(rId == null) return "";
+        
+        String r = rId.toString();
+        
+        r = StringUtils.leftPad(r, 8, "0");
+        
+        StringBuilder br = new StringBuilder();
+        
+        br.append(LiXiGlobalConstants.R);
+        br.append(r);
+        
+        br.insert(4, '-');
+        br.insert(7, '-');
+        
+        return br.toString();
+    }
+    
+    /**
+     * 
+     * @param rId
+     * @return 
+     */
+    public static String getBeautySId(Long rId){
+        
+        if(rId == null) return "";
+        
+        String r = rId.toString();
+        
+        r = StringUtils.leftPad(r, 8, "0");
+        
+        StringBuilder br = new StringBuilder();
+        
+        br.append(LiXiGlobalConstants.S);
+        br.append(r);
+        
+        br.insert(4, '-');
+        br.insert(7, '-');
+        
+        return br.toString();
+    }
 }

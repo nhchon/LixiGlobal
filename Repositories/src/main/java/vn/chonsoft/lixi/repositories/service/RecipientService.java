@@ -4,6 +4,9 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
@@ -22,6 +25,9 @@ public interface RecipientService {
     Recipient findByEmail(User sender, String email);
     
     Recipient findByNameAndPhone(User sender, String firstName, String middleName, String lastName, String phone);
+    
+    @Transactional
+    Page<Recipient> findAll(Pageable page);
     
     int updatePhone(String phone, Long id);
     

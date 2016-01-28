@@ -4,7 +4,9 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.Recipient;
@@ -18,7 +20,23 @@ import vn.chonsoft.lixi.repositories.RecipientRepository;
 @Service
 public class RecipientServiceImpl implements RecipientService{
 
-    @Inject RecipientRepository reciRepository;
+    @Autowired
+    private RecipientRepository reciRepository;
+    
+    @Override
+    @Transactional
+    public Page<Recipient> findAll(Pageable page){
+        
+        Page<Recipient> ps = this.reciRepository.findAll(page);
+        if(ps != null && ps.hasContent()){
+            ps.getContent().forEach(t -> {
+                t.getSender();
+            });
+        }
+        
+        return ps;        
+        
+    }
     
     @Override
     public Recipient findById(Long id) {

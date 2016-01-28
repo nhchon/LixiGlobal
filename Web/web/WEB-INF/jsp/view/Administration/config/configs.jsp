@@ -69,7 +69,7 @@
                                     <td>
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                         <input type="hidden" name="id" value="${c.id}" />
-                                        <button type="submit" class="btn btn-warning">Save</button>
+                                        <button type="submit" class="btn btn-warning">Change</button>
                                         <button type="button" class="btn btn-default" onclick="deleteConfig(${c.id})">Delete</button>
                                     </td>
                                 </tr>

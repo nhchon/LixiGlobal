@@ -17,15 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiInvoice;
-import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.pojo.EnumTopUpStatus;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
@@ -33,6 +30,7 @@ import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -207,6 +205,7 @@ public class SystemTopUpController {
             }
         }
         
+        model.put("VCB", LiXiUtils.getVCBExchangeRates());
         model.put("topUps", ps);
         model.put("status", statusStr);
         model.put("fromDate", fromDateStr);
@@ -215,26 +214,5 @@ public class SystemTopUpController {
         model.put("pagingSize", request.getParameter("paging.size"));
 
         return new ModelAndView("Administration/orders/topUpReport");
-    }
-    
-    /**
-     * 
-     * @param model
-     * @param id
-     * @return 
-     */
-    @RequestMapping(value = "send2VTC/{id}", method = RequestMethod.GET)
-    public ModelAndView submit2VTC(Map<String, Object> model, @PathVariable Long id){
-        
-        TopUpMobilePhone topUp = this.topUpService.findById(id);
-        
-        if(topUp != null){
-            
-            lxAsyncMethods.processTopUpItem(topUp);
-        }
-        
-        RedirectView r = new RedirectView("/Administration/SystemTopUp/list", true, true);
-        r.setExposeModelAttributes(false);
-        return new ModelAndView(r);
     }
 }

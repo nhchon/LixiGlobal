@@ -6,7 +6,7 @@
 <c:set var="m05" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/SystemUser/list')}"/>
 <c:set var="m05" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/SystemUser/add')}"/>
 <c:set var="m07" value="${fn:contains(requestScope['javax.servlet.forward.servlet_path'],'/Administration/SystemSupport/list')}"/>
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-default navbar-static-top" style="z-index: auto;">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -22,11 +22,19 @@
                 <li id="m01" <c:if test="${m01 eq true}">class="active"</c:if>><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
                 <li><a href="javascript:void(0);">Financial</a></li>
                 <li id="m07" class="dropdown<c:if test="${m07 eq true}"> active</c:if>">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customer Support <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customer<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="<c:url value="/Administration/SystemSupport/list"/>">Issue List</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<c:url value="/Administration/SystemSupport/management/self"/>">Management List</a></li>
+                    </ul>
+                </li>
+                <li id="m08" class="dropdown<c:if test="${m08 eq true}"> active</c:if>">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<c:url value="/Administration/SystemTopUp/report"/>">TopUp Report</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="<c:url value="/Administration/SystemRecipient/report"/>">Receiver Report</a></li>
                     </ul>
                 </li>
                 <li id="m02" class="dropdown<c:if test="${m02 eq true}"> active</c:if>">
@@ -39,7 +47,7 @@
                     </ul>
                 </li>
                 <li id="m03" class="dropdown <c:if test="${m03 eq true}">active</c:if>">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">System Config <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Configs<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="<c:url value="/Administration/SystemConfig/categories"/>">Categories</a></li>
                         <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">Lixi Exchange Rate</a></li>
