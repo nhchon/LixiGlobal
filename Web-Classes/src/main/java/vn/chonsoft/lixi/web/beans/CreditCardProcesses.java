@@ -29,7 +29,7 @@ import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
-import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
+import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.repositories.service.AuthorizeCustomerResultService;
 import vn.chonsoft.lixi.repositories.service.AuthorizePaymentResultService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;

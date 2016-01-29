@@ -24,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
-import vn.chonsoft.lixi.model.pojo.EnumTopUpStatus;
+import vn.chonsoft.lixi.EnumTopUpStatus;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.web.LiXiConstants;

@@ -2,20 +2,22 @@
  * Lixi is a Vietnamese word for small gift of money
  * 2015 @ Lixi Global
  */
-package vn.chonsoft.lixi.model.pojo;
+package vn.chonsoft.lixi;
 
 /**
  *
  * @author chonnh
  */
-public enum EnumLixiOrderSetting {
+public enum EnumCard {
 
-    GIFT_ONLY(0),
-    ALLOW_REFUND(1);
+    VISA(1),
+    MASTER(2),
+    DISCOVER(3),
+    AMEX(4);
 
     private final int value;
 
-    private EnumLixiOrderSetting(int value) {
+    private EnumCard(int value) {
         this.value = value;
     }
 
@@ -23,9 +25,9 @@ public enum EnumLixiOrderSetting {
         return value;
     }
 
-    public static EnumLixiOrderSetting findByValue(int value){
+    public static EnumCard findByValue(int value){
         
-        for(EnumLixiOrderSetting c : values()){
+        for(EnumCard c : values()){
             
             if (c.getValue() == value) return c;
         }

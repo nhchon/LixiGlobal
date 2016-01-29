@@ -34,6 +34,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiConfig;
@@ -47,10 +48,12 @@ import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
-import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.model.pojo.Exrate;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
 /**
@@ -246,11 +249,6 @@ public class LiXiUtils {
         return Math.round((a + 0.005) * 100.0) / 100.0;
     }
 
-    public static double round2Decimal(double a) {
-
-        return Math.round(a * 100.0) / 100.0;
-    }
-
     /**
      * 
      * @param vnd
@@ -341,7 +339,7 @@ public class LiXiUtils {
 
         //log.info("feePercent: " + feePercent);
         
-        cardFee = LiXiUtils.round2Decimal((feePercent * giftPrice)/100.0);
+        cardFee = LiXiGlobalUtils.round2Decimal((feePercent * giftPrice)/100.0);
         if((fee.getMaxFee() > 0) && (cardFee > fee.getMaxFee())){
             cardFee = fee.getMaxFee();
         }
@@ -351,12 +349,12 @@ public class LiXiUtils {
         // final total 
         finalTotal = giftPrice + cardFee + lixiFee;
 
-        model.put(LiXiConstants.LIXI_GIFT_PRICE, LiXiUtils.round2Decimal(giftPrice));
+        model.put(LiXiConstants.LIXI_GIFT_PRICE, LiXiGlobalUtils.round2Decimal(giftPrice));
         model.put(LiXiConstants.LIXI_GIFT_PRICE_VND, giftPriceVnd);
-        model.put(LiXiConstants.LIXI_FINAL_TOTAL, LiXiUtils.round2Decimal(finalTotal));
-        model.put(LiXiConstants.LIXI_FINAL_TOTAL_VND, LiXiUtils.round2Decimal(buy * finalTotal));
+        model.put(LiXiConstants.LIXI_FINAL_TOTAL, LiXiGlobalUtils.round2Decimal(finalTotal));
+        model.put(LiXiConstants.LIXI_FINAL_TOTAL_VND, LiXiGlobalUtils.round2Decimal(buy * finalTotal));
         model.put(LiXiConstants.LIXI_HANDLING_FEE, fee.getLixiFee());
-        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, lixiFee);
+        model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, LiXiGlobalUtils.round2Decimal(lixiFee));
         model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFee);
         
     }
@@ -631,18 +629,6 @@ public class LiXiUtils {
 
     }
 
-    /**
-     * 
-     * @param total
-     * @return 
-     */
-    public static double getTestTotalAmount(double total){
-        
-        if(total < 10) return 1.0;
-        
-        return round2Decimal(total/10.0);
-    }
-    
     /**
      * 
      * @param id

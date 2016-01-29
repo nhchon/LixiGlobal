@@ -2,7 +2,7 @@
  * Lixi is a Vietnamese word for small gift of money
  * 2015 @ Lixi Global
  */
-package vn.chonsoft.lixi.model.pojo;
+package vn.chonsoft.lixi;
 
 /**
  *
@@ -13,6 +13,7 @@ public enum EnumTransactionStatus {
     beforePayment("beforePayment"),
     paymentError("paymentError"),
     inProgress("inProgress"),
+    sentToBK("sentToBK"),
     authorizedPendingCapture("authorizedPendingCapture"),
     capturedPendingSettlement("capturedPendingSettlement"),
     communicationError("communicationError"),

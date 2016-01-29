@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiGlobalFee;
 import vn.chonsoft.lixi.repositories.service.CountryService;
 import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -80,11 +81,11 @@ public class SystemFeeController {
         LixiGlobalFee fee = new LixiGlobalFee();
         fee.setCountry(this.countryService.findById(Long.parseLong(countryStr)));
         fee.setPaymentMethod(Integer.parseInt(paymentStr));
-        fee.setAmount(LiXiUtils.round2Decimal(Double.parseDouble(amountStr)));
-        fee.setGiftOnlyFee(LiXiUtils.round2Decimal(Double.parseDouble(giftOnlyStr)));
-        fee.setAllowRefundFee(LiXiUtils.round2Decimal(Double.parseDouble(allowRefundStr)));
-        fee.setMaxFee(LiXiUtils.round2Decimal(Double.parseDouble(maxFeeStr)));
-        fee.setLixiFee(LiXiUtils.round2Decimal(Double.parseDouble(lixiFeeStr)));
+        fee.setAmount(LiXiGlobalUtils.round2Decimal(Double.parseDouble(amountStr)));
+        fee.setGiftOnlyFee(LiXiGlobalUtils.round2Decimal(Double.parseDouble(giftOnlyStr)));
+        fee.setAllowRefundFee(LiXiGlobalUtils.round2Decimal(Double.parseDouble(allowRefundStr)));
+        fee.setMaxFee(LiXiGlobalUtils.round2Decimal(Double.parseDouble(maxFeeStr)));
+        fee.setLixiFee(LiXiGlobalUtils.round2Decimal(Double.parseDouble(lixiFeeStr)));
         
         /* save */
         this.feeService.save(fee);

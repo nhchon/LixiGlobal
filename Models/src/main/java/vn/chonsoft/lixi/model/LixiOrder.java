@@ -23,8 +23,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
-import vn.chonsoft.lixi.model.pojo.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 
 /**
  *

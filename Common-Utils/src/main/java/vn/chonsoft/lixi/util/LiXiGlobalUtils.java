@@ -13,6 +13,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import org.apache.commons.lang3.StringUtils;
+import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 
 /**
@@ -20,6 +21,81 @@ import vn.chonsoft.lixi.LiXiGlobalConstants;
  * @author chonnh
  */
 public abstract class LiXiGlobalUtils {
+    
+    public static double round2Decimal(double a) {
+
+        return Math.round(a * 100.0) / 100.0;
+    }
+
+    /**
+     * 
+     * @param total
+     * @return 
+     */
+    public static double getTestTotalAmount(double total){
+        
+        if(total < 10) return 1.0;
+        
+        return round2Decimal(total/10.0);
+    }
+    
+    
+    /**
+     * 
+     * @param netTransStatus
+     * @return 
+     */
+    public static String translateNetTransStatus(String netTransStatus){
+    
+        if(EnumTransactionStatus.authorizedPendingCapture.getValue().equals(netTransStatus)||
+           EnumTransactionStatus.capturedPendingSettlement.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.refundPendingSettlement.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.approvedReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.underReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.FDSPendingReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.FDSAuthorizedPendingReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.inProgress.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS;
+            
+        }
+        
+        if(EnumTransactionStatus.communicationError.getValue().equals(netTransStatus)||
+           EnumTransactionStatus.declined.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.expired.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.generalError.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.failedReview.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.settlementError.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.returnedItem.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.voidedByUser.getValue().equals(netTransStatus) ||
+           EnumTransactionStatus.voided.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_DECLINED;
+            
+        }
+        
+        if(EnumTransactionStatus.refundSettledSuccessfully.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_REFUNED;
+            
+        }
+        
+        if(EnumTransactionStatus.settledSuccessfully.getValue().equals(netTransStatus) || EnumTransactionStatus.couldNotVoid.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_PROCESSED;
+            
+        }
+        
+        if(EnumTransactionStatus.sentToBK.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_SENT;
+            
+        }
+        
+        return netTransStatus;
+    
+    }
+    
     
     /**
      *
@@ -126,4 +202,5 @@ public abstract class LiXiGlobalUtils {
         
         return br.toString();
     }
+    
 }

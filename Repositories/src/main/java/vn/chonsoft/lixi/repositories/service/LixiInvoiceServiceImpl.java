@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
-import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
+import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.repositories.LixiInvoiceRepository;
 
 /**

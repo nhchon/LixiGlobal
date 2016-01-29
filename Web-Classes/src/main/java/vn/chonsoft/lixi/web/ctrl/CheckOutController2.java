@@ -35,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
+import vn.chonsoft.lixi.model.LixiGlobalFee;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderCard;
@@ -47,10 +48,10 @@ import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.form.AddCardForm;
 import vn.chonsoft.lixi.model.form.BankAccountAddForm;
-import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
-import vn.chonsoft.lixi.model.pojo.EnumLixiOrderStatus;
-import vn.chonsoft.lixi.model.pojo.EnumTopUpStatus;
-import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.EnumTopUpStatus;
+import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
@@ -68,6 +69,7 @@ import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VatgiaProductService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -475,6 +477,37 @@ public class CheckOutController2 {
     
     /**
      * 
+     * @param model
+     * @param order
+     * @param fees 
+     */
+    private void updateInvoiceBeforePayment(Map<String, Object> model, LixiOrder order, List<LixiGlobalFee> fees){
+        
+        LiXiUtils.calculateFee(model, order, fees);
+        
+        LixiInvoice invoice = order.getInvoice();
+        if(invoice == null){
+            invoice = new LixiInvoice();
+        }
+            
+        invoice.setOrder(order);
+        invoice.setInvoiceCode(LiXiUtils.getBeautyOrderId(order.getId()));
+        invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
+        invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
+        invoice.setLixiFee(LiXiGlobalUtils.round2Decimal((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL)));
+        invoice.setTotalAmount(LiXiGlobalUtils.getTestTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)));//
+        invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
+        invoice.setNetTransStatus(EnumTransactionStatus.beforePayment.getValue());
+        /* */
+        Date currDate = Calendar.getInstance().getTime();
+        invoice.setInvoiceDate(currDate);
+        invoice.setCreatedDate(currDate);
+
+        this.invoiceService.save(invoice);
+        
+    }
+    /**
+     * 
      * 
      * @param model
      * @param request
@@ -539,18 +572,20 @@ public class CheckOutController2 {
             LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(this.countryService.findByName(bl.getCountry())));
 
             invoice.setOrder(order);
+            invoice.setPayer(loginedUser.getId());// payer is sender
             invoice.setInvoiceCode(LiXiUtils.getBeautyOrderId(orderId));
             invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
             invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
-            invoice.setLixiFee(LiXiUtils.round2Decimal((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL)));
-            invoice.setTotalAmount(LiXiUtils.getTestTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)));//
+            invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
+            invoice.setTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL));//
             invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
             invoice.setNetTransStatus(EnumTransactionStatus.beforePayment.getValue());
+            invoice.setInvoiceStatus(LiXiGlobalUtils.translateNetTransStatus(EnumTransactionStatus.beforePayment.getValue()));
             invoice.setInvoiceDate(currDate);
             invoice.setCreatedDate(currDate);
 
             this.invoiceService.save(invoice);
-            //}
+            
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
             boolean chargeResult = paymentService.chargeByCustomerProfile(invoice);
             if (chargeResult == false) {
@@ -928,6 +963,25 @@ public class CheckOutController2 {
             if(inv.getInvoiceCode() == null){
                 
                 inv.setInvoiceCode(LiXiUtils.getBeautyOrderId(inv.getOrder().getId()));
+                
+                this.invoiceService.save(inv);
+            }
+        }
+        
+        return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek", true, true));
+    }
+    
+    @UserSecurityAnnotation
+    @RequestMapping(value = "updateInvoiceStatus", method = RequestMethod.GET)
+    public ModelAndView updateInvoiceStatus(Map<String, Object> model, HttpServletRequest request){
+        
+        List<LixiInvoice> invoices = this.invoiceService.findAll();
+        
+        for(LixiInvoice inv : invoices){
+            
+            if(inv.getInvoiceStatus()== null){
+                
+                inv.setInvoiceStatus(LiXiGlobalUtils.translateNetTransStatus(inv.getNetTransStatus()));
                 
                 this.invoiceService.save(inv);
             }

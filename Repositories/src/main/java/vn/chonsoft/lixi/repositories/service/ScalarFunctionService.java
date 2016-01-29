@@ -10,11 +10,11 @@ package vn.chonsoft.lixi.repositories.service;
  */
 public interface ScalarFunctionService {
     
-    double sumGiftOfRecipient(Long id);
+    double sumGiftOfRecipient(String invoiceStatus, Long id);
     
-    double sumTopUpOfRecipient(Long id);
+    double sumTopUpOfRecipient(String invoiceStatus, Long id);
     
-    double sumGiftOfSender(Long id);
+    double sumInvoiceOfSender(String invoiceStatus, Long sender);
     
-    double sumTopUpOfSender(Long id);
+    double sumTopUpOfSender(String invoiceStatus, Long sender);
 }

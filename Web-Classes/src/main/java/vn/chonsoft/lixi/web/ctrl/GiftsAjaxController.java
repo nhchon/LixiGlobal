@@ -26,7 +26,7 @@ import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
-import vn.chonsoft.lixi.model.pojo.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;

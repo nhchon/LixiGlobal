@@ -24,5 +24,7 @@ public abstract class LiXiGlobalConstants {
     
     public static final String TRANS_STATUS_PROCESSED = "Processed";
     
+    public static final String TRANS_STATUS_SENT = "Sent";
+    
     public static final String TRANS_STATUS_COMPLETE = "Complete";
 }

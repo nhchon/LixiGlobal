@@ -67,8 +67,8 @@ import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
-import vn.chonsoft.lixi.model.pojo.EnumTransactionResponseCode;
-import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
+import vn.chonsoft.lixi.EnumTransactionResponseCode;
+import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
@@ -216,6 +216,7 @@ public class PaymentServiceImpl implements PaymentService{
                 String responseCode = result.getResponseCode()+"";
                 /* update invoice */
                 invoice.setNetTransStatus(status);
+                invoice.setInvoiceStatus(LiXiGlobalUtils.translateNetTransStatus(status));
                 invoice.setNetResponseCode(responseCode);
                 invoice.setLastCheckDate(Calendar.getInstance().getTime());
                 
@@ -271,6 +272,7 @@ public class PaymentServiceImpl implements PaymentService{
                     System.out.println(result.getAuthCode());
                     System.out.println(result.getTransId());
                     invoice.setNetTransStatus(EnumTransactionStatus.voided.getValue());
+                    invoice.setInvoiceStatus(LiXiGlobalUtils.translateNetTransStatus(invoice.getNetTransStatus()));
                     
                     this.invoiceService.save(invoice);
                     
@@ -643,7 +645,7 @@ public class PaymentServiceImpl implements PaymentService{
             // Create the payment transaction request
             txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
             txnRequest.setPayment(paymentType);
-            txnRequest.setAmount(new BigDecimal(String.valueOf(lxInvoice.getTotalAmount())));
+            txnRequest.setAmount(new BigDecimal(String.valueOf(LiXiGlobalUtils.getTestTotalAmount(lxInvoice.getTotalAmount()))));
         } else // paid by banking account
         if (order.getBankAccount() != null) {
 
@@ -710,7 +712,7 @@ public class PaymentServiceImpl implements PaymentService{
         /* Create the payment transaction request */
         TransactionRequestType txnRequest = new TransactionRequestType();
         txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
-        txnRequest.setAmount(new BigDecimal(String.valueOf(lxInvoice.getTotalAmount())));
+        txnRequest.setAmount(new BigDecimal(String.valueOf(LiXiGlobalUtils.getTestTotalAmount(lxInvoice.getTotalAmount()))));
         
         //
         log.info("invoice: " + lxInvoice.getId() + " - " + String.valueOf(lxInvoice.getTotalAmount()));
@@ -800,6 +802,7 @@ public class PaymentServiceImpl implements PaymentService{
             lxInvoice.setNetResponseCode(result.getResponseCode());
             lxInvoice.setNetTransId(result.getTransId());
             lxInvoice.setNetTransStatus(EnumTransactionStatus.getStatusFromResponseCode(result.getResponseCode()).getValue());
+            lxInvoice.setInvoiceStatus(LiXiGlobalUtils.translateNetTransStatus(lxInvoice.getNetTransStatus()));
         } else {
 
             payment.setResponseCode("-999");

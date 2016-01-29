@@ -10,6 +10,14 @@
             jQuery(document).ready(function () {
                 $('#btnSubmit').click(function () {
 
+                    if ($('#oStatus').val() === '') {
+
+                        alert("Please select the order's status");
+                        $('#oStatus').focus();
+
+                        //return false;
+                    }
+
                     if ($('#status').val() === '') {
 
                         alert('Please select the status');
@@ -18,7 +26,7 @@
                         //return false;
                     }
 
-                    document.location.href = '<c:url value="/Administration/SystemSender/report/"/>' + $('#status').val();
+                    document.location.href = '<c:url value="/Administration/SystemSender/report/"/>' + $('#status').val() + '/' + $('#oStatus').val();
                 });
             });
             
@@ -46,6 +54,22 @@
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <input type="hidden" name="paging.page"  id="paging.page" value="${pagingPage}"/>
                     <input type="hidden" name="paging.size"  id="paging.size" value="${pagingSize}"/>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="email">Order's Status:</label>
+                                <select class="form-control" id="oStatus" name="oStatus">
+                                    <option value="">Please select status</option>
+                                    <option value="In Progress" <c:if test="${oStatus eq 'In Progress'}">selected=""</c:if>>In Progress</option>
+                                    <option value="Declined" <c:if test="${oStatus eq 'Declined'}">selected=""</c:if>>Declined</option>
+                                    <option value="Refunded" <c:if test="${oStatus eq 'Refunded'}">selected=""</c:if>>Refunded</option>
+                                    <option value="Processed" <c:if test="${oStatus eq 'Processed'}">selected=""</c:if>>Processed</option>
+                                    <option value="Sent" <c:if test="${oStatus eq 'Sent'}">selected=""</c:if>>Sent</option>
+                                    <option value="Complete" <c:if test="${oStatus eq 'Complete'}">selected=""</c:if>>Complete</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
@@ -77,7 +101,7 @@
                                         <th nowrap>User Name/Phone</th>
                                         <th nowrap>Amount</th>
                                         <th nowrap>Status</th>
-                                        <th nowrap>Action</th>
+                                        <th nowrap style="text-align: right;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -85,7 +109,7 @@
                                     <c:set var="totalAmountUsd" value="0"/>
                                     <c:forEach items="${rS}" var="s" varStatus="theCount">
                                         <c:set var="countS" value="${theCount.count}"/>
-                                        <c:set var="totalAmountUsd" value="${totalAmountUsd + s.sumAll}"/>
+                                        <c:set var="totalAmountUsd" value="${totalAmountUsd + s.sumInvoice}"/>
                                         <tr>
                                             <td>${s.beautyId}</td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${s.createdDate}"/></td>
@@ -93,7 +117,7 @@
                                             <td>
                                                 ${s.email}<br/>${s.phone}
                                             </td>
-                                            <td><fmt:formatNumber value="${s.sumAll}" pattern="###,###.##"/> USD</td>
+                                            <td><fmt:formatNumber value="${s.sumInvoice}" pattern="###,###.##"/> USD</td>
                                             <td nowrap>
                                                 <c:if test="${s.activated eq true}">
                                                     Active
@@ -102,7 +126,7 @@
                                                     Deactivated
                                                 </c:if>
                                             </td>
-                                            <td>
+                                            <td style="text-align: right;">
                                                 <a href="javascript:alert('In Implementation');">On</a>
                                                 |
                                                 <a href="javascript:alert('In Implementation');">Off</a>

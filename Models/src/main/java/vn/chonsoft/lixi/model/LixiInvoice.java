@@ -19,7 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
-import vn.chonsoft.lixi.model.pojo.EnumTransactionStatus;
+import vn.chonsoft.lixi.EnumTransactionStatus;
 
 /**
  *
@@ -36,6 +36,9 @@ public class LixiInvoice implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
+    
+    @Column(name = "payer")
+    private Long payer;
     
     @Column(name = "invoice_code")
     private String invoiceCode;
@@ -69,6 +72,9 @@ public class LixiInvoice implements Serializable {
     @Column(name = "net_trans_status")
     private String netTransStatus;
     
+    @Column(name = "invoice_status")
+    private String invoiceStatus;
+    
     @Column(name = "last_check_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastCheckDate;
@@ -94,6 +100,14 @@ public class LixiInvoice implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getPayer() {
+        return payer;
+    }
+
+    public void setPayer(Long payer) {
+        this.payer = payer;
     }
 
     public String getInvoiceCode() {
@@ -224,6 +238,14 @@ public class LixiInvoice implements Serializable {
     
     public void setNetTransStatus(String netTransStatus) {
         this.netTransStatus = netTransStatus;
+    }
+
+    public String getInvoiceStatus() {
+        return invoiceStatus;
+    }
+
+    public void setInvoiceStatus(String invoiceStatus) {
+        this.invoiceStatus = invoiceStatus;
     }
 
     public Date getLastCheckDate() {

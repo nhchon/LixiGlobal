@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import vn.chonsoft.lixi.model.form.support.CustomerProblemForm;
-import vn.chonsoft.lixi.model.pojo.EnumCustomerProblemStatus;
+import vn.chonsoft.lixi.EnumCustomerProblemStatus;
 import vn.chonsoft.lixi.model.support.CustomerProblem;
 import vn.chonsoft.lixi.model.support.CustomerSubject;
 import vn.chonsoft.lixi.repositories.service.CustomerProblemService;

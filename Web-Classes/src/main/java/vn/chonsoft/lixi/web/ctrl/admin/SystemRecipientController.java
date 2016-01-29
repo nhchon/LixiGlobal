@@ -12,9 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
@@ -37,12 +39,23 @@ public class SystemRecipientController {
     
     /**
      * 
+     * @return 
+     */
+    @RequestMapping(value = "report", method = RequestMethod.GET)
+    public ModelAndView report(){
+        
+        return new ModelAndView(new RedirectView("/Administration/SystemRecipient/report/Processed", true, true));
+    }
+    
+    /**
+     * 
+     * @param oStatus
      * @param model
      * @param page
      * @return 
      */
-    @RequestMapping(value = "report", method = RequestMethod.GET)
-    public ModelAndView report(Map<String, Object> model, @PageableDefault(value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page){
+    @RequestMapping(value = "report/{oStatus}", method = RequestMethod.GET)
+    public ModelAndView report(Map<String, Object> model, @PathVariable String oStatus, @PageableDefault(value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page){
         
         Page<Recipient> ps = this.recService.findAll(page);
         
@@ -51,8 +64,8 @@ public class SystemRecipientController {
         if(ps != null && !ps.getContent().isEmpty()){
             
             ps.getContent().forEach(r -> {
-                r.setSumGift(sfService.sumGiftOfRecipient(r.getId()));
-                r.setSumTopUp(sfService.sumTopUpOfRecipient(r.getId()));
+                r.setSumGift(sfService.sumGiftOfRecipient(oStatus, r.getId()));
+                r.setSumTopUp(sfService.sumTopUpOfRecipient(oStatus, r.getId()));
             });
             
             rS = new ArrayList<>(ps.getContent());

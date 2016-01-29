@@ -45,18 +45,19 @@ public class SystemSenderController {
     @RequestMapping(value = "report", method = RequestMethod.GET)
     public ModelAndView report(){
         
-        return new ModelAndView(new RedirectView("/Administration/SystemSender/report/1", true, true));
+        return new ModelAndView(new RedirectView("/Administration/SystemSender/report/1/Processed", true, true));
     }
     
     /**
      * 
      * @param model
      * @param status
+     * @param oStatus
      * @param page
      * @return 
      */
-    @RequestMapping(value = "report/{status}", method = RequestMethod.GET)
-    public ModelAndView report(Map<String, Object> model, @PathVariable int status, @PageableDefault(value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page){
+    @RequestMapping(value = "report/{status}/{oStatus}", method = RequestMethod.GET)
+    public ModelAndView report(Map<String, Object> model, @PathVariable int status, @PathVariable String oStatus, @PageableDefault(value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page){
         
         boolean activated = true;
         if(status == 0) activated = false;
@@ -69,13 +70,12 @@ public class SystemSenderController {
         if(ps != null && !ps.getContent().isEmpty()){
             
             ps.getContent().forEach(s -> {
-                s.setSumGift(sfService.sumGiftOfSender(s.getId()));
-                s.setSumTopUp(sfService.sumTopUpOfSender(s.getId()));
+                s.setSumInvoice(sfService.sumInvoiceOfSender(oStatus, s.getId()));
             });
             
             rS = new ArrayList<>(ps.getContent());
             
-            rS.sort((User s1, User s2)->{return s2.getSumAll().compareTo(s1.getSumAll());});
+            rS.sort((User s1, User s2)->{return s2.getSumInvoice().compareTo(s1.getSumInvoice());});
         }
         
         model.put("status", status);

@@ -53,9 +53,11 @@ public class User implements Serializable {
     private Date modifiedDate;
     private String modifiedBy;
 
-    private double sumGift;
+    //private double sumGift;
     
-    private double sumTopUp;
+    //private double sumTopUp;
+    
+    private Double sumInvoice;
     
     private List<Recipient> recipients;
     
@@ -274,34 +276,44 @@ public class User implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-    @Transient
-    public double getSumGift() {
-        return sumGift;
-    }
+    //@Transient
+    //public double getSumGift() {
+        //return sumGift;
+    //}
 
-    public void setSumGift(double sumGift) {
-        this.sumGift = sumGift;
-    }
+    //public void setSumGift(double sumGift) {
+        //this.sumGift = sumGift;
+    //}
 
-    @Transient
-    public double getSumTopUp() {
-        return sumTopUp;
-    }
+    //@Transient
+    //public double getSumTopUp() {
+        //return sumTopUp;
+    //}
 
-    public void setSumTopUp(double sumTopUp) {
-        this.sumTopUp = sumTopUp;
-    }
+    //public void setSumTopUp(double sumTopUp) {
+        //this.sumTopUp = sumTopUp;
+    //}
 
+    //@Transient
+    //public Double getSumAll(){
+        
+        //return new Double(this.getSumGift() + this.getSumTopUp());
+    //}
+    
     @Transient
     public String getBeautyId(){
         
         return LiXiGlobalUtils.getBeautySId(id);
     }
     
+
     @Transient
-    public Double getSumAll(){
-        
-        return new Double(this.getSumGift() + this.getSumTopUp());
+    public Double getSumInvoice() {
+        return sumInvoice;
+    }
+
+    public void setSumInvoice(Double sumInvoice) {
+        this.sumInvoice = sumInvoice;
     }
     
     

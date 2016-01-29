@@ -31,7 +31,7 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.TopUpResult;
 import vn.chonsoft.lixi.model.VtcResponseCode;
 import vn.chonsoft.lixi.model.VtcServiceCode;
-import vn.chonsoft.lixi.model.pojo.EnumTopUpStatus;
+import vn.chonsoft.lixi.EnumTopUpStatus;
 import vn.chonsoft.lixi.repositories.service.BuyCardResultService;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.DauSoService;

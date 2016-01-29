@@ -23,7 +23,7 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.VatgiaProduct;
-import vn.chonsoft.lixi.model.pojo.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.LixiSubmitOrderResult;

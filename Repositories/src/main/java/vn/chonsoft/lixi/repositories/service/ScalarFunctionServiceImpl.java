@@ -21,15 +21,16 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
     
     /**
      * 
+     * @param invoiceStatus 
      * @param id
      * @return 
      */
     @Override
-    public double sumGiftOfRecipient(Long id){
+    public double sumGiftOfRecipient(String invoiceStatus, Long id){
         
-        String sql = "select sum(product_price) from lixi_order_gifts where recipient = ?";
+        String sql = "select sum(g.product_price)from  lixi_order_gifts g , lixi_invoices i where g.recipient=? and g.order_id = i.order_id and i.invoice_status=?";
         
-        Double rs = scalarDao.singleResult(sql, id);
+        Double rs = scalarDao.singleResult(sql, id, invoiceStatus);
         if(rs != null){
             return rs.doubleValue();
         }
@@ -40,14 +41,15 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
     
     /**
      * 
+     * @param invoiceStatus 
      * @param id
      * @return 
      */
     @Override
-    public double sumTopUpOfRecipient(Long id){
+    public double sumTopUpOfRecipient(String invoiceStatus, Long id){
         
-        String sql = "select sum(amount) from top_up_mobile_phone where recipient = ?";
-        Double rs = scalarDao.singleResult(sql, id);
+        String sql = "select sum(t.amount)from top_up_mobile_phone t, lixi_invoices i where t.recipient=? and t.order_id = i.order_id and i.invoice_status=?";
+        Double rs = scalarDao.singleResult(sql, id, invoiceStatus);
         if(rs != null){
             return rs.doubleValue();
         }
@@ -58,15 +60,16 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
 
     /**
      * 
-     * @param id
+     * @param invoiceStatus 
+     * @param sender
      * @return 
      */
     @Override
-    public double sumGiftOfSender(Long id){
+    public double sumInvoiceOfSender(String invoiceStatus, Long sender){
         
-        String sql = "SELECT sum(g.usd_price) FROM lixi_order_gifts g, lixi_orders o, users u WHERE g.order_id = o.id and o.sender = u.id and u.id = ?";
+        String sql = "SELECT sum(i.total_amount) FROM lixi_invoices i WHERE i.invoice_status = ? and i.payer = ?";
         
-        Double rs = scalarDao.singleResult(sql, id);
+        Double rs = scalarDao.singleResult(sql, invoiceStatus, sender);
         if(rs != null){
             return rs.doubleValue();
         }
@@ -77,14 +80,15 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
     
     /**
      * 
-     * @param id
+     * @param invoiceStatus 
+     * @param sender
      * @return 
      */
     @Override
-    public double sumTopUpOfSender(Long id){
+    public double sumTopUpOfSender(String invoiceStatus, Long sender){
         
-        String sql = "SELECT sum(t.amount_usd) FROM top_up_mobile_phone t, lixi_orders o, users u WHERE t.order_id = o.id and o.sender = u.id and u.id = ?";
-        Double rs = scalarDao.singleResult(sql, id);
+        String sql = "SELECT sum(t.amount_usd) FROM top_up_mobile_phone t , lixi_invoices i WHERE  t.order_id = i.order_id and i.invoice_status = ? and i.payer = ?";
+        Double rs = scalarDao.singleResult(sql, invoiceStatus, sender);
         if(rs != null){
             return rs.doubleValue();
         }
