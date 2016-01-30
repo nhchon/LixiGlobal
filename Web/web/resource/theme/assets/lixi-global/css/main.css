@@ -1126,6 +1126,14 @@ textarea{
 #map-2{
     height: 575px;
 }
+.top-up-mobile-phone-text{}
+.top-up-mobile-phone-icon{}
+.top-up-mobile-phone-icon img{
+    border: 1px solid rgb(213, 213, 213);
+    border-radius: 4px;
+    height: 30px;
+    margin-top: -5px;
+}
 /* End google map */
 /*==================================================
 =            Bootstrap 3 Media Queries             =
@@ -1339,12 +1347,12 @@ textarea{
 
 }
 @media only screen and (min-width : 1200px) {
-  
+
 }
 
 /* Large Devices, Wide Screens */
 @media only screen and (min-width : 1200px) {
-    
+
 }
 
 /*==========  Non-Mobile First Method  ==========*/
@@ -1546,6 +1554,11 @@ textarea{
 
 /* Extra Small Devices, Phones */ 
 @media only screen and (max-width : 480px) {
+    .top-up-mobile-phone-text,
+    .top-up-mobile-phone-icon{
+        display: block;
+        width: 100%;
+    }
     /*.section-slider-thumb {
         height: 300px;
     }*/

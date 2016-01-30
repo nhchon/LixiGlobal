@@ -34,10 +34,10 @@
 
                 // submit
                 //$('#btnTopUpKeepShopping').click(function () {
-                    // set action
-                    //$('#topUpAction').val('KEEP_SHOPPING_ACTION');
-                    //
-                    //return checkTopUpMobileForm();
+                // set action
+                //$('#topUpAction').val('KEEP_SHOPPING_ACTION');
+                //
+                //return checkTopUpMobileForm();
                 //});
 
                 $('#btnTopUpBuyNow').click(function () {
@@ -68,14 +68,15 @@
                 }
                 else {
                     var topUpId = $('#topUpId').val();
-                    if(topUpId === '') topUpId = '0';
-                    
+                    if (topUpId === '')
+                        topUpId = '0';
+
                     $.ajax({
-                        url: '<c:url value="/topUp/checkTopUpExceed"/>' + '/' + topUpId  + '/' + amount,
-                        type: "get",
+                        url: '<c:url value="/topUp/checkTopUpExceed"/>' + '/' + topUpId + '/' + amount,
+                                type: "get",
                         dataType: 'json',
-                        success: function (data, textStatus, jqXHR)
-                        {
+                                success: function (data, textStatus, jqXHR)
+                                {
                             if (data.exceed == '1') {
                                 $('#divError').remove();
                                 $('#topUpPanelBody').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
@@ -113,114 +114,114 @@
             }
 
             function editRecipient(focusId) {
-                if($('#recId').val() !== '0'){
-                $.get('<c:url value="/recipient/edit/"/>' + $('#recId').val(), function (data) {
-                    enableEditRecipientHtmlContent(data);
-                    // focus on phone field
-                    $('#editRecipientModal').on('shown.bs.modal', function () {
-                        $('#' + focusId).focus()
-                    })
+                if ($('#recId').val() !== '0') {
+                    $.get('<c:url value="/recipient/edit/"/>' + $('#recId').val(), function (data) {
+                        enableEditRecipientHtmlContent(data);
+                        // focus on phone field
+                        $('#editRecipientModal').on('shown.bs.modal', function () {
+                            $('#' + focusId).focus()
+                        })
 
-                });
+                    });
                 }
-                else{
+                else {
                     alert(SELECT_RECEIVER)
                 }
             }
-            
-            function enableEditRecipientHtmlContent(data){
+
+            function enableEditRecipientHtmlContent(data) {
 
                 $('#editRecipientContent').html(data);
-                $('#editRecipientModal').modal({show:true});
+                $('#editRecipientModal').modal({show: true});
 
                 // change dial code
-                $('#iso2Code').change(function(){
-                   if($(this).val() === 'VN'){
+                $('#iso2Code').change(function () {
+                    if ($(this).val() === 'VN') {
 
-                       $('#dialCode').val('+84');
+                        $('#dialCode').val('+84');
 
-                   }
-                   else if($(this).val() === 'US'){
-                       $('#dialCode').val('+1');
-                   }
+                    }
+                    else if ($(this).val() === 'US') {
+                        $('#dialCode').val('+1');
+                    }
                 });
                 // handler submit form
                 //callback handler for form submit
-                $("#chooseRecipientForm").submit(function(e)
+                $("#chooseRecipientForm").submit(function (e)
                 {
                     var postData = $(this).serializeArray();
                     var formURL = $(this).attr("action");
                     $.ajax(
-                    {
-                        url : formURL,
-                        type: "POST",
-                        data : postData,
-                        //contentType: "application/x-www-form-urlencoded;charset=ISO-8859-1",
-                        dataType: 'json',
-                        success:function(data, textStatus, jqXHR) 
-                        {
-                            //data: return data from server
-                            if(data.error === '0'){
-                                // save successfully
-                                // hide popup
-                                $('#editRecipientModal').modal('hide');
-                                // get new phone number
-                                var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
-                                var phone = $("#chooseRecipientForm #phone").val();
-                                /* new recipient */
-                                if (parseInt(data.recId) > 0) {
-                                    if(data.action === 'create'){
-                                        $('#recId')
-                                                .append($("<option></option>")
-                                                        .attr("value", data.recId)
-                                                        .text(name + ' - ' + phone));
+                            {
+                                url: formURL,
+                                type: "POST",
+                                data: postData,
+                                //contentType: "application/x-www-form-urlencoded;charset=ISO-8859-1",
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR)
+                                {
+                                    //data: return data from server
+                                    if (data.error === '0') {
+                                        // save successfully
+                                        // hide popup
+                                        $('#editRecipientModal').modal('hide');
+                                        // get new phone number
+                                        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+                                        var phone = $("#chooseRecipientForm #phone").val();
+                                        /* new recipient */
+                                        if (parseInt(data.recId) > 0) {
+                                            if (data.action === 'create') {
+                                                $('#recId')
+                                                        .append($("<option></option>")
+                                                                .attr("value", data.recId)
+                                                                .text(name + ' - ' + phone));
 
-                                        $('#recId').val(data.recId);
+                                                $('#recId').val(data.recId);
+                                            }
+                                            else {
+                                                $("#recId option:selected").html(name + ' - ' + phone);
+                                            }
+                                        }
+                                        else {
+                                        }
                                     }
-                                    else{
-                                        $("#recId option:selected").html(name + ' - ' + phone);
+                                    else {
+                                        alert(SOMETHING_WRONG_ERROR);
                                     }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown)
+                                {
+                                    //if fails      
                                 }
-                                else{
-                                }
-                            }
-                            else{
-                                alert(SOMETHING_WRONG_ERROR);
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) 
-                        {
-                            //if fails      
-                        }
-                    });
-                    if(typeof e  !== 'undefined'){
+                            });
+                    if (typeof e !== 'undefined') {
                         e.preventDefault(); //STOP default action
                         //e.unbind(); //unbind. to stop multiple form submit.
                     }
                 });
             }
-            
+
             /**
              * 
              * @returns {Boolean}
              */
             function checkTopUpMobileForm() {
-                if($('#recId').val() === '0'){
+                if ($('#recId').val() === '0') {
                     alert(SELECT_RECEIVER);
                     return false;
                 }
-                
+
                 if ($.trim($('#amountTopUp').val()) === '0') {
                     alert(TOP_UP_EMPTY);
                     $('#amountTopUp').focus();
                     return false;
                 }
-                
+
                 return true
             }
-            
-            function cancelTopUp(){
-                
+
+            function cancelTopUp() {
+
                 document.location.href = '<c:url value="/gifts/choose"/>';
             }
         </script>
@@ -235,7 +236,15 @@
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="section-receiver">
                     <!--  <span style="font-size: 18px;text-transform: none;">(for ${SELECTED_RECIPIENT.firstName})</span> -->
-                    <h2 class="title">Top up mobile phone</h2>
+                    <h2 class="title">
+                        <span class="top-up-mobile-phone-text">Top up mobile phone</span>
+                        <span class="top-up-mobile-phone-icon">
+                            <img rel="tooltip" title="Mobile Phone"  alt="Mobile Phone" src="<c:url value="/resource/theme/assets/lixi-global/images/icon-mobiphone.png"/>">
+                            <img rel="tooltip" title="Viettel"  alt="Viettel"  src="<c:url value="/resource/theme/assets/lixi-global/images/icon-viettel.png"/>">
+                            <img rel="tooltip" title="Vietnam Mobile"  alt="Vietnam Mobile"  src="<c:url value="/resource/theme/assets/lixi-global/images/icon-vietnammobi.png"/>">
+                            <img rel="tooltip" title="Vina Phone"  alt="Vina Phone"  src="<c:url value="/resource/theme/assets/lixi-global/images/icon-vinaphone.png"/>">
+                        </span>
+                    </h2>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-12">
@@ -258,7 +267,7 @@
                                         </c:if>
                                         <c:url value="/topUp/topUpMobilePhone" var="topUpMobilePhoneUrl"/>
                                         <form class="form-horizontal" role="form" method="post" action="${topUpMobilePhoneUrl}">
-                                          <div class="form-group">
+                                            <div class="form-group">
                                                 <label class="col-md-3" for="email">Select a receiver</label>
                                                 <div class="col-md-7">
                                                     <div class="row">
@@ -273,13 +282,13 @@
                                                         <div class="col-md-2" style="padding-left: 5px;">
                                                             <button type="button" class="btn btn-primary" onclick="editRecipient('phone');">Edit receiver</button>
                                                         </div>
-                                                            <div class="col-md-4">
-                                                                <button type="button" class="btn btn-primary" onclick="createNewRecipient()">Create new receiver</button>
-                                                            </div>
+                                                        <div class="col-md-4">
+                                                            <button type="button" class="btn btn-primary" onclick="createNewRecipient()">Create new receiver</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                          </div>
-                                            
+                                            </div>
+
                                             <div class="form-group">
                                                 <label class="col-md-3" for="email">Amount you want to top up</label>
                                                 <div class="col-md-7">
@@ -289,16 +298,16 @@
                                                         <option value="200000" <c:if test="${amountTopUp eq 200000}">selected=""</c:if>>200,000 VND</option>
                                                         <option value="300000" <c:if test="${amountTopUp eq 300000}">selected=""</c:if>>300,000 VND</option>
                                                         <option value="500000" <c:if test="${amountTopUp eq 500000}">selected=""</c:if>>500,000 VND</option>
-                                                    </select>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-3" for="pwd">Currency conversion rate</label>
-                                                <div class="col-md-3"> 
-                                                    <input type="text" class="form-control" value="1 USD" readonly="">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <input type="text" class="form-control" value="<fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> VND" readonly="">
+                                                <div class="form-group">
+                                                    <label class="col-md-3" for="pwd">Currency conversion rate</label>
+                                                    <div class="col-md-3"> 
+                                                        <input type="text" class="form-control" value="1 USD" readonly="">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" value="<fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> VND" readonly="">
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -307,25 +316,25 @@
                                                     <input type="text" name="topUpInUSD" id="topUpInUSD" class="form-control" placeholder="O USD" readonly="">
                                                 </div>
                                             </div>
-                                                <!--
-                                            <div class="form-group">
-                                                <label class="col-md-3"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
-                                                <div class="col-md-7">
-                                                    <div class="row">
-                                                        <div class="col-md-2" style="padding-right: 0px;">
-                                                            <input type="text" name="recDialCode" class="form-control" value="${SELECTED_RECIPIENT.dialCode}" readonly="" style="padding: 6px;"/>
-                                                        </div>
-                                                        <div class="col-md-8" style="padding-left: 0px;padding-right: 0px;">
-                                                            <input type="text" id="recPhone" name="recPhone" class="form-control" readonly="" value="${SELECTED_RECIPIENT.phone}"/>
-                                                            <span class="help-block errors"></span>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-default" onclick="editRecipient('phone');">Change</button>
-                                                        </div>
+                                            <!--
+                                        <div class="form-group">
+                                            <label class="col-md-3"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
+                                            <div class="col-md-7">
+                                                <div class="row">
+                                                    <div class="col-md-2" style="padding-right: 0px;">
+                                                        <input type="text" name="recDialCode" class="form-control" value="${SELECTED_RECIPIENT.dialCode}" readonly="" style="padding: 6px;"/>
+                                                    </div>
+                                                    <div class="col-md-8" style="padding-left: 0px;padding-right: 0px;">
+                                                        <input type="text" id="recPhone" name="recPhone" class="form-control" readonly="" value="${SELECTED_RECIPIENT.phone}"/>
+                                                        <span class="help-block errors"></span>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-default" onclick="editRecipient('phone');">Change</button>
                                                     </div>
                                                 </div>
                                             </div>
-                                                -->
+                                        </div>
+                                            -->
                                             <div class="row">
                                                 <div class="col-md-3"></div>
                                                 <div class="col-md-7">
