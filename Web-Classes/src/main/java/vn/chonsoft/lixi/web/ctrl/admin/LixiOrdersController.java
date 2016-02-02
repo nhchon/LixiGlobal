@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.web.ctrl.admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,10 +70,13 @@ public class LixiOrdersController {
         List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(oStatus);
         
         if(orders != null){
-            for(LixiOrder o : new ArrayList<>(orders)){
+            Iterator<LixiOrder> iterator = orders.iterator();
+            
+            while(iterator.hasNext()){
+                LixiOrder o = iterator.next();
                 if(o.getGifts() == null || o.getGifts().isEmpty()){
                     /* remove the order has no gift. We don't need sent to baokim */
-                    orders.remove(o);
+                    iterator.remove();
                 }
             }
         }
