@@ -21,7 +21,7 @@ import vn.chonsoft.lixi.model.User;
 @Validated
 public interface LixiOrderService {
     
-    int updateStatus(Integer status, Long id);
+    int updateStatus(String status, Long id);
     
     @Transactional
     LixiOrder save(LixiOrder order);
@@ -36,7 +36,7 @@ public interface LixiOrderService {
     LixiOrder findLastOrder(User user);
     
     @Transactional
-    LixiOrder findLastBySenderAndLixiStatus(User sender, Integer status);
+    LixiOrder findLastBySenderAndLixiStatus(User sender, String status);
     
     @Transactional
     List<LixiOrder> findAll(List<Long> ids);
@@ -45,7 +45,10 @@ public interface LixiOrderService {
     Page<LixiOrder> findBySender(User sender, Pageable page);
     
     @Transactional
-    Page<LixiOrder> findByLixiStatus(Integer status, Pageable page);
+    Page<LixiOrder> findByLixiStatus(String status, Pageable page);
+    
+    @Transactional
+    List<LixiOrder> findByLixiStatus(String status);
     
     @Transactional
     Page<LixiOrder> findByModifiedDate(User sender, Date begin, Date end, Pageable page);

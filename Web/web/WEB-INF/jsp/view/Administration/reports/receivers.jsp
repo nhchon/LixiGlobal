@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Admin htmlTitle="Administration -:- List Top Up">
+<template:Admin htmlTitle="Administration -:- Receiver Reports">
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>
     <jsp:attribute name="extraJavascriptContent">

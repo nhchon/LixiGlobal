@@ -25,6 +25,7 @@ import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.EnumTopUpStatus;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
@@ -402,11 +403,14 @@ public class TopUpMobileController {
         LixiOrder order = new LixiOrder();
         order.setSender(u);
         order.setLxExchangeRate(lxExch);
-        order.setLixiStatus(LiXiConstants.LIXI_ORDER_UNFINISHED);
+        order.setLixiStatus(EnumLixiOrderStatus.UNFINISHED.getValue());
         order.setLixiMessage(null);
         // default is allow refund
         order.setSetting(EnumLixiOrderSetting.ALLOW_REFUND.getValue());
-        order.setModifiedDate(Calendar.getInstance().getTime());
+        /* current date */
+        Date currDate = Calendar.getInstance().getTime();
+        order.setCreatedDate(currDate);
+        order.setModifiedDate(currDate);
 
         // set card and billing address from last order
         LixiOrder lastOrder = this.lxorderService.findLastOrder(u);

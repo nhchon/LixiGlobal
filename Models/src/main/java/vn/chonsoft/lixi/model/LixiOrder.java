@@ -20,6 +20,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -43,7 +44,7 @@ public class LixiOrder implements Serializable {
     private Long id;
     
     @Column(name = "lixi_status")
-    private Integer lixiStatus;
+    private String lixiStatus;
     
     @Lob
     @Column(name = "lixi_message")
@@ -52,7 +53,12 @@ public class LixiOrder implements Serializable {
     @Column(name = "setting")
     private Integer setting;
     
-    @Basic(optional = false)
+    @Basic
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
+    
+    @Basic
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
@@ -74,6 +80,7 @@ public class LixiOrder implements Serializable {
     private UserBankAccount bankAccount;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "order")
+    @OrderBy("id ASC")
     private List<LixiOrderGift> gifts;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
@@ -105,11 +112,11 @@ public class LixiOrder implements Serializable {
         this.id = id;
     }
 
-    public Integer getLixiStatus() {
+    public String getLixiStatus() {
         return lixiStatus;
     }
 
-    public void setLixiStatus(Integer lixiStatus) {
+    public void setLixiStatus(String lixiStatus) {
         this.lixiStatus = lixiStatus;
     }
 
@@ -138,6 +145,14 @@ public class LixiOrder implements Serializable {
         
         return EnumLixiOrderSetting.findByValue(setting).toString();
         
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Date getModifiedDate() {

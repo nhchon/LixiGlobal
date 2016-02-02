@@ -73,6 +73,7 @@
                     }
                 });
             }
+            
             function sent(id){
                 overlayOn($('#rowTopUp'+id));
                 $("#topUpForm input[name=id]").val(id);

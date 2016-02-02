@@ -47,21 +47,13 @@ public class LixiOrderServiceImpl implements LixiOrderService{
      * @return 
      */
     @Override
-    public int updateStatus(Integer status, Long id){
+    public int updateStatus(String status, Long id){
         
         return this.lxorderRepository.updateStatus(status, id);
         
     }
-    /**
-     * 
-     * @param id
-     * @return 
-     */
-    @Transactional
-    @Override
-    public LixiOrder findById(Long id) {
-        
-        LixiOrder order = this.lxorderRepository.findOne(id);
+    
+    private void loadOrder(LixiOrder order){
         if(order != null){
             
             // make sure load gifts
@@ -85,6 +77,21 @@ public class LixiOrderServiceImpl implements LixiOrderService{
             // invoice
             order.getInvoice();
         }
+        
+    }
+    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Transactional
+    @Override
+    public LixiOrder findById(Long id) {
+        
+        LixiOrder order = this.lxorderRepository.findOne(id);
+        
+        loadOrder(order);
         
         return order;
         
@@ -164,7 +171,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
     
     @Override
     @Transactional
-    public LixiOrder findLastBySenderAndLixiStatus(User sender, Integer status){
+    public LixiOrder findLastBySenderAndLixiStatus(User sender, String status){
         
         List<LixiOrder> ls = this.lxorderRepository.findBySenderAndLixiStatus(sender, status);
         if(ls != null && !ls.isEmpty()){
@@ -226,7 +233,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
      */
     @Override
     @Transactional
-    public Page<LixiOrder> findByLixiStatus(Integer status, Pageable page){
+    public Page<LixiOrder> findByLixiStatus(String status, Pageable page){
         
         Page<LixiOrder> ps = this.lxorderRepository.findByLixiStatus(status, page);
         if(ps != null && ps.hasContent()){
@@ -236,6 +243,25 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         return ps;
     }
     
+    /**
+     * 
+     * @param status
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<LixiOrder> findByLixiStatus(String status){
+        
+        Sort defaultSort = new Sort(new Sort.Order(Sort.Direction.DESC, "id"));
+        
+        List<LixiOrder> ls = this.lxorderRepository.findByLixiStatus(status, defaultSort);
+
+        if(ls != null && !ls.isEmpty()){
+            ls.forEach(o -> {loadOrder(o);});
+        }
+        
+        return ls;
+    }
     /**
      * 
      * @param sender

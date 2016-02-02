@@ -34,6 +34,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
@@ -722,7 +723,7 @@ public class UserGeneralController {
                 LiXiUtils.setLoginedUser(loginedUser, u, this.configService.findAll());
 
                 // check the order that unfinished
-                LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, LiXiConstants.LIXI_ORDER_UNFINISHED);
+                LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, EnumLixiOrderStatus.UNFINISHED.getValue());
                 if (order != null) {
                     /* get latest exchange rate */
                     LixiExchangeRate exRate = this.lxexrateService.findLastRecord(LiXiConstants.USD);

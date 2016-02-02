@@ -17,6 +17,8 @@ public interface LixiAsyncMethods {
     @Async
     void submitOrdersToBaoKim(LixiOrder order);
     
+    void submitOrdersToBaoKimNoAsync(LixiOrder order);
+            
     @Async
     void processTopUpItems(LixiOrder order);
     

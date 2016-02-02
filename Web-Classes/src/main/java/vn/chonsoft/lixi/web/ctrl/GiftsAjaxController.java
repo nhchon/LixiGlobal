@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
@@ -359,11 +361,14 @@ public class GiftsAjaxController {
                         order = new LixiOrder();
                         order.setSender(u);
                         order.setLxExchangeRate(lxExch);
-                        order.setLixiStatus(LiXiConstants.LIXI_ORDER_UNFINISHED);
+                        order.setLixiStatus(EnumLixiOrderStatus.UNFINISHED.getValue());
                         order.setLixiMessage(null);
                         // default is allow refund
                         order.setSetting(EnumLixiOrderSetting.ALLOW_REFUND.getValue());
-                        order.setModifiedDate(Calendar.getInstance().getTime());
+                        /* current date */
+                        Date currDate = Calendar.getInstance().getTime();
+                        order.setCreatedDate(currDate);
+                        order.setModifiedDate(currDate);
 
                         // set card and billing address from last order
                         LixiOrder lastOrder = this.lxorderService.findLastOrder(u);
@@ -393,7 +398,7 @@ public class GiftsAjaxController {
                     lxogift.setProductName(vgp.getName());
                     lxogift.setProductImage(vgp.getImageUrl());
                     lxogift.setProductQuantity(quantity);
-                    lxogift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED+"");// not yet submitted
+                    lxogift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());// not yet submitted
                     lxogift.setModifiedDate(Calendar.getInstance().getTime());
 
                     this.lxogiftService.save(lxogift);

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,7 +26,7 @@ public interface LixiOrderRepository  extends JpaRepository<LixiOrder, Long>{
     @Modifying
     @Transactional
     @Query("update LixiOrder o set o.lixiStatus = :lixiStatus where o.id = :id")
-    int updateStatus(@Param("lixiStatus") Integer lixiStatus, @Param("id") Long id);
+    int updateStatus(@Param("lixiStatus") String lixiStatus, @Param("id") Long id);
     
     //@Transactional
     //@Query("SELECT o FROM LixiOrder o WHERE o.modifiedDate BETWEEN :begin AND :end")
@@ -38,7 +39,9 @@ public interface LixiOrderRepository  extends JpaRepository<LixiOrder, Long>{
     
     Page<LixiOrder> findBySender(User sender, Pageable page);
     
-    Page<LixiOrder> findByLixiStatus(Integer status, Pageable page);
+    Page<LixiOrder> findByLixiStatus(String status, Pageable page);
     
-    List<LixiOrder> findBySenderAndLixiStatus(User sender, Integer status);
+    List<LixiOrder> findByLixiStatus(String status, Sort sort);
+    
+    List<LixiOrder> findBySenderAndLixiStatus(User sender, String status);
 }

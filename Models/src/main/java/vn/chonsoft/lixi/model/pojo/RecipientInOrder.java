@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.model.pojo;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrderGift;
@@ -158,5 +159,26 @@ public class RecipientInOrder {
         SumVndUsd buyCard = getPhoneCardTotal();
         
         return new SumVndUsd("TOTAL_ALL_TYPE", gift.getVnd() + topUp.getVnd() + buyCard.getVnd(), gift.getUsd() + topUp.getUsd() + buyCard.getUsd());
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public String getBkStatus(){
+        
+        final String p = "Passed";
+        final String f = "Not Sent";
+        
+        if(gifts != null){
+            
+            for(LixiOrderGift g : gifts){
+                if(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue().equals(g.getBkStatus())){
+                    return f;
+                }
+            }
+        }
+        
+        return p;
     }
 }

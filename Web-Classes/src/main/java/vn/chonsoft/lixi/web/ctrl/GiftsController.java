@@ -37,6 +37,7 @@ import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
@@ -484,7 +485,7 @@ public class GiftsController {
             order = new LixiOrder();
             order.setSender(u);
             order.setLxExchangeRate(lxExch);
-            order.setLixiStatus(LiXiConstants.LIXI_ORDER_UNFINISHED);
+            order.setLixiStatus(EnumLixiOrderStatus.UNFINISHED.getValue());
             order.setLixiMessage(null);
             // default is allow refund
             order.setSetting(EnumLixiOrderSetting.ALLOW_REFUND.getValue());
@@ -521,7 +522,7 @@ public class GiftsController {
                 alreadyGift.setProductName(name);
                 alreadyGift.setProductImage(image);
                 alreadyGift.setProductQuantity(quantity);
-                alreadyGift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED);// not yet submitted
+                alreadyGift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());// not yet submitted
                 alreadyGift.setModifiedDate(Calendar.getInstance().getTime());
 
                 this.lxogiftService.save(alreadyGift);
@@ -544,7 +545,7 @@ public class GiftsController {
                 lxogift.setProductName(name);
                 lxogift.setProductImage(image);
                 lxogift.setProductQuantity(quantity);
-                lxogift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED);// not yet submitted
+                lxogift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());// not yet submitted
                 lxogift.setModifiedDate(Calendar.getInstance().getTime());
 
                 this.lxogiftService.save(lxogift);
@@ -658,7 +659,7 @@ public class GiftsController {
                         order = new LixiOrder();
                         order.setSender(u);
                         order.setLxExchangeRate(lxExch);
-                        order.setLixiStatus(LiXiConstants.LIXI_ORDER_UNFINISHED);
+                        order.setLixiStatus(EnumLixiOrderStatus.UNFINISHED.getValue());
                         order.setLixiMessage(null);
                         // default is allow refund
                         order.setSetting(EnumLixiOrderSetting.ALLOW_REFUND.getValue());
@@ -690,7 +691,7 @@ public class GiftsController {
                     lxogift.setProductName(vgp.getName());
                     lxogift.setProductImage(vgp.getImageUrl());
                     lxogift.setProductQuantity(quantity);
-                    lxogift.setBkStatus(LiXiConstants.LIXI_ORDER_GIFT_NOT_SUBMITTED);// not yet submitted
+                    lxogift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());// not yet submitted
                     lxogift.setModifiedDate(Calendar.getInstance().getTime());
 
                     this.lxogiftService.save(lxogift);

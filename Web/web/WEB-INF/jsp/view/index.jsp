@@ -10,15 +10,16 @@
 
     <jsp:body>
         <c:set var="currentDate" value="<%=new java.util.Date()%>"/>
-        <fmt:parseDate parseLocale="en_US" var="tetDateMilestone" value="Wed Jan 20 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
-        <fmt:parseDate parseLocale="en_US" var="valentinceDateMilestone" value="Mon Feb 01 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
-        <fmt:parseDate parseLocale="en_US" var="endValentinceDateMilestone" value="Mon Feb 15 00:00:00 GMT 2016" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+        <fmt:parseDate parseLocale="en_US" var="beginTetDateMilestone" value="Feb 1 00:00:00 GMT 2016" pattern="MMM dd HH:mm:ss z yyyy" />
+        <fmt:parseDate parseLocale="en_US" var="endTetDateMilestone" value="Feb 12 00:00:00 GMT 2016" pattern="MMM dd HH:mm:ss z yyyy" />
+        <fmt:parseDate parseLocale="en_US" var="beginValentinceDateMilestone" value="Feb 13 00:00:00 GMT 2016" pattern="MMM dd HH:mm:ss z yyyy" />
+        <fmt:parseDate parseLocale="en_US" var="endValentinceDateMilestone" value="Feb 20 00:00:00 GMT 2016" pattern="MMM dd HH:mm:ss z yyyy" />
         <section class="section-slider section-slider-thumb text-right">
             <c:choose>
-                <c:when test="${(currentDate gt tetDateMilestone) && (currentDate lt valentinceDateMilestone)}">
+                <c:when test="${(currentDate ge beginTetDateMilestone) && (currentDate le endTetDateMilestone)}">
                     <img src="<c:url value="/resource/theme/assets/lixi-global/images/slider-tet.jpg"/>"/>
                 </c:when>
-                <c:when test="${(currentDate gt valentinceDateMilestone) && (currentDate lt endValentinceDateMilestone)}">
+                <c:when test="${(currentDate ge beginValentinceDateMilestone) && (currentDate le endValentinceDateMilestone)}">
                     <img src="<c:url value="/resource/theme/assets/lixi-global/images/slider-valentine.jpg"/>"/>
                 </c:when>
                 <c:otherwise>
