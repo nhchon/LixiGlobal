@@ -135,10 +135,12 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
             List<VatgiaProduct> ps = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(vgps);
             // save to database
             synchronized(this){
-                // update alive = 0
-                updateAlive(c.getId(), 0);
-                // update products
-                this.vgpRepository.save(ps);
+                if(ps != null && !ps.isEmpty()){
+                    // update alive = 0
+                    updateAlive(c.getId(), 0);
+                    // update products
+                    this.vgpRepository.save(ps);
+                }
             }
         }
     }

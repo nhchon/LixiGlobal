@@ -4,17 +4,12 @@
  */
 package vn.chonsoft.lixi.web.ctrl.admin;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +45,28 @@ public class LixiOrdersController {
     @Autowired
     private LixiAsyncMethods lxAsyncMethods;
     
+    /**
+     * 
+     * @param model
+     * @param id
+     * @return 
+     */
+    @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
+    public ModelAndView listNewOrders(Map<String, Object> model, @PathVariable Long id){
+        
+        LixiOrder order = this.lxOrderService.findById(id);
+        /* back to list */
+        if(order == null){
+            return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue(), true, true));
+        }
+        
+        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
+        
+        model.put("order", order);
+        model.put("recGifts", recGifts);
+        
+        return new ModelAndView("Administration/orders/receiverDetail");
+    }
     /**
      * 
      * @param model
@@ -98,6 +115,59 @@ public class LixiOrdersController {
     /**
      * 
      * @param model
+     * @return 
+     */
+    @RequestMapping(value = "sendMoneyInfo", method = RequestMethod.GET)
+    public ModelAndView sendMoneyInfo(Map<String, Object> model){
+        
+        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.SENT_INFO.getValue());
+        
+        if(orders != null){
+            Iterator<LixiOrder> iterator = orders.iterator();
+            
+            while(iterator.hasNext()){
+                LixiOrder o = iterator.next();
+                if(o.getGifts() == null || o.getGifts().isEmpty()){
+                    /* remove the order has no gift. We don't need sent to baokim */
+                    iterator.remove();
+                }
+            }
+        }
+        
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        
+        if(orders != null){
+            
+            orders.forEach(o -> {
+                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+            });
+        }
+        
+        model.put("mOs", mOs);
+        
+        return new ModelAndView("Administration/orders/sendMoneyInfo");
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param id
+     * @return 
+     */
+    @RequestMapping(value = "sendMoneyInfo/{id}", method = RequestMethod.GET)
+    public ModelAndView sendMoneyInfo(Map<String, Object> model, @PathVariable Long id){
+        
+        LixiOrder order = this.lxOrderService.findById(id);
+        
+        if(order != null){
+            lxAsyncMethods.sendPaymentInfoToBaoKim(order);
+        }
+        
+        return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
+    }
+    /**
+     * 
+     * @param model
      * @param id
      * @return 
      */
@@ -119,6 +189,31 @@ public class LixiOrdersController {
         
         return new ModelAndView("Administration/orders/bkSubmitMessage");
     }
+    
+    /**
+     * 
+     * @param model
+     * @param id
+     * @param back
+     * @return 
+     */
+    @RequestMapping(value = "cancel/{id}/{back}", method = RequestMethod.GET)
+    public ModelAndView cancelOrdersOnBaoKim(Map<String, Object> model, @PathVariable Long id, @PathVariable String back){
+        
+        LixiOrder order = this.lxOrderService.findById(id);
+        
+        if(order != null){
+            lxAsyncMethods.cancelOrdersOnBaoKimNoAsync(order);
+        }
+        
+        if("info".equals(back)){
+            return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue(), true, true));
+        }
+        else{
+            return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
+        }
+    }
+    
     /**
      * 
      * @param model

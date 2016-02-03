@@ -14,18 +14,22 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
  */
 public interface LixiAsyncMethods {
     
-    @Async
-    void submitOrdersToBaoKim(LixiOrder order);
+    String processTopUpItemNoAsync(TopUpMobilePhone topUp);
     
     void submitOrdersToBaoKimNoAsync(LixiOrder order);
             
+    void cancelOrdersOnBaoKimNoAsync(LixiOrder order);
+            
+    void sendPaymentInfoToBaoKim(LixiOrder order);
+    
+    @Async
+    void submitOrdersToBaoKim(LixiOrder order);
+    
     @Async
     void processTopUpItems(LixiOrder order);
     
     @Async
     String processTopUpItem(TopUpMobilePhone topUp);
-    
-    String processTopUpItemNoAsync(TopUpMobilePhone topUp);
     
     @Async
     void processBuyCardItems(LixiOrder order);

@@ -93,15 +93,6 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/lixi.global-extend-js.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/lixi.global.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/utils.js"/>"></script>
-        <script>
-            $(function () {
-                var token = $("input[name='_csrf']").val();
-                var header = "X-CSRF-TOKEN";
-                $(document).ajaxSend(function (e, xhr, options) {
-                    xhr.setRequestHeader(header, token);
-                });
-            });
-        </script>
         <jsp:invoke fragment="javascriptContent" />
     </body>
 </html>

@@ -44,7 +44,8 @@
                             Ordered on <fmt:formatDate pattern="MMMM dd yyyy" value="${LIXI_ORDER.modifiedDate}"/>
                         </div>
                         <div class="col-md-3" style="">
-                            Order # ${LIXI_ORDER.id}
+                            Order # <c:if test="${not empty LIXI_ORDER.invoice}">${LIXI_ORDER.invoice.invoiceCode}</c:if>
+                            <c:if test="${empty LIXI_ORDER.invoice}">${LIXI_ORDER.id}</c:if>
                         </div>
                         <div class="col-md-6" style="text-align: right;">
                             <button class="btn btn-default">View or Print Invoice</button>
@@ -160,31 +161,32 @@
                                         <div class="col-md-1" style="padding-top:40px;text-align: center;">
                                             ${g.productQuantity}
                                         </div>
-                                        <div class="col-md-7" style="padding-top:40px;">
+                                        <div class="col-md-6" style="padding-top:40px;">
                                             ${g.productName}
                                         </div>
-                                        <div class="col-md-2" style="padding-top:40px;text-align: right;">
+                                        <div class="col-md-3" style="padding-top:40px;text-align: right;">
                                             USD <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/>
                                         </div>
                                     </div>
                                 </c:forEach>
                                 <c:forEach items="${rio.topUpMobilePhones}" var="t">
-                                    <div class="row" style="margin-bottom: 5px;">
-                                        <div class="col-md-3" style="padding-left:50px;">
-                                            Top Up Mobile Phone
+                                    <div class="row" style="margin-bottom: 5px;margin-top: 20px;">
+                                        <div class="col-md-2" style="padding-left:50px;">
+                                            Top Up Mobile
                                         </div>
-                                        <div class="col-md-6" style="text-align: center;">
-                                            ${t.phone}
+                                        <div class="col-md-1" style="text-align: center;">1</div>
+                                        <div class="col-md-6">
+                                            Top Up For Mobile Phone ${t.phone}
                                         </div>
-                                        <div class="col-md-3" style="text-align: center;">
-                                            USD <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${t.amount * m.key.lxExchangeRate.buy}" pattern="###,###.##"/>
+                                        <div class="col-md-3" style="text-align: right;">
+                                            USD <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>
                                         </div>
                                     </div>
                                 </c:forEach>
                                 
                                 <c:if test="${theValueCount.count < fn:length(REC_GIFTS)}">
                                     <div class="row">
-                                        <div class="col-md-8"><hr style="height:1px;border:none;color:#333;background-color:#333;"/></div>
+                                        <div class="col-md-12"><hr style="height:1px;border:none;color:#333;background-color:#333;"/></div>
                                     </div>
                                 </c:if>
                             </c:forEach>

@@ -31,20 +31,12 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-        <script type="text/javascript">
-            var CONTEXT_PATH = "${pageContext.request.contextPath}";
-            if (CONTEXT_PATH === null || CONTEXT_PATH === 'null' || CONTEXT_PATH === '/') {
-                CONTEXT_PATH = '';
-            }
-        </script>
         <jsp:invoke fragment="headContent" />
     </head>
 
     <body>
-
         <!-- Top Bar -->
         <jsp:invoke fragment="topbarContent" />
-        
         <div class="container">
             <jsp:doBody />
         </div>
@@ -59,11 +51,17 @@
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/javascript">
+            var CONTEXT_PATH = "${pageContext.request.contextPath}";
+            if (CONTEXT_PATH === null || CONTEXT_PATH === 'null' || CONTEXT_PATH === '/') {
+                CONTEXT_PATH = '';
+            }
+        </script>
         <script src="<c:url value="/resource/theme/assets/js/jquery/jquery-2.1.0.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/js/bootstrap/bootstrap.min.js"/>"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="<c:url value="/resource/theme/assets/js/ie10-viewport-bug-workaround.js"/>"></script>
-<script src="<c:url value="/resource/theme/assets/lixi-global/js/utils.js"/>"></script>        
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/utils.js"/>"></script>        
         <!-- javascript at end of page-->
         <jsp:invoke fragment="javascriptContent" />
         <!-- // -->

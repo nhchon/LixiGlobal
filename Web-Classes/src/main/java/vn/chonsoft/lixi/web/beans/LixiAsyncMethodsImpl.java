@@ -113,6 +113,27 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     }
 
     /**
+     * 
+     * @param order 
+     */
+    @Override
+    public void cancelOrdersOnBaoKimNoAsync(LixiOrder order){
+        
+        LiXiVatGiaUtils.getInstance().cancelOrderOnBaoKim(order, orderService, orderGiftService);
+        
+    }
+    
+    /**
+     * 
+     * @param order 
+     */
+    @Override
+    public void sendPaymentInfoToBaoKim(LixiOrder order){
+        
+        LiXiVatGiaUtils.getInstance().sendPaymentInfoToBaoKim(order, orderService, orderGiftService);
+    }
+    
+    /**
      *
      * @param phone
      * @return

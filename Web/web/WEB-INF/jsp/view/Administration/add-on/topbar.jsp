@@ -42,7 +42,8 @@
                 <li id="m02" class="dropdown<c:if test="${m02 eq true}"> active</c:if>">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Orders <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="<c:url value="/Administration/Orders/newOrders"/>">New Orders</a></li>
+                        <li><a href="<c:url value="/Administration/Orders/newOrders"/>">New Order Info</a></li>
+                        <li><a href="<c:url value="/Administration/Orders/sendMoneyInfo"/>">Order Send Money</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<c:url value="/Administration/SystemTopUp/list"/>">List Un-Submitted TopUp</a></li>
                     </ul>

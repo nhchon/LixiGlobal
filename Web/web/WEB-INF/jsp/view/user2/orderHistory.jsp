@@ -166,7 +166,7 @@
                                                     Top Up Mobile Phone
                                                 </div>
                                                 <div class="col-md-2" style="text-align: center;">
-                                                    USD <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/>
+                                                    1
                                                 </div>
                                                 <div class="col-md-4">
                                                     ${t.phone}

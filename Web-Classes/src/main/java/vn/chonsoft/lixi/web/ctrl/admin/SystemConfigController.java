@@ -152,7 +152,7 @@ public class SystemConfigController {
      * @param id
      * @return 
      */
-    @RequestMapping(value = "configs/delete/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "configs/delete/{id}", method = RequestMethod.GET)
     public ModelAndView saveConfig(Map<String, Object> model, @PathVariable Integer id){
         
         this.configService.delete(id);

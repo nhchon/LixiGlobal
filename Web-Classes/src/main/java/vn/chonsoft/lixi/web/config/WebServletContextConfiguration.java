@@ -55,6 +55,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
@@ -169,9 +170,17 @@ public class WebServletContextConfiguration  extends WebMvcConfigurerAdapter{
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        super.addInterceptors(registry);
 
+        WebContentInterceptor interceptor = new WebContentInterceptor();
+        interceptor.setCacheSeconds(0);
+        interceptor.setUseExpiresHeader(true);
+        interceptor.setUseCacheControlHeader(true);
+        interceptor.setUseCacheControlNoStore(true);
+        
+        registry.addInterceptor(interceptor);
         registry.addInterceptor(new LocaleChangeInterceptor());
+        
+        super.addInterceptors(registry);
     }
 
     @Bean

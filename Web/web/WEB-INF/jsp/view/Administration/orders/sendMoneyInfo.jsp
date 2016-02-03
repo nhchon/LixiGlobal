@@ -23,34 +23,17 @@
             
             function sent(id){
                 
-                overlayOn($('#rowO'+id));
-                $("#orderSubmitForm input[name=id]").val(id);
-                
-                $.ajax(
-                {
-                    url: '<c:url value="/Administration/Orders/submit2BK/"/>' + id,
-                    type: "GET",
-                    dataType: 'html',
-                    success: function (data, textStatus, jqXHR)
-                    {
-                        //data: return data from server
-                        $('#status'+id).html(data);
-                        /* */
-                        overlayOff();
-                    },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
-                        //if fails  
-                        overlayOff();
-                    }
-                });
+                if(confirm('Send payment notification of this order id '+ id + ' to BaoKim ???')){
+                    
+                    document.location.href = '<c:url value="/Administration/Orders/sendMoneyInfo/"/>' + id;
+                }
             }
             
             function cancel(id){
                 
                 if(confirm('Are you sure want to CANCEL this order id '+ id + ' ???')){
                     
-                    document.location.href = '<c:url value="/Administration/Orders/cancel/"/>' + id + '/info';
+                    document.location.href = '<c:url value="/Administration/Orders/cancel/"/>' + id + '/money';
                 }
             }
         </script>    
@@ -64,30 +47,14 @@
         <c:set var="PROCESSING" value="0"/>
         <c:set var="COMPLETED" value="1"/>
         <c:set var="CANCELED" value="2"/>
+        <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-            <li><a href="<c:url value="/Administration/Orders/newOrders/-1"/>">New Orders</a></li>
+            <li><a href="<c:url value="/Administration/Orders/sendMoneyInfo"/>">Order Send Money</a></li>
         </ul>
-        <h2 class="sub-header">New Orders</h2>
-        <div class="row">
-            <div class="col-md-12">
-                <form role="form" id="reportForm" action="<c:url value="/Administration/Orders/newOrders"/>" method="post">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="email">New Order's Status:</label>
-                                <select class="form-control" id="oStatus" name="oStatus">
-                                    <option value="">Please select status</option>
-                                    <option value="${NOT_YET_SUBMITTED}" <c:if test="${oStatus eq NOT_YET_SUBMITTED}">selected=""</c:if>>New Order</option>
-                                    <option value="${SENT_INFO}" <c:if test="${oStatus eq SENT_INFO}">selected=""</c:if>>Already Sent information to BaoKim Service</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" id="btnSubmit" class="btn btn-primary">Run Report</button>
-                </form>                
-            </div>
-        </div>
+
+        <!-- main -->
+        <h2 class="sub-header">Order Send Money</h2>
         <div class="row">
             <div class="col-sm-12">
                 <!-- Tab panes -->
@@ -103,8 +70,7 @@
                                         <th>Sender</th><%-- 4 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 5 --%>
                                         <th style="text-align: right;">Amount</th><%-- 6 --%>
-                                        <th>Status</th><%-- 7 --%>
-                                        <th style="text-align: right;">Action</th><%-- 8 --%>
+                                        <th style="text-align: right;">Action</th><%-- 7 --%>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -116,45 +82,23 @@
                                         <c:set var="totalAmountVnd" value="${totalAmountVnd + m.key.invoice.totalAmountVnd}"/>
                                         <c:set var="totalAmountUsd" value="${totalAmountUsd + m.key.invoice.totalAmount}"/>
                                         <tr id="rowO${m.key.id}">
-                                            <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/></td>
+                                            <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
+                                            </td>
                                             <td><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">${m.key.invoice.invoiceCode}</a></td>
                                             <td>${m.key.invoice.netTransId}</td>
                                             <td>${m.key.sender.fullName}</td>
                                             <td style="text-align: center;">
                                                 <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                                                    <c:if test="${not empty rio.gifts}">
                                                     ${rio.recipient.fullName}<br/><a href="javascript:alert('In Implementation');">${rio.recipient.beautyId}</a><br/>
-                                                    </c:if>
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: right;">
                                                 <c:forEach items="${m.value}" var="rio">
-                                                    <c:if test="${not empty rio.gifts}">
-                                                        <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                        <fmt:formatNumber value="${rio.allTotal.vnd}" pattern="###,###.##"/> VND<br/>
-                                                </c:if>
-                                                </c:forEach>
-                                            </td>
-                                            <td id="status${m.key.id}">
-                                                <c:forEach items="${m.value}" var="rio">
-                                                    <c:if test="${not empty rio.gifts}">
-                                                    <c:choose>
-                                                        <c:when test="${rio.bkStatus eq 'Not Sent'}">
-                                                           <span class="alert-danger">${rio.bkStatus}</span>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <span class="alert-success">${rio.bkStatus}</span>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                    <br/><br/>
-                                                    </c:if>
+                                                    <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD<br/><fmt:formatNumber value="${rio.allTotal.vnd}" pattern="###,###.##"/> VND<br/>
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: right;">
-                                                <c:if test="${oStatus eq NOT_YET_SUBMITTED}">
-                                                    <a href="javascript:sent(${m.key.id});">Send</a>
-                                                </c:if>
-                                                <c:if test="${oStatus eq SENT_INFO}"><a href="javascript:cancel(${m.key.id});">Cancel</a></c:if>
+                                                <a href="javascript:sent(${m.key.id});">Send</a> | <a href="javascript:cancel(${m.key.id});">Cancel</a>
                                             </td>
                                         </tr>
                                     </c:forEach>

@@ -10,12 +10,14 @@ package vn.chonsoft.lixi;
  */
 public enum EnumLixiOrderStatus {
     
-    UNFINISHED("-2"),
-    NOT_YET_SUBMITTED("-1"),
-    SENT_INFO("0"),
-    SENT_MONEY("1"),
-    COMPLETED("2"),
-    CANCELED("99")
+    UNFINISHED("-9"),
+    NOT_YET_SUBMITTED("-8"),
+    SENT_INFO("-7"),
+    SENT_MONEY("-6"),
+    /* BaoKim status */
+    PROCESSING("0"),
+    COMPLETED("1"),
+    CANCELED("2")
     ;
 
     private final String value;
