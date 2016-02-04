@@ -66,16 +66,15 @@
                                         <th nowrap>Item</th><%-- 2 --%>
                                         <th nowrap>Description</th><%-- 3 --%>
                                         <th>Amount</th><%-- 4 --%>
-                                        <th>Status</th><%-- 5 --%>
+                                        <th style="text-align:right;">Status</th><%-- 5 --%>
                                         <%-- <th>Action</th>6 --%>
-                                        <th>Error Message</th><%-- 7 --%>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <c:forEach items="${recGifts}" var="rio" varStatus="theCount">
                                         <tr id="rowR${m.key.id}">
                                             <td>${rio.recipient.fullName}</td>
-                                            <td colspan="6"></td>
+                                            <td colspan="4"></td>
                                         </tr>
                                         <c:forEach items="${rio.gifts}" var="g" varStatus="theCount2">
                                             <tr>
@@ -87,7 +86,7 @@
                                                     <br/>
                                                     <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> USD
                                                 </td>
-                                                <td>
+                                                <td style="text-align:right;">
                                                     <c:choose>
                                                         <c:when test="${g.bkStatus eq NOT_YET_SUBMITTED}">
                                                             <span class="alert-danger">Failed</span>
@@ -99,7 +98,6 @@
                                                     <br/>
                                                     <br/>
                                                 </td>
-                                                <td></td>
                                         </tr>
                                         </c:forEach>
                                         <c:forEach items="${rio.topUpMobilePhones}" var="t" varStatus="theCount2">
@@ -116,9 +114,6 @@
                                                     <br/>
                                                     <br/>
                                                 </td>
-                                                <td>
-                                                </td>
-                                                <td></td>
                                         </tr>
                                         </c:forEach>
                                     </c:forEach>

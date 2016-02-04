@@ -31,6 +31,12 @@
                     $('#transInfo').show();
                 }
             }
+            
+            function callPrint(){
+                //alert('hello');
+                window.focus();
+                window.print();
+            }
         </script>
     </jsp:attribute>
 
@@ -48,7 +54,7 @@
                             <c:if test="${empty LIXI_ORDER.invoice}">${LIXI_ORDER.id}</c:if>
                         </div>
                         <div class="col-md-6" style="text-align: right;">
-                            <button class="btn btn-default">View or Print Invoice</button>
+                            <button class="btn btn-default" onclick="callPrint()">View or Print Invoice</button>
                         </div>
                     </div>
                     <div class="panel panel-default">

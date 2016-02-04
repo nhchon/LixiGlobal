@@ -36,6 +36,29 @@
                     document.location.href = '<c:url value="/Administration/Orders/cancel/"/>' + id + '/money';
                 }
             }
+            
+            function viewRecipient(id) {
+                $.get('<c:url value="/Administration/SystemRecipient/view/"/>' + id, function (data) {
+                    $('#editRecipientContent').html(data);
+                    $('#editRecipientModal').modal({show: true});
+
+                    $('#editRecipientModal').on('shown.bs.modal', function () {
+                        // TODO
+                    })
+                });
+            }
+
+            function viewSender(id) {
+                $.get('<c:url value="/Administration/SystemSender/view/"/>' + id, function (data) {
+                    $('#editRecipientContent').html(data);
+                    $('#editRecipientModal').modal({show: true});
+
+                    $('#editRecipientModal').on('shown.bs.modal', function () {
+                        // TODO
+                    })
+                });
+            }
+            
         </script>    
     </jsp:attribute>
     <jsp:body>
@@ -86,10 +109,10 @@
                                             </td>
                                             <td><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">${m.key.invoice.invoiceCode}</a></td>
                                             <td>${m.key.invoice.netTransId}</td>
-                                            <td>${m.key.sender.fullName}</td>
+                                            <td>${m.key.sender.fullName}<br/><a href="javascript:viewSender(${m.key.sender.id});">${m.key.sender.beautyId}</a></td>
                                             <td style="text-align: center;">
                                                 <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                                                    ${rio.recipient.fullName}<br/><a href="javascript:alert('In Implementation');">${rio.recipient.beautyId}</a><br/>
+                                                    ${rio.recipient.fullName}<br/><a href="javascript:viewRecipient(${rio.recipient.id});">${rio.recipient.beautyId}</a><br/>
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: right;">
@@ -149,6 +172,11 @@
                 </table>
             </div>
         </div>
-                                            
+        <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" id="editRecipientContent">
+                </div>
+            </div>
+        </div>
     </jsp:body>
 </template:Admin>

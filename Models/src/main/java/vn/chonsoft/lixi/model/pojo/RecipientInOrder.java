@@ -34,6 +34,12 @@ public class RecipientInOrder {
     
     private List<TopUpMobilePhone> topUpMobilePhones;
 
+    private SumVndUsd giftTotal = null;
+    private SumVndUsd phoneCardTotal = null;
+    
+    private SumVndUsd topUpTotal = null;
+    private SumVndUsd allTotal = null;
+    
     public Long getOrderId() {
         return orderd;
     }
@@ -90,7 +96,7 @@ public class RecipientInOrder {
         this.topUpMobilePhones = topUpMobilePhones;
     }
     
-    public SumVndUsd getGiftTotal(){
+    private SumVndUsd calculateGiftTotal(){
         
         /* */
         double buy = getLxExchangeRate().getBuy();
@@ -113,11 +119,25 @@ public class RecipientInOrder {
         return new SumVndUsd("LIXI_GIFT_TYPE", sumGiftVND, sumGiftUSD);
     }
     
+    
     /**
      * 
      * @return 
      */
-    public SumVndUsd getPhoneCardTotal(){
+    private SumVndUsd getGiftTotal(){
+        
+        if(giftTotal == null){
+            giftTotal = calculateGiftTotal();
+        }
+        
+        return giftTotal;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    private SumVndUsd calculatePhoneCardTotal(){
         
         /* */
         double buy = getLxExchangeRate().getBuy();
@@ -135,10 +155,15 @@ public class RecipientInOrder {
         return new SumVndUsd("LIXI_PHONE_CARD_TYPE", sumBuyCardUSD * buy, sumBuyCardUSD);
     }
     
-    public SumVndUsd getTopUpTotal(){
+    public SumVndUsd getPhoneCardTotal(){
         
-        /* */
-        double buy = getLxExchangeRate().getBuy();
+        if(phoneCardTotal == null)
+            phoneCardTotal = calculatePhoneCardTotal();
+        
+        return phoneCardTotal;
+    }
+    
+    private SumVndUsd calculateTopUpTotal(){
         
         // top up mobile phone
         double sumTopUpUSD = 0;
@@ -150,6 +175,14 @@ public class RecipientInOrder {
             }
         }
         return new SumVndUsd("LIXI_TOP_UP_TYPE", sumTopUpVND, sumTopUpUSD);
+    }
+    
+    public SumVndUsd getTopUpTotal(){
+        
+        if(topUpTotal == null)
+            topUpTotal = calculateTopUpTotal();
+        
+        return topUpTotal;
     }
     
     public SumVndUsd getAllTotal(){

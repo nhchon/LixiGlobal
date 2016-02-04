@@ -30,6 +30,8 @@ public interface UserService {
     
     User findByEmail(String email);
     
+    User findById(Long id);
+    
     int updateEnaled(Boolean enabled, Long id);
 
     int updateActivated(Boolean activated, Long id);

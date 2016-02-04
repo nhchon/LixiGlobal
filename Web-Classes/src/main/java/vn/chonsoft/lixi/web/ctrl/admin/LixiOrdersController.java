@@ -78,12 +78,53 @@ public class LixiOrdersController {
         return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue(), true, true));
     }
     
+    /**
+     * 
+     * @param model
+     * @param oStatus
+     * @return 
+     */
     @RequestMapping(value = "newOrders/{oStatus}", method = RequestMethod.GET)
     public ModelAndView listNewOrders(Map<String, Object> model, @PathVariable String oStatus){
         
-        //Page<LixiOrder> orders = this.lxOrderService.findByLixiStatus(LiXiConstants.LIXI_ORDER_NOT_YET_SUBMITTED, page);
+        /*
+        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(oStatus);
         
-        //model.put(LiXiConstants.LIXI_ORDERS, orders);
+        if(orders != null){
+            Iterator<LixiOrder> iterator = orders.iterator();
+            
+            while(iterator.hasNext()){
+                LixiOrder o = iterator.next();
+                if(o.getGifts() == null || o.getGifts().isEmpty()){
+                    //remove the order has no gift. We don't need sent to baokim
+                    iterator.remove();
+                }
+            }
+        }
+        
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        
+        if(orders != null){
+            
+            orders.forEach(o -> {
+                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+            });
+        }
+        
+        model.put("mOs", mOs);
+        */
+        return new ModelAndView("Administration/orders/newOrderInfo");
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param oStatus
+     * @return 
+     */
+    @RequestMapping(value = "newOrders/ajax/{oStatus}", method = RequestMethod.GET)
+    public ModelAndView getListNewOrders(Map<String, Object> model, @PathVariable String oStatus){
+        
         List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(oStatus);
         
         if(orders != null){
@@ -109,7 +150,7 @@ public class LixiOrdersController {
         
         model.put("mOs", mOs);
         
-        return new ModelAndView("Administration/orders/newOrderInfo");
+        return new ModelAndView("Administration/orders/newOrderInfoAjax");
     }
     
     /**

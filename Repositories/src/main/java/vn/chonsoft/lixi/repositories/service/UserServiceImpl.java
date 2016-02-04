@@ -26,6 +26,16 @@ public class UserServiceImpl implements UserService{
     
     /**
      * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public User findById(Long id){
+        
+        return this.userRepository.findOne(id);
+    }
+    /**
+     * 
      * @param activated
      * @param page
      * @return 

@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.web.ctrl.admin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,25 @@ public class SystemRecipientController {
     
     @Autowired
     private ScalarFunctionService sfService;
+    
+    /**
+     *
+     * @param model
+     * @param id
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "view/{id}", method = RequestMethod.GET)
+    public ModelAndView viewRecipient(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
+
+        /* get recipient */
+        Recipient rec = this.recService.findById(id);
+
+        model.put("rec", rec);
+
+        return new ModelAndView("recipient/viewRecipientModal");
+    }
+    
     
     /**
      * 

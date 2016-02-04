@@ -525,7 +525,8 @@ public class LiXiVatGiaUtils {
                 //
                 log.info("///////////////////////////////////////////////////");
                 log.info("Send payment to baokim baokim");
-
+                log.info("url: " + submitUrl);
+                
                 LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, p, LixiSubmitOrderResult.class);
 
                 log.info("bk message:" + result.getData().getMessage());

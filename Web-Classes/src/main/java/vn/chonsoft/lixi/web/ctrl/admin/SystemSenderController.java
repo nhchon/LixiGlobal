@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.repositories.service.UserService;
@@ -37,6 +36,23 @@ public class SystemSenderController {
     
     @Autowired
     private ScalarFunctionService sfService;
+    
+    /**
+     *
+     * @param model
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "view/{id}", method = RequestMethod.GET)
+    public ModelAndView viewRecipient(Map<String, Object> model, @PathVariable Long id) {
+
+        /* get recipient */
+        User sender = this.uService.findById(id);
+
+        model.put("sender", sender);
+
+        return new ModelAndView("Administration/orders/viewSenderModal");
+    }
     
     /**
      * 

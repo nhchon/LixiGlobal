@@ -599,17 +599,21 @@ public class LiXiUtils {
                 recInOrder.setGifts(recGifts.get(rec));
 
             }
+            
             if (recPhoneCards.containsKey(rec)) {
 
                 recInOrder.setBuyPhoneCards(recPhoneCards.get(rec));
 
             }
+            
             if (recTopUps.containsKey(rec)) {
 
                 recInOrder.setTopUpMobilePhones(recTopUps.get(rec));
 
             }
-            //
+            /* */
+            recInOrder.getAllTotal();
+            
             recs.add(recInOrder);
         }
         listRecInOrder.addAll(recs);
