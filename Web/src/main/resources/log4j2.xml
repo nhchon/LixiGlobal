@@ -5,7 +5,7 @@
             <PatternLayout
                     pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <RollingFile name="ChonSoftLixiFileAppender" fileName="${catalina.base}/logs/lixi.log"
+        <RollingFile name="ChonSoftLixiFileAppender" fileName="${catalina.home}/logs/lixi.log"
                      filePattern="${catalina.base}/logs/lixi-support-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout>
                 <pattern>%d{HH:mm:ss.SSS} [%t] %X{id} %X{username} %-5level %c{36} %l: %msg%n</pattern>

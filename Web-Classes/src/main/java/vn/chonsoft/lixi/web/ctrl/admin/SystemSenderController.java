@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.repositories.service.UserService;
@@ -37,6 +38,46 @@ public class SystemSenderController {
     @Autowired
     private ScalarFunctionService sfService;
     
+    /**
+     * 
+     * (Ajax call)
+     * 
+     * @param model
+     * @param id
+     * @param oStatus
+     * @return 
+     */
+    @RequestMapping(value = "action/{id}/{oStatus}", method = RequestMethod.GET)
+    public ModelAndView action(Map<String, Object> model, @PathVariable long id, @PathVariable String oStatus){
+        
+        /* failed is default */
+        model.put("error", 1);
+        
+        /* get user */
+        User u = this.uService.findById(id);
+        if(u == null){
+            // NOTHING TO-DO
+        }
+        else{
+            
+            if(LiXiGlobalConstants.OFF.equals(oStatus)){
+                
+                u.setActivated(false);
+            }
+            else if(LiXiGlobalConstants.ON.equals(oStatus)){
+                
+                u.setActivated(true);
+            }
+            
+            /* update user */
+            this.uService.save(u);
+            
+            model.put("error", 0);
+        }
+        
+        /* */
+        return new ModelAndView("Administration/ajax/simple-message");
+    }    
     /**
      *
      * @param model

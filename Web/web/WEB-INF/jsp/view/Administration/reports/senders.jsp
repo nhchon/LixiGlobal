@@ -30,6 +30,43 @@
                 });
             });
             
+            function doAction(id, action){
+                
+                overlayOn($('#rowSender'+id));
+                
+                $.ajax(
+                {
+                    url: '<c:url value="/Administration/SystemSender/action/"/>' + id + '/' + action,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR)
+                    {
+                        //data: return data from server
+                        /* */
+                        if(data.error === '0'){
+                            
+                            if(action === 'On'){
+                                /* */
+                                $('#tdStatus' + id).html('Active')
+                                $('#tdAction' + id).html('On | <a href="javascript:doAction('+id+', \'Off\');">Off</a>');
+                            }
+                            else if(action === 'Off'){
+                                /* */
+                                $('#tdStatus' + id).html('Deactivated');
+                                $('#tdAction' + id).html('<a href="javascript:doAction('+id+', \'On\');">Off</a> | On');
+                            }
+                        }
+                        
+                        overlayOff();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        //if fails  
+                        overlayOff();
+                    }
+                });
+            }
+            
             function jump(page, size){
                 $('#paging.page').val(page);
                 $('#paging.size').val(size);
@@ -110,7 +147,7 @@
                                     <c:forEach items="${rS}" var="s" varStatus="theCount">
                                         <c:set var="countS" value="${theCount.count}"/>
                                         <c:set var="totalAmountUsd" value="${totalAmountUsd + s.sumInvoice}"/>
-                                        <tr>
+                                        <tr id="rowSender${s.id}">
                                             <td>${s.beautyId}</td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${s.createdDate}"/></td>
                                             <td>${s.fullName}</td>
@@ -118,7 +155,7 @@
                                                 ${s.email}<br/>${s.phone}
                                             </td>
                                             <td><fmt:formatNumber value="${s.sumInvoice}" pattern="###,###.##"/> USD</td>
-                                            <td nowrap>
+                                            <td id="tdStatus${s.id}" nowrap>
                                                 <c:if test="${s.activated eq true}">
                                                     Active
                                                 </c:if>
@@ -126,10 +163,17 @@
                                                     Deactivated
                                                 </c:if>
                                             </td>
-                                            <td style="text-align: right;">
-                                                <a href="javascript:alert('In Implementation');">On</a>
-                                                |
-                                                <a href="javascript:alert('In Implementation');">Off</a>
+                                            <td id="tdAction${s.id}" style="text-align: right;">
+                                                <c:if test="${s.activated eq true}">
+                                                    On
+                                                    |
+                                                    <a href="javascript:doAction(${s.id}, 'Off');">Off</a>
+                                                </c:if>
+                                                <c:if test="${s.activated eq false}">
+                                                    <a href="javascript:doAction(${s.id}, 'On');">On</a>
+                                                    |
+                                                    Off
+                                                </c:if>
                                             </td>
                                         </tr>
                                     </c:forEach>

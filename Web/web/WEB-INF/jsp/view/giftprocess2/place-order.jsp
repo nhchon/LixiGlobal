@@ -517,7 +517,7 @@
                                                 <div class="col-md-4">
                                                     <div class="checkbox">
                                                         <label><input name="setting" value="1" type="radio" <c:if test="${LIXI_ORDER.setting eq 1}">checked="checked"</c:if> class="custom-checkbox-input" style="margin-top: 6px;"/>
-                                                            Allow Refund to Receiver
+                                                            Allow Refund ( No refund for mobile top up )
                                                         </label>
                                                     </div>
                                                 </div>

@@ -7,6 +7,26 @@
         <script type="text/javascript">
             
             jQuery(document).ready(function () {
+                
+                $('input[name=oIds]').change(function(){
+                    
+                    var count = 0;
+                    var totalVnd = 0;
+                    var totalUsd = 0;
+                    $('input[name=oIds]').each(function(){
+                       
+                       if($(this).prop( "checked" )){
+                           //alert($(this).attr('totalAmountVnd'));
+                           count++;
+                           totalVnd = totalVnd + parseFloat($(this).attr('totalAmountVnd'));
+                           totalUsd = totalUsd + parseFloat($(this).attr('totalAmountUsd'));
+                       }
+                    });
+                    $('#tdOnSelectCount').html(count + '');
+                    $('#tdOnSelectVnd').html(totalVnd + '');
+                    $('#tdOnSelectUsd').html(totalUsd.toFixed(2) + '');
+                });
+                
                 $('#btnSubmit').click(function () {
 
                     if ($('#oStatus').val() === '') {
@@ -87,6 +107,7 @@
                             <table class="table table-hover table-responsive table-striped">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th nowrap>Date</th><%-- 1 --%>
                                         <th nowrap>Order</th><%-- 2 --%>
                                         <th nowrap>Transaction No</th><%-- 3 --%>
@@ -105,6 +126,7 @@
                                         <c:set var="totalAmountVnd" value="${totalAmountVnd + m.key.invoice.totalAmountVnd}"/>
                                         <c:set var="totalAmountUsd" value="${totalAmountUsd + m.key.invoice.totalAmount}"/>
                                         <tr id="rowO${m.key.id}">
+                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalAmountVnd="${m.key.invoice.totalAmountVnd}" totalAmountUsd="${m.key.invoice.totalAmount}"/></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
                                             <td><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">${m.key.invoice.invoiceCode}</a></td>
@@ -112,12 +134,16 @@
                                             <td>${m.key.sender.fullName}<br/><a href="javascript:viewSender(${m.key.sender.id});">${m.key.sender.beautyId}</a></td>
                                             <td style="text-align: center;">
                                                 <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
+                                                    <c:if test="${not empty rio.gifts}">
                                                     ${rio.recipient.fullName}<br/><a href="javascript:viewRecipient(${rio.recipient.id});">${rio.recipient.beautyId}</a><br/>
+                                                    </c:if>
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: right;">
                                                 <c:forEach items="${m.value}" var="rio">
+                                                    <c:if test="${not empty rio.gifts}">
                                                     <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD<br/><fmt:formatNumber value="${rio.allTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                    </c:if>
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: right;">
@@ -133,7 +159,31 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <table class="table table-responsive" style="font-size: 14px;">
+                    <thead>
+                    <th colspan="3">On-Select Summary:</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total:</td>
+                            <td style="text-align: right;" id="tdOnSelectCount"></td>
+                            <td>Receivers</td>
+                        </tr>
+                        <tr>
+                            <td>Total Amount(fee, tax,...):</td>
+                            <td style="text-align: right;" id="tdOnSelectUsd"></td>
+                            <td>USD</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="text-align: right;" id="tdOnSelectVnd"></td>
+                            <td>VND</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4"></div>
             <div class="col-md-4">
                 <table class="table table-responsive" style="font-size: 14px;">
                     <thead>
@@ -143,7 +193,7 @@
                         <tr>
                             <td>Total:</td>
                             <td style="text-align: right;">${countRec}</td>
-                            <td>Receivers</td>
+                            <td>Record(s)</td>
                         </tr>
                         <tr>
                             <td>Total Amount(fee, tax,...):</td>
@@ -171,6 +221,13 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4" style="text-align: center;">
+                <button class="btn btn-primary" onclick="alert('in working')">Sent Selected Orders</button>
+            </div>
+            <div class="col-md-4"></div>
         </div>
         <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog modal-lg" role="document">

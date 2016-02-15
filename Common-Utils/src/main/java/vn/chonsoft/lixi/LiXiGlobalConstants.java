@@ -16,6 +16,10 @@ public abstract class LiXiGlobalConstants {
     
     public static final String S = "S";
     
+    public static final String ON = "On";
+    
+    public static final String OFF = "Off";
+    
     public static final String TRANS_STATUS_IN_PROGRESS = "In Progress";
     
     public static final String TRANS_STATUS_DECLINED = "Declined";

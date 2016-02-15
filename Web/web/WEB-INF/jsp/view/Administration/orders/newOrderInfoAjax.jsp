@@ -68,7 +68,7 @@
                                             </c:if>
                                         </c:forEach>
                                     </td>
-                                    <td style="text-align: right;">
+                                    <td style="text-align: right;" id="tdAction${m.key.id}">
                                         <c:if test="${oStatus eq NOT_YET_SUBMITTED}">
                                             <a href="javascript:sent(${m.key.id});">Send</a>
                                         </c:if>

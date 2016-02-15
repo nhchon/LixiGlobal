@@ -39,6 +39,11 @@
                     {
                         //data: return data from server
                         $('#status'+id).html(data);
+                        
+                        if(data.indexOf('Passed') > -1){
+                            /* remove sent action */
+                            $('#tdAction'+id).html('');
+                        }
                         /* */
                         overlayOff();
                     },
@@ -110,8 +115,8 @@
                                 <label for="email">New Order's Status:</label>
                                 <select class="form-control" id="oStatus" name="oStatus">
                                     <option value="">Please select status</option>
-                                    <option value="${NOT_YET_SUBMITTED}" <c:if test="${oStatus eq NOT_YET_SUBMITTED}">selected=""</c:if>>New Order</option>
-                                    <option value="${SENT_INFO}" <c:if test="${oStatus eq SENT_INFO}">selected=""</c:if>>Already Sent information to BaoKim Service</option>
+                                    <option value="${NOT_YET_SUBMITTED}" <c:if test="${oStatus eq NOT_YET_SUBMITTED}">selected=""</c:if>>Failed Sent</option>
+                                    <option value="${SENT_INFO}" <c:if test="${oStatus eq SENT_INFO}">selected=""</c:if>>Success Sent</option>
                                 </select>
                             </div>
                         </div>
@@ -120,7 +125,7 @@
                 </form>                
             </div>
         </div>
-                                <div id="divContent"></div>
+        <div id="divContent"></div>
         <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content" id="editRecipientContent">

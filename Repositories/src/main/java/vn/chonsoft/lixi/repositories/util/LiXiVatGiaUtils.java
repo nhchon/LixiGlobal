@@ -497,48 +497,58 @@ public class LiXiVatGiaUtils {
 
             final RestTemplate restTemplate = new RestTemplate(requestFactory);
 
-            String submitUrl = baokimProp.getProperty("baokim.payment_notification");
+            String submitUrl = baokimProp.getProperty("baokim.single_payment_notification");
             boolean updateOrderStatus = true;
-            List<BaoKimPaymentNotification> dataL = new ArrayList<>();
-            BaoKimPaymentNotifications p = new BaoKimPaymentNotifications();
             SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             for (LixiOrderGift gift : order.getGifts()) {
 
+                try {
+
                     String id = gift.getId().toString();
                     String amount = gift.getProductPrice() + "";
                     String dateTransf = dFormat.format(Calendar.getInstance().getTime());
+                    /**
+                     *
+                     * Setting up data to be sent to REST service
+                     *
+                     */
+                    MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
+                    vars.add("order_id", gift.getId().toString());
+                    vars.add("amount", amount);
+                    vars.add("date_transfer", dateTransf);
+                    //
+                    log.info("///////////////////////////////////////////////////");
+                    log.info("sent money order");
+                    log.info("order_id:" + gift.getId().toString());
+                    log.info("amount:" + amount);
+                    log.info("date_transfer:" + dateTransf);
+                    log.info("///////////////////////////////////////////////////");
 
-                    BaoKimPaymentNotification data = new BaoKimPaymentNotification(id, amount, dateTransf);
-                    
-                    dataL.add(data);
+                    LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
+
+                    gift.setBkStatus(EnumLixiOrderStatus.SENT_MONEY.getValue());
+                    gift.setBkMessage(result.getData().getMessage());
+                    log.info("bk message:" + result.getData().getMessage());
+                    log.info("order id:" + result.getData().getOrder_id());
+                    log.info("///////////////////////////////////////////////////");
+                    // update
+                    orderGiftService.save(gift);
+                        
+                } catch (Exception e) {
+                    // error
+                    gift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
+                    gift.setBkMessage(e.getMessage());
+                    // update
+                    orderGiftService.save(gift);
+                    // don't update order status
+                    updateOrderStatus = false;
+
+                    // log error
+                    log.info(e.getMessage(), e);
+                }
             }
 
-            try {
-
-                p.setData(dataL);
-                /**
-                 *
-                 * Setting up data to be sent to REST service
-                 *
-                 */
-                //
-                log.info("///////////////////////////////////////////////////");
-                log.info("Send payment to baokim baokim");
-                log.info("url: " + submitUrl);
-                
-                LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, p, LixiSubmitOrderResult.class);
-
-                log.info("bk message:" + result.getData().getMessage());
-                log.info("///////////////////////////////////////////////////");
-            } catch (Exception e) {
-                // don't update order status
-                updateOrderStatus = false;
-
-                // log error
-                log.info(e.getMessage(), e);
-            }
-            
             // update order
             if (updateOrderStatus) {
 
