@@ -505,39 +505,40 @@ public class LiXiVatGiaUtils {
 
                 try {
 
-                    String id = gift.getId().toString();
-                    String amount = gift.getProductPrice() + "";
-                    String dateTransf = dFormat.format(Calendar.getInstance().getTime());
-                    /**
-                     *
-                     * Setting up data to be sent to REST service
-                     *
-                     */
-                    MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
-                    vars.add("order_id", gift.getId().toString());
-                    vars.add("amount", amount);
-                    vars.add("date_transfer", dateTransf);
-                    //
-                    log.info("///////////////////////////////////////////////////");
-                    log.info("sent money order");
-                    log.info("order_id:" + gift.getId().toString());
-                    log.info("amount:" + amount);
-                    log.info("date_transfer:" + dateTransf);
-                    log.info("///////////////////////////////////////////////////");
+                    if (EnumLixiOrderStatus.SENT_INFO.getValue().equals(gift.getBkStatus())) {
+                        String id = gift.getId().toString();
+                        String amount = gift.getProductPrice() + "";
+                        String dateTransf = dFormat.format(Calendar.getInstance().getTime());
+                        /**
+                         *
+                         * Setting up data to be sent to REST service
+                         *
+                         */
+                        MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
+                        vars.add("order_id", gift.getId().toString());
+                        vars.add("amount", amount);
+                        vars.add("date_transfer", dateTransf);
+                        //
+                        log.info("///////////////////////////////////////////////////");
+                        log.info("sent money order");
+                        log.info("order_id:" + gift.getId().toString());
+                        log.info("amount:" + amount);
+                        log.info("date_transfer:" + dateTransf);
+                        log.info("///////////////////////////////////////////////////");
 
-                    LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
+                        LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
 
-                    gift.setBkStatus(EnumLixiOrderStatus.SENT_MONEY.getValue());
-                    gift.setBkMessage(result.getData().getMessage());
-                    log.info("bk message:" + result.getData().getMessage());
-                    log.info("order id:" + result.getData().getOrder_id());
-                    log.info("///////////////////////////////////////////////////");
-                    // update
-                    orderGiftService.save(gift);
-                        
+                        gift.setBkStatus(EnumLixiOrderStatus.SENT_MONEY.getValue());
+                        gift.setBkMessage(result.getData().getMessage());
+                        log.info("bk message:" + result.getData().getMessage());
+                        log.info("order id:" + result.getData().getOrder_id());
+                        log.info("///////////////////////////////////////////////////");
+                        // update
+                        orderGiftService.save(gift);
+                    }
                 } catch (Exception e) {
                     // error
-                    gift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
+                    gift.setBkStatus(EnumLixiOrderStatus.SENT_INFO.getValue());
                     gift.setBkMessage(e.getMessage());
                     // update
                     orderGiftService.save(gift);

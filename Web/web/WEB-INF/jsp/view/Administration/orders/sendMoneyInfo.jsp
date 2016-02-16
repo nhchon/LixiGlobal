@@ -27,19 +27,25 @@
                     $('#tdOnSelectUsd').html(totalUsd.toFixed(2) + '');
                 });
                 
-                $('#btnSubmit').click(function () {
-
-                    if ($('#oStatus').val() === '') {
-
-                        alert("Please select the order's status");
-                        $('#oStatus').focus();
-
-                        //return false;
-                    }
-
-                    document.location.href = '<c:url value="/Administration/Orders/newOrders/"/>' + $('#oStatus').val();
-                });
             });
+
+            function checkForm(){
+                
+                var rs = false;
+                $('input[name=oIds]').each(function(){
+                       
+                       if($(this).prop( "checked" )){
+                           //alert($(this).attr('totalAmountVnd'));
+                           rs =  true;
+                       }
+                });
+                
+                if(rs === false){
+                    alert('Please check atleast one order');
+                }
+                
+                return rs;
+            }
             
             function sent(id){
                 
@@ -98,6 +104,8 @@
 
         <!-- main -->
         <h2 class="sub-header">Order Send Money</h2>
+        <c:url value="/Administration/Orders/sendMoneyInfo" var="postMoneyInfo"/>
+        <form action="${postMoneyInfo}" method="post" onsubmit="return checkForm()">
         <div class="row">
             <div class="col-sm-12">
                 <!-- Tab panes -->
@@ -168,7 +176,7 @@
                         <tr>
                             <td>Total:</td>
                             <td style="text-align: right;" id="tdOnSelectCount"></td>
-                            <td>Receivers</td>
+                            <td>Record(s)</td>
                         </tr>
                         <tr>
                             <td>Total Amount(fee, tax,...):</td>
@@ -225,10 +233,12 @@
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4" style="text-align: center;">
-                <button class="btn btn-primary" onclick="alert('in working')">Sent Selected Orders</button>
+                <button class="btn btn-primary" type="submit">Sent Selected Orders</button>
             </div>
             <div class="col-md-4"></div>
         </div>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        </form>
         <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content" id="editRecipientContent">

@@ -202,13 +202,6 @@
                                         </tr>
                                     </c:forEach>
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="9">
-                                            
-                                        </td>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                     </div>

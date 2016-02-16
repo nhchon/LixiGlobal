@@ -206,6 +206,28 @@ public class LixiOrdersController {
         
         return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
     }
+    
+    /**
+     * 
+     * @param model
+     * @param orderIds
+     * @return 
+     */
+    @RequestMapping(value = "sendMoneyInfo", method = RequestMethod.POST)
+    public ModelAndView sendMoneyInfos(Map<String, Object> model, @RequestParam(value="oIds") Long[] orderIds){
+        
+        if(orderIds != null && orderIds.length > 0){
+            
+            List<LixiOrder> orders = this.lxOrderService.findAll(Arrays.asList(orderIds));
+            for(LixiOrder order : orders){
+                // send to bao kim
+                lxAsyncMethods.sendPaymentInfoToBaoKim(order);
+            }
+        }
+        //
+        return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
+    }
+    
     /**
      * 
      * @param model
@@ -255,24 +277,4 @@ public class LixiOrdersController {
         }
     }
     
-    /**
-     * 
-     * @param model
-     * @param orderIds
-     * @return 
-     */
-    @RequestMapping(value = "sendToBaoKim", method = RequestMethod.POST)
-    public ModelAndView submitOrdersToBaoKim(Map<String, Object> model, @RequestParam(value="orderId") Long[] orderIds){
-        
-        if(orderIds != null && orderIds.length > 0){
-            
-            List<LixiOrder> orders = this.lxOrderService.findAll(Arrays.asList(orderIds));
-            for(LixiOrder order : orders){
-                // send to bao kim
-                LiXiVatGiaUtils.getInstance().submitOrdersToBaoKim(order, lxOrderService, lxogiftService);
-            }
-        }
-        //
-        return new ModelAndView(new RedirectView("/Administration/Orders/newOrders", true, true));
-    }
 }
