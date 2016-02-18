@@ -2,7 +2,7 @@
  * Lixi is a Vietnamese word for small gift of money
  * 2015 @ Lixi Global
  */
-package vn.chonsoft.lixi.model.pojo;
+package vn.chonsoft.lixi.pojo;
 
 /**
  *
@@ -15,11 +15,11 @@ public class Exrate {
     /* */
     private String name;
     /* */
-    private Double buy;
+    private double buy;
     /* */
-    private Double transfer;
+    private double transfer;
     /* */
-    private Double sell;
+    private double sell;
 
     public String getCode() {
         return code;
@@ -37,27 +37,27 @@ public class Exrate {
         this.name = name;
     }
 
-    public Double getBuy() {
+    public double getBuy() {
         return buy;
     }
 
-    public void setBuy(Double buy) {
+    public void setBuy(double buy) {
         this.buy = buy;
     }
 
-    public Double getTransfer() {
+    public double getTransfer() {
         return transfer;
     }
 
-    public void setTransfer(Double transfer) {
+    public void setTransfer(double transfer) {
         this.transfer = transfer;
     }
 
-    public Double getSell() {
+    public double getSell() {
         return sell;
     }
 
-    public void setSell(Double sell) {
+    public void setSell(double sell) {
         this.sell = sell;
     }
     

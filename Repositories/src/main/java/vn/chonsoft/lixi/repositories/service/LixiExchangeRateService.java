@@ -6,7 +6,7 @@ package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
-import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 
@@ -17,6 +17,8 @@ import vn.chonsoft.lixi.model.LixiExchangeRate;
 @Validated
 public interface LixiExchangeRateService {
     
+    @Scheduled(fixedDelay=1*60*60*1000, initialDelay=60*1000)
+    void autoUpdateExFromVCB();
     /**
      * 
      * @param lx 

@@ -21,6 +21,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -95,7 +96,7 @@ public class SystemRecipientController {
         
         model.put("rS", rS);
         model.put("pRs", ps);
-        model.put("VCB", LiXiUtils.getVCBExchangeRates());
+        model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
         
         return new ModelAndView("Administration/reports/receivers");
     }

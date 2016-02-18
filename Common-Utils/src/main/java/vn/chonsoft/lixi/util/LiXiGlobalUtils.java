@@ -13,14 +13,25 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
 import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.pojo.BankExchangeRate;
+import vn.chonsoft.lixi.pojo.Exrate;
 
 /**
  *
  * @author chonnh
  */
 public abstract class LiXiGlobalUtils {
+    
+    private static final Logger log = LogManager.getLogger(LiXiGlobalUtils.class);
     
     public static double round2Decimal(double a) {
 
@@ -201,6 +212,62 @@ public abstract class LiXiGlobalUtils {
         br.insert(7, '-');
         
         return br.toString();
+    }
+ 
+    /**
+     *
+     * @return
+     */
+    public static BankExchangeRate getVCBExchangeRates() {
+
+        try {
+
+            // get page: http://www.vietcombank.com.vn/ExchangeRates/ExrateXML.aspx
+            Document doc = Jsoup.connect(LiXiGlobalConstants.VCB_EXCHANGE_RATES_PAGE)
+                    .timeout(0)
+                    .maxBodySize(0)
+                    .userAgent("Mozilla")
+                    .parser(Parser.xmlParser())
+                    .get();
+
+            //
+            BankExchangeRate ber = new BankExchangeRate();
+            ber.setTime(doc.select("DateTime").first().text().trim());
+            // name
+            String source = doc.select("Source").first().text().trim();
+            String[] ns = source.split(" - ");
+            ber.setBankName(ns[0]);
+            ber.setBankShortName(ns[1]);
+
+            /* */
+            Elements exrates = doc.select("Exrate");
+            if (exrates.size() > 0) {
+
+                List<Exrate> exs = new ArrayList<>();
+                for (Element e : exrates) {
+
+                    Exrate ex = new Exrate();
+                    ex.setCode(e.attr("CurrencyCode"));
+                    ex.setName(e.attr("CurrencyName"));
+                    ex.setBuy(Double.parseDouble(e.attr("Buy")));
+                    ex.setTransfer(Double.parseDouble(e.attr("Transfer")));
+                    ex.setSell(Double.parseDouble(e.attr("Sell")));
+
+                    exs.add(ex);
+                    //log.debug(e.attr("CurrencyCode") + " : " + e.attr("Buy") + " : " + e.attr("Transfer") + " : " + e.attr("Sell"));
+                }
+
+                ber.setExrates(exs);
+
+                return ber;
+            }
+        } catch (Exception e) {
+
+            log.error("getVCBExchangeRates error:", e);
+
+        }
+
+        return null;
     }
     
 }

@@ -47,10 +47,10 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.VatgiaProduct;
-import vn.chonsoft.lixi.model.pojo.BankExchangeRate;
+import vn.chonsoft.lixi.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.EnumTransactionStatus;
-import vn.chonsoft.lixi.model.pojo.Exrate;
+import vn.chonsoft.lixi.pojo.Exrate;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
@@ -741,59 +741,4 @@ public class LiXiUtils {
 
     }
 
-    /**
-     *
-     * @return
-     */
-    public static BankExchangeRate getVCBExchangeRates() {
-
-        try {
-
-            // get page: http://www.vietcombank.com.vn/ExchangeRates/ExrateXML.aspx
-            Document doc = Jsoup.connect(LiXiConstants.VCB_EXCHANGE_RATES_PAGE)
-                    .timeout(0)
-                    .maxBodySize(0)
-                    .userAgent("Mozilla")
-                    .parser(Parser.xmlParser())
-                    .get();
-
-            //
-            BankExchangeRate ber = new BankExchangeRate();
-            ber.setTime(doc.select("DateTime").first().text().trim());
-            // name
-            String source = doc.select("Source").first().text().trim();
-            String[] ns = source.split(" - ");
-            ber.setBankName(ns[0]);
-            ber.setBankShortName(ns[1]);
-
-            /* */
-            Elements exrates = doc.select("Exrate");
-            if (exrates.size() > 0) {
-
-                List<Exrate> exs = new ArrayList<>();
-                for (Element e : exrates) {
-
-                    Exrate ex = new Exrate();
-                    ex.setCode(e.attr("CurrencyCode"));
-                    ex.setName(e.attr("CurrencyName"));
-                    ex.setBuy(Double.parseDouble(e.attr("Buy")));
-                    ex.setTransfer(Double.parseDouble(e.attr("Transfer")));
-                    ex.setSell(Double.parseDouble(e.attr("Sell")));
-
-                    exs.add(ex);
-                    //log.debug(e.attr("CurrencyCode") + " : " + e.attr("Buy") + " : " + e.attr("Transfer") + " : " + e.attr("Sell"));
-                }
-
-                ber.setExrates(exs);
-
-                return ber;
-            }
-        } catch (Exception e) {
-
-            log.error("getVCBExchangeRates error:", e);
-
-        }
-
-        return null;
-    }
 }

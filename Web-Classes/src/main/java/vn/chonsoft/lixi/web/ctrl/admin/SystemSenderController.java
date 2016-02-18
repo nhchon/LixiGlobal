@@ -21,6 +21,7 @@ import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.repositories.service.UserService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -138,7 +139,7 @@ public class SystemSenderController {
         model.put("status", status);
         model.put("rS", rS);
         model.put("pRs", ps);
-        model.put("VCB", LiXiUtils.getVCBExchangeRates());
+        model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
         
         return new ModelAndView("Administration/reports/senders");
     }

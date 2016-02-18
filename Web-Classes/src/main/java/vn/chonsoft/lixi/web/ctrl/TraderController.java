@@ -26,6 +26,7 @@ import vn.chonsoft.lixi.model.trader.Trader;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
 import vn.chonsoft.lixi.repositories.service.ExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.TraderService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -192,7 +193,7 @@ public class TraderController {
         }
         
         model.put("traderExchangeRateForm", new TraderExchangeRateForm());
-        model.put("VCB", LiXiUtils.getVCBExchangeRates());
+        model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
         model.put("CURRENCIES", this.currencyService.findAll());
         model.put("EXCHANGE_RATES", this.exrService.findByTraderId(this.traderService.findById(traderId)));
         //
@@ -222,7 +223,7 @@ public class TraderController {
         if (errors.hasErrors()) {
             
             // pass values
-            model.put("VCB", LiXiUtils.getVCBExchangeRates());
+            model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
             model.put("CURRENCIES", this.currencyService.findAll());
             model.put("EXCHANGE_RATES", this.exrService.findByTraderId(this.traderService.findById(traderId)));
             //

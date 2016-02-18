@@ -27,6 +27,7 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.EnumTopUpStatus;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
@@ -205,7 +206,7 @@ public class SystemTopUpController {
             }
         }
         
-        model.put("VCB", LiXiUtils.getVCBExchangeRates());
+        model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
         model.put("topUps", ps);
         model.put("status", statusStr);
         model.put("fromDate", fromDateStr);

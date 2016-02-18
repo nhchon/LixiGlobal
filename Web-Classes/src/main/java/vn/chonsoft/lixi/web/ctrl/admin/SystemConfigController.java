@@ -48,6 +48,7 @@ import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -180,7 +181,7 @@ public class SystemConfigController {
         
         model.put("liXiExchangeRateForm",form);
         model.put("CURRENCIES", this.currencyService.findAll());
-        model.put("VCB", LiXiUtils.getVCBExchangeRates());
+        model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
         model.put("EXCHANGE_RATES", getLastERByTrader());
         model.put("LIXI_EXCHANGE_RATES", this.lxrService.findAll());
         model.put("LAST_X_R", this.lxrService.findLastRecord(LiXiConstants.USD));
