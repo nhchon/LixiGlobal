@@ -336,7 +336,7 @@ public class UserManagementController {
 
                             MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                             message.setTo(u.getEmail());
-                            message.setCc(LiXiConstants.YHANNART_GMAIL);
+                            message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                             message.setFrom("support@lixi.global");
                             message.setSubject("Revision to Your LiXi.Global Account");
                             message.setSentDate(Calendar.getInstance().getTime());

@@ -1,0 +1,22 @@
+<html>
+    <body>
+        <h5>Hello Yuric !</h5>
+        
+        <p>VCB Exchange Rate has been changed</p>
+        
+        <p><b>Buy: </b> ${vcbBuy}</p>
+        <p><b>Sell: </b> ${vcbSell}</p>
+
+        <p>New Lixi.Global Exchange Rate</p>
+        
+        <p><b>Buy: </b> ${lxBuy} ${lxBuyPercentage}%</p>
+        <p><b>Sell: </b> ${lxSell} ${lxSellPercentage}%</p>
+
+        <p>This email is sent automaytically. Please sign in the lixi.global to get control</p>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

@@ -24,6 +24,11 @@ public abstract class LiXiGlobalConstants {
     
     public static final String OFF = "Off";
     
+    public static final String YHANNART_GMAIL = "yhannart@gmail.com";
+    
+    public static final String CHONNH_GMAIL = "chonnh@gmail.com";
+    
+    
     public static final String TRANS_STATUS_IN_PROGRESS = "In Progress";
     
     public static final String TRANS_STATUS_DECLINED = "Declined";

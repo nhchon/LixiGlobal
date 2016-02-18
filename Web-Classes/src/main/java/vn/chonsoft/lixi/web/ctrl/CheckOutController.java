@@ -51,6 +51,7 @@ import vn.chonsoft.lixi.model.form.BillingAddressForm;
 import vn.chonsoft.lixi.model.form.CardAddForm;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
@@ -980,7 +981,7 @@ public class CheckOutController {
                     public void prepare(MimeMessage mimeMessage) throws Exception {
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
                         message.setTo(emailSender);
-                        message.setCc(LiXiConstants.YHANNART_GMAIL);
+                        message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Invoice Alert");
                         message.setSentDate(Calendar.getInstance().getTime());

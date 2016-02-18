@@ -4,22 +4,30 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import javax.inject.Inject;
+import java.util.Map;
+import javax.mail.internet.MimeMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.pojo.Exrate;
@@ -41,6 +49,15 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
     @Autowired
     private CurrencyTypeService currencyService;
     
+    @Autowired
+    private ThreadPoolTaskScheduler taskScheduler;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private VelocityEngine velocityEngine;
+
     /**
      * 
      */
@@ -75,16 +92,15 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
                 
                 /* */
                 LixiExchangeRate lxExch = this.findLastRecord(LiXiGlobalConstants.USD);
-                
-                if(usdEx.getBuy() != lxExch.getBuy() || usdEx.getSell() != lxExch.getSell()){
                     
-                    /* create new lixi exchange rate */
-                    double newBuyRate = usdEx.getBuy() + (usdEx.getBuy() * LiXiGlobalConstants.LIXI_DEFAULT_BUY_RATE / 100.0);
-                    double roundNewBuyRate = Math.floor(newBuyRate/100.0) * 100;
+                /* create new lixi exchange rate */
+                double newBuyRate = usdEx.getBuy() + (usdEx.getBuy() * LiXiGlobalConstants.LIXI_DEFAULT_BUY_RATE / 100.0);
+                final double roundNewBuyRate = Math.floor(newBuyRate/100.0) * 100;
+
+                double newSellRate = usdEx.getSell() + (usdEx.getSell() * LiXiGlobalConstants.LIXI_DEFAULT_SELL_RATE / 100.0);
+                final double roundNewSellRate = Math.floor(newSellRate/100.0) * 100;
                     
-                    double newSellRate = usdEx.getSell() + (usdEx.getSell() * LiXiGlobalConstants.LIXI_DEFAULT_SELL_RATE / 100.0);
-                    double roundNewSellRate = Math.floor(newSellRate/100.0) * 100;
-                    
+                if(roundNewBuyRate != lxExch.getBuy() || roundNewSellRate != lxExch.getSell()){
                     LixiExchangeRate lixiexr = new LixiExchangeRate();
                     Date cDate = Calendar.getInstance().getTime();
                     lixiexr.setDateInput(cDate);
@@ -98,6 +114,37 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
                     lixiexr.setCreatedDate(cDate);
 
                     this.save(lixiexr);
+                    
+                    /* sent email to yuric*/
+                    final double vcbSell = usdEx.getSell();
+                    final double vcbBuy = usdEx.getBuy();
+                    MimeMessagePreparator preparator = new MimeMessagePreparator() {
+                        @SuppressWarnings({"rawtypes", "unchecked"})
+                        @Override
+                        public void prepare(MimeMessage mimeMessage) throws Exception {
+                            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+                            message.setTo(LiXiGlobalConstants.YHANNART_GMAIL);
+                            message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                            message.setFrom("support@lixi.global");
+                            message.setSubject("LiXi.Global - Lixi Ex Rate has ben changed");
+                            message.setSentDate(Calendar.getInstance().getTime());
+
+                            Map<String, Object> model = new HashMap<>();
+                            model.put("vcbBuy", vcbBuy);
+                            model.put("vcbSell", vcbSell);
+                            model.put("lxBuy", roundNewBuyRate);
+                            model.put("lxSell", roundNewSellRate);
+                            model.put("lxBuyPercentage", LiXiGlobalConstants.LIXI_DEFAULT_BUY_RATE);
+                            model.put("lxSellPercentage", LiXiGlobalConstants.LIXI_DEFAULT_SELL_RATE);
+
+                            String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                    velocityEngine, "emails/alert-yuric-rate-change.vm", "UTF-8", model);
+                            message.setText(text, true);
+                        }
+                    };
+                    // send oldEmail
+                    taskScheduler.execute(() -> mailSender.send(preparator));
+
                     
                 }
                 else{

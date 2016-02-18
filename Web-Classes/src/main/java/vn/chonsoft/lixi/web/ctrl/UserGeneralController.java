@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
@@ -226,7 +227,7 @@ public class UserGeneralController {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(form.getEmail());
-                message.setCc(LiXiConstants.CHONNH_GMAIL);
+                message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
                 message.setSubject("LiXi.Global - Confirm your registration");
                 message.setSentDate(Calendar.getInstance().getTime());
@@ -345,7 +346,7 @@ public class UserGeneralController {
 
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                         message.setTo(u.getEmail());
-                        message.setCc(LiXiConstants.YHANNART_GMAIL);
+                        message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Resend activation code");
                         message.setSentDate(Calendar.getInstance().getTime());
@@ -440,7 +441,7 @@ public class UserGeneralController {
 
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                         message.setTo(u.getEmail());
-                        message.setCc(LiXiConstants.YHANNART_GMAIL);
+                        message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Reset Your Password");
                         message.setSentDate(Calendar.getInstance().getTime());
@@ -519,7 +520,7 @@ public class UserGeneralController {
 
                     MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                     message.setTo(u.getEmail());
-                    message.setCc(LiXiConstants.YHANNART_GMAIL);
+                    message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                     message.setFrom("support@lixi.global");
                     message.setSubject("LiXi.Global - Reset Your Password");
                     message.setSentDate(Calendar.getInstance().getTime());
@@ -850,8 +851,8 @@ public class UserGeneralController {
 
                     MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                     message.setTo(u.getEmail());
-                    message.setCc(LiXiConstants.YHANNART_GMAIL);
-                    message.addCc(LiXiConstants.CHONNH_GMAIL);
+                    message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                    message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                     message.setFrom("support@lixi.global");
                     message.setSubject("LiXi.Global - Verify your email");
                     message.setSentDate(Calendar.getInstance().getTime());

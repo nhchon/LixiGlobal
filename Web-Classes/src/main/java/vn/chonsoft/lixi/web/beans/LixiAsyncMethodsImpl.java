@@ -32,6 +32,7 @@ import vn.chonsoft.lixi.model.TopUpResult;
 import vn.chonsoft.lixi.model.VtcResponseCode;
 import vn.chonsoft.lixi.model.VtcServiceCode;
 import vn.chonsoft.lixi.EnumTopUpStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.repositories.service.BuyCardResultService;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.DauSoService;
@@ -227,8 +228,8 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                     public void prepare(MimeMessage mimeMessage) throws Exception {
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
                         message.setTo(rec.getEmail());
-                        message.setCc(LiXiConstants.CHONNH_GMAIL);
-                        message.addCc(LiXiConstants.YHANNART_GMAIL);
+                        message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                        message.addCc(LiXiGlobalConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Top Up Mobile Minutes Alert");
                         message.setSentDate(Calendar.getInstance().getTime());
@@ -390,7 +391,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                             public void prepare(MimeMessage mimeMessage) throws Exception {
                                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
                                 message.setTo(rec.getEmail());
-                                message.setCc(LiXiConstants.CHONNH_GMAIL);
+                                message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
                                 message.setFrom("support@lixi.global");
                                 message.setSubject("LiXi.Global - Phone Cards Alert");
                                 message.setSentDate(Calendar.getInstance().getTime());

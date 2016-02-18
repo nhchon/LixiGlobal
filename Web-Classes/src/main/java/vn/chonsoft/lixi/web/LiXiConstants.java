@@ -132,10 +132,6 @@ public abstract class LiXiConstants {
     public static final Integer NUM_PRODUCTS_PER_PAGE = 10;
     public static final String LIXI_TOTAL_AMOUNT = "LIXI_TOTAL_AMOUNT";
     
-    public static final String YHANNART_GMAIL = "yhannart@gmail.com";
-    
-    public static final String CHONNH_GMAIL = "chonnh@gmail.com";
-    
     public static final String WEB_INF_FOLDER = "WEB-INF";
     // folder that contains category icon
     public static final String CATEGORY_ICON_FOLDER = "uploads";
