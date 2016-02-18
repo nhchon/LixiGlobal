@@ -12,7 +12,7 @@
         <p><b>Buy: </b> ${lxBuy} ${lxBuyPercentage}%</p>
         <p><b>Sell: </b> ${lxSell} ${lxSellPercentage}%</p>
 
-        <p>This email is sent automaytically. Please sign in the lixi.global to get control</p>
+        <p>This email is sent automatically. Please sign in the lixi.global to get control</p>
 
         <div>
             Thank you<br/>
