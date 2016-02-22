@@ -124,7 +124,7 @@ public class RecipientInOrder {
      * 
      * @return 
      */
-    private SumVndUsd getGiftTotal(){
+    public SumVndUsd getGiftTotal(){
         
         if(giftTotal == null){
             giftTotal = calculateGiftTotal();

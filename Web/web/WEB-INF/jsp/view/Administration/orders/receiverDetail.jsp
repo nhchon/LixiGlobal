@@ -116,7 +116,75 @@
                                                 </td>
                                         </tr>
                                         </c:forEach>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">Total</td>
+                                            <td style="text-align: right;">
+                                                <fmt:formatNumber value="${rio.allTotal.vnd}" pattern="###,###.##"/> VND
+                                                <br/>
+                                                <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD
+                                            </td>
+                                            <td></td>
+                                        </tr>
                                     </c:forEach>
+                                        <%-- GRAND TOTAL --%>
+                                        <tr style="border-top: 2px solid #0090d0;">
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">Gift price</td>
+                                            <td style="text-align: right;">
+                                                <fmt:formatNumber value="${order.invoice.giftPrice}" pattern="###,###.##"/> USD
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">Card processing fee</td>
+                                            <td style="text-align: right;">
+                                                <fmt:formatNumber value="${order.invoice.cardFee}" pattern="###,###.##"/> USD
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">Lixi handing fee</td>
+                                            <td style="text-align: right;">
+                                                <fmt:formatNumber value="${order.invoice.lixiFee}" pattern="###,###.##"/> USD
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">Total befor tax</td>
+                                            <td style="text-align: right;">
+                                                <fmt:formatNumber value="${order.invoice.totalAmount}" pattern="###,###.##"/> USD
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">Sale tax</td>
+                                            <td style="text-align: right;">
+                                                <fmt:formatNumber value="0" pattern="###,###.##"/> USD
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;"><b>Grand Total</b></td>
+                                            <td style="text-align: right;">
+                                                <fmt:formatNumber value="${order.invoice.totalAmountVnd}" pattern="###,###.##"/> VND
+                                                <br/>
+                                                <fmt:formatNumber value="${order.invoice.totalAmount}" pattern="###,###.##"/> USD
+                                            </td>
+                                            <td></td>
+                                        </tr>
                                 </tbody>
                             </table>
                         </div>

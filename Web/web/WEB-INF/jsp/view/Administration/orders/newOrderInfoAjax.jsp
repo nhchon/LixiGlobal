@@ -36,8 +36,6 @@
                             <c:set var="totalAmountUsd" value="0"/>
                             <c:forEach items="${mOs}" var="m" varStatus="theCount">
                                 <c:set var="countRec" value="${theCount.count}"/>
-                                <c:set var="totalAmountVnd" value="${totalAmountVnd + m.key.invoice.totalAmountVnd}"/>
-                                <c:set var="totalAmountUsd" value="${totalAmountUsd + m.key.invoice.totalAmount}"/>
                                 <tr id="rowO${m.key.id}">
                                     <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/></td>
                                     <td nowrap style="text-align:center;">
@@ -67,13 +65,16 @@
                                     <td style="text-align: right;">
                                         <c:forEach items="${m.value}" var="rio">
                                             <c:if test="${not empty rio.gifts}">
-                                                <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD<br/>
+                                                <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
                                                 <c:if test="${m.key.setting eq 0}">
-                                                    <fmt:formatNumber value="${rio.allTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
+                                                    <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
+                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd * transferPercent/100.0}"/>
                                                 </c:if>
                                                 <c:if test="${m.key.setting eq 1}">
-                                                    <fmt:formatNumber value="${rio.allTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                    <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
                                                 </c:if>
+                                                <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
                                             </c:if>
                                         </c:forEach>
                                     </td>
