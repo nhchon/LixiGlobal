@@ -62,10 +62,14 @@
                                                     <option value="NO" <c:if test="${c.value eq 'NO'}">selected=""</c:if>>NO</option>
                                                 </select>
                                             </c:when>
+                                            <c:when test="${c.name eq 'LIXI_BAOKIM_TRANFER_PERCENT'}">
+                                                <input type="number" name="value" value="${c.value}" class="form-control"/>
+                                            </c:when>
                                             <c:otherwise>
-                                                <input type="text" name="value" value="${c.value}" class="form-control"/></td>
+                                                <input type="text" name="value" value="${c.value}" class="form-control"/>
                                             </c:otherwise>
-                                        </c:choose>       
+                                        </c:choose>   
+                                    </td>
                                     <td>
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                         <input type="hidden" name="id" value="${c.id}" />

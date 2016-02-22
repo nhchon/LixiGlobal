@@ -23,7 +23,6 @@ import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.annotation.WebController;
-import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *

@@ -6,6 +6,10 @@
 <c:set var="PROCESSING" value="0"/>
 <c:set var="COMPLETED" value="1"/>
 <c:set var="CANCELED" value="2"/>
+<c:set var="transferPercent" value="95"/>
+<c:if test="${not empty sessionScope['scopedTarget.loginedUser'].configs['LIXI_BAOKIM_TRANFER_PERCENT']}">
+    <c:set var="transferPercent" value="${sessionScope['scopedTarget.loginedUser'].configs['LIXI_BAOKIM_TRANFER_PERCENT']}"/>
+</c:if>
 <div class="row">
     <div class="col-sm-12">
         <!-- Tab panes -->
@@ -16,13 +20,14 @@
                         <thead>
                             <tr>
                                 <th nowrap>Date</th><%-- 1 --%>
-                                <th nowrap>Order</th><%-- 2 --%>
+                                <th nowrap style="text-align:center;">Order</th><%-- 2 --%>
                                 <th nowrap>Transaction No</th><%-- 3 --%>
-                                <th>Sender</th><%-- 4 --%>
-                                <th style="text-align: center;">Receiver(s)</th><%-- 5 --%>
-                                <th style="text-align: right;">Amount</th><%-- 6 --%>
-                                <th>Status</th><%-- 7 --%>
-                                <th style="text-align: right;">Action</th><%-- 8 --%>
+                                <th nowrap>Option</th><%-- 4 --%>
+                                <th>Sender</th><%-- 5 --%>
+                                <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
+                                <th style="text-align: right;">Amount</th><%-- 7 --%>
+                                <th>Status</th><%-- 8 --%>
+                                <th style="text-align: right;">Action</th><%-- 9 --%>
                             </tr>
                         </thead>
                         <tbody>
@@ -35,8 +40,22 @@
                                 <c:set var="totalAmountUsd" value="${totalAmountUsd + m.key.invoice.totalAmount}"/>
                                 <tr id="rowO${m.key.id}">
                                     <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/></td>
-                                    <td><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">${m.key.invoice.invoiceCode}</a></td>
+                                    <td nowrap style="text-align:center;">
+                                        <a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
+                                            ${m.key.invoice.invoiceCode}
+                                        </a>
+                                        <br/>
+                                        1 USD = ${m.key.lxExchangeRate.buy} VND
+                                    </td>
                                     <td>${m.key.invoice.netTransId}</td>
+                                    <td nowrap>
+                                        <c:if test="${m.key.setting eq 0}">
+                                            Gift Only
+                                        </c:if>
+                                        <c:if test="${m.key.setting eq 1}">
+                                            Allow Refund
+                                        </c:if>
+                                    </td>
                                     <td>${m.key.sender.fullName}<br/><a href="javascript:viewSender(${m.key.sender.id});">${m.key.sender.beautyId}</a></td>
                                     <td style="text-align: center;">
                                         <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
@@ -49,7 +68,12 @@
                                         <c:forEach items="${m.value}" var="rio">
                                             <c:if test="${not empty rio.gifts}">
                                                 <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                <fmt:formatNumber value="${rio.allTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                <c:if test="${m.key.setting eq 0}">
+                                                    <fmt:formatNumber value="${rio.allTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
+                                                </c:if>
+                                                <c:if test="${m.key.setting eq 1}">
+                                                    <fmt:formatNumber value="${rio.allTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                </c:if>
                                             </c:if>
                                         </c:forEach>
                                     </td>

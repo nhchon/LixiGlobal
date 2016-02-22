@@ -170,23 +170,6 @@ public class LiXiUtils {
     }
     
     /**
-     * 
-     * @param phone
-     * @return 
-     */
-    public static String checkZeroAtBeginOfPhoneNumber(String phone){
-        
-        if(phone == null) return phone;
-        
-        if(!phone.startsWith("0")){
-            
-            return "0" + phone;
-        }
-        else{
-            return phone;
-        }
-    }
-    /**
      *
      * fix encode and capitalize fully
      *

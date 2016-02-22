@@ -25,8 +25,6 @@ import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
-import vn.chonsoft.lixi.model.pojo.BaoKimPaymentNotification;
-import vn.chonsoft.lixi.model.pojo.BaoKimPaymentNotifications;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.LixiSubmitOrderResult;
@@ -34,6 +32,7 @@ import vn.chonsoft.lixi.model.pojo.VatGiaCategoryPj;
 import vn.chonsoft.lixi.model.pojo.VatGiaProductPj;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -325,7 +324,7 @@ public class LiXiVatGiaUtils {
                         vars.add("quantity", gift.getProductQuantity() + "");
                         vars.add("receiver_name", receiverName);
                         vars.add("receiver_email", emptyIfNull(gift.getRecipient().getEmail()));
-                        vars.add("receiver_phone", emptyIfNull(gift.getRecipient().getPhone()));
+                        vars.add("receiver_phone", emptyIfNull(LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(gift.getRecipient().getPhone())));
                         vars.add("receiver_adress", "INPUT_BY_BAOKIM");// TODO: add address to recipient
                         vars.add("message", gift.getRecipient().getNote());
                         vars.add("method_receive", methodReceive);
@@ -340,7 +339,7 @@ public class LiXiVatGiaUtils {
                         log.info("quantity:" + gift.getProductQuantity() + "");
                         log.info("receiver_name:" + receiverName);
                         log.info("receiver_email:" + emptyIfNull(gift.getRecipient().getEmail()));
-                        log.info("receiver_phone:" + emptyIfNull(gift.getRecipient().getPhone()));
+                        log.info("receiver_phone:" + emptyIfNull(LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(gift.getRecipient().getPhone())));
                         log.info("receiver_adress:" + "xxx");
                         log.info("message:" + gift.getRecipient().getNote());
                         log.info("method_receive:" + methodReceive);

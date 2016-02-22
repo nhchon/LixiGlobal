@@ -43,6 +43,7 @@ import vn.chonsoft.lixi.repositories.service.TopUpResultService;
 import vn.chonsoft.lixi.repositories.service.VtcResponseCodeService;
 import vn.chonsoft.lixi.repositories.service.VtcServiceCodeService;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.vtc.pay.RequestTransactionResponse;
@@ -164,7 +165,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
         
         Recipient rec = topUp.getRecipient();
         String amount = "10000"; // new Long((long)topUp.getAmount()).toString();
-        String account = LiXiUtils.checkZeroAtBeginOfPhoneNumber(topUp.getPhone()); // phone number
+        String account = LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(topUp.getPhone()); // phone number
 
         DauSo dauSo = getDauSo(account);
         //if(!dauSos.isEmpty()){

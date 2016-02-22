@@ -41,7 +41,7 @@ public class TestEverything {
     }    
     public static void main(String[] args) {
         
-        System.out.println(LiXiUtils.checkZeroAtBeginOfPhoneNumber("913402740"));
+        //System.out.println(LiXiUtils.checkZeroAtBeginOfPhoneNumber("913402740"));
         //System.out.println(getBeautyOrderId(19l));
         //System.out.println(LiXiUtils.getTestTotalAmount(102.34));
         //System.out.println(Math.floor(21766.8/100)*100);

@@ -648,24 +648,27 @@ public class CheckOutController2 {
                 // send oldEmail
                 taskScheduler.execute(() -> mailSender.send(preparator));
 
-            }
-            ////////////////////////////////////////////////////////////////////
-            log.info("Call Async methods");
-            if(LiXiConstants.YES.equals(loginedUser.getConfig(LiXiConstants.VTC_AUTO))){
-                // The order is paid, top up mobile
-                lxAsyncMethods.processTopUpItems(order);
+                ////////////////////////////////////////////////////////////////////
+                log.info("Call Async methods");
+                if(LiXiConstants.YES.equals(loginedUser.getConfig(LiXiConstants.VTC_AUTO))){
+                    // The order is paid, top up mobile
+                    lxAsyncMethods.processTopUpItems(order);
 
-                // Buy Cards
-                //lxAsyncMethods.processBuyCardItems(order);
-            }
-            //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
-            log.info("submitOrdersToBaoKim");
-            //lxAsyncMethods.submitOrdersToBaoKim(order);
-            ////////////////////////////////////////////////////////////////////
-            log.info("END OF Call Async methods");
-            
-            // jump to thank you page
-            return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
+                    // Buy Cards
+                    //lxAsyncMethods.processBuyCardItems(order);
+                }
+                //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
+                log.info("submitOrdersToBaoKim");
+
+                lxAsyncMethods.submitOrdersToBaoKim(order);
+
+                log.info(" // END of submitOrdersToBaoKim");
+                ////////////////////////////////////////////////////////////////////
+                log.info("END OF Call Async methods");
+
+                // jump to thank you page
+                return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
+            } // charge is success
         } else {
 
             // order not exist, go to Choose recipient page

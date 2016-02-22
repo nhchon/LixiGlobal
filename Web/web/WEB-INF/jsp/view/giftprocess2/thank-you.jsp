@@ -25,7 +25,7 @@
                     <br />
                     <p>Email us with any questions at <a href="mailto:support@lixi.global">support@lixi.global</a>. Please paste the order confirmation number to the subject line.</p>
                     <br /><br /><br />
-                    <div class="btns">
+                    <div class="btns" style="text-align:center;">
                         <a href="<c:url value="/gifts/choose"/>" class="btn btn-primary">Continue Giving</a>
                         <a href="<c:url value="/user/signOut"/>" class="btn btn-primary">Log Out</a>
                     </div>
