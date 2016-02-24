@@ -171,9 +171,10 @@
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
                                         <th style="text-align: right;">Amount</th><%-- 7 --%>
-                                        <th style="text-align: center;">Last Modified Date</th><%-- 8 --%>
+                                        <th style="text-align: center;">Status</th><%-- 8 --%>
+                                        <th style="text-align: center;">Last Modified Date</th><%-- 9 --%>
                                         <c:if test="${searchForm.status eq 'All' or searchForm.status eq 'Processed'}">
-                                        <th style="text-align: right;">Action</th><%-- 9 --%>    
+                                        <th style="text-align: right;">Action</th><%-- 10 --%>    
                                         </c:if>
                                     </tr>
                                 </thead>
@@ -226,6 +227,17 @@
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: center;">
+                                                <c:if test="${m.key.lixiStatus eq SENT_MONEY or m.key.lixiStatus eq PROCESSING}">
+                                                    In Processed
+                                                </c:if>
+                                                <c:if test="${m.key.lixiStatus eq COMPLETED}">
+                                                    Completed
+                                                </c:if>
+                                                <c:if test="${m.key.lixiStatus eq CANCELED}">
+                                                    Cancelled
+                                                </c:if>
+                                            </td>
+                                            <td style="text-align: center;">
                                                 <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.modifiedDate}"/>
                                             </td>
                                             <c:if test="${searchForm.status eq 'All' or searchForm.status eq 'Processed'}">
@@ -239,9 +251,9 @@
                                     </c:forEach>
                                 </tbody>
                                 <tfoot>
-                                    <c:set var="colSpan" value="8"/>
+                                    <c:set var="colSpan" value="9"/>
                                     <c:if test="${searchForm.status eq 'All' or searchForm.status eq 'Processed'}">
-                                        <c:set var="colSpan" value="9"/>
+                                        <c:set var="colSpan" value="10"/>
                                     </c:if>
                                     <tr>
                                         <td colspan="${colSpan}">
