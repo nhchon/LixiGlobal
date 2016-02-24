@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,8 @@ public class LixiOrdersController {
     private static final Logger log = LogManager.getLogger(LixiOrdersController.class);
     
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    
+    private final SimpleDateFormat formatter4ToDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
     @Autowired
     private LixiOrderService lxOrderService;
@@ -130,9 +133,10 @@ public class LixiOrdersController {
             )));
         }
         
+        
         if(StringUtils.isNotEmpty(form.getToDate())){
             criteria.add(new Criterion("createdDate", Criterion.Operator.LTE, new Date(
-                    this.formatter.parse(form.getToDate()).getTime()
+                    DateUtils.addDays(this.formatter.parse(form.getToDate()), 1).getTime()
             )));
         }
         
