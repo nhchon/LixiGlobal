@@ -28,7 +28,16 @@ public abstract class LiXiGlobalConstants {
     
     public static final String CHONNH_GMAIL = "chonnh@gmail.com";
     
+    /* */
+    public static final String TRANS_REPORT_STATUS_ALL = "All";
     
+    public static final String TRANS_REPORT_STATUS_PROCESSED = "Processed";
+    
+    public static final String TRANS_REPORT_STATUS_COMPLETED = "Completed";
+    
+    public static final String TRANS_REPORT_STATUS_CANCELLED = "Cancelled";
+    
+    /* */
     public static final String TRANS_STATUS_IN_PROGRESS = "In Progress";
     
     public static final String TRANS_STATUS_DECLINED = "Declined";
@@ -39,7 +48,7 @@ public abstract class LiXiGlobalConstants {
     
     public static final String TRANS_STATUS_SENT = "Sent";
     
-    public static final String TRANS_STATUS_COMPLETE = "Complete";
+    public static final String TRANS_STATUS_COMPLETED = "Completed";
     
     public static final String VCB_EXCHANGE_RATES_PAGE = "http://www.vietcombank.com.vn/ExchangeRates/ExrateXML.aspx";
     

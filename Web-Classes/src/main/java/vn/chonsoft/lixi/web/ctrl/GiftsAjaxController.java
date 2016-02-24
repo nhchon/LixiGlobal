@@ -399,7 +399,10 @@ public class GiftsAjaxController {
                     lxogift.setProductImage(vgp.getImageUrl());
                     lxogift.setProductQuantity(quantity);
                     lxogift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());// not yet submitted
-                    lxogift.setModifiedDate(Calendar.getInstance().getTime());
+                    /* date */
+                    Date currDate = Calendar.getInstance().getTime();
+                    lxogift.setCreatedDate(currDate);
+                    lxogift.setModifiedDate(currDate);
 
                     this.lxogiftService.save(lxogift);
                 }

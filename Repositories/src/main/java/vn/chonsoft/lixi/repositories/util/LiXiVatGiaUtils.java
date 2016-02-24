@@ -349,6 +349,8 @@ public class LiXiVatGiaUtils {
 
                         gift.setBkStatus(EnumLixiOrderStatus.SENT_INFO.getValue());
                         gift.setBkMessage(result.getData().getMessage());
+                        gift.setModifiedDate(Calendar.getInstance().getTime());
+                        
                         log.info("bk message:" + result.getData().getMessage());
                         log.info("order id:" + result.getData().getOrder_id());
                         log.info("///////////////////////////////////////////////////");
@@ -376,7 +378,8 @@ public class LiXiVatGiaUtils {
 
                 order.setLixiStatus(EnumLixiOrderStatus.SENT_INFO.getValue());
                 order.setLixiMessage("The Order already sent to BaoKim Service");
-
+                order.setModifiedDate(Calendar.getInstance().getTime());
+                
                 orderService.save(order);
 
             }
@@ -437,6 +440,8 @@ public class LiXiVatGiaUtils {
 
                     gift.setBkStatus(EnumLixiOrderStatus.CANCELED.getValue());
                     gift.setBkMessage(result.getData().getMessage());
+                    gift.setModifiedDate(Calendar.getInstance().getTime());
+                    
                     log.info("bk message:" + result.getData().getMessage());
                     log.info("order id:" + result.getData().getOrder_id());
                     log.info("///////////////////////////////////////////////////");
@@ -457,7 +462,8 @@ public class LiXiVatGiaUtils {
 
                 order.setLixiStatus(EnumLixiOrderStatus.CANCELED.getValue());
                 order.setLixiMessage("The Order has been canceled on BaoKim Service");
-
+                order.setModifiedDate(Calendar.getInstance().getTime());
+                
                 orderService.save(order);
 
             }
@@ -529,6 +535,8 @@ public class LiXiVatGiaUtils {
 
                         gift.setBkStatus(EnumLixiOrderStatus.SENT_MONEY.getValue());
                         gift.setBkMessage(result.getData().getMessage());
+                        gift.setModifiedDate(Calendar.getInstance().getTime());
+                        
                         log.info("bk message:" + result.getData().getMessage());
                         log.info("order id:" + result.getData().getOrder_id());
                         log.info("///////////////////////////////////////////////////");
@@ -554,7 +562,8 @@ public class LiXiVatGiaUtils {
 
                 order.setLixiStatus(EnumLixiOrderStatus.SENT_MONEY.getValue());
                 order.setLixiMessage("Payment Information already sent to BaoKim Service");
-
+                order.setModifiedDate(Calendar.getInstance().getTime());
+                
                 orderService.save(order);
 
             }

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.repositories.LixiOrderRepository;
+import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
 
 /**
  *
@@ -53,33 +54,6 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         
     }
     
-    private void loadOrder(LixiOrder order){
-        if(order != null){
-            
-            // make sure load gifts
-            order.getGifts().size();
-            
-            // top up
-            order.getTopUpMobilePhones().size();
-            
-            // phone card
-            order.getBuyCards().size();
-            
-            // exchange rate
-            order.getLxExchangeRate();
-            
-            //
-            order.getCard();
-            
-            //
-            order.getBankAccount();
-            
-            // invoice
-            order.getInvoice();
-        }
-        
-    }
-    
     /**
      * 
      * @param id
@@ -91,7 +65,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         
         LixiOrder order = this.lxorderRepository.findOne(id);
         
-        loadOrder(order);
+        LiXiRepoUtils.loadOrder(order);
         
         return order;
         
@@ -257,7 +231,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         List<LixiOrder> ls = this.lxorderRepository.findByLixiStatus(status, defaultSort);
 
         if(ls != null && !ls.isEmpty()){
-            ls.forEach(o -> {loadOrder(o);});
+            ls.forEach(o -> {LiXiRepoUtils.loadOrder(o);});
         }
         
         return ls;

@@ -102,7 +102,7 @@
                                     <option value="Refunded" <c:if test="${oStatus eq 'Refunded'}">selected=""</c:if>>Refunded</option>
                                     <option value="Processed" <c:if test="${oStatus eq 'Processed'}">selected=""</c:if>>Processed</option>
                                     <option value="Sent" <c:if test="${oStatus eq 'Sent'}">selected=""</c:if>>Sent</option>
-                                    <option value="Complete" <c:if test="${oStatus eq 'Complete'}">selected=""</c:if>>Complete</option>
+                                    <option value="Completed" <c:if test="${oStatus eq 'Completed'}">selected=""</c:if>>Completed</option>
                                 </select>
                             </div>
                         </div>

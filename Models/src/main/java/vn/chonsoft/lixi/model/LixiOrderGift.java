@@ -78,6 +78,11 @@ public class LixiOrderGift implements Serializable {
     @Column(name = "bk_updated")
     private String bkUpdated;
 
+    @Basic
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
+    
     @Basic(optional = false)
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -179,6 +184,14 @@ public class LixiOrderGift implements Serializable {
 
     public void setProductQuantity(int productQuantity) {
         this.productQuantity = productQuantity;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Date getModifiedDate() {
