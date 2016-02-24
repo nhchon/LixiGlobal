@@ -111,8 +111,9 @@ public class LixiOrdersController {
                 }
         }
         
-        /* do not get orders that in creation */
+        /* do not get orders that in creation or just send order info */
         criteria.add(new Criterion("lixiStatus", Criterion.Operator.NEQ, EnumLixiOrderStatus.UNFINISHED.getValue()));
+        criteria.add(new Criterion("lixiStatus", Criterion.Operator.NEQ, EnumLixiOrderStatus.SENT_INFO.getValue()));
         
         /* check status */
         if(StringUtils.isNotEmpty(status)){

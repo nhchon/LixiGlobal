@@ -6,7 +6,9 @@ package vn.chonsoft.lixi.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -99,6 +102,10 @@ public class AdminUser implements Serializable {
     
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "adminUserId")
     private List<AdminUserAuthority> authorities;
+
+    /* system config */
+    @Transient
+    private Map<String, String> configs;
 
     public AdminUser() {
     }
@@ -259,6 +266,25 @@ public class AdminUser implements Serializable {
         this.authorities = authorities;
     }
 
+    public Map<String, String> getConfigs() {
+        return configs;
+    }
+
+    public void setConfigs(Map<String, String> configs) {
+        this.configs = configs;
+    }
+    
+    public void addConfig(String name, String value){
+        
+        if(name != null){
+            /* */
+            if(configs == null)
+                configs = new HashMap<>();
+            /* */
+            configs.put(name, value);
+        }
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -32,6 +32,8 @@ public class SecurityAdminUser extends AdminUser implements UserDetails, Credent
             this.setCreatedBy(au.getCreatedBy());
             this.setModifiedDate(au.getModifiedDate());
             this.setModifiedBy(au.getModifiedBy());
+            
+            this.setConfigs(au.getConfigs());
         }
     }
 

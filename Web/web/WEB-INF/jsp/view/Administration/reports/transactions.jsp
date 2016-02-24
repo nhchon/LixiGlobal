@@ -150,10 +150,12 @@
         </div>
         
         <c:url value="/Administration/Orders/report" var="postOrderReport"/>
-        <c:set var="transferPercent" value="95"/>
-        <c:if test="${not empty sessionScope['scopedTarget.loginedUser'].configs['LIXI_BAOKIM_TRANFER_PERCENT']}">
-            <c:set var="transferPercent" value="${sessionScope['scopedTarget.loginedUser'].configs['LIXI_BAOKIM_TRANFER_PERCENT']}"/>
+        
+        <security:authentication property="principal.configs['LIXI_BAOKIM_TRANFER_PERCENT']" var="transferPercent" />
+        <c:if test="${empty transferPercent}">
+            <c:set var="transferPercent" value="95"/>
         </c:if>
+        
         <form action="${postOrderReport}" method="post" onsubmit="return checkForm()">
         <div class="row">
             <div class="col-sm-12">
@@ -228,7 +230,7 @@
                                             </td>
                                             <td style="text-align: center;">
                                                 <c:if test="${m.key.lixiStatus eq SENT_MONEY or m.key.lixiStatus eq PROCESSING}">
-                                                    In Processed
+                                                    In Processed<br/>(Sent Money Info)
                                                 </c:if>
                                                 <c:if test="${m.key.lixiStatus eq COMPLETED}">
                                                     Completed
