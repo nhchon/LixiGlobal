@@ -53,8 +53,6 @@ public class LixiOrdersController {
     
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     
-    private final SimpleDateFormat formatter4ToDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
     @Autowired
     private LixiOrderService lxOrderService;
     
