@@ -122,7 +122,7 @@
                                         <th>#</th>
                                         <th nowrap>Date</th><%-- 1 --%>
                                         <th nowrap style="text-align:center;">Order</th><%-- 2 --%>
-                                        <th nowrap>Transaction No</th><%-- 3 --%>
+                                        <th nowrap style="text-align:center;">Transaction No</th><%-- 3 --%>
                                         <th nowrap>Option</th><%-- 4 --%>
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
@@ -146,7 +146,7 @@
                                                 <br/>
                                                 1 USD = ${m.key.lxExchangeRate.buy} VND
                                             </td>
-                                            <td>${m.key.invoice.netTransId}</td>
+                                            <td style="text-align:center;">${m.key.invoice.netTransId}<br/>(${m.key.invoice.translatedStatus})</td>
                                             <td nowrap>
                                                 <c:if test="${m.key.setting eq 0}">
                                                     Gift Only
@@ -155,7 +155,7 @@
                                                     Allow Refund
                                                 </c:if>
                                             </td>
-                                            <td>${m.key.sender.fullName}<br/><a href="javascript:viewSender(${m.key.sender.id});">${m.key.sender.beautyId}</a></td>
+                                            <td>${m.key.sender.fullName}<br/><a href="<c:url value="/Administration/SystemSender/detail/${m.key.sender.id}"/>">${m.key.sender.beautyId}</a></td>
                                             <td style="text-align: center;">
                                                 <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
                                                     <c:if test="${not empty rio.gifts}">

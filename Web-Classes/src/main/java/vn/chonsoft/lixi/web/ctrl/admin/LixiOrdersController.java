@@ -193,7 +193,7 @@ public class LixiOrdersController {
         model.put("order", order);
         model.put("recGifts", recGifts);
         
-        return new ModelAndView("Administration/orders/receiverDetail");
+        return new ModelAndView("Administration/orders/orderDetail");
     }
     /**
      * 

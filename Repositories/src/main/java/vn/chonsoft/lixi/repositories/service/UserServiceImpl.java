@@ -26,13 +26,37 @@ public class UserServiceImpl implements UserService{
     
     /**
      * 
+     * @param u 
+     */
+    private void loadUser(User u){
+        
+        if(u != null){
+        
+            /* load credit card */
+            u.getUserCards().size();
+            
+            /* */
+            u.getRecipients().size();
+            
+            // maximum payment amount
+            if(u.getUserMoneyLevel() != null)
+                u.getUserMoneyLevel().getMoneyLevel();
+        }
+    }
+    /**
+     * 
      * @param id
      * @return 
      */
     @Override
+    @Transactional
     public User findById(Long id){
         
-        return this.userRepository.findOne(id);
+        User u = this.userRepository.findOne(id);
+        
+        loadUser(u);
+        
+        return u;
     }
     /**
      * 

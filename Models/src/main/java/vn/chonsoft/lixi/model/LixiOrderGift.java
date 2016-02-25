@@ -83,7 +83,7 @@ public class LixiOrderGift implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     
-    @Basic(optional = false)
+    @Basic
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;

@@ -77,7 +77,8 @@ public class SystemSenderController {
         
         /* */
         return new ModelAndView("Administration/ajax/simple-message");
-    }    
+    }
+    
     /**
      *
      * @param model
@@ -85,7 +86,7 @@ public class SystemSenderController {
      * @return
      */
     @RequestMapping(value = "view/{id}", method = RequestMethod.GET)
-    public ModelAndView viewRecipient(Map<String, Object> model, @PathVariable Long id) {
+    public ModelAndView viewSender(Map<String, Object> model, @PathVariable Long id) {
 
         /* get recipient */
         User sender = this.uService.findById(id);
@@ -93,6 +94,23 @@ public class SystemSenderController {
         model.put("sender", sender);
 
         return new ModelAndView("Administration/orders/viewSenderModal");
+    }
+    
+    /**
+     *
+     * @param model
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
+    public ModelAndView detailSender(Map<String, Object> model, @PathVariable Long id) {
+
+        /* get recipient */
+        User sender = this.uService.findById(id);
+
+        model.put("sender", sender);
+
+        return new ModelAndView("Administration/orders/senderDetail");
     }
     
     /**
