@@ -206,7 +206,7 @@ public class RecipientInOrder {
         if(gifts != null){
             
             for(LixiOrderGift g : gifts){
-                if(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue().equals(g.getBkStatus())){
+                if(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue().equals(g.getBkStatus())){
                     return f;
                 }
             }

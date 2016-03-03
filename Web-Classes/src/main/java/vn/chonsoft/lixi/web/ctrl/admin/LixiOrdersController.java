@@ -100,7 +100,7 @@ public class LixiOrdersController {
             
             /* send money*/
             if(LiXiGlobalConstants.TRANS_REPORT_STATUS_PROCESSED.equals(form.getStatus())){
-                status = EnumLixiOrderStatus.SENT_MONEY.getValue();
+                status = EnumLixiOrderStatus.PROCESSING.getValue();
             }
             else
                 if(LiXiGlobalConstants.TRANS_REPORT_STATUS_COMPLETED.equals(form.getStatus())){
@@ -112,9 +112,8 @@ public class LixiOrdersController {
                 }
         }
         
-        /* do not get orders that in creation or just send order info */
-        criteria.add(new Criterion("lixiStatus", Criterion.Operator.NEQ, EnumLixiOrderStatus.UNFINISHED.getValue()));
-        criteria.add(new Criterion("lixiStatus", Criterion.Operator.NEQ, EnumLixiOrderStatus.SENT_INFO.getValue()));
+        /* do not get orders that in creation */
+        criteria.add(new Criterion("lixiStatus", Criterion.Operator.NEQ, EnumLixiOrderStatus.UN_FINISHED.getValue()));
         
         /* check status */
         if(StringUtils.isNotEmpty(status)){
@@ -185,7 +184,7 @@ public class LixiOrdersController {
         LixiOrder order = this.lxOrderService.findById(id);
         /* back to list */
         if(order == null){
-            return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue(), true, true));
+            return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.PROCESSED.getValue(), true, true));
         }
         
         List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
@@ -203,7 +202,7 @@ public class LixiOrdersController {
     @RequestMapping(value = "newOrders", method = RequestMethod.GET)
     public ModelAndView listNewOrders(Map<String, Object> model){
         
-        return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue(), true, true));
+        return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue(), true, true));
     }
     
     /**
@@ -253,7 +252,7 @@ public class LixiOrdersController {
     @RequestMapping(value = "newOrders/ajax/{oStatus}", method = RequestMethod.GET)
     public ModelAndView getListNewOrders(Map<String, Object> model, @PathVariable String oStatus){
         
-        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(oStatus);
+        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), oStatus);
         
         if(orders != null){
             Iterator<LixiOrder> iterator = orders.iterator();
@@ -289,7 +288,7 @@ public class LixiOrdersController {
     @RequestMapping(value = "sendMoneyInfo", method = RequestMethod.GET)
     public ModelAndView sendMoneyInfo(Map<String, Object> model){
         
-        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.SENT_INFO.getValue());
+        List<LixiOrder> orders = this.lxOrderService.findByLixiSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
         
         if(orders != null){
             Iterator<LixiOrder> iterator = orders.iterator();
@@ -399,7 +398,7 @@ public class LixiOrdersController {
         
         switch(back){
             case "info":
-                return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue(), true, true));
+                return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.PROCESSED.getValue(), true, true));
             case "report":
                 return new ModelAndView(new RedirectView("/Administration/Orders/report", true, true));
             default:

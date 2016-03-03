@@ -30,16 +30,22 @@ public interface TopUpMobilePhoneService {
     TopUpMobilePhone findById(Long id);
     
     @Transactional
-    List<TopUpMobilePhone> findByIsSubmitted(Iterable<Integer> isSubmitted);
+    List<TopUpMobilePhone> findByStatus(Iterable<String> status);
 
     @Transactional
-    Page<TopUpMobilePhone> findByIsSubmittedAndModifiedDate(Integer isSubmitted, Date begin, Date end, Pageable page);
+    List<TopUpMobilePhone> findByStatus(String status);
+
+    @Transactional
+    List<TopUpMobilePhone> findByStatus(String lxStatus, String status);
+
+    @Transactional
+    Page<TopUpMobilePhone> findByStatusAndModifiedDate(String status, Date begin, Date end, Pageable page);
     
     @Transactional
-    Page<TopUpMobilePhone> findByIsSubmittedAndFromDate(Integer isSubmitted, Date begin, Pageable page);
+    Page<TopUpMobilePhone> findByStatusAndFromDate(String status, Date begin, Pageable page);
     
     @Transactional
-    Page<TopUpMobilePhone> findByIsSubmittedAndEndDate(Integer isSubmitted, Date end, Pageable page);
+    Page<TopUpMobilePhone> findByStatusAndEndDate(String status, Date end, Pageable page);
     
     void deleteById(Long id);
     

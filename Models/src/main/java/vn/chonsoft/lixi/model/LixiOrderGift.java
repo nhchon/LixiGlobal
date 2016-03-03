@@ -66,6 +66,9 @@ public class LixiOrderGift implements Serializable {
     @Column(name = "bk_status")
     private String bkStatus;
     
+    @Column(name = "bk_sub_status")
+    private String bkSubStatus;
+    
     @Basic
     @Column(name = "bk_message")
     private String bkMessage;
@@ -240,6 +243,14 @@ public class LixiOrderGift implements Serializable {
 
     public void setBkStatus(String bkStatus) {
         this.bkStatus = bkStatus;
+    }
+
+    public String getBkSubStatus() {
+        return bkSubStatus;
+    }
+
+    public void setBkSubStatus(String bkSubStatus) {
+        this.bkSubStatus = bkSubStatus;
     }
 
     public String getBkMessage() {

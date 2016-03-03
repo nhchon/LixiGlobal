@@ -15,7 +15,7 @@ import vn.chonsoft.lixi.model.UserCard;
  */
 public interface PaymentService {
     
-    @Scheduled(fixedDelay=3*60*60*1000, initialDelay=60*1000)
+    @Scheduled(fixedDelay=1*60*60*1000, initialDelay=60*1000)
     void updateAllInvoiceStatus();
     
     void updateInvoiceStatus(LixiInvoice invoice);

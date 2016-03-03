@@ -724,7 +724,7 @@ public class UserGeneralController {
                 LiXiUtils.setLoginedUser(loginedUser, u, this.configService.findAll());
 
                 // check the order that unfinished
-                LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, EnumLixiOrderStatus.UNFINISHED.getValue());
+                LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, EnumLixiOrderStatus.UN_FINISHED.getValue());
                 if (order != null) {
                     /* get latest exchange rate */
                     LixiExchangeRate exRate = this.lxexrateService.findLastRecord(LiXiConstants.USD);

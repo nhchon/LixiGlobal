@@ -61,8 +61,8 @@ public class TopUpMobilePhone implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
     
-    @Column(name = "is_submitted")
-    private Integer isSubmitted;
+    @Column(name = "status")
+    private String status;
     
     @Column(name = "response_code")
     private Integer responseCode;
@@ -186,14 +186,15 @@ public class TopUpMobilePhone implements Serializable {
         return "vn.chonsoft.lixi.model.TopUpMobilePhone[ id=" + id + " ]";
     }
 
-    public Integer getIsSubmitted() {
-        return isSubmitted;
+    public String getStatus() {
+        return status;
     }
 
-    public void setIsSubmitted(Integer isSubmitted) {
-        this.isSubmitted = isSubmitted;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
+    
     public Integer getResponseCode() {
         return responseCode;
     }

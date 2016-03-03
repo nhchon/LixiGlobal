@@ -48,9 +48,7 @@ import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.form.AddCardForm;
 import vn.chonsoft.lixi.model.form.BankAccountAddForm;
-import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
-import vn.chonsoft.lixi.EnumTopUpStatus;
 import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
@@ -596,7 +594,7 @@ public class CheckOutController2 {
                 this.invoiceService.save(invoice);
                 
                 return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
-            } 
+            }
             else {
                 
                 /* update invoice's status */
@@ -605,12 +603,13 @@ public class CheckOutController2 {
                 
                 /* update top up status */
                 if(order.getTopUpMobilePhones()!= null){
-                    order.getTopUpMobilePhones().forEach(t -> {t.setIsSubmitted(EnumTopUpStatus.NOT_YET_SEND.getValue());});
+                    order.getTopUpMobilePhones().forEach(t -> {t.setStatus(EnumLixiOrderStatus.TopUpStatus.UN_SUBMITTED.getValue());});
                     this.topUpService.save(order.getTopUpMobilePhones());
                 }
                 
                 /* update order status */
-                order.setLixiStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
+                order.setLixiStatus(EnumLixiOrderStatus.UN_PROCESSED.getValue());
+                order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
                 order.setModifiedDate(currDate);
                 this.lxorderService.save(order);
             
@@ -660,7 +659,7 @@ public class CheckOutController2 {
                 //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
                 log.info("submitOrdersToBaoKim");
 
-                lxAsyncMethods.submitOrdersToBaoKim(order);
+                //lxAsyncMethods.submitOrdersToBaoKim(order);
 
                 log.info(" // END of submitOrdersToBaoKim");
                 ////////////////////////////////////////////////////////////////////

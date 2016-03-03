@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
@@ -31,6 +33,9 @@ import vn.chonsoft.lixi.web.annotation.WebController;
 @WebController
 @RequestMapping(value = "/Administration/SystemSender")
 public class SystemSenderController {
+    
+    @Autowired
+    private LixiOrderService lxOrderService;
     
     @Autowired
     private UserService uService;
@@ -100,16 +105,20 @@ public class SystemSenderController {
      *
      * @param model
      * @param id
+     * @param page
      * @return
      */
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    public ModelAndView detailSender(Map<String, Object> model, @PathVariable Long id) {
+    public ModelAndView detailSender(Map<String, Object> model, @PathVariable Long id, @PageableDefault(value = 50, sort = {"lixiStatus", "id"}, direction = Sort.Direction.DESC) Pageable page) {
 
         /* get recipient */
         User sender = this.uService.findById(id);
 
         model.put("sender", sender);
 
+        Page<LixiOrder> orders = this.lxOrderService.findBySender(sender, page);
+                
+                
         return new ModelAndView("Administration/orders/senderDetail");
     }
     

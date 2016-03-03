@@ -46,6 +46,9 @@ public class LixiOrder implements Serializable {
     @Column(name = "lixi_status")
     private String lixiStatus;
     
+    @Column(name = "lixi_sub_status")
+    private String lixiSubStatus;
+    
     @Lob
     @Column(name = "lixi_message")
     private String lixiMessage;
@@ -124,6 +127,15 @@ public class LixiOrder implements Serializable {
         
         return EnumLixiOrderStatus.findByValue(lixiStatus).toString();
     }
+
+    public String getLixiSubStatus() {
+        return lixiSubStatus;
+    }
+
+    public void setLixiSubStatus(String lixiSubStatus) {
+        this.lixiSubStatus = lixiSubStatus;
+    }
+    
     
     public String getLixiMessage() {
         return lixiMessage;

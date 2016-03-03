@@ -236,6 +236,47 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         
         return ls;
     }
+    
+    /**
+     * 
+     * @param status
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<LixiOrder> findByLixiSubStatus(String status){
+        
+        Sort defaultSort = new Sort(new Sort.Order(Sort.Direction.DESC, "id"));
+        
+        List<LixiOrder> ls = this.lxorderRepository.findByLixiSubStatus(status, defaultSort);
+
+        if(ls != null && !ls.isEmpty()){
+            ls.forEach(o -> {LiXiRepoUtils.loadOrder(o);});
+        }
+        
+        return ls;
+    }
+    
+    /**
+     * 
+     * @param status
+     * @param subStatus
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<LixiOrder> findByLixiStatus(String status, String subStatus){
+        
+        Sort defaultSort = new Sort(new Sort.Order(Sort.Direction.DESC, "id"));
+        
+        List<LixiOrder> ls = this.lxorderRepository.findByLixiStatusAndLixiSubStatus(status, subStatus, defaultSort);
+
+        if(ls != null && !ls.isEmpty()){
+            ls.forEach(o -> {LiXiRepoUtils.loadOrder(o);});
+        }
+        
+        return ls;
+    }
     /**
      * 
      * @param sender

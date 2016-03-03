@@ -57,6 +57,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.AuthorizeCustomerResult;
 import vn.chonsoft.lixi.model.AuthorizePaymentResult;
@@ -108,6 +109,9 @@ public class PaymentServiceImpl implements PaymentService{
     @Autowired
     private LixiInvoiceService invoiceService;
     
+    @Autowired
+    private LixiOrderService orderService;
+
     /**
      * 
      * http://stackoverflow.com/questions/17097521/spring-3-2-value-annotation-
@@ -160,7 +164,7 @@ public class PaymentServiceImpl implements PaymentService{
      * 
      */
     @Override
-    @Scheduled(fixedDelay=3*60*60*1000, initialDelay=60*1000)
+    @Scheduled(fixedDelay=1*60*60*1000, initialDelay=60*1000)
     public void updateAllInvoiceStatus(){
         
         List<String> continueStatus = Arrays.asList(EnumTransactionStatus.inProgress.getValue(),
@@ -213,16 +217,26 @@ public class PaymentServiceImpl implements PaymentService{
                 TransactionDetailsType result = getResponse.getTransaction();
 
                 String status = result.getTransactionStatus();
+                String translateStatus = LiXiGlobalUtils.translateNetTransStatus(status);
                 String responseCode = result.getResponseCode()+"";
                 /* update invoice */
                 invoice.setNetTransStatus(status);
-                invoice.setInvoiceStatus(LiXiGlobalUtils.translateNetTransStatus(status));
+                invoice.setInvoiceStatus(translateStatus);
                 invoice.setNetResponseCode(responseCode);
                 invoice.setLastCheckDate(Calendar.getInstance().getTime());
                 
                 this.invoiceService.save(invoice);
                 
-                log.info("Update invoice id " + invoice.getNetTransId() + " : " + status + " : " + responseCode);
+                if(LiXiGlobalConstants.TRANS_STATUS_PROCESSED.equals(translateStatus)){
+                    
+                    LixiOrder order = this.orderService.findById(invoice.getOrder().getId());
+                    order.setLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue());
+                    order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
+                    /* update order to processed */
+                    this.orderService.save(order);
+                }
+                
+                log.info("Update invoice id " + invoice.getNetTransId() + " : " + translateStatus + " : " + status + " : " + responseCode);
                 
             } else {
                 log.info("Failed to get transaction details:  " + getResponse.getMessages().getResultCode());

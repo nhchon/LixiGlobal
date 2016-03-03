@@ -22,7 +22,7 @@
                 });
                 
                 /* */
-                <c:if test="${not empty oStatus}">getContent(${oStatus});</c:if>
+                <c:if test="${not empty oStatus}">getContent('${oStatus}');</c:if>
             });
             
             function sent(id){
@@ -93,14 +93,7 @@
         </script>    
     </jsp:attribute>
     <jsp:body>
-        <%-- EnumLixiOrderStatus.java --%>
-        <c:set var="UNFINISHED" value="-9"/>
-        <c:set var="NOT_YET_SUBMITTED" value="-8"/>
-        <c:set var="SENT_INFO" value="-7"/>
-        <c:set var="SENT_MONEY" value="-6"/>
-        <c:set var="PROCESSING" value="0"/>
-        <c:set var="COMPLETED" value="1"/>
-        <c:set var="CANCELED" value="2"/>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
             <li><a href="<c:url value="/Administration/Orders/newOrders/-1"/>">New Orders</a></li>
@@ -115,7 +108,7 @@
                                 <label for="email">New Order's Status:</label>
                                 <select class="form-control" id="oStatus" name="oStatus">
                                     <option value="">Please select status</option>
-                                    <option value="${NOT_YET_SUBMITTED}" <c:if test="${oStatus eq NOT_YET_SUBMITTED}">selected=""</c:if>>Failed Sent</option>
+                                    <option value="${UN_SUBMITTED}" <c:if test="${oStatus eq UN_SUBMITTED}">selected=""</c:if>>Failed Sent</option>
                                     <option value="${SENT_INFO}" <c:if test="${oStatus eq SENT_INFO}">selected=""</c:if>>Success Sent</option>
                                 </select>
                             </div>

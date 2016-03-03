@@ -51,5 +51,11 @@ public interface LixiOrderService {
     List<LixiOrder> findByLixiStatus(String status);
     
     @Transactional
+    List<LixiOrder> findByLixiStatus(String status, String subStatus);
+    
+    @Transactional
+    List<LixiOrder> findByLixiSubStatus(String status);
+    
+    @Transactional
     Page<LixiOrder> findByModifiedDate(User sender, Date begin, Date end, Pageable page);
 }

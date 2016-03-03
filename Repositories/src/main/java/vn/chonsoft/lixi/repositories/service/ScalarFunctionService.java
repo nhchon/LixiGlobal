@@ -4,11 +4,15 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
+
 /**
  *
  * @author chonnh
  */
 public interface ScalarFunctionService {
+    
+    //List<Long> getListOrderProcessedOreCompletedOfRecipient(Long id);
     
     double sumGiftOfRecipient(String invoiceStatus, Long id);
     

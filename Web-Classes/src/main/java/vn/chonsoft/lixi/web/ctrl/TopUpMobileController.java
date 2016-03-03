@@ -26,7 +26,6 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
-import vn.chonsoft.lixi.EnumTopUpStatus;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
@@ -224,7 +223,7 @@ public class TopUpMobileController {
             topUp.setAmount(amountTopUp);
             topUp.setAmountUsd(amountUsd);
             topUp.setPhone(recPhone);
-            topUp.setIsSubmitted(EnumTopUpStatus.ORDER_UNFINISHED.getValue());// not yet submit
+            topUp.setStatus(EnumLixiOrderStatus.UN_FINISHED.getValue());// not yet submit
             topUp.setOrder(order);
             topUp.setRecipient(rec);
             //
@@ -403,7 +402,7 @@ public class TopUpMobileController {
         LixiOrder order = new LixiOrder();
         order.setSender(u);
         order.setLxExchangeRate(lxExch);
-        order.setLixiStatus(EnumLixiOrderStatus.UNFINISHED.getValue());
+        order.setLixiStatus(EnumLixiOrderStatus.UN_FINISHED.getValue()); // unfinished
         order.setLixiMessage(null);
         // default is allow refund
         order.setSetting(EnumLixiOrderSetting.ALLOW_REFUND.getValue());

@@ -361,7 +361,8 @@ public class GiftsAjaxController {
                         order = new LixiOrder();
                         order.setSender(u);
                         order.setLxExchangeRate(lxExch);
-                        order.setLixiStatus(EnumLixiOrderStatus.UNFINISHED.getValue());
+                        order.setLixiStatus(EnumLixiOrderStatus.UN_FINISHED.getValue());
+                        order.setLixiSubStatus(EnumLixiOrderStatus.UN_FINISHED.getValue());
                         order.setLixiMessage(null);
                         // default is allow refund
                         order.setSetting(EnumLixiOrderSetting.ALLOW_REFUND.getValue());
@@ -398,7 +399,8 @@ public class GiftsAjaxController {
                     lxogift.setProductName(vgp.getName());
                     lxogift.setProductImage(vgp.getImageUrl());
                     lxogift.setProductQuantity(quantity);
-                    lxogift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());// not yet submitted
+                    lxogift.setBkStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());// not yet submitted
+                    lxogift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());// not yet submitted
                     /* date */
                     Date currDate = Calendar.getInstance().getTime();
                     lxogift.setCreatedDate(currDate);

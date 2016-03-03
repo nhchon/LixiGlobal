@@ -307,7 +307,7 @@ public class LiXiVatGiaUtils {
 
                 try {
 
-                    if (EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue().equals(gift.getBkStatus())) {
+                    if (EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue().equals(gift.getBkSubStatus())) {
                         String receiverName = StringUtils.join(new String[]{gift.getRecipient().getFirstName(), gift.getRecipient().getMiddleName(), gift.getRecipient().getLastName()}, " ");
                         /**
                          *
@@ -347,7 +347,8 @@ public class LiXiVatGiaUtils {
 
                         LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
 
-                        gift.setBkStatus(EnumLixiOrderStatus.SENT_INFO.getValue());
+                        gift.setBkStatus(EnumLixiOrderStatus.PROCESSING.getValue());
+                        gift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
                         gift.setBkMessage(result.getData().getMessage());
                         gift.setModifiedDate(Calendar.getInstance().getTime());
                         
@@ -359,7 +360,7 @@ public class LiXiVatGiaUtils {
                     }
                 } catch (Exception e) {
                     // error
-                    gift.setBkStatus(EnumLixiOrderStatus.NOT_YET_SUBMITTED.getValue());
+                    gift.setBkStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
                     gift.setBkMessage(e.getMessage());
                     // update
                     orderGiftService.save(gift);
@@ -376,8 +377,9 @@ public class LiXiVatGiaUtils {
 
             if (updateOrderStatus) {
 
-                order.setLixiStatus(EnumLixiOrderStatus.SENT_INFO.getValue());
-                order.setLixiMessage("The Order already sent to BaoKim Service");
+                order.setLixiStatus(EnumLixiOrderStatus.PROCESSING.getValue());
+                order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
+                order.setLixiMessage("Sent Order Info");
                 order.setModifiedDate(Calendar.getInstance().getTime());
                 
                 orderService.save(order);
@@ -510,7 +512,7 @@ public class LiXiVatGiaUtils {
 
                 try {
 
-                    if (EnumLixiOrderStatus.SENT_INFO.getValue().equals(gift.getBkStatus())) {
+                    if (EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue().equals(gift.getBkSubStatus())) {
                         String id = gift.getId().toString();
                         String amount = gift.getProductPrice() + "";
                         String dateTransf = dFormat.format(Calendar.getInstance().getTime());
@@ -533,7 +535,8 @@ public class LiXiVatGiaUtils {
 
                         LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
 
-                        gift.setBkStatus(EnumLixiOrderStatus.SENT_MONEY.getValue());
+                        gift.setBkStatus(EnumLixiOrderStatus.PROCESSING.getValue());
+                        gift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_MONEY.getValue());
                         gift.setBkMessage(result.getData().getMessage());
                         gift.setModifiedDate(Calendar.getInstance().getTime());
                         
@@ -545,7 +548,7 @@ public class LiXiVatGiaUtils {
                     }
                 } catch (Exception e) {
                     // error
-                    gift.setBkStatus(EnumLixiOrderStatus.SENT_INFO.getValue());
+                    gift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
                     gift.setBkMessage(e.getMessage());
                     // update
                     orderGiftService.save(gift);
@@ -560,8 +563,9 @@ public class LiXiVatGiaUtils {
             // update order
             if (updateOrderStatus) {
 
-                order.setLixiStatus(EnumLixiOrderStatus.SENT_MONEY.getValue());
-                order.setLixiMessage("Payment Information already sent to BaoKim Service");
+                order.setLixiStatus(EnumLixiOrderStatus.PROCESSING.getValue());
+                order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_MONEY.getValue());
+                order.setLixiMessage("Sent Payment Information");
                 order.setModifiedDate(Calendar.getInstance().getTime());
                 
                 orderService.save(order);

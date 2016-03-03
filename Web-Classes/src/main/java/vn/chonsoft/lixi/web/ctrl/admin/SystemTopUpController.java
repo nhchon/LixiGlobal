@@ -21,17 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
-import vn.chonsoft.lixi.EnumTopUpStatus;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
-import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -54,7 +53,7 @@ public class SystemTopUpController {
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public ModelAndView notYetSubmitted(Map<String, Object> model){
     
-        List<TopUpMobilePhone> topUps = this.topUpService.findByIsSubmitted(Arrays.asList(-1, 0));
+        List<TopUpMobilePhone> topUps = this.topUpService.findByStatus(EnumLixiOrderStatus.TopUpStatus.UN_SUBMITTED.getValue());
         
         model.put("topUps", topUps);
         
@@ -137,7 +136,7 @@ public class SystemTopUpController {
         
         LixiInvoice invoice = t.getOrder().getInvoice();
         
-        t.setIsSubmitted(EnumTopUpStatus.CANCEL_BY_ADMIN.getValue()); // cancel by admin
+        t.setStatus(EnumLixiOrderStatus.CANCELED.getValue()); // cancel by admin
         this.topUpService.save(t);
         
         model.put("status", invoice.getTranslatedStatus());
@@ -194,14 +193,14 @@ public class SystemTopUpController {
         }
         else{
             if(fromDate == null){
-                ps = this.topUpService.findByIsSubmittedAndEndDate(status, toDate, page);
+                ps = this.topUpService.findByStatusAndEndDate(statusStr, toDate, page);
             }
             else{
                 if(toDate == null){
-                    ps = this.topUpService.findByIsSubmittedAndFromDate(status, fromDate, page);
+                    ps = this.topUpService.findByStatusAndFromDate(statusStr, fromDate, page);
                 }
                 else{
-                    ps = this.topUpService.findByIsSubmittedAndModifiedDate(status, fromDate, toDate, page);
+                    ps = this.topUpService.findByStatusAndModifiedDate(statusStr, fromDate, toDate, page);
                 }
             }
         }

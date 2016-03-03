@@ -1,0 +1,5 @@
+ALTER TABLE `top_up_mobile_phone` CHANGE `is_submitted` `status` VARCHAR(255) NULL DEFAULT '0';
+
+ALTER TABLE `lixi_order_gifts` ADD `bk_sub_status` VARCHAR(255) NULL AFTER `bk_status`;
+
+ALTER TABLE `lixi_orders` ADD `lixi_sub_status` VARCHAR(255) NULL AFTER `lixi_status`;

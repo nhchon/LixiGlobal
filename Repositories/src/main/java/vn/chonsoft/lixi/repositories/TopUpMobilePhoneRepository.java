@@ -20,13 +20,17 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
  */
 public interface TopUpMobilePhoneRepository  extends JpaRepository<TopUpMobilePhone, Long>{
     
-    Page<TopUpMobilePhone> findByIsSubmittedAndModifiedDateBetween(Integer isSubmitted, Date begin, Date end, Pageable page);
+    Page<TopUpMobilePhone> findByStatusAndModifiedDateBetween(String status, Date begin, Date end, Pageable page);
     
-    Page<TopUpMobilePhone> findByIsSubmittedAndModifiedDateIsGreaterThanEqual(Integer isSubmitted, Date begin, Pageable page);
+    Page<TopUpMobilePhone> findByStatusAndModifiedDateIsGreaterThanEqual(String status, Date begin, Pageable page);
     
-    Page<TopUpMobilePhone> findByIsSubmittedAndModifiedDateIsLessThanEqual(Integer isSubmitted, Date end, Pageable page);
+    Page<TopUpMobilePhone> findByStatusAndModifiedDateIsLessThanEqual(String status, Date end, Pageable page);
     
-    List<TopUpMobilePhone> findByIsSubmittedIn(Iterable<Integer> isSubmitted, Sort sort);
+    List<TopUpMobilePhone> findByStatusIn(Iterable<String> status, Sort sort);
+    
+    List<TopUpMobilePhone> findByStatus(String status, Sort sort);
+    
+    List<TopUpMobilePhone> findByOrder_LixiStatusAndStatus(String lxStatus, String status, Sort sort);
     
     Long deleteByOrderAndRecipient(LixiOrder order, Recipient recipient);
 }

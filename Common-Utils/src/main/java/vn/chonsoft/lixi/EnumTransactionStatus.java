@@ -13,7 +13,7 @@ public enum EnumTransactionStatus {
     beforePayment("beforePayment"),
     paymentError("paymentError"),
     inProgress("inProgress"),
-    sentToBK("sentToBK"),
+    //sentToBK("sentToBK"),
     authorizedPendingCapture("authorizedPendingCapture"),
     capturedPendingSettlement("capturedPendingSettlement"),
     communicationError("communicationError"),

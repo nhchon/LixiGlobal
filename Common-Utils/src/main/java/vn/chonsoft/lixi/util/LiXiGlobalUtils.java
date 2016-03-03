@@ -97,12 +97,6 @@ public abstract class LiXiGlobalUtils {
             
         }
         
-        if(EnumTransactionStatus.sentToBK.getValue().equals(netTransStatus)){
-            
-            return LiXiGlobalConstants.TRANS_STATUS_SENT;
-            
-        }
-        
         return netTransStatus;
     
     }

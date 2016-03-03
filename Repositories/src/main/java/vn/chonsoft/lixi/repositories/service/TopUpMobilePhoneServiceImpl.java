@@ -61,6 +61,7 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
         TopUpMobilePhone t = this.topUpRepository.findOne(id);
         if(t != null){
             t.getOrder().getInvoice();
+            t.getOrder().getGifts();
             t.getRecipient();
         }
         return t;
@@ -69,15 +70,15 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
     
     /**
      * 
-     * @param isSubmitted
+     * @param status
      * @return 
      */
     @Override
     @Transactional
-    public List<TopUpMobilePhone> findByIsSubmitted(Iterable<Integer> isSubmitted){
+    public List<TopUpMobilePhone> findByStatus(Iterable<String> status){
         
         
-        List<TopUpMobilePhone>  l = this.topUpRepository.findByIsSubmittedIn(isSubmitted, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
+        List<TopUpMobilePhone>  l = this.topUpRepository.findByStatusIn(status, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
         
         l.forEach(t -> {
             t.getOrder().getInvoice();
@@ -90,7 +91,49 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
     
     /**
      * 
-     * @param isSubmitted
+     * @param status
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<TopUpMobilePhone> findByStatus(String status){
+        
+        
+        List<TopUpMobilePhone>  l = this.topUpRepository.findByStatus(status, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
+        
+        l.forEach(t -> {
+            t.getOrder().getInvoice();
+            t.getRecipient();
+        });
+        
+        return l;
+        
+    }
+    
+    /**
+     * 
+     * @param lxStatus
+     * @param status
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<TopUpMobilePhone> findByStatus(String lxStatus, String status){
+        
+        List<TopUpMobilePhone>  l = this.topUpRepository.findByOrder_LixiStatusAndStatus(lxStatus, status, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
+        
+        l.forEach(t -> {
+            t.getOrder().getInvoice();
+            t.getRecipient();
+        });
+        
+        return l;
+        
+    }
+
+    /**
+     * 
+     * @param status
      * @param begin
      * @param end
      * @param page
@@ -98,9 +141,9 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
      */
     @Override
     @Transactional
-    public Page<TopUpMobilePhone> findByIsSubmittedAndModifiedDate(Integer isSubmitted, Date begin, Date end, Pageable page){
+    public Page<TopUpMobilePhone> findByStatusAndModifiedDate(String status, Date begin, Date end, Pageable page){
         
-        Page<TopUpMobilePhone> ps = this.topUpRepository.findByIsSubmittedAndModifiedDateBetween(isSubmitted, begin, end, page);
+        Page<TopUpMobilePhone> ps = this.topUpRepository.findByStatusAndModifiedDateBetween(status, begin, end, page);
         if(ps != null && ps.hasContent()){
             ps.getContent().forEach(t -> {
                 t.getOrder().getInvoice();
@@ -113,16 +156,16 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
     
     /**
      * 
-     * @param isSubmitted
+     * @param status
      * @param begin
      * @param page
      * @return 
      */
     @Override
     @Transactional
-    public Page<TopUpMobilePhone> findByIsSubmittedAndFromDate(Integer isSubmitted, Date begin, Pageable page){
+    public Page<TopUpMobilePhone> findByStatusAndFromDate(String status, Date begin, Pageable page){
         
-        Page<TopUpMobilePhone> ps = this.topUpRepository.findByIsSubmittedAndModifiedDateIsGreaterThanEqual(isSubmitted, begin, page);
+        Page<TopUpMobilePhone> ps = this.topUpRepository.findByStatusAndModifiedDateIsGreaterThanEqual(status, begin, page);
         if(ps != null && ps.hasContent()){
             ps.getContent().forEach(t -> {
                 t.getOrder().getInvoice();
@@ -135,16 +178,16 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
     
     /**
      * 
-     * @param isSubmitted
+     * @param status
      * @param end
      * @param page
      * @return 
      */
     @Override
     @Transactional
-    public Page<TopUpMobilePhone> findByIsSubmittedAndEndDate(Integer isSubmitted, Date end, Pageable page){
+    public Page<TopUpMobilePhone> findByStatusAndEndDate(String status, Date end, Pageable page){
         
-        Page<TopUpMobilePhone> ps = this.topUpRepository.findByIsSubmittedAndModifiedDateIsLessThanEqual(isSubmitted, end, page);
+        Page<TopUpMobilePhone> ps = this.topUpRepository.findByStatusAndModifiedDateIsLessThanEqual(status, end, page);
         if(ps != null && ps.hasContent()){
             ps.getContent().forEach(t -> {
                 t.getOrder().getInvoice();
