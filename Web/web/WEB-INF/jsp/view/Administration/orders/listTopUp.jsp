@@ -128,6 +128,7 @@
         </script>    
     </jsp:attribute>
     <jsp:body>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
@@ -178,16 +179,13 @@
                                             </td>
                                             <td id="status${t.id}">
                                                 <c:choose>
-                                                    <c:when test="${t.isSubmitted eq 0}">
+                                                    <c:when test="${t.status eq UN_SUBMITTED}">
                                                        Not Sent
                                                     </c:when>
-                                                    <c:when test="${t.isSubmitted eq -1}">
-                                                        Not Sent
+                                                    <c:when test="${t.status eq COMPLETED}">
+                                                        Completed
                                                     </c:when>
-                                                    <c:when test="${t.isSubmitted eq 1}">
-                                                        Sent
-                                                    </c:when>
-                                                    <c:when test="${t.isSubmitted eq 2}">
+                                                    <c:when test="${t.status eq CANCELED}">
                                                         Canceled
                                                     </c:when>
                                                 </c:choose>                                                

@@ -20,5 +20,7 @@ public interface ScalarFunctionService {
     
     double sumInvoiceOfSender(String invoiceStatus, Long sender);
     
+    double sumInvoiceByOrderStatus(String status, long sender);
+    
     double sumTopUpOfSender(String invoiceStatus, Long sender);
 }

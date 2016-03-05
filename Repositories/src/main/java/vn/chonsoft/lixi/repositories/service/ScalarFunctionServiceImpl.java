@@ -77,6 +77,19 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
         }
     }
     
+    public double sumInvoiceByOrderStatus(String status, long sender){
+        String sql = "SELECT sum(i.total_amount) FROM lixi_orders o, lixi_invoices i WHERE o.lixi_status = ? and o.id = i.order_id and i.payer = ?";
+        
+        Double rs = scalarDao.singleResult(sql, status, sender);
+        if(rs != null){
+            return rs.doubleValue();
+        }
+        else{
+            return 0d;
+        }
+    }
+    
+    
     /**
      * 
      * @param invoiceStatus 

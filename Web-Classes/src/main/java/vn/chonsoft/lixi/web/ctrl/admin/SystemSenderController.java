@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
@@ -129,7 +130,7 @@ public class SystemSenderController {
     @RequestMapping(value = "report", method = RequestMethod.GET)
     public ModelAndView report(){
         
-        return new ModelAndView(new RedirectView("/Administration/SystemSender/report/1/Processed", true, true));
+        return new ModelAndView(new RedirectView("/Administration/SystemSender/report/1/0", true, true));
     }
     
     /**
@@ -154,7 +155,16 @@ public class SystemSenderController {
         if(ps != null && !ps.getContent().isEmpty()){
             
             ps.getContent().forEach(s -> {
-                s.setSumInvoice(sfService.sumInvoiceOfSender(oStatus, s.getId()));
+                
+                if(EnumLixiOrderStatus.PROCESSED.getValue().equals(oStatus) || 
+                   EnumLixiOrderStatus.COMPLETED.getValue().equals(oStatus) || 
+                   EnumLixiOrderStatus.CANCELED.getValue().equals(oStatus)){
+                    
+                    s.setSumInvoice(sfService.sumInvoiceByOrderStatus(oStatus, s.getId()));
+                }
+                else{
+                    s.setSumInvoice(sfService.sumInvoiceOfSender(oStatus, s.getId()));
+                }
             });
             
             rS = new ArrayList<>(ps.getContent());

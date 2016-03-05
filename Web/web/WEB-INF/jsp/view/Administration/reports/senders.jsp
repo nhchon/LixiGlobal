@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Admin htmlTitle="Administration -:- List Top Up">
+<template:Admin htmlTitle="Administration -:- List Sender">
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/bootstrap-datepicker3.min.css"/>">
     </jsp:attribute>
@@ -77,6 +77,7 @@
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-datepicker.min.js"/>"></script>
     </jsp:attribute>
     <jsp:body>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
@@ -100,9 +101,9 @@
                                     <option value="In Progress" <c:if test="${oStatus eq 'In Progress'}">selected=""</c:if>>In Progress</option>
                                     <option value="Declined" <c:if test="${oStatus eq 'Declined'}">selected=""</c:if>>Declined</option>
                                     <option value="Refunded" <c:if test="${oStatus eq 'Refunded'}">selected=""</c:if>>Refunded</option>
-                                    <option value="Processed" <c:if test="${oStatus eq 'Processed'}">selected=""</c:if>>Processed</option>
-                                    <option value="Sent" <c:if test="${oStatus eq 'Sent'}">selected=""</c:if>>Sent</option>
-                                    <option value="Completed" <c:if test="${oStatus eq 'Completed'}">selected=""</c:if>>Completed</option>
+                                    <option value="0" <c:if test="${oStatus eq '0'}">selected=""</c:if>>Processed</option>
+                                    <option value="1" <c:if test="${oStatus eq '1'}">selected=""</c:if>>Completed</option>
+                                    <option value="2" <c:if test="${oStatus eq '2'}">selected=""</c:if>>Cancelled</option>
                                 </select>
                             </div>
                         </div>

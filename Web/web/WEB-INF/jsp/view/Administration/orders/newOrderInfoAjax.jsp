@@ -1,11 +1,4 @@
-<%-- EnumLixiOrderStatus.java --%>
-<c:set var="UNFINISHED" value="-9"/>
-<c:set var="NOT_YET_SUBMITTED" value="-8"/>
-<c:set var="SENT_INFO" value="-7"/>
-<c:set var="SENT_MONEY" value="-6"/>
-<c:set var="PROCESSING" value="0"/>
-<c:set var="COMPLETED" value="1"/>
-<c:set var="CANCELED" value="2"/>
+<%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
 <c:set var="transferPercent" value="95"/>
 <c:if test="${not empty sessionScope['scopedTarget.loginedUser'].configs['LIXI_BAOKIM_TRANFER_PERCENT']}">
     <c:set var="transferPercent" value="${sessionScope['scopedTarget.loginedUser'].configs['LIXI_BAOKIM_TRANFER_PERCENT']}"/>
@@ -94,7 +87,7 @@
                                         </c:forEach>
                                     </td>
                                     <td style="text-align: right;" id="tdAction${m.key.id}">
-                                        <c:if test="${oStatus eq NOT_YET_SUBMITTED}">
+                                        <c:if test="${oStatus eq UN_SUBMITTED}">
                                             <a href="javascript:sent(${m.key.id});">Send</a>
                                         </c:if>
                                         <c:if test="${oStatus eq SENT_INFO}"><a href="javascript:cancel(${m.key.id});">Cancel</a></c:if>
