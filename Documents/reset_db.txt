@@ -1,0 +1,14 @@
+ delete from top_up_result;
+
+delete from top_up_mobile_phone;
+
+delete from lixi_order_gifts;
+
+delete from lixi_invoice_payment;
+
+delete from lixi_invoices;
+
+ delete from lixi_orders;
+
+delete from lixi_order_cards;
+
