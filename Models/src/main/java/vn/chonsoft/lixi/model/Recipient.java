@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -79,6 +80,13 @@ public class Recipient implements Serializable {
     
     @Transient
     private double sumTopUp;
+    
+    @Transient
+    private List<LixiOrder> processedOrders;
+    
+    @Transient
+    private List<LixiOrder> completedOrders;
+    
     
     public Recipient() {
     }
@@ -211,6 +219,22 @@ public class Recipient implements Serializable {
     public Double getSumAll(){
         
         return new Double(this.getSumGift() + this.getSumTopUp());
+    }
+
+    public List<LixiOrder> getProcessedOrders() {
+        return processedOrders;
+    }
+
+    public void setProcessedOrders(List<LixiOrder> processedOrders) {
+        this.processedOrders = processedOrders;
+    }
+
+    public List<LixiOrder> getCompletedOrders() {
+        return completedOrders;
+    }
+
+    public void setCompletedOrders(List<LixiOrder> completedOrders) {
+        this.completedOrders = completedOrders;
     }
     
     @Override

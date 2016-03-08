@@ -90,8 +90,8 @@
             <div class="col-md-12">
                 <form role="form" id="reportForm" action="<c:url value="/Administration/SystemSender/report"/>" method="post">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                    <input type="hidden" name="paging.page"  id="paging.page" value="${pagingPage}"/>
-                    <input type="hidden" name="paging.size"  id="paging.size" value="${pagingSize}"/>
+                    <input type="hidden" name="paging.page"  id="paging.page" value="1"/>
+                    <input type="hidden" name="paging.size"  id="paging.size" value="50"/>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">

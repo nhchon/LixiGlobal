@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +40,8 @@ import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 @WebController
 @RequestMapping(value = "/Administration/SystemTopUp")
 public class SystemTopUpController {
+    
+    private static final Logger log = LogManager.getLogger(SystemTopUpController.class);
     
     @Autowired
     private TopUpMobilePhoneService topUpService;
@@ -169,12 +173,10 @@ public class SystemTopUpController {
         String fromDateStr = request.getParameter("fromDate");
         String toDateStr = request.getParameter("toDate");
         
-        Integer status = 0;
         Date fromDate = null;
         Date toDate = null;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            status = Integer.valueOf(statusStr);
             
             if(!StringUtils.isEmpty(fromDateStr)){
                 fromDate = df.parse(fromDateStr);
@@ -203,6 +205,9 @@ public class SystemTopUpController {
                 }
             }
         }
+        
+        //log.info("status: " + statusStr + " toDate: " + toDateStr);
+        //log.info("topUps: " + ps.getTotalElements());
         
         model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
         model.put("topUps", ps);

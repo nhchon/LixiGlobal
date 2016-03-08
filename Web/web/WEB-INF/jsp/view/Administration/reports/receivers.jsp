@@ -23,6 +23,7 @@
         </script>    
     </jsp:attribute>
     <jsp:body>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
@@ -35,8 +36,8 @@
             <div class="col-md-12">
                 <form role="form" id="reportForm" action="<c:url value="/Administration/SystemSender/report"/>" method="post">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                    <input type="hidden" name="paging.page"  id="paging.page" value="${pagingPage}"/>
-                    <input type="hidden" name="paging.size"  id="paging.size" value="${pagingSize}"/>
+                    <input type="hidden" name="paging.page"  id="paging.page" value="1"/>
+                    <input type="hidden" name="paging.size"  id="paging.size" value="50"/>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
@@ -46,9 +47,9 @@
                                     <option value="In Progress" <c:if test="${oStatus eq 'In Progress'}">selected=""</c:if>>In Progress</option>
                                     <option value="Declined" <c:if test="${oStatus eq 'Declined'}">selected=""</c:if>>Declined</option>
                                     <option value="Refunded" <c:if test="${oStatus eq 'Refunded'}">selected=""</c:if>>Refunded</option>
-                                    <option value="Processed" <c:if test="${oStatus eq 'Processed'}">selected=""</c:if>>Processed</option>
-                                    <option value="Sent" <c:if test="${oStatus eq 'Sent'}">selected=""</c:if>>Sent</option>
-                                    <option value="Complete" <c:if test="${oStatus eq 'Complete'}">selected=""</c:if>>Complete</option>
+                                    <option value="0" <c:if test="${oStatus eq '0'}">selected=""</c:if>>Processed</option>
+                                    <option value="1" <c:if test="${oStatus eq '1'}">selected=""</c:if>>Completed</option>
+                                    <option value="2" <c:if test="${oStatus eq '2'}">selected=""</c:if>>Cancelled</option>
                                 </select>
                             </div>
                         </div>

@@ -48,6 +48,7 @@
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-datepicker.min.js"/>"></script>
     </jsp:attribute>
     <jsp:body>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
@@ -60,18 +61,16 @@
             <div class="col-md-12">
                 <form role="form" id="reportForm" action="<c:url value="/Administration/SystemTopUp/report"/>" method="post">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                    <input type="hidden" name="paging.page"  id="paging.page" value="${pagingPage}"/>
-                    <input type="hidden" name="paging.size"  id="paging.size" value="${pagingSize}"/>
+                    <input type="hidden" name="paging.page"  id="paging.page" value="1"/>
+                    <input type="hidden" name="paging.size"  id="paging.size" value="50"/>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="email">TopUp's Status:</label>
                                 <select class="form-control" id="status" name="status">
                                     <option value="">Please select status</option>
-                                    <option value="-1" <c:if test="${status eq '-1'}">selected=""</c:if>>Sent failed</option>
-                                    <option value="0" <c:if test="${status eq '0'}">selected=""</c:if>>Not yet send</option>
-                                    <option value="1" <c:if test="${status eq '1'}">selected=""</c:if>>Sent</option>
-                                    <option value="2" <c:if test="${status eq '2'}">selected=""</c:if>>Canceled</option>
+                                    <option value="${UN_SUBMITTED}" <c:if test="${status eq UN_SUBMITTED}">selected=""</c:if>>Failed Sent</option>
+                                    <option value="${COMPLETED}" <c:if test="${status eq COMPLETED}">selected=""</c:if>>Success Sent</option>
                                 </select>
                             </div>
                         </div>
@@ -143,17 +142,11 @@
                                             </td>
                                             <td id="status${t.id}">
                                                 <c:choose>
-                                                    <c:when test="${t.isSubmitted eq 0}">
+                                                    <c:when test="${t.status eq UN_SUBMITTED}">
                                                         Not Sent
                                                     </c:when>
-                                                    <c:when test="${t.isSubmitted eq -1}">
-                                                        Sent Failed
-                                                    </c:when>
-                                                    <c:when test="${t.isSubmitted eq 1}">
-                                                        Sent
-                                                    </c:when>
-                                                    <c:when test="${t.isSubmitted eq 2}">
-                                                        Canceled
+                                                    <c:when test="${t.status eq COMPLETE}">
+                                                        Success sent
                                                     </c:when>
                                                 </c:choose>                                                
                                             </td>

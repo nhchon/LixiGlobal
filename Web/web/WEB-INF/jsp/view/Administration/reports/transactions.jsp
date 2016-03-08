@@ -68,14 +68,7 @@
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-datepicker.min.js"/>"></script>
     </jsp:attribute>
     <jsp:body>
-        <%-- EnumLixiOrderStatus.java --%>
-        <c:set var="UNFINISHED" value="-9"/>
-        <c:set var="NOT_YET_SUBMITTED" value="-8"/>
-        <c:set var="SENT_INFO" value="-7"/>
-        <c:set var="SENT_MONEY" value="-6"/>
-        <c:set var="PROCESSING" value="0"/>
-        <c:set var="COMPLETED" value="1"/>
-        <c:set var="CANCELED" value="2"/>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
@@ -97,9 +90,9 @@
                                 <form:select class="form-control" path="status">
                                     <option value="">Please select status</option>
                                     <option value="All" <c:if test="${searchForm.status eq 'All'}">selected=""</c:if>>All</option>
-                                    <option value="Processed" <c:if test="${searchForm.status eq 'Processed'}">selected=""</c:if>>Processed</option>
-                                    <option value="Completed" <c:if test="${searchForm.status eq 'Completed'}">selected=""</c:if>>Completed</option>
-                                    <option value="Cancelled" <c:if test="${searchForm.status eq 'Cancelled'}">selected=""</c:if>>Cancelled</option>
+                                    <option value="${PROCESSED}" <c:if test="${searchForm.status eq PROCESSED}">selected=""</c:if>>Processed</option>
+                                    <option value="${COMPLETED}" <c:if test="${searchForm.status eq COMPLETED}">selected=""</c:if>>Completed</option>
+                                    <option value="${CANCELED}" <c:if test="${searchForm.status eq CANCELED}">selected=""</c:if>>Cancelled</option>
                                 </form:select>
                             </div>
                         </div>
@@ -168,14 +161,14 @@
                                     <tr>
                                         <th nowrap>Date</th><%-- 1 --%>
                                         <th nowrap style="text-align:center;">Order</th><%-- 2 --%>
-                                        <th nowrap>Transaction No</th><%-- 3 --%>
+                                        <th nowrap style="text-align:center;">Transaction No</th><%-- 3 --%>
                                         <th nowrap>Option</th><%-- 4 --%>
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
                                         <th style="text-align: right;">Amount</th><%-- 7 --%>
                                         <th style="text-align: center;">Status</th><%-- 8 --%>
                                         <th style="text-align: center;">Last Modified Date</th><%-- 9 --%>
-                                        <c:if test="${searchForm.status eq 'All' or searchForm.status eq 'Processed'}">
+                                        <c:if test="${searchForm.status eq 'All' or searchForm.status eq PROCESSED}">
                                         <th style="text-align: right;">Action</th><%-- 10 --%>    
                                         </c:if>
                                     </tr>
@@ -195,7 +188,7 @@
                                                 <br/>
                                                 1 USD = ${m.key.lxExchangeRate.buy} VND
                                             </td>
-                                            <td>${m.key.invoice.netTransId}</td>
+                                            <td style="text-align:center;">${m.key.invoice.netTransId}<br/>(${m.key.invoice.translatedStatus})</td>
                                             <td nowrap>
                                                 <c:if test="${m.key.setting eq 0}">
                                                     Gift Only
@@ -229,8 +222,10 @@
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: center;">
-                                                <c:if test="${m.key.lixiStatus eq SENT_MONEY or m.key.lixiStatus eq PROCESSING}">
-                                                    In Processed<br/>(Sent Money Info)
+                                                <c:if test="${m.key.lixiStatus eq PROCESSED}">
+                                                    Processed<br/>
+                                                    <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                                    <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
                                                 </c:if>
                                                 <c:if test="${m.key.lixiStatus eq COMPLETED}">
                                                     Completed
@@ -242,9 +237,9 @@
                                             <td style="text-align: center;">
                                                 <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.modifiedDate}"/>
                                             </td>
-                                            <c:if test="${searchForm.status eq 'All' or searchForm.status eq 'Processed'}">
+                                            <c:if test="${searchForm.status eq 'All' or searchForm.status eq PROCESSED}">
                                             <td style="text-align: right;">
-                                                <c:if test="${m.key.lixiStatus eq SENT_MONEY}">
+                                                <c:if test="${m.key.lixiStatus eq PROCESSED and (m.key.lixiSubStatus eq SENT_MONEY or m.key.lixiSubStatus eq SENT_INFO)}">
                                                     <a href="javascript:cancel(${m.key.id});">Cancel</a>
                                                 </c:if>
                                             </td>

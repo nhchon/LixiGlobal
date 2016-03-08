@@ -16,11 +16,17 @@ public interface ScalarFunctionService {
     
     double sumGiftOfRecipient(String invoiceStatus, Long id);
     
+    double sumGiftOfRecipientByOrderStatus(String oStatus, Long id);
+            
     double sumTopUpOfRecipient(String invoiceStatus, Long id);
+    
+    double sumTopUpOfRecipientByOrderStatus(String oStatus, Long id);
     
     double sumInvoiceOfSender(String invoiceStatus, Long sender);
     
     double sumInvoiceByOrderStatus(String status, long sender);
     
     double sumTopUpOfSender(String invoiceStatus, Long sender);
+    
+    List<Long> getOrdersOfRecipient(String status, Long id);
 }

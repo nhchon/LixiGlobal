@@ -5,13 +5,17 @@
 package vn.chonsoft.lixi.web.ctrl.admin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +38,8 @@ import vn.chonsoft.lixi.web.annotation.WebController;
 @WebController
 @RequestMapping(value = "/Administration/SystemSender")
 public class SystemSenderController {
+    
+    private static final Logger log = LogManager.getLogger(SystemSenderController.class);
     
     @Autowired
     private LixiOrderService lxOrderService;
@@ -115,6 +121,16 @@ public class SystemSenderController {
         /* get recipient */
         User sender = this.uService.findById(id);
 
+        if(!CollectionUtils.isEmpty(sender.getRecipients())){
+            
+            sender.getRecipients().forEach(r -> {
+                
+                List<Long> processedOrderIds = this.sfService.getOrdersOfRecipient(EnumLixiOrderStatus.PROCESSED.getValue(), r.getId());
+                
+                r.setProcessedOrders(this.lxOrderService.findAll(processedOrderIds));
+            });
+        }
+            
         model.put("sender", sender);
 
         Page<LixiOrder> orders = this.lxOrderService.findBySender(sender, page);

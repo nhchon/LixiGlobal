@@ -193,7 +193,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         
         List<LixiOrder> ls = this.lxorderRepository.findAll(ids);
         if(ls != null && !ls.isEmpty()){
-            ls.forEach((LixiOrder o) -> o.getGifts().size());
+            ls.forEach(o -> {LiXiRepoUtils.loadOrder(o);});
         }
         return ls;
         

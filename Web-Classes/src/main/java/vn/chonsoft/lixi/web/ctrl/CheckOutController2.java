@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -617,6 +618,10 @@ public class CheckOutController2 {
                 final String emailSender = order.getSender().getEmail();
                 final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
                 final LixiOrder refOrder = order;
+                // order date
+                SimpleDateFormat sdfr = new SimpleDateFormat("MMM/dd/yyyy KK:mm:ss a");
+                final String orderDate = sdfr.format(order.getModifiedDate());
+                        
                 MimeMessagePreparator preparator = new MimeMessagePreparator() {
                     @SuppressWarnings({"rawtypes", "unchecked"})
                     @Override
@@ -631,6 +636,8 @@ public class CheckOutController2 {
 
                         Map<String, Object> model = new HashMap<>();
                         model.put("sender", u);
+                        model.put("orderDate", orderDate);
+                                
                         model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId(refOrder.getId()));
                         model.put("LIXI_ORDER", refOrder);
                         model.put("REC_GIFTS", recGifts);
@@ -659,7 +666,7 @@ public class CheckOutController2 {
                 //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
                 log.info("submitOrdersToBaoKim");
 
-                //lxAsyncMethods.submitOrdersToBaoKim(order);
+                lxAsyncMethods.submitOrdersToBaoKim(order);
 
                 log.info(" // END of submitOrdersToBaoKim");
                 ////////////////////////////////////////////////////////////////////

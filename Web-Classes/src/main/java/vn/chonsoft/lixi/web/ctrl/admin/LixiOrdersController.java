@@ -100,7 +100,7 @@ public class LixiOrdersController {
             
             /* send money*/
             if(LiXiGlobalConstants.TRANS_REPORT_STATUS_PROCESSED.equals(form.getStatus())){
-                status = EnumLixiOrderStatus.PROCESSING.getValue();
+                status = EnumLixiOrderStatus.PROCESSED.getValue();
             }
             else
                 if(LiXiGlobalConstants.TRANS_REPORT_STATUS_COMPLETED.equals(form.getStatus())){

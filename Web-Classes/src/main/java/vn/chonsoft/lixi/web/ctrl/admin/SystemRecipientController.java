@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
@@ -84,8 +85,17 @@ public class SystemRecipientController {
         if(ps != null && !ps.getContent().isEmpty()){
             
             ps.getContent().forEach(r -> {
-                r.setSumGift(sfService.sumGiftOfRecipient(oStatus, r.getId()));
-                r.setSumTopUp(sfService.sumTopUpOfRecipient(oStatus, r.getId()));
+                if(EnumLixiOrderStatus.PROCESSED.getValue().equals(oStatus) || 
+                   EnumLixiOrderStatus.COMPLETED.getValue().equals(oStatus) || 
+                   EnumLixiOrderStatus.CANCELED.getValue().equals(oStatus)){
+                    
+                    r.setSumGift(sfService.sumGiftOfRecipientByOrderStatus(oStatus, r.getId()));
+                    r.setSumTopUp(sfService.sumTopUpOfRecipientByOrderStatus(oStatus, r.getId()));
+                }
+                else{
+                    r.setSumGift(sfService.sumGiftOfRecipient(oStatus, r.getId()));
+                    r.setSumTopUp(sfService.sumTopUpOfRecipient(oStatus, r.getId()));
+                }
             });
             
             rS = new ArrayList<>(ps.getContent());

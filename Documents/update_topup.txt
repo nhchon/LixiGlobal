@@ -3,3 +3,7 @@ ALTER TABLE `top_up_mobile_phone` CHANGE `is_submitted` `status` VARCHAR(255) NU
 ALTER TABLE `lixi_order_gifts` ADD `bk_sub_status` VARCHAR(255) NULL AFTER `bk_status`;
 
 ALTER TABLE `lixi_orders` ADD `lixi_sub_status` VARCHAR(255) NULL AFTER `lixi_status`;
+
+ALTER TABLE `vatgia_products` CHANGE `image_url` `image_url` VARCHAR(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `vatgia_products` CHANGE `link_detail` `link_detail` VARCHAR(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
