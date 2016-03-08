@@ -250,7 +250,7 @@
                                                     </c:if>
                                                 </c:forEach>
                                                 <c:forEach items="${pO.topUpMobilePhones}" var="t" varStatus="theCount2">
-                                                    <c:if test="${t.recipient.id eq r.id}"></c:if>
+                                                    <c:if test="${t.recipient.id eq r.id}">
                                                     <tr>
                                                         <td></td>
                                                         <td>1</td>
@@ -260,7 +260,8 @@
                                                             <br/>
                                                             <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/> USD
                                                         </td>
-                                                </tr>
+                                                    </tr>
+                                                    </c:if>
                                                 </c:forEach>
                                                     
                                             </table>
