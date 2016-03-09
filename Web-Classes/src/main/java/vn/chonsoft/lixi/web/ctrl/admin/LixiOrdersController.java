@@ -259,7 +259,7 @@ public class LixiOrdersController {
             
             while(iterator.hasNext()){
                 LixiOrder o = iterator.next();
-                if(o.getGifts() == null || o.getGifts().isEmpty()){
+                if( o.getGifts() == null || o.getGifts().isEmpty()){
                     /* remove the order has no gift. We don't need sent to baokim */
                     iterator.remove();
                 }

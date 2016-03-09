@@ -5,7 +5,7 @@
 package vn.chonsoft.lixi.web.ctrl.admin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
@@ -25,11 +25,13 @@ import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.User;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -120,7 +122,9 @@ public class SystemSenderController {
 
         /* get recipient */
         User sender = this.uService.findById(id);
-
+        
+        /* List order by recipient */
+        /*
         if(!CollectionUtils.isEmpty(sender.getRecipients())){
             
             sender.getRecipients().forEach(r -> {
@@ -130,11 +134,25 @@ public class SystemSenderController {
                 r.setProcessedOrders(this.lxOrderService.findAll(processedOrderIds));
             });
         }
-            
+        */
+        
         model.put("sender", sender);
 
-        Page<LixiOrder> orders = this.lxOrderService.findBySender(sender, page);
-                
+        Page<LixiOrder> pOrders = this.lxOrderService.findBySender(sender, page);
+
+        List<LixiOrder> orders = pOrders.getContent();
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        
+        if(!CollectionUtils.isEmpty(orders)){
+            
+            orders.forEach(o -> {
+                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+            });
+        }
+        
+        model.put("mOs", mOs);
+        
+        model.put("pOrders", pOrders);
                 
         return new ModelAndView("Administration/orders/senderDetail");
     }

@@ -61,12 +61,11 @@
                             <tr>
                                 <th nowrap>#</th><%-- 1 --%>
                                 <th nowrap>Authorize Profile Id</th><%-- 2 --%>
-                                <th nowrap>First Name</th><%-- 3 --%>
-                                <th nowrap>Middle Name</th><%-- 4 --%>
-                                <th nowrap>Last Name</th><%-- 5 --%>
-                                <th nowrap>Email/Phone</th><%-- 6 --%>
-                                <th nowrap>Created Date</th><%-- 7 --%>
-                                <th nowrap>Status</th>
+                                <th nowrap style="text-align:center;">Name</th><%-- 3 --%>
+                                <th nowrap style="text-align:center;">Email/Phone</th><%-- 6 --%>
+                                <th nowrap>Total Amount</th><%-- 7 --%>
+                                <th nowrap>Graders</th>
+                                <th nowrap style="text-align: right;">Status</th>
                                 <th nowrap style="text-align: right;">Action</th><%-- 8 --%>
                             </tr>
                         </thead>
@@ -74,14 +73,11 @@
                             <tr id="rowSender${sender.id}">
                                 <td>${sender.id}</td>
                                 <td>${sender.authorizeProfileId}</td>
-                                <td>${sender.firstName}</td>
-                                <td>${sender.middleName}</td>
-                                <td>${sender.lastName}</td>
-                                <td>${sender.email} / ${sender.phone}</td>
-                                <td>
-                                    <fmt:formatDate pattern="MM/dd/yyyy HH:mm:ss" value="${sender.createdDate}"/>
-                                </td>
-                                <td id="tdStatus${sender.id}" nowrap>
+                                <td style="text-align:center;">${sender.fullName}<br/><fmt:formatDate pattern="MM/dd/yyyy HH:mm:ss" value="${sender.createdDate}"/></td>
+                                <td style="text-align:center;">${sender.email} <br/> ${sender.phone}</td>
+                                <td></td>
+                                <td></td>
+                                <td id="tdStatus${sender.id}" nowrap style="text-align: right;">
                                     <c:if test="${sender.activated eq true}">
                                         Active
                                     </c:if>
@@ -158,119 +154,78 @@
                 </div>
             </div>
         </div>
-        <h3>Receivers</h3>
+        <h3>Orders</h3>
         <div class="row">
             <div class="col-sm-12">
                 <div class="table-responsive">
-                    <table class="table table-hover table-responsive table-striped">
-                        <thead>
-                            <tr>
-                                <th nowrap>#</th><%-- 1 --%>
-                                <th nowrap>First Name</th><%-- 2 --%>
-                                <th nowrap>Middle Name</th><%-- 3 --%>
-                                <th nowrap>Last Name</th><%-- 4 --%>
-                                <th nowrap>Email</th><%-- 5 --%>
-                                <th nowrap>Phone</th><%-- 6 --%>
-                                <th nowrap>Created Date</th><%-- 7 --%>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach items="${sender.recipients}" var="r">
+                    <c:set var="countRec" value="0"/>
+                    <c:set var="totalAmountVnd" value="0"/>
+                    <c:set var="totalAmountUsd" value="0"/>
+                    <c:forEach items="${mOs}" var="m" varStatus="theCount">
+                        <table class="table table-hover table-responsive table-striped">
+                            <thead>
                                 <tr>
-                                    <td>${r.id}</td><%-- 1 --%>
-                                    <td>${r.firstName}</td><%-- 2 --%>
-                                    <td>${r.middleName}</td><%-- 3 --%>
-                                    <td>${r.lastName}</td><%-- 4 --%>
-                                    <td>${r.email}</td><%-- 5 --%>
-                                    <td>(${r.dialCode})&nbsp; ${r.phone}</td><%-- 6 --%>
-                                    <td><fmt:formatDate pattern="MM/dd/yyyy HH:mm:ss" value="${r.modifiedDate}"/></td>
+                                    <th nowrap>Order # <a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">${m.key.invoice.invoiceCode}</a>
+                                    </th><%-- 1 --%>
+                                    <th style="text-align: right;">Amount</th><%-- 2 --%>
+                                    <th nowrap style="text-align: center;">Transaction</th><%-- 3 --%>
+                                    <th nowrap style="text-align: center;">Option</th><%-- 4 --%>
+                                    <th style="text-align: center;">Status</th><%-- 5 --%>
                                 </tr>
-
-                                <c:forEach items="${r.processedOrders}" var="pO">
-                                    <tr>
-                                        <td colspan="7">
-                                            <h4>Order #${pO.invoice.invoiceCode} </h4>
-                                            <table class="table table-hover table-responsive table-striped" style="width:50%;">
-                                                <thead>
-                                                    <tr>
-                                                        <th nowrap>Order</th><%-- 1 --%>
-                                                        <th nowrap>Date</th><%-- 2 --%>
-                                                        <th nowrap>Transaction No</th><%-- 3 --%>
-                                                        <th nowrap>Option</th><%-- 4 --%>
-                                                        <th>Status</th><%-- 5 --%>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td nowrap>
-                                                            <a href="<c:url value="/Administration/Orders/detail/${pO.id}"/>">
-                                                                ${pO.invoice.invoiceCode}
-                                                            </a>
-                                                            <br/>
-                                                            1 USD = ${pO.lxExchangeRate.buy} VND
-                                                        </td>
-                                                        <td><fmt:formatDate pattern="MM/dd/yyyy" value="${pO.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${pO.createdDate}"/></td>
-                                                        <td>${pO.invoice.netTransId} <br/>(${pO.invoice.translatedStatus})</td>
-                                                        <td nowrap>
-                                                            <c:if test="${pO.setting eq 0}">
-                                                                Gift Only
-                                                            </c:if>
-                                                            <c:if test="${pO.setting eq 1}">
-                                                                Allow Refund
-                                                            </c:if>
-                                                        </td>
-                                                        <td>
-                                                            <c:if test="${pO.lixiStatus eq PROCESSED}">
-                                                                Processed<br/>
-                                                                <c:if test="${pO.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
-                                                                <c:if test="${pO.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
-                                                            </c:if>
-                                                            <c:if test="${pO.lixiStatus eq COMPLETED}">
-                                                                Completed
-                                                            </c:if>
-                                                            <c:if test="${pO.lixiStatus eq CANCELED}">
-                                                                Cancelled
-                                                            </c:if>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <table class="table table-hover table-responsive table-striped" style="margin-bottom:0px;">
-                                                <c:forEach items="${pO.gifts}" var="g" varStatus="theCount2">
-                                                    <c:if test="${g.recipient.id eq r.id}">
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>${g.productQuantity}</td>
-                                                        <td>${g.productName}</td>
-                                                        <td style="text-align: right;">
-                                                            <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
-                                                            <br/>
-                                                            <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> USD
-                                                        </td>
-                                                    </tr>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <c:forEach items="${pO.topUpMobilePhones}" var="t" varStatus="theCount2">
-                                                    <c:if test="${t.recipient.id eq r.id}">
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>1</td>
-                                                        <td>Top Up Mobile Minutes ${t.phone}</td>
-                                                        <td style="text-align: right;">
-                                                            <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> VND
-                                                            <br/>
-                                                            <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/> USD
-                                                        </td>
-                                                    </tr>
-                                                    </c:if>
-                                                </c:forEach>
-                                                    
-                                            </table>
-                                        </td>
+                            </thead>
+                            <tbody>
+                                <c:set var="countRec" value="${theCount.count}"/>
+                                <tr id="rowO${m.key.id}">
+                                    <td nowrap>
+                                        <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
+                                            <c:if test="${not empty rio.gifts}">
+                                                ${rio.recipient.fullName}<br/><a href="javascript:viewRecipient(${rio.recipient.id});">${rio.recipient.beautyId}</a><br/>
+                                            </c:if>
+                                        </c:forEach>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <c:forEach items="${m.value}" var="rio">
+                                            <c:if test="${not empty rio.gifts}">
+                                                <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
+                                                <c:if test="${m.key.setting eq 0}">
+                                                    <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
+                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd * transferPercent/100.0}"/>
+                                                </c:if>
+                                                <c:if test="${m.key.setting eq 1}">
+                                                    <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
+                                                </c:if>
+                                                <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
+                                            </c:if>
+                                        </c:forEach>
+                                    </td>
+                                    <td style="text-align: center;">${m.key.invoice.netTransId}<br/> ${m.key.invoice.translatedStatus}</td>
+                                    <td nowrap style="text-align: center;">
+                                        <c:if test="${m.key.setting eq 0}">
+                                            Gift Only
+                                        </c:if>
+                                        <c:if test="${m.key.setting eq 1}">
+                                            Allow Refund
+                                        </c:if>
+                                        <br/><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
+                                    </td>
+                                    <td id="status${m.key.id}"  style="text-align: center;">
+                                        <c:if test="${m.key.lixiStatus eq PROCESSED}">
+                                            Processed<br/>
+                                            <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                            <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
+                                        </c:if>
+                                        <c:if test="${m.key.lixiStatus eq COMPLETED}">
+                                            Completed
+                                        </c:if>
+                                        <c:if test="${m.key.lixiStatus eq CANCELED}">
+                                            Cancelled
+                                        </c:if>
+                                    </td>
                                     </tr>
-                                </c:forEach>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+                                </tbody>
+                            </table>
+                    </c:forEach>
                 </div>
             </div>
         </div>
