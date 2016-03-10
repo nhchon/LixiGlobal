@@ -58,6 +58,10 @@ public class User implements Serializable {
     
     private Double sumInvoice;
     
+    private Double sumInvoiceVnd;
+    
+    private Long graders;
+    
     private List<Recipient> recipients;
     
     private UserMoneyLevel userMoneyLevel;
@@ -314,7 +318,24 @@ public class User implements Serializable {
     public void setSumInvoice(Double sumInvoice) {
         this.sumInvoice = sumInvoice;
     }
-    
+
+    @Transient
+    public Double getSumInvoiceVnd() {
+        return sumInvoiceVnd;
+    }
+
+    public void setSumInvoiceVnd(Double sumInvoiceVnd) {
+        this.sumInvoiceVnd = sumInvoiceVnd;
+    }
+
+    @Transient
+    public Long getGraders() {
+        return graders;
+    }
+
+    public void setGraders(Long graders) {
+        this.graders = graders;
+    }
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     public List<UserCard> getUserCards() {

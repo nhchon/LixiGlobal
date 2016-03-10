@@ -60,7 +60,7 @@
                                 </span>
                                 <div class="clearfix"></div>
                                 <h3>Choose the gift<br/>you want to buy</h3>
-                                <small><sup>*</sup>$1.00 per person. Max purchase is $250.00</small>
+                                <small><sup>*</sup>$1.00 per person. Max purchase is $150.00</small>
                             </div>
                         </div>
                         <div class="col-md-1 col-sm-1 col-xs-1 col-has-gift-arrow">

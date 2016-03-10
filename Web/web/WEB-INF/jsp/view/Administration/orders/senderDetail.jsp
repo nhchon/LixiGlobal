@@ -62,10 +62,10 @@
                                 <th nowrap>#</th><%-- 1 --%>
                                 <th nowrap>Authorize Profile Id</th><%-- 2 --%>
                                 <th nowrap style="text-align:center;">Name</th><%-- 3 --%>
-                                <th nowrap style="text-align:center;">Email/Phone</th><%-- 6 --%>
-                                <th nowrap>Total Amount</th><%-- 7 --%>
-                                <th nowrap>Graders</th>
-                                <th nowrap style="text-align: right;">Status</th>
+                                <th nowrap style="text-align:center;">Email/Phone</th><%-- 4 --%>
+                                <th nowrap style="text-align:right;">Total Amount</th><%-- 5 --%>
+                                <th nowrap style="text-align:center;">Graders</th><%-- 6 --%>
+                                <th nowrap style="text-align: right;">Status</th><%-- 7 --%>
                                 <th nowrap style="text-align: right;">Action</th><%-- 8 --%>
                             </tr>
                         </thead>
@@ -75,8 +75,28 @@
                                 <td>${sender.authorizeProfileId}</td>
                                 <td style="text-align:center;">${sender.fullName}<br/><fmt:formatDate pattern="MM/dd/yyyy HH:mm:ss" value="${sender.createdDate}"/></td>
                                 <td style="text-align:center;">${sender.email} <br/> ${sender.phone}</td>
-                                <td></td>
-                                <td></td>
+                                <td style="text-align:right;"><fmt:formatNumber value="${sender.sumInvoice}" pattern="###,###.##"/> USD<br/>
+                                <fmt:formatNumber value="${sender.sumInvoiceVnd}" pattern="###,###.##"/> VND
+                                </td>
+                                <td style="text-align:center;">
+                                    <c:choose>
+                                        <c:when test="${sender.graders >= 1 and sender.graders <= 3}">
+                                           <span class="glyphicon glyphicon-star alert-warning" aria-hidden="true"></span>
+                                        </c:when>
+                                        <c:when test="${sender.graders >= 4 and sender.graders <= 7}">
+                                            <span class="glyphicon glyphicon-star alert-warning" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-star alert-warning" aria-hidden="true"></span>
+                                        </c:when>
+                                            <c:when test="${sender.graders >= 8}">
+                                            <span class="glyphicon glyphicon-star alert-warning" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-star alert-warning" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-star alert-warning" aria-hidden="true"></span>
+                                        </c:when>
+                                        <c:otherwise>
+                                        </c:otherwise>
+                                    </c:choose>                                    
+                                    
+                                </td>
                                 <td id="tdStatus${sender.id}" nowrap style="text-align: right;">
                                     <c:if test="${sender.activated eq true}">
                                         Active
@@ -159,18 +179,16 @@
             <div class="col-sm-12">
                 <div class="table-responsive">
                     <c:set var="countRec" value="0"/>
-                    <c:set var="totalAmountVnd" value="0"/>
-                    <c:set var="totalAmountUsd" value="0"/>
                     <c:forEach items="${mOs}" var="m" varStatus="theCount">
                         <table class="table table-hover table-responsive table-striped">
                             <thead>
                                 <tr>
-                                    <th nowrap>Order # <a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">${m.key.invoice.invoiceCode}</a>
+                                    <th nowrap class="info">Order # <a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">${m.key.invoice.invoiceCode}</a>
                                     </th><%-- 1 --%>
-                                    <th style="text-align: right;">Amount</th><%-- 2 --%>
-                                    <th nowrap style="text-align: center;">Transaction</th><%-- 3 --%>
-                                    <th nowrap style="text-align: center;">Option</th><%-- 4 --%>
-                                    <th style="text-align: center;">Status</th><%-- 5 --%>
+                                    <th style="text-align: right;" class="info">Amount</th><%-- 2 --%>
+                                    <th nowrap style="text-align: center;" class="info">Transaction</th><%-- 3 --%>
+                                    <th nowrap style="text-align: center;" class="info">Option</th><%-- 4 --%>
+                                    <th style="text-align: center;" class="info">Status</th><%-- 5 --%>
                                 </tr>
                             </thead>
                             <tbody>
@@ -184,19 +202,13 @@
                                         </c:forEach>
                                     </td>
                                     <td style="text-align: right;">
+                                        <c:set var="totalAmountVnd" value="0"/>
+                                        <c:set var="totalAmountUsd" value="0"/>
                                         <c:forEach items="${m.value}" var="rio">
-                                            <c:if test="${not empty rio.gifts}">
-                                                <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                <c:if test="${m.key.setting eq 0}">
-                                                    <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
-                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd * transferPercent/100.0}"/>
-                                                </c:if>
-                                                <c:if test="${m.key.setting eq 1}">
-                                                    <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
-                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
-                                                </c:if>
-                                                <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
-                                            </c:if>
+                                            <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD<br/>
+                                            <fmt:formatNumber value="${rio.allTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                            <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.allTotal.vnd}"/>
+                                            <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.allTotal.usd}"/>
                                         </c:forEach>
                                     </td>
                                     <td style="text-align: center;">${m.key.invoice.netTransId}<br/> ${m.key.invoice.translatedStatus}</td>
@@ -224,6 +236,18 @@
                                     </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td style="text-align: right;" class="warning"><strong>Total:</strong></td>
+                                        <td style="text-align: right;" class="warning">
+                                            <fmt:formatNumber value="${totalAmountUsd}" pattern="###,###.##"/> USD<br/>
+                                            <fmt:formatNumber value="${totalAmountVnd}" pattern="###,###.##"/> VND<br/>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
                             </table>
                     </c:forEach>
                 </div>

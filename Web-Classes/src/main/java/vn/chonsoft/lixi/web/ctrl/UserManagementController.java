@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiInvoice;
@@ -761,6 +762,12 @@ public class UserManagementController {
                 
                 String rs = this.paymentService.voidTransaction(invoice);
                 if(EnumTransactionResponseCode.APPROVED.getValue().equals(rs)){
+                    
+                    /* update order status */
+                    order.setLixiStatus(EnumLixiOrderStatus.CANCELED.getValue());
+                    order.setLixiMessage("Cancelled by sender");
+                    this.orderService.save(order);
+                    
                     /* invoice status */
                     invoice.setNetTransStatus(EnumTransactionStatus.voidedByUser.getValue());
                     this.invoiceService.save(invoice);

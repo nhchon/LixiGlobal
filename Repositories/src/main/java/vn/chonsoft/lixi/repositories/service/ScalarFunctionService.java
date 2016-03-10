@@ -12,7 +12,11 @@ import java.util.List;
  */
 public interface ScalarFunctionService {
     
+    /* recipient's functions */
+    
     //List<Long> getListOrderProcessedOreCompletedOfRecipient(Long id);
+    
+    List<Long> getOrdersOfRecipient(String status, Long id);
     
     double sumGiftOfRecipient(String invoiceStatus, Long id);
     
@@ -22,11 +26,15 @@ public interface ScalarFunctionService {
     
     double sumTopUpOfRecipientByOrderStatus(String oStatus, Long id);
     
+    /* sender's functions */
+    long countOrdersOfSender(String oStatus, Long sender);
+    
     double sumInvoiceOfSender(String invoiceStatus, Long sender);
     
     double sumInvoiceByOrderStatus(String status, long sender);
     
+    double sumInvoiceVndByOrderStatus(String status, long sender);
+    
     double sumTopUpOfSender(String invoiceStatus, Long sender);
     
-    List<Long> getOrdersOfRecipient(String status, Long id);
 }

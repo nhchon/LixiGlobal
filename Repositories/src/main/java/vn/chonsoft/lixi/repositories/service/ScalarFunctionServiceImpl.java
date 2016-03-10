@@ -124,6 +124,26 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
 
     /**
      * 
+     * @param oStatus 
+     * @param sender
+     * @return 
+     */
+    @Override
+    public long countOrdersOfSender(String oStatus, Long sender){
+        
+        String sql = "SELECT count(*) FROM lixi_orders o WHERE o.lixi_status = ? and o.sender = ?";
+        
+        BigInteger rs = scalarDaoL.singleResult(sql, oStatus, sender);
+        if(rs != null){
+            return rs.longValue();
+        }
+        else{
+            return 0;
+        }
+    }
+    
+    /**
+     * 
      * @param invoiceStatus 
      * @param sender
      * @return 
@@ -145,6 +165,25 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
     @Override
     public double sumInvoiceByOrderStatus(String status, long sender){
         String sql = "SELECT sum(i.total_amount) FROM lixi_orders o, lixi_invoices i WHERE o.lixi_status = ? and o.id = i.order_id and i.payer = ?";
+        
+        Double rs = scalarDao.singleResult(sql, status, sender);
+        if(rs != null){
+            return rs;
+        }
+        else{
+            return 0d;
+        }
+    }
+    
+    /**
+     * 
+     * @param status
+     * @param sender
+     * @return 
+     */
+    @Override
+    public double sumInvoiceVndByOrderStatus(String status, long sender){
+        String sql = "SELECT sum(i.total_amount_vnd) FROM lixi_orders o, lixi_invoices i WHERE o.lixi_status = ? and o.id = i.order_id and i.payer = ?";
         
         Double rs = scalarDao.singleResult(sql, status, sender);
         if(rs != null){

@@ -123,6 +123,18 @@ public class SystemSenderController {
         /* get recipient */
         User sender = this.uService.findById(id);
         
+        sender.setSumInvoice(
+                sfService.sumInvoiceByOrderStatus(EnumLixiOrderStatus.PROCESSED.getValue(), sender.getId()) 
+                +
+                sfService.sumInvoiceByOrderStatus(EnumLixiOrderStatus.COMPLETED.getValue(), sender.getId()));
+        
+        sender.setSumInvoiceVnd(
+                sfService.sumInvoiceVndByOrderStatus(EnumLixiOrderStatus.PROCESSED.getValue(), sender.getId()) 
+                +
+                sfService.sumInvoiceVndByOrderStatus(EnumLixiOrderStatus.COMPLETED.getValue(), sender.getId()));
+        
+        sender.setGraders(sfService.countOrdersOfSender(EnumLixiOrderStatus.COMPLETED.getValue(), sender.getId()));
+        
         /* List order by recipient */
         /*
         if(!CollectionUtils.isEmpty(sender.getRecipients())){

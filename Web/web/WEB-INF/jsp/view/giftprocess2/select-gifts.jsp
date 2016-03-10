@@ -170,7 +170,8 @@
                     </div>
                     <h2 id="giftValueFor" class="title" style="text-transform: none;<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>">Gift value for <span id="recFirstName">${SELECTED_RECIPIENT_FIRST_NAME}</span></h2>
                     <p>( We will select only gift at your price range )</p>
-                    <h5 class="maximum-purchase">Maximum purchase is VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 250}" pattern="###,###.##"/> or USD 250</h5>
+                    <%-- <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 250}" pattern="###,###.##"/> --%>>
+                    <h5 class="maximum-purchase">Maximum purchase is VND 3,500,000  or USD 150</h5>
                     <div class="change-curency-box">
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">
@@ -194,7 +195,7 @@
                             <c:if test="${not empty SELECTED_AMOUNT_IN_USD}">
                                 <c:set value="${SELECTED_AMOUNT_IN_USD}" var="startPrice"/>
                             </c:if>
-                            <input type="text" class="gift-filter-slider-input" value="" data-slider-min="10" data-slider-max="250" data-slider-step="5" data-slider-value="10"/>
+                            <input type="text" class="gift-filter-slider-input" value="" data-slider-min="10" data-slider-max="150" data-slider-step="5" data-slider-value="10"/>
                         </div>
                         <div class="gift-filter-label">
                             <span class="gift-filter-label-min">

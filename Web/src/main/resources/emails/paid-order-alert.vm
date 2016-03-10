@@ -1,11 +1,11 @@
 <html>
     <body>
-        <h5>Hi ${sender.firstName} !</h5>
+        <p><b>Hi ${sender.firstName},</b></p>
         
-        <h2>Thank you for your payment</h2>
+        <h4>Thank you for your payment</h4>
         
-        <h2>Your order id: ${LIXI_ORDER_ID}</h2>
-        ${orderDate}<br/>
+        <h4>Your order id: ${LIXI_ORDER_ID}</h4>
+        <p>${orderDate}</p>
 
         <div>
             <table class="recipient">
