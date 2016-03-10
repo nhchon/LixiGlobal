@@ -4,10 +4,11 @@
  */
 package vn.chonsoft.lixi.web.ctrl.admin;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -75,7 +76,18 @@ public class LixiOrdersController {
 
         model.put("mOs", null);
         
-        model.put("searchForm", new LixiOrderSearchForm());
+        LixiOrderSearchForm searchForm = new LixiOrderSearchForm();
+        
+        /* default value for search form */
+        searchForm.setStatus("All");
+        
+        Date currDate = DateUtils.addDays(Calendar.getInstance().getTime(), 1);
+        Date fromDate = DateUtils.addDays(currDate, -2);
+
+        searchForm.setFromDate(formatter.format(fromDate));
+        searchForm.setToDate(formatter.format(currDate));
+        
+        model.put("searchForm", searchForm);
         model.put("results", null);
         
         return new ModelAndView("Administration/reports/transactions");

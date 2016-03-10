@@ -32,6 +32,9 @@
                     return true;
                 });
                 
+                /* submit form with default value */
+                <c:if test="${empty results}">$('#searchForm').submit();</c:if>
+                
             });
 
             function cancel(id){
