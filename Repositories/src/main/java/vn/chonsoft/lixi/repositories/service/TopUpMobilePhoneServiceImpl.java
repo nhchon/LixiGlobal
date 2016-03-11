@@ -141,9 +141,9 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
      */
     @Override
     @Transactional
-    public Page<TopUpMobilePhone> findByStatusAndModifiedDate(String status, Date begin, Date end, Pageable page){
+    public Page<TopUpMobilePhone> findByStatusAndModifiedDate(Iterable<String> status, Date begin, Date end, Pageable page){
         
-        Page<TopUpMobilePhone> ps = this.topUpRepository.findByStatusAndModifiedDateBetween(status, begin, end, page);
+        Page<TopUpMobilePhone> ps = this.topUpRepository.findByStatusInAndModifiedDateBetween(status, begin, end, page);
         if(ps != null && ps.hasContent()){
             ps.getContent().forEach(t -> {
                 t.getOrder().getInvoice();
@@ -163,9 +163,9 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
      */
     @Override
     @Transactional
-    public Page<TopUpMobilePhone> findByStatusAndFromDate(String status, Date begin, Pageable page){
+    public Page<TopUpMobilePhone> findByStatusAndFromDate(Iterable<String> status, Date begin, Pageable page){
         
-        Page<TopUpMobilePhone> ps = this.topUpRepository.findByStatusAndModifiedDateIsGreaterThanEqual(status, begin, page);
+        Page<TopUpMobilePhone> ps = this.topUpRepository.findByStatusInAndModifiedDateIsGreaterThanEqual(status, begin, page);
         if(ps != null && ps.hasContent()){
             ps.getContent().forEach(t -> {
                 t.getOrder().getInvoice();
@@ -185,9 +185,9 @@ public class TopUpMobilePhoneServiceImpl implements TopUpMobilePhoneService{
      */
     @Override
     @Transactional
-    public Page<TopUpMobilePhone> findByStatusAndEndDate(String status, Date end, Pageable page){
+    public Page<TopUpMobilePhone> findByStatusAndEndDate(Iterable<String> status, Date end, Pageable page){
         
-        Page<TopUpMobilePhone> ps = this.topUpRepository.findByStatusAndModifiedDateIsLessThanEqual(status, end, page);
+        Page<TopUpMobilePhone> ps = this.topUpRepository.findByStatusInAndModifiedDateIsLessThanEqual(status, end, page);
         if(ps != null && ps.hasContent()){
             ps.getContent().forEach(t -> {
                 t.getOrder().getInvoice();

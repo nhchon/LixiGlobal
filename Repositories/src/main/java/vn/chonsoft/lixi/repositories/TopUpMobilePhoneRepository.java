@@ -20,11 +20,11 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
  */
 public interface TopUpMobilePhoneRepository  extends JpaRepository<TopUpMobilePhone, Long>{
     
-    Page<TopUpMobilePhone> findByStatusAndModifiedDateBetween(String status, Date begin, Date end, Pageable page);
+    Page<TopUpMobilePhone> findByStatusInAndModifiedDateBetween(Iterable<String> status, Date begin, Date end, Pageable page);
     
-    Page<TopUpMobilePhone> findByStatusAndModifiedDateIsGreaterThanEqual(String status, Date begin, Pageable page);
+    Page<TopUpMobilePhone> findByStatusInAndModifiedDateIsGreaterThanEqual(Iterable<String> status, Date begin, Pageable page);
     
-    Page<TopUpMobilePhone> findByStatusAndModifiedDateIsLessThanEqual(String status, Date end, Pageable page);
+    Page<TopUpMobilePhone> findByStatusInAndModifiedDateIsLessThanEqual(Iterable<String> status, Date end, Pageable page);
     
     List<TopUpMobilePhone> findByStatusIn(Iterable<String> status, Sort sort);
     

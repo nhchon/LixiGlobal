@@ -153,26 +153,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
             LixiOrder order = ls.get(0);
             if(order != null){
 
-                // make sure load gifts
-                order.getGifts().size();
-
-                // top up
-                order.getTopUpMobilePhones().size();
-
-                // phone card
-                order.getBuyCards().size();
-
-                // exchange rate
-                order.getLxExchangeRate();
-
-                //
-                order.getCard();
-
-                //
-                order.getBankAccount();
-
-                // invoice
-                order.getInvoice();
+                LiXiRepoUtils.loadOrder(order);
             }  
             
             return order;
@@ -277,6 +258,27 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         
         return ls;
     }
+    
+    /**
+     * 
+     * @param status
+     * @param subStatus
+     * @param page
+     * @return 
+     */
+    @Override
+    @Transactional
+    public Page<LixiOrder> findByLixiStatus(String status, String subStatus, Pageable page){
+        
+        Page<LixiOrder> ps = this.lxorderRepository.findByLixiStatusAndLixiSubStatus(status, subStatus, page);
+
+        if(ps != null && ps.hasContent()){
+            ps.getContent().forEach(o -> {LiXiRepoUtils.loadOrder(o);});
+        }
+        
+        return ps;
+    }
+    
     /**
      * 
      * @param sender

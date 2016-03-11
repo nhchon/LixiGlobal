@@ -20,6 +20,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,7 +92,8 @@ public class LixiOrdersController {
         model.put("searchForm", searchForm);
         model.put("results", null);
         
-        return new ModelAndView("Administration/reports/transactions");
+        String url = "search=true&paging.page=1&paging.size=50&status=All&fromDate=" + formatter.format(fromDate)+ "&toDate="+formatter.format(currDate);
+        return new ModelAndView(new RedirectView("/Administration/Orders/report?" + url, true, true));
     }
     
     /**
@@ -181,6 +184,7 @@ public class LixiOrdersController {
         }
         
         model.put("mOs", mOs);
+        model.put("pOrder", pOrder);
         
         return new ModelAndView("Administration/reports/transactions");
     }    
@@ -221,21 +225,22 @@ public class LixiOrdersController {
      * 
      * @param model
      * @param oStatus
+     * @param page
      * @return 
      */
     @RequestMapping(value = "newOrders/{oStatus}", method = RequestMethod.GET)
-    public ModelAndView listNewOrders(Map<String, Object> model, @PathVariable String oStatus){
+    public ModelAndView listNewOrders(Map<String, Object> model, @PathVariable String oStatus, @PageableDefault(value = 50, sort = {"lixiStatus", "id"}, direction = Sort.Direction.DESC) Pageable page){
         
-        /*
-        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(oStatus);
+        Page<LixiOrder> pOrder = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), oStatus, page);
         
+        List<LixiOrder> orders = pOrder.getContent();
         if(orders != null){
             Iterator<LixiOrder> iterator = orders.iterator();
             
             while(iterator.hasNext()){
                 LixiOrder o = iterator.next();
                 if(o.getGifts() == null || o.getGifts().isEmpty()){
-                    //remove the order has no gift. We don't need sent to baokim
+                    /* remove the order has no gift. We don't need sent to baokim */
                     iterator.remove();
                 }
             }
@@ -251,7 +256,8 @@ public class LixiOrdersController {
         }
         
         model.put("mOs", mOs);
-        */
+        model.put("pOrder", pOrder);
+        
         return new ModelAndView("Administration/orders/newOrderInfo");
     }
     

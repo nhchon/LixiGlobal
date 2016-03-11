@@ -39,13 +39,13 @@ public interface TopUpMobilePhoneService {
     List<TopUpMobilePhone> findByStatus(String lxStatus, String status);
 
     @Transactional
-    Page<TopUpMobilePhone> findByStatusAndModifiedDate(String status, Date begin, Date end, Pageable page);
+    Page<TopUpMobilePhone> findByStatusAndModifiedDate(Iterable<String> status, Date begin, Date end, Pageable page);
     
     @Transactional
-    Page<TopUpMobilePhone> findByStatusAndFromDate(String status, Date begin, Pageable page);
+    Page<TopUpMobilePhone> findByStatusAndFromDate(Iterable<String> status, Date begin, Pageable page);
     
     @Transactional
-    Page<TopUpMobilePhone> findByStatusAndEndDate(String status, Date end, Pageable page);
+    Page<TopUpMobilePhone> findByStatusAndEndDate(Iterable<String> status, Date end, Pageable page);
     
     void deleteById(Long id);
     

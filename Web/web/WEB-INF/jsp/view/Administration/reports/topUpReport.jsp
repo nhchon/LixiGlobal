@@ -59,8 +59,8 @@
         <h2 class="sub-header">Top Up Reports</h2>
         <div class="row">
             <div class="col-md-12">
-                <form role="form" id="reportForm" action="<c:url value="/Administration/SystemTopUp/report"/>" method="post">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                <form role="form" id="reportForm" action="<c:url value="/Administration/SystemTopUp/report"/>" method="get">
+                    <input type="hidden" name="search" value="true" />
                     <input type="hidden" name="paging.page"  id="paging.page" value="1"/>
                     <input type="hidden" name="paging.size"  id="paging.size" value="50"/>
                     <div class="form-group">
@@ -69,6 +69,7 @@
                                 <label for="email">TopUp's Status:</label>
                                 <select class="form-control" id="status" name="status">
                                     <option value="">Please select status</option>
+                                    <option value="All" <c:if test="${status eq 'All'}">selected=""</c:if>>All</option>
                                     <option value="${UN_SUBMITTED}" <c:if test="${status eq UN_SUBMITTED}">selected=""</c:if>>Failed Sent</option>
                                     <option value="${COMPLETED}" <c:if test="${status eq COMPLETED}">selected=""</c:if>>Success Sent</option>
                                 </select>

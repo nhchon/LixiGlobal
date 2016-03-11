@@ -4,7 +4,6 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -52,6 +51,9 @@ public interface LixiOrderService {
     
     @Transactional
     List<LixiOrder> findByLixiStatus(String status, String subStatus);
+    
+    @Transactional
+    Page<LixiOrder> findByLixiStatus(String status, String subStatus, Pageable page);
     
     @Transactional
     List<LixiOrder> findByLixiSubStatus(String status);

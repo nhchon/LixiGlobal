@@ -5,12 +5,14 @@
 package vn.chonsoft.lixi.web.ctrl.admin;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiInvoice;
@@ -42,6 +45,8 @@ import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 public class SystemTopUpController {
     
     private static final Logger log = LogManager.getLogger(SystemTopUpController.class);
+    
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     
     @Autowired
     private TopUpMobilePhoneService topUpService;
@@ -157,7 +162,11 @@ public class SystemTopUpController {
     @RequestMapping(value = "report", method = RequestMethod.GET)
     public ModelAndView report(Map<String, Object> model){
     
-        return new ModelAndView("Administration/reports/topUpReport");
+        Date currDate = DateUtils.addDays(Calendar.getInstance().getTime(), 1);
+        Date fromDate = DateUtils.addDays(currDate, -2);
+        
+        String url = "search=true&paging.page=1&paging.size=50&status=All&fromDate=" + formatter.format(fromDate)+ "&toDate="+formatter.format(currDate);
+        return new ModelAndView(new RedirectView("/Administration/SystemTopUp/report?" + url, true, true));
     }
     
     /**
@@ -166,13 +175,15 @@ public class SystemTopUpController {
      * @param page
      * @return 
      */
-    @RequestMapping(value = "report", method = RequestMethod.POST)
+    @RequestMapping(value = "report",  params = "search=true",
+            method = { RequestMethod.GET, RequestMethod.POST })
     public ModelAndView report(Map<String, Object> model, @PageableDefault(value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page, HttpServletRequest request){
     
+        final String ALL_TOPUP = "All";
+        
         String statusStr = request.getParameter("status");
         String fromDateStr = request.getParameter("fromDate");
         String toDateStr = request.getParameter("toDate");
-        
         Date fromDate = null;
         Date toDate = null;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -188,20 +199,26 @@ public class SystemTopUpController {
         } catch (Exception e) {
         }
         
+        /* list status */
+        List<String> statuses = Arrays.asList(statusStr);
+        if(ALL_TOPUP.equals(statusStr)){
+            statuses = Arrays.asList(EnumLixiOrderStatus.TopUpStatus.UN_SUBMITTED.getValue(), EnumLixiOrderStatus.COMPLETED.getValue());
+        }
+        
         Page<TopUpMobilePhone> ps = null;
         if(fromDate == null && toDate == null){
             // TODO
         }
         else{
             if(fromDate == null){
-                ps = this.topUpService.findByStatusAndEndDate(statusStr, toDate, page);
+                ps = this.topUpService.findByStatusAndEndDate(statuses, toDate, page);
             }
             else{
                 if(toDate == null){
-                    ps = this.topUpService.findByStatusAndFromDate(statusStr, fromDate, page);
+                    ps = this.topUpService.findByStatusAndFromDate(statuses, fromDate, page);
                 }
                 else{
-                    ps = this.topUpService.findByStatusAndModifiedDate(statusStr, fromDate, toDate, page);
+                    ps = this.topUpService.findByStatusAndModifiedDate(statuses, fromDate, toDate, page);
                 }
             }
         }
