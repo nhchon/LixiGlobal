@@ -55,9 +55,11 @@
                                 <span title="Master Card">
                                     <label class="drinkcard-cc mastercard"for="mastercard2"></label>
                                 </span>
+                                <%--
                                 <span title="AMEX Card">
                                     <label class="drinkcard-cc card-type2"for="card-type2"></label>
                                 </span>
+                                --%>
                             </div>
                         </div>
                         <h4 class="text-color-link text-uppercase">Card details</h4>
@@ -71,7 +73,7 @@
                                         <option value="1" <c:if test="${addCardForm.cardType eq 1}">selected=""</c:if>>Visa</option>
                                         <option value="2" <c:if test="${addCardForm.cardType eq 2}">selected=""</c:if>>Master Card</option>
                                         <option value="3" <c:if test="${addCardForm.cardType eq 3}">selected=""</c:if>>Discover</option>
-                                        <option value="4" <c:if test="${addCardForm.cardType eq 4}">selected=""</c:if>>Amex</option>
+                                        <%--<option value="4" <c:if test="${addCardForm.cardType eq 4}">selected=""</c:if>>Amex</option>--%>
                                     </form:select>
                                     <div class="has-error"><form:errors path="cardType" cssClass="help-block" element="div"/></div>
                                 </div>

@@ -149,7 +149,7 @@
                                         <c:set var="countS" value="${theCount.count}"/>
                                         <c:set var="totalAmountUsd" value="${totalAmountUsd + s.sumInvoice}"/>
                                         <tr id="rowSender${s.id}">
-                                            <td>${s.beautyId}</td>
+                                            <td><a href='<c:url value="/Administration/SystemSender/detail/${s.id}"/>'>${s.beautyId}</a></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${s.createdDate}"/></td>
                                             <td>${s.fullName}</td>
                                             <td>
