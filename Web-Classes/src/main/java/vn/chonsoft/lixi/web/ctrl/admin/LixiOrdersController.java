@@ -210,16 +210,6 @@ public class LixiOrdersController {
         
         return new ModelAndView("Administration/orders/orderDetail");
     }
-    /**
-     * 
-     * @param model
-     * @return 
-     */
-    @RequestMapping(value = "newOrders", method = RequestMethod.GET)
-    public ModelAndView listNewOrders(Map<String, Object> model){
-        
-        return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue(), true, true));
-    }
     
     /**
      * 
@@ -228,8 +218,8 @@ public class LixiOrdersController {
      * @param page
      * @return 
      */
-    @RequestMapping(value = "newOrders/{oStatus}", method = RequestMethod.GET)
-    public ModelAndView listNewOrders(Map<String, Object> model, @PathVariable String oStatus, @PageableDefault(value = 50, sort = {"lixiStatus", "id"}, direction = Sort.Direction.DESC) Pageable page){
+    @RequestMapping(value = "newOrders", method = RequestMethod.GET)
+    public ModelAndView listNewOrders(Map<String, Object> model, @RequestParam String oStatus, @PageableDefault(value = 50, sort = {"lixiStatus", "id"}, direction = Sort.Direction.DESC) Pageable page){
         
         Page<LixiOrder> pOrder = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), oStatus, page);
         
@@ -255,6 +245,7 @@ public class LixiOrdersController {
             });
         }
         
+        model.put("oStatus", oStatus);
         model.put("mOs", mOs);
         model.put("pOrder", pOrder);
         
