@@ -20,7 +20,7 @@ public interface LixiAsyncMethods {
             
     void cancelOrdersOnBaoKimNoAsync(LixiOrder order);
             
-    void sendPaymentInfoToBaoKim(LixiOrder order);
+    boolean sendPaymentInfoToBaoKim(LixiOrder order);
     
     @Async
     void submitOrdersToBaoKim(LixiOrder order);

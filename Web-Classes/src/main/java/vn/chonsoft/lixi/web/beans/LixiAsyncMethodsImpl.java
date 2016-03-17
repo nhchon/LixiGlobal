@@ -130,9 +130,9 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
      * @param order 
      */
     @Override
-    public void sendPaymentInfoToBaoKim(LixiOrder order){
+    public boolean sendPaymentInfoToBaoKim(LixiOrder order){
         
-        LiXiVatGiaUtils.getInstance().sendPaymentInfoToBaoKim(order, orderService, orderGiftService);
+        return LiXiVatGiaUtils.getInstance().sendPaymentInfoToBaoKim(order, orderService, orderGiftService);
     }
     
     /**

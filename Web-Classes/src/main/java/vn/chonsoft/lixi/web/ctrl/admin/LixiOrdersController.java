@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,11 +32,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.LixiBatch;
+import vn.chonsoft.lixi.model.LixiBatchOrder;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.form.LixiOrderSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.search.Criterion;
 import vn.chonsoft.lixi.repositories.search.SearchCriteria;
+import vn.chonsoft.lixi.repositories.service.LixiBatchOrderService;
+import vn.chonsoft.lixi.repositories.service.LixiBatchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderSearchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
@@ -67,6 +72,12 @@ public class LixiOrdersController {
     
     @Autowired
     private LixiAsyncMethods lxAsyncMethods;
+    
+    @Autowired
+    private LixiBatchService batchService;
+    
+    @Autowired
+    private LixiBatchOrderService batchOrderService;
     
     /**
      * 
@@ -325,6 +336,23 @@ public class LixiOrdersController {
         return new ModelAndView("Administration/orders/sendMoneyInfo");
     }
     
+    private LixiBatch createBatch(){
+        
+        // current date
+        Date currDate = Calendar.getInstance().getTime();
+        SimpleDateFormat format = new SimpleDateFormat("MMddyyyy HH:mm a");
+        
+        LixiBatch batch = new LixiBatch();
+        batch.setName(format.format(currDate));
+        batch.setCreatedDate(currDate);
+        batch.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        
+        batch = this.batchService.save(batch);
+        
+        log.info("batch id: " + batch.getId());
+        
+        return batch;
+    }
     /**
      * 
      * @param model
@@ -336,8 +364,22 @@ public class LixiOrdersController {
         
         LixiOrder order = this.lxOrderService.findById(id);
         
+        LixiBatch batch = createBatch();
+        
         if(order != null){
-            lxAsyncMethods.sendPaymentInfoToBaoKim(order);
+            /* attach batch id */
+            order.setBatchId(batch.getId());
+            
+            boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
+            
+            if(rs){
+                /* lưu id */
+                LixiBatchOrder bo = new LixiBatchOrder();
+                bo.setBatch(batch);
+                bo.setOrderId(order.getId());
+                
+                this.batchOrderService.save(bo);
+            }
         }
         
         return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
@@ -355,9 +397,18 @@ public class LixiOrdersController {
         if(orderIds != null && orderIds.length > 0){
             
             List<LixiOrder> orders = this.lxOrderService.findAll(Arrays.asList(orderIds));
+            LixiBatch batch = createBatch();
             for(LixiOrder order : orders){
                 // send to bao kim
-                lxAsyncMethods.sendPaymentInfoToBaoKim(order);
+                boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
+                if(rs){
+                    /* lưu id */
+                    LixiBatchOrder bo = new LixiBatchOrder();
+                    bo.setBatch(batch);
+                    bo.setOrderId(order.getId());
+
+                    this.batchOrderService.save(bo);
+                }
             }
         }
         //

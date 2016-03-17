@@ -24,6 +24,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 
@@ -94,6 +95,9 @@ public class LixiOrder implements Serializable {
     
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
     private LixiInvoice invoice;
+    
+    @Transient
+    private Long batchId;
     
     public LixiOrder() {
     }
@@ -215,7 +219,14 @@ public class LixiOrder implements Serializable {
         this.gifts = gifts;
     }
 
-    
+    public Long getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(Long batchId) {
+        this.batchId = batchId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

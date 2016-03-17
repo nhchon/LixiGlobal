@@ -483,19 +483,20 @@ public class LiXiVatGiaUtils {
      * @param orderService
      * @param orderGiftService
      */
-    public void sendPaymentInfoToBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService) {
+    public boolean sendPaymentInfoToBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService) {
 
         // check properties is null
         if (baokimProp == null) {
-            return;
+            return false;
         }
         if (order == null) {
-            return;
+            return false;
         }
         if (order.getGifts() == null || order.getGifts().isEmpty()) {
-            return;
+            return false;
         }
         //
+        boolean updateOrderStatus = true;
         try {
 
             final AuthHttpComponentsClientHttpRequestFactory requestFactory
@@ -505,7 +506,6 @@ public class LiXiVatGiaUtils {
             final RestTemplate restTemplate = new RestTemplate(requestFactory);
 
             String submitUrl = baokimProp.getProperty("baokim.single_payment_notification");
-            boolean updateOrderStatus = true;
             SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             for (LixiOrderGift gift : order.getGifts()) {
@@ -569,12 +569,14 @@ public class LiXiVatGiaUtils {
                 order.setModifiedDate(Calendar.getInstance().getTime());
                 
                 orderService.save(order);
-
+                
+                //
             }
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
         }
-
+        
+        return updateOrderStatus;
     }
 }
