@@ -9,6 +9,14 @@
             
             jQuery(document).ready(function () {
                 
+                // reset value
+                $('#status').change(function(){
+                    if($(this).value !== 'Other'){
+                        $('#fromDate').val('');
+                        $('#toDate').val('');
+                    }
+                });
+                
                 $('#btnSubmit').click(function () {
 
                     if ($('#status').val() === '') {
@@ -21,14 +29,27 @@
 
                     var fromDate = $('#fromDate').val();
                     var toDate = $('#toDate').val();
+                    if($('#status').val() === 'Other'){
+                        
+                        if (fromDate === ''){
+                            alert('Please input fromDate');
+                             $('#fromDate').focus();
+                            return false;
+                        }
+                        
+                        if (toDate === ''){
+                            alert('Please input toDate');
+                            $('#toDate').focus();
+                            return false;
+                        }
+                        
+                        if ((fromDate !== '' && toDate !== '') && (fromDate > toDate)) {
 
-                    if ((fromDate !== '' && toDate !== '') && (fromDate > toDate)) {
-
-                        alert('The value of from date must be smaller or equal end date');
-                        $('#fromDate').focus();
-                        return false;
-                    }
-
+                            alert('The value of from date must be smaller or equal end date');
+                            $('#fromDate').focus();
+                            return false;
+                        }
+                    }   
                     return true;
                 });
                 <%--
@@ -79,7 +100,7 @@
         </ul>
 
         <!-- main -->
-        <h2 class="sub-header">Transaction Report</h2>
+        <h2 class="sub-header">Batch Report</h2>
         <div class="row">
             <div class="col-md-12">
                 <form:form modelAttribute="searchForm" method="get">
@@ -89,35 +110,17 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="status">Transaction Status:</label>
+                                <label for="status">Batch Status:</label>
                                 <form:select class="form-control" path="status">
                                     <option value="">Please select status</option>
-                                    <option value="All" <c:if test="${searchForm.status eq 'All'}">selected=""</c:if>>All</option>
-                                    <option value="${PROCESSED}" <c:if test="${searchForm.status eq PROCESSED}">selected=""</c:if>>Processed</option>
-                                    <option value="${COMPLETED}" <c:if test="${searchForm.status eq COMPLETED}">selected=""</c:if>>Completed</option>
-                                    <option value="${CANCELED}" <c:if test="${searchForm.status eq CANCELED}">selected=""</c:if>>Cancelled</option>
+                                    <option value="Latest" <c:if test="${searchForm.status eq 'Latest'}">selected=""</c:if>>Latest</option>
+                                    <option value="Weekly" <c:if test="${searchForm.status eq 'Weekly'}">selected=""</c:if>>Weekly</option>
+                                    <option value="Monthly" <c:if test="${searchForm.status eq 'Monthly'}">selected=""</c:if>>Monthly</option>
+                                    <option value="Other" <c:if test="${searchForm.status eq 'Other'}">selected=""</c:if>>Other</option>
                                 </form:select>
                             </div>
                         </div>
                     </div>
-                    <%--
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="firstName">Sender's First Name:</label>
-                                <form:input class="form-control" path="firstName"/>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="lastName">Last Name:</label>
-                                <form:input type="text" class="form-control" path="lastName"/>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="email">Email:</label>
-                                <form:input type="text" class="form-control" path="email"/>
-                            </div>
-                        </div>
-                    </div>
-                    --%>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
@@ -145,14 +148,11 @@
             </div>
         </div>
         
-        <c:url value="/Administration/Orders/report" var="postOrderReport"/>
-        
         <security:authentication property="principal.configs['LIXI_BAOKIM_TRANFER_PERCENT']" var="transferPercent" />
         <c:if test="${empty transferPercent}">
             <c:set var="transferPercent" value="95"/>
         </c:if>
         
-        <form action="${postOrderReport}" method="post" onsubmit="return checkForm()">
         <div class="row">
             <div class="col-sm-12">
                 <!-- Tab panes -->
@@ -162,101 +162,30 @@
                             <table class="table table-hover table-responsive table-striped">
                                 <thead>
                                     <tr>
-                                        <th nowrap>Date</th><%-- 1 --%>
-                                        <th nowrap style="text-align:center;">Order</th><%-- 2 --%>
-                                        <th nowrap style="text-align:center;">Transaction No</th><%-- 3 --%>
-                                        <th nowrap>Option</th><%-- 4 --%>
-                                        <th>Sender</th><%-- 5 --%>
-                                        <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
-                                        <th style="text-align: right;">Amount</th><%-- 7 --%>
-                                        <th style="text-align: center;">Status</th><%-- 8 --%>
-                                        <th style="text-align: center;">Last Modified Date</th><%-- 9 --%>
-                                        <c:if test="${searchForm.status eq 'All' or searchForm.status eq PROCESSED}">
-                                        <th style="text-align: right;">Action</th><%-- 10 --%>    
-                                        </c:if>
+                                        <th nowrap>#</th><%-- 1 --%>
+                                        <th nowrap>File Name</th><%-- 2 --%>
+                                        <th nowrap>Date</th><%-- 3 --%>
+                                        <th nowrap>Time</th><%-- 4 --%>
+                                        <th nowrap style="text-align:right;">Export to Excel</th><%-- 5 --%>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:set var="countRec" value="0"/>
-                                    <c:set var="totalAmountVnd" value="0"/>
-                                    <c:set var="totalAmountUsd" value="0"/>
-                                    <c:forEach items="${mOs}" var="m" varStatus="theCount">
-                                        <c:set var="countRec" value="${theCount.count}"/>
-                                        <tr id="rowO${m.key.id}">
-                                            <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
+                                    <c:forEach items="${results.content}" var="b" varStatus="theCount">
+                                        <tr id="rowO${b.id}">
+                                            <td>${b.id}</td>
+                                            <td><a href="<c:url value="/Administration/SystemBatch/view/${b.id}"/>">${b.name}</a></td>
+                                            <td><fmt:formatDate pattern="MM/dd/yyyy" value="${b.createdDate}"/></td>
+                                            <td><fmt:formatDate pattern="HH:mm:ss" value="${b.createdDate}"/>
                                             </td>
-                                            <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
-                                                    ${m.key.invoice.invoiceCode}
-                                                </a>
-                                                <br/>
-                                                1 USD = ${m.key.lxExchangeRate.buy} VND
+                                            <td nowrap style="text-align:right;">
+                                                <button type="button" onclick="alert('In Working')" class="btn btn-primary">Export</button>
                                             </td>
-                                            <td style="text-align:center;">${m.key.invoice.netTransId}<br/>(${m.key.invoice.translatedStatus})</td>
-                                            <td nowrap>
-                                                <c:if test="${m.key.setting eq 0}">
-                                                    Gift Only
-                                                </c:if>
-                                                <c:if test="${m.key.setting eq 1}">
-                                                    Allow Refund
-                                                </c:if>
-                                            </td>
-                                            <td>${m.key.sender.fullName}<br/><a href='<c:url value="/Administration/SystemSender/detail/${m.key.sender.id}"/>'>${m.key.sender.beautyId}</a></td>
-                                            <td style="text-align: center;">
-                                                <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                                                    <c:if test="${not empty rio.gifts}">
-                                                    ${rio.recipient.fullName}<br/><a href="javascript:viewRecipient(${rio.recipient.id});">${rio.recipient.beautyId}</a><br/>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </td>
-                                            <td style="text-align: right;">
-                                                <c:forEach items="${m.value}" var="rio">
-                                                    <c:if test="${not empty rio.gifts}">
-                                                    <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                    <c:if test="${m.key.setting eq 0}">
-                                                        <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
-                                                        <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd * transferPercent/100.0}"/>
-                                                    </c:if>
-                                                    <c:if test="${m.key.setting eq 1}">
-                                                        <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
-                                                        <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
-                                                    </c:if>
-                                                    <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </td>
-                                            <td style="text-align: center;">
-                                                <c:if test="${m.key.lixiStatus eq PROCESSED}">
-                                                    Processed<br/>
-                                                    <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
-                                                    <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
-                                                </c:if>
-                                                <c:if test="${m.key.lixiStatus eq COMPLETED}">
-                                                    Completed
-                                                </c:if>
-                                                <c:if test="${m.key.lixiStatus eq CANCELED}">
-                                                    Cancelled
-                                                </c:if>
-                                            </td>
-                                            <td style="text-align: center;">
-                                                <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.modifiedDate}"/>
-                                            </td>
-                                            <c:if test="${searchForm.status eq 'All' or searchForm.status eq PROCESSED}">
-                                            <td style="text-align: right;">
-                                                <c:if test="${m.key.lixiStatus eq PROCESSED and (m.key.lixiSubStatus eq SENT_MONEY or m.key.lixiSubStatus eq SENT_INFO)}">
-                                                    <a href="javascript:cancel(${m.key.id});">Cancel</a>
-                                                </c:if>
-                                            </td>
-                                            </c:if>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
                                 <tfoot>
-                                    <c:set var="colSpan" value="9"/>
-                                    <c:if test="${searchForm.status eq 'All' or searchForm.status eq 'Processed'}">
-                                        <c:set var="colSpan" value="10"/>
-                                    </c:if>
                                     <tr>
-                                        <td colspan="${colSpan}">
+                                        <td colspan="5">
                                             <%-- Paging --%>
                                             <nav>
                                                 <ul class="pagination pull-right">
@@ -285,7 +214,6 @@
                 </div>
             </div>
         </div>
-        </form>
         <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content" id="editRecipientContent">

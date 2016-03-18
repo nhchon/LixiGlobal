@@ -87,21 +87,21 @@ public class LixiOrdersController {
     @RequestMapping(value = "report", method = RequestMethod.GET)
     public ModelAndView report(Map<String, Object> model){
 
-        model.put("mOs", null);
+        //model.put("mOs", null);
         
-        LixiOrderSearchForm searchForm = new LixiOrderSearchForm();
+        //LixiOrderSearchForm searchForm = new LixiOrderSearchForm();
         
         /* default value for search form */
-        searchForm.setStatus("All");
+        //searchForm.setStatus("All");
         
         Date currDate = DateUtils.addDays(Calendar.getInstance().getTime(), 1);
         Date fromDate = DateUtils.addDays(currDate, -2);
 
-        searchForm.setFromDate(formatter.format(fromDate));
-        searchForm.setToDate(formatter.format(currDate));
+        //searchForm.setFromDate(formatter.format(fromDate));
+        //searchForm.setToDate(formatter.format(currDate));
         
-        model.put("searchForm", searchForm);
-        model.put("results", null);
+        //model.put("searchForm", searchForm);
+        //model.put("results", null);
         
         String url = "search=true&paging.page=1&paging.size=50&status=All&fromDate=" + formatter.format(fromDate)+ "&toDate="+formatter.format(currDate);
         return new ModelAndView(new RedirectView("/Administration/Orders/report?" + url, true, true));
@@ -112,6 +112,7 @@ public class LixiOrdersController {
      * @param model
      * @param form
      * @param pageable
+     * @throws ParseException
      * @return 
      */
     @RequestMapping(value = "report", params = "search=true",
@@ -195,7 +196,7 @@ public class LixiOrdersController {
         }
         
         model.put("mOs", mOs);
-        model.put("pOrder", pOrder);
+        //model.put("pOrder", pOrder);
         
         return new ModelAndView("Administration/reports/transactions");
     }    

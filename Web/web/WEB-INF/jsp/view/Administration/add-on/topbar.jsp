@@ -34,6 +34,8 @@
                     <ul class="dropdown-menu">
                         <li><a href="<c:url value="/Administration/Orders/report"/>">Transaction Report</a></li>
                         <li role="separator" class="divider"></li>
+                        <li><a href="<c:url value="/Administration/SystemBatch/report"/>">Batch Report</a></li>
+                        <li role="separator" class="divider"></li>
                         <li><a href="<c:url value="/Administration/SystemTopUp/report"/>">TopUp Report</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<c:url value="/Administration/SystemRecipient/report"/>">Receiver Report</a></li>

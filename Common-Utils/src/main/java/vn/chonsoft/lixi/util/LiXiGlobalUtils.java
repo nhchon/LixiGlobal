@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.util;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -32,6 +33,7 @@ import vn.chonsoft.lixi.pojo.Exrate;
 public abstract class LiXiGlobalUtils {
     
     private static final Logger log = LogManager.getLogger(LiXiGlobalUtils.class);
+    
     
     public static double round2Decimal(double a) {
 
