@@ -28,6 +28,12 @@ public abstract class LiXiGlobalConstants {
     
     public static final String CHONNH_GMAIL = "chonnh@gmail.com";
     
+    /* Type */
+    public static final String LIXI_GIFT_TYPE = "LIXI_GIFT_TYPE";
+    public static final String LIXI_PHONE_CARD_TYPE = "LIXI_PHONE_CARD_TYPE";
+    public static final String LIXI_TOP_UP_TYPE = "LIXI_TOP_UP_TYPE";
+    public static final String LIXI_TOTAL_ALL_TYPE = "TOTAL_ALL_TYPE";
+    
     /* */
     public static final String TRANS_REPORT_STATUS_ALL = "All";
     

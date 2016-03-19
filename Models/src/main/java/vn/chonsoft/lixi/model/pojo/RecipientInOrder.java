@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrderGift;
@@ -116,7 +117,7 @@ public class RecipientInOrder {
             }
         }
         
-        return new SumVndUsd("LIXI_GIFT_TYPE", sumGiftVND, sumGiftUSD);
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
     }
     
     
@@ -152,7 +153,7 @@ public class RecipientInOrder {
                 sumBuyCardUSD = Math.round(sumBuyCardUSD * 100.0) / 100.0;
             }
         }
-        return new SumVndUsd("LIXI_PHONE_CARD_TYPE", sumBuyCardUSD * buy, sumBuyCardUSD);
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_PHONE_CARD_TYPE, sumBuyCardUSD * buy, sumBuyCardUSD);
     }
     
     public SumVndUsd getPhoneCardTotal(){
@@ -174,7 +175,7 @@ public class RecipientInOrder {
                 sumTopUpVND += topUp.getAmount();
             }
         }
-        return new SumVndUsd("LIXI_TOP_UP_TYPE", sumTopUpVND, sumTopUpUSD);
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_TOP_UP_TYPE, sumTopUpVND, sumTopUpUSD);
     }
     
     public SumVndUsd getTopUpTotal(){
@@ -191,7 +192,7 @@ public class RecipientInOrder {
         SumVndUsd topUp = getTopUpTotal();
         SumVndUsd buyCard = getPhoneCardTotal();
         
-        return new SumVndUsd("TOTAL_ALL_TYPE", gift.getVnd() + topUp.getVnd() + buyCard.getVnd(), gift.getUsd() + topUp.getUsd() + buyCard.getUsd());
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_TOTAL_ALL_TYPE, gift.getVnd() + topUp.getVnd() + buyCard.getVnd(), gift.getUsd() + topUp.getUsd() + buyCard.getUsd());
     }
     
     /**

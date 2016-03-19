@@ -41,6 +41,7 @@ import vn.chonsoft.lixi.repositories.search.Criterion;
 import vn.chonsoft.lixi.repositories.search.SearchCriteria;
 import vn.chonsoft.lixi.repositories.service.LixiBatchOrderService;
 import vn.chonsoft.lixi.repositories.service.LixiBatchService;
+import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderSearchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
@@ -78,6 +79,9 @@ public class LixiOrdersController {
     
     @Autowired
     private LixiBatchOrderService batchOrderService;
+    
+    @Autowired
+    private LixiConfigService configService;
     
     /**
      * 
@@ -366,7 +370,6 @@ public class LixiOrdersController {
         LixiOrder order = this.lxOrderService.findById(id);
         
         LixiBatch batch = createBatch();
-        
         if(order != null){
             /* attach batch id */
             order.setBatchId(batch.getId());

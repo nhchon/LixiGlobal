@@ -27,6 +27,9 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.pojo.SumVndUsd;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -275,5 +278,28 @@ public class LixiOrder implements Serializable {
     public void setInvoice(LixiInvoice invoice) {
         this.invoice = invoice;
     }
-
+    
+    public SumVndUsd getSumOfGiftVnd(double percent){
+        
+        if(this.gifts != null && !this.gifts.isEmpty()){
+            
+            double sumVnd = 0;
+            double sumUsd = 0;
+            for(LixiOrderGift g : this.gifts){
+               sumVnd += g.getProductPrice();
+               sumUsd += g.getUsdPrice();
+            }
+            
+            /* canculate the percent */
+            sumVnd = (sumVnd * percent)/100.0;
+            
+            /* round */
+            sumVnd = LiXiGlobalUtils.round2Decimal(sumVnd);
+            sumUsd = LiXiGlobalUtils.round2Decimal(sumUsd);
+            
+            return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumVnd, sumUsd);
+        }
+        else
+            return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, 0d, 0d);
+    }
 }
