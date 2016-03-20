@@ -105,9 +105,9 @@
         <!-- main -->
         <h2 class="sub-header">Order Send Money</h2>
         <c:url value="/Administration/Orders/sendMoneyInfo" var="postMoneyInfo"/>
-        <c:set var="transferPercent" value="95"/>
-        <c:if test="${not empty sessionScope['scopedTarget.loginedUser'].configs['LIXI_BAOKIM_TRANFER_PERCENT']}">
-            <c:set var="transferPercent" value="${sessionScope['scopedTarget.loginedUser'].configs['LIXI_BAOKIM_TRANFER_PERCENT']}"/>
+        <security:authentication property="principal.configs['LIXI_BAOKIM_TRANFER_PERCENT']" var="transferPercent" />
+        <c:if test="${empty transferPercent}">
+            <c:set var="transferPercent" value="95"/>
         </c:if>
         <form action="${postMoneyInfo}" method="post" onsubmit="return checkForm()">
         <div class="row">

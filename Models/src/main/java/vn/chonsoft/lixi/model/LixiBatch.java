@@ -20,6 +20,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  *
@@ -54,6 +55,11 @@ public class LixiBatch implements Serializable {
     @OrderBy("id ASC")
     private List<LixiBatchOrder> orders;
     
+    @Transient
+    private double sumVnd;
+    
+    @Transient
+    private double sumUsd;
     
     public LixiBatch() {
     }
@@ -107,6 +113,22 @@ public class LixiBatch implements Serializable {
 
     public void setOrders(List<LixiBatchOrder> orders) {
         this.orders = orders;
+    }
+
+    public double getSumVnd() {
+        return sumVnd;
+    }
+
+    public void setSumVnd(double sumVnd) {
+        this.sumVnd = sumVnd;
+    }
+
+    public double getSumUsd() {
+        return sumUsd;
+    }
+
+    public void setSumUsd(double sumUsd) {
+        this.sumUsd = sumUsd;
     }
 
     @Override

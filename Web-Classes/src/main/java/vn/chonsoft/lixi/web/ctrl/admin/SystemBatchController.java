@@ -31,6 +31,7 @@ import vn.chonsoft.lixi.model.form.BatchSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.LixiBatchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
+import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -57,6 +58,9 @@ public class SystemBatchController {
     @Autowired
     private LixiOrderService lxOrderService;
     
+    @Autowired
+    private ScalarFunctionService scalaService;
+    
     /**
      * 
      * @param model
@@ -67,6 +71,10 @@ public class SystemBatchController {
     public ModelAndView view(Map<String, Object> model, @PathVariable long id){
         
         LixiBatch batch = this.batchService.findById(id);
+        
+        batch.setSumVnd(this.scalaService.sumVndOfBatch(id));
+        batch.setSumUsd(this.scalaService.sumUsdOfBatch(id));
+        
         List<Long> ids  = new ArrayList<>();
         batch.getOrders().forEach(o -> {
             ids.add(o.getOrderId());
@@ -161,6 +169,11 @@ public class SystemBatchController {
         }
         
         Page<LixiBatch> pBs = this.batchService.findByCreatedDate(fromDate, toDate, pageable);
+        
+        pBs.getContent().forEach(b ->{
+            b.setSumVnd(this.scalaService.sumVndOfBatch(b.getId()));
+            b.setSumUsd(this.scalaService.sumUsdOfBatch(b.getId()));
+        });
         
         model.put("searchForm", form);
         model.put("results", pBs);

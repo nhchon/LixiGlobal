@@ -28,6 +28,8 @@ public abstract class LiXiGlobalConstants {
     
     public static final String CHONNH_GMAIL = "chonnh@gmail.com";
     
+    public static final double LIXI_BAOKIM_DEFAULT_PERCENT = 95.0;
+    
     /* Type */
     public static final String LIXI_GIFT_TYPE = "LIXI_GIFT_TYPE";
     public static final String LIXI_PHONE_CARD_TYPE = "LIXI_PHONE_CARD_TYPE";

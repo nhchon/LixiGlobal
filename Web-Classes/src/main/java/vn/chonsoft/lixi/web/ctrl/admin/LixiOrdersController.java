@@ -35,8 +35,10 @@ import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiBatch;
 import vn.chonsoft.lixi.model.LixiBatchOrder;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.SecurityAdminUser;
 import vn.chonsoft.lixi.model.form.LixiOrderSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
+import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.search.Criterion;
 import vn.chonsoft.lixi.repositories.search.SearchCriteria;
 import vn.chonsoft.lixi.repositories.service.LixiBatchOrderService;
@@ -358,6 +360,20 @@ public class LixiOrdersController {
         
         return batch;
     }
+    
+    /**
+     * 
+     * @return 
+     */
+    private double getBaoKimPercent(){
+        
+        double percent = LiXiGlobalConstants.LIXI_BAOKIM_DEFAULT_PERCENT;
+        try {
+            percent = Double.parseDouble(this.configService.findByName("LIXI_BAOKIM_TRANFER_PERCENT").getValue());
+        } catch (Exception e) {}
+        
+        return percent;
+    }
     /**
      * 
      * @param model
@@ -370,6 +386,9 @@ public class LixiOrdersController {
         LixiOrder order = this.lxOrderService.findById(id);
         
         LixiBatch batch = createBatch();
+        
+        double percent = getBaoKimPercent();
+        
         if(order != null){
             /* attach batch id */
             order.setBatchId(batch.getId());
@@ -381,6 +400,11 @@ public class LixiOrdersController {
                 LixiBatchOrder bo = new LixiBatchOrder();
                 bo.setBatch(batch);
                 bo.setOrderId(order.getId());
+                
+                SumVndUsd sum = order.getSumOfGiftVnd(percent);
+                
+                bo.setVndOnlyGift(sum.getVnd());
+                bo.setUsdOnlyGift(sum.getUsd());
                 
                 this.batchOrderService.save(bo);
             }
@@ -402,6 +426,9 @@ public class LixiOrdersController {
             
             List<LixiOrder> orders = this.lxOrderService.findAll(Arrays.asList(orderIds));
             LixiBatch batch = createBatch();
+            
+            double percent = getBaoKimPercent();
+        
             for(LixiOrder order : orders){
                 // send to bao kim
                 boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
@@ -411,6 +438,11 @@ public class LixiOrdersController {
                     bo.setBatch(batch);
                     bo.setOrderId(order.getId());
 
+                    SumVndUsd sum = order.getSumOfGiftVnd(percent);
+
+                    bo.setVndOnlyGift(sum.getVnd());
+                    bo.setUsdOnlyGift(sum.getUsd());
+                
                     this.batchOrderService.save(bo);
                 }
             }

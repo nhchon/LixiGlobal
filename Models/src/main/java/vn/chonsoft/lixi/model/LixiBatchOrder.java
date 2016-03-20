@@ -35,6 +35,14 @@ public class LixiBatchOrder implements Serializable {
     @Column(name = "order_id")
     private long orderId;
 
+    @Basic
+    @Column(name = "vnd_only_gift")
+    private double vndOnlyGift;
+    
+    @Basic
+    @Column(name = "usd_only_gift")
+    private double usdOnlyGift;
+    
     @JoinColumn(name = "batch_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private LixiBatch batch;
@@ -65,6 +73,22 @@ public class LixiBatchOrder implements Serializable {
 
     public void setOrderId(long orderId) {
         this.orderId = orderId;
+    }
+
+    public double getVndOnlyGift() {
+        return vndOnlyGift;
+    }
+
+    public void setVndOnlyGift(double vndOnlyGift) {
+        this.vndOnlyGift = vndOnlyGift;
+    }
+
+    public double getUsdOnlyGift() {
+        return usdOnlyGift;
+    }
+
+    public void setUsdOnlyGift(double usdOnlyGift) {
+        this.usdOnlyGift = usdOnlyGift;
     }
 
     public LixiBatch getBatch() {

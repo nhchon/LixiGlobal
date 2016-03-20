@@ -166,7 +166,8 @@
                                         <th nowrap>File Name</th><%-- 2 --%>
                                         <th nowrap>Date</th><%-- 3 --%>
                                         <th nowrap>Time</th><%-- 4 --%>
-                                        <th nowrap style="text-align:right;">Export to Excel</th><%-- 5 --%>
+                                        <th nowrap style="text-align:right;">Total</th><%-- 5 --%>
+                                        <th nowrap style="text-align:right;">Export to Excel</th><%-- 6 --%>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -177,6 +178,10 @@
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${b.createdDate}"/></td>
                                             <td><fmt:formatDate pattern="HH:mm:ss" value="${b.createdDate}"/>
                                             </td>
+                                            <td style="text-align:right;">
+                                                <fmt:formatNumber value="${b.sumVnd}" pattern="###,###.##"/> VND<br/>
+                                                <fmt:formatNumber value="${b.sumUsd}" pattern="###,###.##"/> USD
+                                            </td>
                                             <td nowrap style="text-align:right;">
                                                 <button type="button" onclick="alert('In Working')" class="btn btn-primary">Export</button>
                                             </td>
@@ -185,7 +190,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="5">
+                                        <td colspan="6">
                                             <%-- Paging --%>
                                             <nav>
                                                 <ul class="pagination pull-right">

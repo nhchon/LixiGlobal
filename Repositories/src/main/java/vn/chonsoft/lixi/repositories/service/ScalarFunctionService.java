@@ -16,6 +16,9 @@ public interface ScalarFunctionService {
     
     //List<Long> getListOrderProcessedOreCompletedOfRecipient(Long id);
     
+    double sumVndOfBatch(long id);
+    double sumUsdOfBatch(long id);
+    
     List<Long> getOrdersOfRecipient(String status, Long id);
     
     double sumGiftOfRecipient(String invoiceStatus, Long id);

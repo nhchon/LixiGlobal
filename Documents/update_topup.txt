@@ -7,3 +7,5 @@ ALTER TABLE `lixi_orders` ADD `lixi_sub_status` VARCHAR(255) NULL AFTER `lixi_st
 ALTER TABLE `vatgia_products` CHANGE `image_url` `image_url` VARCHAR(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 
 ALTER TABLE `vatgia_products` CHANGE `link_detail` `link_detail` VARCHAR(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `lixi_batch_orders` ADD `vnd_only_gift` DOUBLE NULL AFTER `order_id`, ADD `usd_only_gift` DOUBLE NULL AFTER `vnd_only_gift`;

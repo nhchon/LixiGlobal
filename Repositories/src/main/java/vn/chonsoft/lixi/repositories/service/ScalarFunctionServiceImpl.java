@@ -214,4 +214,39 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
         }
     }
 
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public double sumVndOfBatch(long id){
+        
+        String sql = "SELECT sum(bo.vnd_only_gift) FROM lixi_batch_orders bo WHERE bo.batch_id=?";
+        Double rs = scalarDao.singleResult(sql, id);
+        if(rs != null){
+            return rs.doubleValue();
+        }
+        else{
+            return 0d;
+        }
+    }
+    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public double sumUsdOfBatch(long id){
+        String sql = "SELECT sum(bo.usd_only_gift) FROM lixi_batch_orders bo WHERE bo.batch_id=?";
+        Double rs = scalarDao.singleResult(sql, id);
+        if(rs != null){
+            return rs.doubleValue();
+        }
+        else{
+            return 0d;
+        }
+    }
+    
 }
