@@ -290,8 +290,11 @@ public class LixiOrder implements Serializable {
                sumUsd += g.getUsdPrice();
             }
             
-            /* canculate the percent */
-            sumVnd = (sumVnd * percent)/100.0;
+            /* Gift ONLY option */
+            if(this.setting == LiXiGlobalConstants.LIXI_GIFT_ONLY_OPTION){
+                /* canculate the percent */
+                sumVnd = (sumVnd * percent)/100.0;
+            }
             
             /* round */
             sumVnd = LiXiGlobalUtils.round2Decimal(sumVnd);

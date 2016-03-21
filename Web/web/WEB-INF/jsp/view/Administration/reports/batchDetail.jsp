@@ -68,7 +68,37 @@
 
         <!-- main -->
         <h2 class="sub-header">Batch Detail #${batch.id}</h2>
-        
+        <div class="row">
+            <div class="col-sm-8">
+                <table class="table table-hover table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th nowrap class="success">#</th><%-- 1 --%>
+                            <th nowrap class="success">File Name</th><%-- 2 --%>
+                            <th nowrap class="success">Date</th><%-- 3 --%>
+                            <th nowrap class="success">Time</th><%-- 4 --%>
+                            <th nowrap style="text-align:right;" class="success">Total</th><%-- 5 --%>
+                            <th nowrap style="text-align:right;" class="success">Owner</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="rowO${batch.id}">
+                            <td>${batch.id}</td>
+                            <td><a href="<c:url value="/Administration/SystemBatch/view/${batch.id}"/>">${batch.name}</a></td>
+                            <td><fmt:formatDate pattern="MM/dd/yyyy" value="${batch.createdDate}"/></td>
+                            <td><fmt:formatDate pattern="HH:mm:ss" value="${batch.createdDate}"/>
+                            </td>
+                            <td style="text-align:right;">
+                                <fmt:formatNumber value="${batch.sumVnd}" pattern="###,###.##"/> VND<br/>
+                                <fmt:formatNumber value="${batch.sumUsd}" pattern="###,###.##"/> USD
+                            </td>
+                            <td nowrap style="text-align:right;">${batch.createdBy}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
         <security:authentication property="principal.configs['LIXI_BAOKIM_TRANFER_PERCENT']" var="transferPercent" />
         <c:if test="${empty transferPercent}">
             <c:set var="transferPercent" value="95"/>
