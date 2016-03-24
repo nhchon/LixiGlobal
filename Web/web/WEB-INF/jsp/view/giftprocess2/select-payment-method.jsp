@@ -24,6 +24,13 @@
                     </div>
                 </div>
                 </c:if>
+                <c:if test="${overNumOfCard eq 1 || param.overNumOfCard eq 1}">
+                <div class="alert alert-warning alert-dismissible bg-white" role="alert">
+                    <div class="alert-message">
+                        <spring:message code="error.over-num-of-card" text="Your maximum number of card is 5. Please delete on of them before add new card"/>
+                    </div>
+                </div>
+                </c:if>
                 <c:url value="/checkout/paymentMethods" var="choosePaymentMethodUrl"/>
                 <form id="changePaymentForm" action="${choosePaymentMethodUrl}" method="post" class="receiver-form" onsubmit="return checkSelectedPayment()">
                     <div class="section-receiver">
@@ -70,6 +77,7 @@
                                     </c:forEach>
                                 </tbody>
                             </table>
+                            <%--
                             <c:if test="${not empty ACCOUNTS}">
                             <p>&nbsp;</p>
                             <table>
@@ -98,6 +106,7 @@
                                 </tbody>
                             </table>
                             </c:if>
+                            --%>
                         </div>
                     </div>
                     <div class="button-control text-uppercase">
@@ -107,7 +116,10 @@
                                 <button class="btn btn-primary text-uppercase"  type="submit">use this payment method</button>
                             </div>
                             <div class="col-md-6 text-right">
-                                <button class="btn btn-primary btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/checkout/addCard"/>">add new card</button>
+                                <c:set var="numOfCard" value="${fn:length(CARDS)}"/>
+                                <c:if test="${numOfCard < 5}">
+                                    <button class="btn btn-primary btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/checkout/addCard"/>">add new card</button>
+                                </c:if>
                             </div>
                         </div>
                     </div>

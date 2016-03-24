@@ -247,6 +247,12 @@ public class CheckOutController {
             model.put("returnUrl", "/gifts/order-summary");
         } else {
             model.put("returnUrl", "/checkout/paymentMethods");
+            
+            /* check num of cards <= 5 */
+            if(cards.size() >= LiXiGlobalConstants.USER_MAX_NUM_OF_CARD){
+                
+                return new ModelAndView(new RedirectView("/checkout/paymentMethods?overNumOfCard=1", true, true));
+            }
         }
         
         /* card form */

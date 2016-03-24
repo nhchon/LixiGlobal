@@ -68,4 +68,5 @@ public abstract class LiXiGlobalConstants {
     
     public static final int LIXI_ALLOW_REFUND_OPTION = 1;
     
+    public static final int USER_MAX_NUM_OF_CARD = 5;
 }
