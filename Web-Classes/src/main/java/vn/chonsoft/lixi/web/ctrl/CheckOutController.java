@@ -83,9 +83,9 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
  */
 @WebController
 @RequestMapping("checkout")
-public class CheckOutController2 {
+public class CheckOutController {
 
-    private static final Logger log = LogManager.getLogger(CheckOutController2.class);
+    private static final Logger log = LogManager.getLogger(CheckOutController.class);
 
     /* session bean - Login user */
     @Autowired

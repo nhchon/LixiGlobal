@@ -6,7 +6,6 @@ package vn.chonsoft.lixi.util;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
