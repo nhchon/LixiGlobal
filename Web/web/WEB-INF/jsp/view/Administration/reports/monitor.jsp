@@ -12,7 +12,7 @@
         <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-            <li><a href="<c:url value="/Administration/SystemTopUp/list"/>">Top Up Mobile List</a></li>
+            <li><a href="<c:url value="/Administration/TransactionMonitor/report"/>">Transaction Monitor</a></li>
         </ul>
 
         <!-- main -->
