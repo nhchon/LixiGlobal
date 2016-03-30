@@ -41,7 +41,7 @@
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/bootstrap.min.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/lixi-global-ext.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/fonts/font-awesome/css/font-awesome.min.css"/>">
-        <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:100,300,300italic,400,700|Julius+Sans+One|Roboto+Condensed:300,400">
+        <link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:100,300,300italic,400,700|Julius+Sans+One|Roboto+Condensed:300,400">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/hover-min.css"/>">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/main.css"/>">
         <c:set var="currentDate" value="<%=new java.util.Date()%>"/>

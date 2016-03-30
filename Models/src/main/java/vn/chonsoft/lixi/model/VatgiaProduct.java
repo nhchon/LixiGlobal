@@ -48,6 +48,9 @@ public class VatgiaProduct implements Serializable {
     @Column(name = "image_url")
     private String imageUrl;
     
+    @Column(name = "image_full_size")
+    private String imageFullSize;
+    
     @Column(name = "link_detail")
     private String linkDetail;
     
@@ -137,6 +140,14 @@ public class VatgiaProduct implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getImageFullSize() {
+        return imageFullSize;
+    }
+
+    public void setImageFullSize(String imageFullSize) {
+        this.imageFullSize = imageFullSize;
     }
 
     public String getLinkDetail() {

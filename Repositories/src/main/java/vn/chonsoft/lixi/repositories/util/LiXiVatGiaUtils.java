@@ -140,6 +140,7 @@ public class LiXiVatGiaUtils {
         p.setName(pj.getName());
         p.setPrice(pj.getPrice());
         p.setImageUrl(pj.getImage_url());
+        p.setImageFullSize(pj.getImage_full_size());
         p.setLinkDetail(pj.getLink_detail());
         p.setAlive(1);
         p.setModifiedDate(Calendar.getInstance().getTime());

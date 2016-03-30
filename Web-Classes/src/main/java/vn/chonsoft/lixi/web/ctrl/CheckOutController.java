@@ -65,6 +65,7 @@ import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
+import vn.chonsoft.lixi.repositories.service.TransactionMonitorService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
@@ -151,6 +152,8 @@ public class CheckOutController {
     @Autowired
     private LixiAsyncMethods lxAsyncMethods;
     
+    @Autowired
+    private TransactionMonitorService transMoniService;
     /**
      * 
      * @param model
@@ -355,6 +358,9 @@ public class CheckOutController {
 
                 this.lxorderService.save(order);
 
+                /* Transaction Monitor, Async */
+                this.transMoniService.visaCard(uc);
+                
                 // check billing address
                 //Pageable just6rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
                 //Page<BillingAddress> addresses = this.baService.findByUser(u, just6rec);
@@ -377,7 +383,7 @@ public class CheckOutController {
             log.info("Insert card failed", e);
             //
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("giftprocess2/add-a-card", model);
+            return new ModelAndView("giftprocess2/add-a-card");
 
         }
 
@@ -619,7 +625,10 @@ public class CheckOutController {
                 order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
                 order.setModifiedDate(currDate);
                 this.lxorderService.save(order);
-            
+                
+                /* Transaction Monitor, Async */
+                this.transMoniService.transactions(order);
+                
                 // send mail to sender
                 final String emailSender = order.getSender().getEmail();
                 final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);

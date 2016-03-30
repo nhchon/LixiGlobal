@@ -16,6 +16,7 @@ public class VatGiaProductPj {
     private String name;
     private Double price;
     private String image_url;
+    private String image_full_size;
     private String link_detail;
 
     public Integer getId() {
@@ -64,6 +65,14 @@ public class VatGiaProductPj {
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;
+    }
+
+    public String getImage_full_size() {
+        return image_full_size;
+    }
+
+    public void setImage_full_size(String image_full_size) {
+        this.image_full_size = image_full_size;
     }
 
     public String getLink_detail() {

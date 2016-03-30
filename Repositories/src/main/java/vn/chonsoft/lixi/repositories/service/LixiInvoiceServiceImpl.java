@@ -4,18 +4,14 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
-import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.repositories.LixiInvoiceRepository;
 
 /**
@@ -44,6 +40,7 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
     }
 
     @Override
+    @Transactional
     public LixiInvoice findById(long id) {
         
         LixiInvoice invoice = this.invoiceRepository.findOne(id);
@@ -55,6 +52,7 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
     }
 
     @Override
+    @Transactional
     public LixiInvoice findByOrder(LixiOrder order) {
         
         LixiInvoice invoice = this.invoiceRepository.findByOrder(order);
@@ -71,6 +69,7 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
      * @return 
      */
     @Override
+    @Transactional
     public LixiInvoice findByNetTransId(String transId){
         
         return this.invoiceRepository.findByNetTransId(transId);
@@ -82,6 +81,7 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
      * @return 
      */
     @Override
+    @Transactional
     public List<LixiInvoice> findByNetResponseCode(Iterable<String> code){
         
         return this.invoiceRepository.findByNetResponseCodeIn(code);
@@ -94,6 +94,7 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
      * @return 
      */
     @Override
+    @Transactional
     public List<LixiInvoice> findByNetTransStatusIn(Iterable<String> status){
         
         List<LixiInvoice> invs = this.invoiceRepository.findByNetTransStatusIn(status);
@@ -108,6 +109,7 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
      * @return 
      */
     @Override
+    @Transactional
     public List<LixiInvoice> findAll(){
         
         List<LixiInvoice> invs = this.invoiceRepository.findAll();
@@ -115,5 +117,37 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
         
         return invs;
         
+    }
+    
+    /**
+     * 
+     * @param payer
+     * @param invStatus
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<LixiInvoice> findByPayerAndInvoiceStatus(Long payer, String invStatus){
+        
+        List<LixiInvoice> invs = this.invoiceRepository.findByPayerAndInvoiceStatus(payer, invStatus);
+        invs.forEach(i -> {i.getOrder();});
+        
+        return invs;
+    }
+    
+    /**
+     * 
+     * @param payer
+     * @param invStatus
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<LixiInvoice> findByPayerAndInvoiceStatusIn(Long payer, Iterable<String> invStatus){
+        
+        List<LixiInvoice> invs = this.invoiceRepository.findByPayerAndInvoiceStatusIn(payer, invStatus);
+        invs.forEach(i -> {i.getOrder();});
+        
+        return invs;
     }
 }

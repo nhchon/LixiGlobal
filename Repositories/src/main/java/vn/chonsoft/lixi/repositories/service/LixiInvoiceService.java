@@ -18,15 +18,27 @@ public interface LixiInvoiceService {
     @Transactional
     LixiInvoice save(LixiInvoice invoice);
     
+    @Transactional
     LixiInvoice findById(long id);
     
+    @Transactional
     LixiInvoice findByNetTransId(String transId);
     
+    @Transactional
     LixiInvoice findByOrder(LixiOrder order);
     
+    @Transactional
     List<LixiInvoice> findAll();
     
+    @Transactional
     List<LixiInvoice> findByNetResponseCode(Iterable<String> code);
     
+    @Transactional
     List<LixiInvoice> findByNetTransStatusIn(Iterable<String> status);
+    
+    @Transactional
+    List<LixiInvoice> findByPayerAndInvoiceStatusIn(Long payer, Iterable<String> invStatus);
+    
+    @Transactional
+    List<LixiInvoice> findByPayerAndInvoiceStatus(Long payer, String invStatus);
 }

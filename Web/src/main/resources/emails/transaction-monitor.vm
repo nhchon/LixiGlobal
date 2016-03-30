@@ -1,0 +1,14 @@
+<html>
+    <body>
+        <h5>Hi Yuric,</h5>
+        
+        <p>${content}</p>
+
+        <p>This email is sent automatically. Please sign in the lixi.global to get control</p>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

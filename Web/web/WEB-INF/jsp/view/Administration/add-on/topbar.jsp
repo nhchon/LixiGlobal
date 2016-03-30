@@ -32,6 +32,8 @@
                 <li id="m08" class="dropdown<c:if test="${m08 eq true}"> active</c:if>">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li><a href="<c:url value="/Administration/TransactionMonitor/report"/>">Transaction Monitor</a></li>
+                        <li role="separator" class="divider"></li>
                         <li><a href="<c:url value="/Administration/Orders/report"/>">Transaction Report</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<c:url value="/Administration/SystemBatch/report"/>">Batch Report</a></li>
