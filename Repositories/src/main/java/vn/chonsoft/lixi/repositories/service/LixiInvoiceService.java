@@ -41,4 +41,14 @@ public interface LixiInvoiceService {
     
     @Transactional
     List<LixiInvoice> findByPayerAndInvoiceStatus(Long payer, String invStatus);
+    
+    @Transactional
+    List<LixiInvoice> findByInvoiceStatus(String invStatus);
+    
+    @Transactional
+    List<LixiInvoice> findByInvoiceStatusIn(Iterable<String> invStatus);
+    
+    @Transactional
+    List<LixiInvoice> findByMonitored(Integer monitored);
+    
 }

@@ -357,9 +357,6 @@ public class CheckOutController {
                 order.setBankAccount(null);
 
                 this.lxorderService.save(order);
-
-                /* Transaction Monitor, Async */
-                this.transMoniService.visaCard(uc);
                 
                 // check billing address
                 //Pageable just6rec = new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));

@@ -75,6 +75,9 @@ public class LixiInvoice implements Serializable {
     @Column(name = "invoice_status")
     private String invoiceStatus;
     
+    @Column(name = "monitored")
+    private Integer monitored;
+    
     @Column(name = "last_check_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastCheckDate;
@@ -246,6 +249,14 @@ public class LixiInvoice implements Serializable {
 
     public void setInvoiceStatus(String invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
+    }
+
+    public Integer getMonitored() {
+        return monitored;
+    }
+
+    public void setMonitored(Integer monitored) {
+        this.monitored = monitored;
     }
 
     public Date getLastCheckDate() {

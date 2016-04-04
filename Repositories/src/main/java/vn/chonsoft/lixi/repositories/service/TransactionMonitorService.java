@@ -6,16 +6,12 @@ package vn.chonsoft.lixi.repositories.service;
 
 import org.springframework.scheduling.annotation.Async;
 import vn.chonsoft.lixi.model.LixiOrder;
-import vn.chonsoft.lixi.model.UserCard;
 
 /**
  *
  * @author Asus
  */
 public interface TransactionMonitorService {
-    
-    @Async
-    void visaCard(UserCard uc);
     
     @Async
     void transactions(LixiOrder order);

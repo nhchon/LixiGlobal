@@ -28,6 +28,9 @@ public interface LixiOrderRepository  extends JpaRepository<LixiOrder, Long>{
     @Query("update LixiOrder o set o.lixiStatus = :lixiStatus where o.id = :id")
     int updateStatus(@Param("lixiStatus") String lixiStatus, @Param("id") Long id);
     
+    @Transactional
+    List<LixiOrder> findByIdIn(List<Long> ids, Sort sort);
+    
     //@Transactional
     //@Query("SELECT o FROM LixiOrder o WHERE o.modifiedDate BETWEEN :begin AND :end")
     //Page<LixiOrder> findByModifiedDate(@Param("begin") Date begin, @Param("end") Date end, Pageable page);

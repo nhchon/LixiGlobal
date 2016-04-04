@@ -29,11 +29,17 @@ import vn.chonsoft.lixi.model.UserCard;
  * @author Asus
  */
 @Service
-public class TransactionMonitorServiceImpl implements TransactionMonitorService{
-    
+public class TransactionMonitorServiceImpl implements TransactionMonitorService {
+
+    private static final int MAX_NUM_ORDER = 3;
+
+    private static final int OVER_100_USD = 1;
+    private static final int NAME_ON_CARD_WRONG = 2;
+    private static final int OVER_MAX_NUM_ORDER = 3;
+
     @Autowired
     private LixiMonitorService monitor;
-    
+
     @Autowired
     private LixiInvoiceService invService;
 
@@ -47,11 +53,11 @@ public class TransactionMonitorServiceImpl implements TransactionMonitorService{
     private VelocityEngine velocityEngine;
 
     /**
-     * 
-     * @param content 
+     *
+     * @param content
      */
-    private void mail(String content){
-     
+    private void mail(String content) {
+
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             @SuppressWarnings({"rawtypes", "unchecked"})
             @Override
@@ -65,7 +71,7 @@ public class TransactionMonitorServiceImpl implements TransactionMonitorService{
 
                 Map<String, Object> model = new HashMap<>();
                 model.put("content", content);
-                
+
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
                         velocityEngine, "emails/transaction-monitor.vm", "UTF-8", model);
                 message.setText(text, true);
@@ -74,95 +80,53 @@ public class TransactionMonitorServiceImpl implements TransactionMonitorService{
         // send oldEmail
         taskScheduler.execute(() -> mailSender.send(preparator));
     }
+
     /**
-     * 
-     * @param order 
+     *
+     * @param order
      */
     @Override
     @Async
-    public void transactions(LixiOrder order){
-        
+    public void transactions(LixiOrder order) {
+
         /* get sender id */
         Long payer = order.getSender().getId();
         String emailPayer = order.getSender().getEmail();
-        
-        List<LixiInvoice> invs = invService.findByPayerAndInvoiceStatus(payer, LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS);
-        
-        if(invs != null){
-            if(invs.size()>=2){
-                /* more than one order in progress */
-                String content = "Tài khoản " + emailPayer + " có " + invs.size() + " transactions are In Progress";
-                LixiMonitor m = new LixiMonitor();
-                m.setDescription(content);
-                m.setProcessed(0);
-                m.setUser(order.getSender());
-                m.setCreatedDate(Calendar.getInstance().getTime());
 
-                this.monitor.save(m);
+        /* get invoices */
+        LixiInvoice inv = this.invService.findByOrder(order);
+        if (inv.getTotalAmount() >= 100) {
 
-                /* mail */
-                mail(content);
-            }
-            
-            /* */
-            invs.forEach(i -> {
-                if(i.getGiftPrice() >= 100.0){
-                    String content = "Tài khoản " + emailPayer + " thực hiện đơn hàng " + i.getGiftPrice() + " USD. "
-                            + " Transaction ID: " + i.getOrder().getId() + ""
-                            + " Authorize.net ID: " + i.getNetTransId();
-                    LixiMonitor m = new LixiMonitor();
-                    m.setDescription(content);
-                    m.setProcessed(0);
-                    m.setUser(order.getSender());
-                    m.setCreatedDate(Calendar.getInstance().getTime());
+            inv.setMonitored(OVER_100_USD);
+            this.invService.save(inv);
+        } else {
+            // content
+            String mailContent = "Transaction #" + inv.getInvoiceCode() + " need to be reviewed:<br/>"
+                    + " By: " + emailPayer + "<br/>"
+                    + " Authorize.net ID: " + inv.getNetTransId();
+            // check card
+            String nameOnCard = order.getCard().getCardName();
 
-                    this.monitor.save(m);
+            String firstName = order.getSender().getFirstName();
+            String lastName = order.getSender().getLastName();
 
-                    /* mail */
-                    mail(content);
+            if (!nameOnCard.contains(firstName) || !nameOnCard.contains(lastName)) {
+                inv.setMonitored(NAME_ON_CARD_WRONG);
+                this.invService.save(inv);
+
+                //
+                mail(mailContent);
+            } else {
+                List<LixiInvoice> invs = invService.findByPayerAndInvoiceStatus(payer, LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS);
+
+                if (invs != null && invs.size() >= MAX_NUM_ORDER) {
+                    inv.setMonitored(OVER_MAX_NUM_ORDER);
+                    this.invService.save(inv);
+
+                    //
+                    mail(mailContent);
                 }
-            });
-        }
-    }
-    /**
-     * 
-     * @param uc 
-     */
-    @Override
-    @Async
-    public void visaCard(UserCard uc){
-        
-        String nameOnCard = uc.getCardName();
-        
-        String firstName = uc.getUser().getFirstName();
-        String lastName = uc.getUser().getLastName();
-        
-        if(!nameOnCard.contains(firstName) || !nameOnCard.contains(lastName)){
-            
-            String cardType = "Visa";
-            switch(uc.getCardType()){
-                //MASTER(2
-                case 2:
-                    cardType = "Master";
-                    break;
-                //DISCOVER(3)
-                case 3:
-                    cardType = "Discovery";
-                    break;
             }
-            
-            LixiMonitor m = new LixiMonitor();
-            String content = "Thẻ " + cardType + "("+uc.getCardNumber()+")" + " không trùng tên đăng ký của account " +
-                    uc.getUser().getEmail() +"(" + uc.getUser().getFullName()+")";
-            m.setDescription(content);
-            m.setProcessed(0);
-            m.setUser(uc.getUser());
-            m.setCreatedDate(Calendar.getInstance().getTime());
-            
-            this.monitor.save(m);
-            
-            /* mail */
-            mail(content);
         }
     }
 }

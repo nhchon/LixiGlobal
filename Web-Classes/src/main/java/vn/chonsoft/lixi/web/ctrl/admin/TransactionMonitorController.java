@@ -4,9 +4,12 @@
  */
 package vn.chonsoft.lixi.web.ctrl.admin;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiMonitor;
+import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
+import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
 import vn.chonsoft.lixi.repositories.service.LixiMonitorService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -31,6 +41,12 @@ public class TransactionMonitorController {
     @Autowired
     private LixiMonitorService lixiMonitorService;
     
+    @Autowired
+    private LixiInvoiceService invService;
+    
+    @Autowired
+    private LixiOrderService orderService;
+    
     /**
      * 
      * @param model
@@ -39,8 +55,25 @@ public class TransactionMonitorController {
     @RequestMapping(value = "report", method = RequestMethod.GET)
     public ModelAndView report(Map<String, Object> model){
         
-        List<LixiMonitor> monitors = this.lixiMonitorService.findByProcessed(new Integer(0));
-        model.put("monitors", monitors);
+        //List<LixiMonitor> monitors = this.lixiMonitorService.findByProcessed(new Integer(0));
+        
+        List<LixiInvoice> invs = this.invService.findByInvoiceStatus(LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS);
+        
+        List<Long> oIds = invs.stream().map(LixiInvoice::getOrder).map(LixiOrder::getId).collect(Collectors.toList());
+        
+        List<LixiOrder> orders = this.orderService.findAll(oIds);
+        
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        
+        if(orders != null){
+            
+            orders.forEach(o -> {
+                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+            });
+        }
+        
+        model.put("mOs", mOs);
+        //model.put("monitors", monitors);
         
         return new ModelAndView("Administration/reports/monitor");
     }

@@ -172,7 +172,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
     @Transactional
     public List<LixiOrder> findAll(List<Long> ids){
         
-        List<LixiOrder> ls = this.lxorderRepository.findAll(ids);
+        List<LixiOrder> ls = this.lxorderRepository.findByIdIn(ids, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
         if(ls != null && !ls.isEmpty()){
             ls.forEach(o -> {LiXiRepoUtils.loadOrder(o);});
         }

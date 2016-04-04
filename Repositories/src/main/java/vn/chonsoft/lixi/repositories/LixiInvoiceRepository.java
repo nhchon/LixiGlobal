@@ -26,4 +26,10 @@ public interface LixiInvoiceRepository extends JpaRepository<LixiInvoice, Long>{
     List<LixiInvoice> findByPayerAndInvoiceStatusIn(Long payer, Iterable<String> invStatus);
     
     List<LixiInvoice> findByPayerAndInvoiceStatus(Long payer, String invStatus);
+    
+    List<LixiInvoice> findByInvoiceStatus(String invStatus);
+    
+    List<LixiInvoice> findByInvoiceStatusIn(Iterable<String> invStatus);
+    
+    List<LixiInvoice> findByMonitored(Integer monitored);
 }

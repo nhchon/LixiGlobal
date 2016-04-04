@@ -150,4 +150,47 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
         
         return invs;
     }
+    
+    /**
+     * 
+     * @param invStatus
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<LixiInvoice> findByInvoiceStatus(String invStatus){
+        List<LixiInvoice> invs = this.invoiceRepository.findByInvoiceStatus(invStatus);
+        invs.forEach(i -> {i.getOrder();});
+        
+        return invs;
+    }
+    
+    /**
+     * 
+     * @param invStatus
+     * @return 
+     */
+    @Override
+    @Transactional
+    public List<LixiInvoice> findByInvoiceStatusIn(Iterable<String> invStatus){
+        List<LixiInvoice> invs = this.invoiceRepository.findByInvoiceStatusIn(invStatus);
+        invs.forEach(i -> {i.getOrder();});
+        
+        return invs;
+    }
+
+    /**
+     * 
+     * @param monitored
+     * @return 
+     */
+    @Override
+    public List<LixiInvoice> findByMonitored(Integer monitored) {
+        
+        List<LixiInvoice> invs = this.invoiceRepository.findByMonitored(monitored);
+        invs.forEach(i -> {i.getOrder();});
+        
+        return invs;    
+    }
+    
 }

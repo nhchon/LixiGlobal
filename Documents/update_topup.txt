@@ -9,3 +9,6 @@ ALTER TABLE `vatgia_products` CHANGE `image_url` `image_url` VARCHAR(1024) CHARA
 ALTER TABLE `vatgia_products` CHANGE `link_detail` `link_detail` VARCHAR(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 
 ALTER TABLE `lixi_batch_orders` ADD `vnd_only_gift` DOUBLE NULL AFTER `order_id`, ADD `usd_only_gift` DOUBLE NULL AFTER `vnd_only_gift`;
+
+#20160404
+ALTER TABLE `lixi_invoices` ADD `monitored` INT NULL DEFAULT '0' AFTER `invoice_status`;
