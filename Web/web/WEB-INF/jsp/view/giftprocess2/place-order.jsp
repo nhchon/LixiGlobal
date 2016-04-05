@@ -30,6 +30,37 @@
             var PLACE_ORDER_UPDATE_GIFT_PATH = '<c:url value="/checkout/update/gift/"/>';
             var arrQ = [];
 
+            function processingYourOrder(){
+                $('#processingYourOrder').modal({backdrop: 'static', keyboard: false});
+                    var postData = $('#placeOrderForm').serializeArray();
+                    var formURL = $('#placeOrderForm').attr("action");
+                    $.ajax(
+                    {
+                        url: formURL,
+                        type: "POST",
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR)
+                        {
+                            //data: return data from server
+                            if (data.error === '0') {
+                            } else {
+                                alert(data.message);
+                            }
+                            window.location.href = data.returnPage;
+                        },
+                        error: function (jqXHR, textStatus, errorThrown)
+                        {
+                            //if fails
+                            alert(SOMETHING_WRONG_ERROR + " : " + errorThrown);
+                        }
+                    });
+                }
+            
+            function closeModelProcessingYourOrder(){
+                $('#processingYourOrder').modal('hide');
+            }
+            
             function showPageBillAdd(page) {
                 $.get('<c:url value="/checkout/choose-billing-address-modal?paging.page"/>=' + page, function (data) {
                     $('#billingAddressListContent').html(data);
@@ -383,7 +414,7 @@
                 <c:set var="localStep" value="7"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <c:url value="/checkout/place-order" var="placeOrderUrl"/>
-                <form method="post" class="receiver-form" action="${placeOrderUrl}">
+                <form id="placeOrderForm" method="post" class="receiver-form" action="${placeOrderUrl}">
                     <div class="section-receiver">
                         <h2 class="title">review your order</h2>
 
@@ -556,7 +587,7 @@
                                                 <p>(Receiver will be notified right away. Delivery varies by vendor. Settlement of refund will be 48 to 72 hours)</p>
                                                 <p> By placing this order, you agree to <a href="<c:url value="/support/terms"/>" target="_blank">Lixi.Global Terms of Use</a> and <a href="<c:url value="/support/privacy"/>" target="_blank">Privacy Policy</a>.</p>
                                                 --%>
-                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </c:if>
@@ -573,6 +604,7 @@
                             <c:if test="${LIXI_FINAL_TOTAL eq 0}">
                                 <button id="btnLogOut" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'">Log Out</button>
                             </c:if>
+                                <button type="button" class="btn btn-danger" onclick="processingYourOrder()">Place Order</button>    
                         </div>
                     </div>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />        
@@ -585,5 +617,28 @@
                 </div>
             </div>
         </section>
+        <!-- Modal -->
+        <div id="processingYourOrder" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <p>Please wait! We are processing your order.</p>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>                
     </jsp:body>
 </template:Client>

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
@@ -547,6 +548,13 @@ public class CheckOutController {
         return new ModelAndView("giftprocess2/place-order");
     }
     
+    private void setReturnValue(Map<String, Object> model, String error, String returnPage, String message){
+        
+        model.put("error", error);
+        model.put("returnPage", returnPage);
+        model.put("message", message);
+        
+    }
     /**
      * 
      * @param request
@@ -558,6 +566,7 @@ public class CheckOutController {
     public ModelAndView placeOrder(HttpServletRequest request) throws Exception {
 
         User u = this.userService.findByEmail(loginedUser.getEmail());
+        Map<String, Object> model = new HashMap<>();
 
         LixiOrder order = null;
         // order already created
@@ -573,7 +582,6 @@ public class CheckOutController {
             }
             
             /* update invoice */
-            Map<String, Object> model = new HashMap<>();
             /* get billing address */
             BillingAddress bl = LiXiUtils.getBillingAddress(order);
 
@@ -603,10 +611,17 @@ public class CheckOutController {
                 invoice.setNetTransStatus(EnumTransactionStatus.paymentError.getValue());
                 this.invoiceService.save(invoice);
                 
-                return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
+                /**/
+                String returnPage = ServletUriComponentsBuilder.fromContextPath(request).path("/checkout/paymentMethods?wrong=1").build().toUriString();
+                setReturnValue(model, "1", returnPage, "error.payment-method");
+                //return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
+                return new ModelAndView("ajax/place-order-message", model);
             }
             else {
+                // CashRun
                 
+                
+                ////////////////////////////////////////////////////////////////
                 /* update invoice's status */
                 invoice.setNetTransStatus(EnumTransactionStatus.inProgress.getValue());
                 this.invoiceService.save(invoice);
@@ -684,13 +699,21 @@ public class CheckOutController {
                 ////////////////////////////////////////////////////////////////////
                 log.info("END OF Call Async methods");
 
+                String returnPage = ServletUriComponentsBuilder.fromContextPath(request).path("/checkout/paymentMethods?wrong=1").build().toUriString();
+                setReturnValue(model, "0", returnPage, "error.payment-method");
+                return new ModelAndView("giftprocess2/thank-you", model);
+                
                 // jump to thank you page
-                return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
+                //return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
+                
             } // charge is success
         } else {
 
             // order not exist, go to Choose recipient page
-            return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
+            // return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
+            String returnPage = ServletUriComponentsBuilder.fromContextPath(request).path("/checkout/paymentMethods?wrong=1").build().toUriString();
+            setReturnValue(model, "0", returnPage, "error.payment-method");
+            return new ModelAndView("giftprocess2/thank-you", model);
         }
 
     }
