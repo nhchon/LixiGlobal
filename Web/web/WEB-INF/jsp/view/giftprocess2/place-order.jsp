@@ -2,6 +2,7 @@
 <template:Client htmlTitle="Lixi Global - Place Order">
 
     <jsp:attribute name="extraHeadContent">
+        <script language="javascript" src="https://cashshieldasia.cashrun.com/crfp.js?SITE_ID=2b57448f3013fc513dcc7a4ab933e6928ab74672&SESSION_ID=${pageContext.session.id}&TYPE=JS" type="text/javascript" charset="UTF-8"></script>
         <style>
             .btn{
                 padding-left: 10px;
@@ -604,7 +605,7 @@
                             <c:if test="${LIXI_FINAL_TOTAL eq 0}">
                                 <button id="btnLogOut" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'">Log Out</button>
                             </c:if>
-                                <button type="button" class="btn btn-danger" onclick="processingYourOrder()">Place Order</button>    
+                                <button type="button" class="btn btn-danger" onclick="processingYourOrder()" style="color:#fff;">New Place Order</button>    
                         </div>
                     </div>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />        
@@ -625,9 +626,14 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row">
+                            <div class="col-md-12" style="text-align:center;">
+                                <p>Please wait! We are processing your order. <b>Please DO NOT close or reload your browser tab</b>.</p>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
-                                <p>Please wait! We are processing your order.</p>
+                                
                                 <div class="progress">
                                     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                                     </div>

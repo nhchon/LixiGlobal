@@ -4,6 +4,8 @@
  */
 package vn.chonsoft.lixi.web.util;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,6 +46,7 @@ import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
+import vn.chonsoft.lixi.pojo.CashRun;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
@@ -63,6 +66,52 @@ public class LiXiUtils {
         df.applyPattern("###,###.##");
     }
 
+    public static String getCardExpiryDateMMYY(int mm, int yy){
+        String expireMonth = StringUtils.leftPad(mm + "", 2, "0");
+        String expireYear = "";
+        //4 digits
+        if(yy > 999){
+            expireYear = StringUtils.left(yy+"", 2);
+        }
+        else{
+            expireYear = StringUtils.leftPad(yy + "", 2, "0");
+        }
+        
+        return expireMonth + expireYear;
+    }
+    /**
+     * 
+     * @param result
+     * @return 
+     */
+    public static CashRun parseCashRunResult(String result){
+        
+        log.info("cash run result: " + result);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true); 
+            CashRun cashRun = mapper.readValue(result, CashRun.class);
+            
+            return cashRun;
+        } catch (Exception e) {
+            
+            log.info("parse cash run: ", e);
+        }
+        
+        return null;
+    }
+    
+    public static String getPaymentMethod4CashRun(int card){
+        switch(card){
+            case 2:
+                return "Mastercard";
+            case 3:
+                return "Discover";
+            default:
+                return "Visa";
+        }
+    }
+    
     public static void setLoginedUser(LoginedUser l, User u, List<LixiConfig> configs){
     
         l.setId(u.getId());
@@ -112,6 +161,7 @@ public class LiXiUtils {
         c.setAuthorizePaymentId(card.getAuthorizePaymentId());
         c.setCardType(card.getCardType());
         c.setCardName(card.getCardName());
+        c.setCardBin(card.getCardBin());
         c.setCardNumber(card.getCardNumber());
         c.setExpMonth(card.getExpMonth());
         c.setExpYear(card.getExpYear());

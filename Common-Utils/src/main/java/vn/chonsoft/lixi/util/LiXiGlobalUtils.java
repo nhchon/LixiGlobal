@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.util;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -33,6 +34,16 @@ public abstract class LiXiGlobalUtils {
     
     private static final Logger log = LogManager.getLogger(LiXiGlobalUtils.class);
     
+    public static String getClientIp(HttpServletRequest request){
+        
+        //is client behind something?
+        String ipAddress = request.getHeader("X-FORWARDED-FOR");  
+        if (ipAddress == null) {  
+            ipAddress = request.getRemoteAddr();  
+        }
+        
+        return ipAddress;
+    }
     
     public static double round2Decimal(double a) {
 

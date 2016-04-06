@@ -20,7 +20,7 @@
                 <c:if test="${wrong eq 1 || param.wrong eq 1}">
                 <div class="alert alert-warning alert-dismissible bg-white" role="alert">
                     <div class="alert-message">
-                        <spring:message code="validate.there_is_something_wrong"/>
+                        <spring:message code="error.payment-method"/>
                     </div>
                 </div>
                 </c:if>

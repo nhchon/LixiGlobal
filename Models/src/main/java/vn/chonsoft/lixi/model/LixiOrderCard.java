@@ -49,6 +49,10 @@ public class LixiOrderCard implements Serializable {
     @Column(name = "card_name")
     private String cardName;
     
+    @Basic
+    @Column(name = "card_bin")
+    private String cardBin;
+    
     @Basic(optional = false)
     @Column(name = "card_number")
     private String cardNumber;
@@ -89,6 +93,7 @@ public class LixiOrderCard implements Serializable {
             this.authorizePaymentId = card.getAuthorizePaymentId();
             this.cardType = card.getCardType();
             this.cardName = card.getCardName();
+            this.cardBin = card.getCardBin();
             this.cardNumber = card.getCardNumber();
             this.expMonth = card.getExpMonth();
             this.expYear = card.getExpYear();
@@ -98,11 +103,12 @@ public class LixiOrderCard implements Serializable {
         }
     }
     
-    public LixiOrderCard(Long id, long userId, int cardType, String cardName, String cardNumber, int expMonth, int expYear, String cardCvv, Date modifiedDate) {
+    public LixiOrderCard(Long id, long userId, int cardType, String cardName, String cardBin, String cardNumber, int expMonth, int expYear, String cardCvv, Date modifiedDate) {
         this.id = id;
         this.userId = userId;
         this.cardType = cardType;
         this.cardName = cardName;
+        this.cardBin = cardBin;
         this.cardNumber = cardNumber;
         this.expMonth = expMonth;
         this.expYear = expYear;
@@ -152,6 +158,14 @@ public class LixiOrderCard implements Serializable {
 
     public void setCardName(String cardName) {
         this.cardName = cardName;
+    }
+
+    public String getCardBin() {
+        return cardBin;
+    }
+
+    public void setCardBin(String cardBin) {
+        this.cardBin = cardBin;
     }
 
     public String getCardNumber() {

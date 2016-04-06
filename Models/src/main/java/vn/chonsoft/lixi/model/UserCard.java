@@ -47,6 +47,10 @@ public class UserCard implements Serializable {
     @Column(name = "card_name")
     private String cardName;
     
+    @Basic
+    @Column(name = "card_bin")
+    private String cardBin;
+    
     @Basic(optional = false)
     @Column(name = "card_number")
     private String cardNumber;
@@ -98,11 +102,12 @@ public class UserCard implements Serializable {
         
     }
 
-    public UserCard(Long id, String authorizePaymentId, int cardType, String cardName, String cardNumber, int expMonth, int expYear, String cardCvv, Date modifiedDate) {
+    public UserCard(Long id, String authorizePaymentId, int cardType, String cardName, String cardBin, String cardNumber, int expMonth, int expYear, String cardCvv, Date modifiedDate) {
         this.id = id;
         this.authorizePaymentId = authorizePaymentId;
         this.cardType = cardType;
         this.cardName = cardName;
+        this.cardBin = cardBin;
         this.cardNumber = cardNumber;
         this.expMonth = expMonth;
         this.expYear = expYear;
@@ -144,6 +149,14 @@ public class UserCard implements Serializable {
 
     public void setCardName(String cardName) {
         this.cardName = cardName;
+    }
+
+    public String getCardBin() {
+        return cardBin;
+    }
+
+    public void setCardBin(String cardBin) {
+        this.cardBin = cardBin;
     }
 
     public String getCardNumber() {

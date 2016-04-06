@@ -18,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,10 +55,13 @@ import vn.chonsoft.lixi.model.form.BankAccountAddForm;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.LixiCashrun;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
+import vn.chonsoft.lixi.pojo.CashRun;
 import vn.chonsoft.lixi.repositories.service.BillingAddressService;
 import vn.chonsoft.lixi.repositories.service.CountryService;
+import vn.chonsoft.lixi.repositories.service.LixiCashrunService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
@@ -118,7 +123,7 @@ public class CheckOutController {
     private LixiExchangeRateService lxexrateService;
 
     //@Autowired
-    //private RecipientService recService;
+    private LixiCashrunService cashRunService;
 
     @Autowired
     private UserBankAccountService ubcService;
@@ -326,6 +331,7 @@ public class CheckOutController {
             uc.setCardName(form.getCardName());
             uc.setBillingAddress(bl);
             uc.setModifiedDate(Calendar.getInstance().getTime());
+            uc.setCardBin(StringUtils.left(form.getCardNumber(), 6));
             // pass real information to authorize.net
             uc.setCardNumber(form.getCardNumber());
             uc.setExpMonth(form.getExpMonth());
@@ -345,7 +351,7 @@ public class CheckOutController {
             if(LiXiConstants.OK.equals(returned)){
 
                 /* Don't store full card information */
-                String secretCardNumber= "XXXX"+StringUtils.right(form.getCardNumber(), 4);
+                String secretCardNumber= StringUtils.leftPad(StringUtils.right(form.getCardNumber(), 4), form.getCardNumber().length(), "X");
                 uc.setCardNumber(secretCardNumber);
                 uc.setCardCvv(null);
                 uc = this.ucService.save(uc);
@@ -555,6 +561,18 @@ public class CheckOutController {
         model.put("message", message);
         
     }
+    
+    private void insertLxCashRun(long inv, long order, String cashrun){
+        
+        LixiCashrun lxCashRun = new LixiCashrun();
+        lxCashRun.setCashrun(cashrun);
+        lxCashRun.setInvId(inv);
+        lxCashRun.setOrderId(order);
+        lxCashRun.setCreatedDate(Calendar.getInstance().getTime());
+
+        this.cashRunService.save(lxCashRun);
+                
+    }
     /**
      * 
      * @param request
@@ -619,8 +637,69 @@ public class CheckOutController {
             }
             else {
                 // CashRun
+                // ORDER_DESC
+                StringBuilder orderDesc = new StringBuilder("");
+                //ORDER_QUANTITY
+                StringBuilder orderQuantity = new StringBuilder("");
+                // ORDER_PRICE
+                StringBuilder orderPrice = new StringBuilder("");
                 
+                for(LixiOrderGift gift : order.getGifts()){
+                    orderDesc.append(gift.getProductName()).append(";");
+                    orderQuantity.append(gift.getProductQuantity()).append(";");
+                    orderPrice.append(LiXiUtils.getNumberFormat().format(gift.getProductPrice()));
+                }
                 
+                Document doc = Jsoup.connect(LiXiGlobalConstants.CASHRUN_PRODUCTION_PAGE)
+                    .timeout(0)
+                    .maxBodySize(0)
+                    .data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+                    .data("ORDER_ID", invoice.getId().toString())
+                    .data("SESSION_ID", request.getSession().getId())
+                    .data("CUSTOMER_ID", invoice.getPayer().toString())
+                    .data("BILLING_FIRST_NAME", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+                    .data("BILLING_LAST_NAME", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+                    .data("BILLING_STREET", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+                    .data("BILLING_CITY", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+                    .data("BILLING_ZIP", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+                    .data("BILLING_EMAIL", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+                    .data("BILLING_COUNTRY", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+                    .data("IP_ADDRESS", LiXiGlobalUtils.getClientIp(request))
+                    .data("AMOUNT", LiXiUtils.getNumberFormat().format(invoice.getTotalAmount()))
+                    .data("BILLING_CURRENCY", "USD")
+                    .data("ORDER_DESC", orderDesc.toString())
+                    .data("ORDER_QUANTITY", orderQuantity.toString())
+                    .data("ORDER_PRICE", orderPrice.toString())
+                    .data("PAYMENT_METHOD", LiXiUtils.getPaymentMethod4CashRun(order.getCard().getCardType()))
+                    .data("PAYMENT_STATUS", "1")
+                    .data("LANG", "EN")
+                    .data("DOMAIN", "lixi.global")
+                    .data("CUSTOMER_STATUS", "2")
+                    .data("PAYMENT_BIN", order.getCard().getCardBin())
+                    .data("PAYMENT_FIRST_NAME", order.getSender().getFirstName())
+                    .data("PAYMENT_CARDNO", order.getCard().getCardNumber())
+                    .data("PAYMENT_EXPIRYDATE", LiXiUtils.getCardExpiryDateMMYY(order.getCard().getExpMonth(), order.getCard().getExpYear()))
+                    .data("PAYMENT_3DSECURE", "0")
+                    .data("PAYMENT_BIN", "")
+                    .data("PAYMENT_BIN", "")
+                    .data("PAYMENT_BIN", "")
+                    .data("PAYMENT_BIN", "")
+                    .data("PAYMENT_BIN", "")
+                    .data("PAYMENT_BIN", "")
+                    .data("PAYMENT_BIN", "")
+                    .data("PAYMENT_BIN", "")
+                    .data("TEST_FLAG", "0")
+                    .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
+                    //"Mozilla"
+                    .userAgent(request.getHeader("User-Agent"))
+                    .post();
+                
+                CashRun cashRunResult = LiXiUtils.parseCashRunResult(doc.toString());
+                
+                /* */
+                insertLxCashRun(invoice.getId(), order.getId(), doc.toString());
+                
+                if(cashRunResult!=null && "001".equals(cashRunResult.getCode())){
                 ////////////////////////////////////////////////////////////////
                 /* update invoice's status */
                 invoice.setNetTransStatus(EnumTransactionStatus.inProgress.getValue());
@@ -705,9 +784,16 @@ public class CheckOutController {
                 
                 // jump to thank you page
                 //return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
-                
+                }
+                else{
+                    // cashrun returns NO OK
+                    String returnPage = ServletUriComponentsBuilder.fromContextPath(request).path("/checkout/paymentMethods?wrong=1").build().toUriString();
+                    setReturnValue(model, "0", returnPage, "error.payment-method");
+                    return new ModelAndView("giftprocess2/thank-you", model);
+                }
             } // charge is success
-        } else {
+        }
+        else {
 
             // order not exist, go to Choose recipient page
             // return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));

@@ -60,6 +60,10 @@ public abstract class LiXiGlobalConstants {
     
     public static final String VCB_EXCHANGE_RATES_PAGE = "http://www.vietcombank.com.vn/ExchangeRates/ExrateXML.aspx";
     
+    public static final String CASHRUN_SANDBOX_PAGE = "https://cashshieldasia.cashrun.com/devtest/risk_score.php";
+    
+    public static final String CASHRUN_PRODUCTION_PAGE = "https://cashshieldasia.cashrun.com/live/risk_score.php";
+    
     public static final int LIXI_DEFAULT_BUY_RATE = -2;
     
     public static final int LIXI_DEFAULT_SELL_RATE = 3;

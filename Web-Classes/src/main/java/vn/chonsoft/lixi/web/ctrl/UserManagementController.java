@@ -666,6 +666,7 @@ public class UserManagementController {
             uc.setCardName(form.getCardName());
             uc.setBillingAddress(bl);
             uc.setModifiedDate(Calendar.getInstance().getTime());
+            uc.setCardBin(StringUtils.left(form.getCardNumber(), 6));
             // pass real information to authorize.net
             uc.setCardNumber(form.getCardNumber());
             uc.setExpMonth(form.getExpMonth());
@@ -685,7 +686,8 @@ public class UserManagementController {
             if(LiXiConstants.OK.equals(returned)){
 
                 /* Don't store full card information */
-                String secretCardNumber= "XXXX"+StringUtils.right(form.getCardNumber(), 4);
+                //String secretCardNumber= "XXXX"+StringUtils.right(form.getCardNumber(), 4);
+                String secretCardNumber= StringUtils.leftPad(StringUtils.right(form.getCardNumber(), 4), form.getCardNumber().length(), "X");
                 uc.setCardNumber(secretCardNumber);
                 uc.setCardCvv("000");
                 
