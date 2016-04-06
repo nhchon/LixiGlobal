@@ -630,8 +630,7 @@ public class CheckOutController {
                 this.invoiceService.save(invoice);
                 
                 /**/
-                String returnPage = ServletUriComponentsBuilder.fromContextPath(request).path("/checkout/paymentMethods?wrong=1").build().toUriString();
-                setReturnValue(model, "1", returnPage, "error.payment-method");
+                setReturnValue(model, "1", "/checkout/paymentMethods?wrong=1", "error.payment-method");
                 //return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
                 return new ModelAndView("ajax/place-order-message", model);
             }
@@ -680,14 +679,6 @@ public class CheckOutController {
                     .data("PAYMENT_CARDNO", order.getCard().getCardNumber())
                     .data("PAYMENT_EXPIRYDATE", LiXiUtils.getCardExpiryDateMMYY(order.getCard().getExpMonth(), order.getCard().getExpYear()))
                     .data("PAYMENT_3DSECURE", "0")
-                    .data("PAYMENT_BIN", "")
-                    .data("PAYMENT_BIN", "")
-                    .data("PAYMENT_BIN", "")
-                    .data("PAYMENT_BIN", "")
-                    .data("PAYMENT_BIN", "")
-                    .data("PAYMENT_BIN", "")
-                    .data("PAYMENT_BIN", "")
-                    .data("PAYMENT_BIN", "")
                     .data("TEST_FLAG", "0")
                     .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
                     //"Mozilla"
@@ -778,8 +769,7 @@ public class CheckOutController {
                 ////////////////////////////////////////////////////////////////////
                 log.info("END OF Call Async methods");
 
-                String returnPage = ServletUriComponentsBuilder.fromContextPath(request).path("/checkout/paymentMethods?wrong=1").build().toUriString();
-                setReturnValue(model, "0", returnPage, "error.payment-method");
+                setReturnValue(model, "0", "/checkout/paymentMethods?wrong=1", "error.payment-method");
                 return new ModelAndView("giftprocess2/thank-you", model);
                 
                 // jump to thank you page
@@ -787,8 +777,7 @@ public class CheckOutController {
                 }
                 else{
                     // cashrun returns NO OK
-                    String returnPage = ServletUriComponentsBuilder.fromContextPath(request).path("/checkout/paymentMethods?wrong=1").build().toUriString();
-                    setReturnValue(model, "0", returnPage, "error.payment-method");
+                    setReturnValue(model, "0", "/checkout/paymentMethods?wrong=1", "error.payment-method");
                     return new ModelAndView("giftprocess2/thank-you", model);
                 }
             } // charge is success
@@ -797,8 +786,7 @@ public class CheckOutController {
 
             // order not exist, go to Choose recipient page
             // return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
-            String returnPage = ServletUriComponentsBuilder.fromContextPath(request).path("/checkout/paymentMethods?wrong=1").build().toUriString();
-            setReturnValue(model, "0", returnPage, "error.payment-method");
+            setReturnValue(model, "0", "/checkout/paymentMethods?wrong=1", "error.payment-method");
             return new ModelAndView("giftprocess2/thank-you", model);
         }
 
