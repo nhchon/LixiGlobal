@@ -34,9 +34,11 @@ public class Country implements Serializable {
     @Column(name = "id")
     private Long id;
     
-    @Size(max = 255)
     @Column(name = "name")
     private String name;
+    
+    @Column(name = "code")
+    private String code;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "country")
     @OrderBy("paymentMethod ASC, amount ASC")
@@ -63,6 +65,14 @@ public class Country implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public List<LixiGlobalFee> getFees() {

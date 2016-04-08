@@ -12,3 +12,5 @@ ALTER TABLE `lixi_batch_orders` ADD `vnd_only_gift` DOUBLE NULL AFTER `order_id`
 
 #20160404
 ALTER TABLE `lixi_invoices` ADD `monitored` INT NULL DEFAULT '0' AFTER `invoice_status`;
+
+ALTER TABLE `countries` ADD `code` VARCHAR(3) NULL AFTER `name`;

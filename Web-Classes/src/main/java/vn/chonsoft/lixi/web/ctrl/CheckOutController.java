@@ -4,7 +4,9 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,10 +16,15 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +42,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiGlobalFee;
@@ -122,7 +130,7 @@ public class CheckOutController {
     @Autowired
     private LixiExchangeRateService lxexrateService;
 
-    //@Autowired
+    @Autowired
     private LixiCashrunService cashRunService;
 
     @Autowired
@@ -160,6 +168,7 @@ public class CheckOutController {
     
     @Autowired
     private TransactionMonitorService transMoniService;
+    
     /**
      * 
      * @param model
@@ -564,6 +573,8 @@ public class CheckOutController {
     
     private void insertLxCashRun(long inv, long order, String cashrun){
         
+        log.info(cashrun);
+
         LixiCashrun lxCashRun = new LixiCashrun();
         lxCashRun.setCashrun(cashrun);
         lxCashRun.setInvId(inv);
@@ -572,6 +583,100 @@ public class CheckOutController {
 
         this.cashRunService.save(lxCashRun);
                 
+    }
+    
+    private CashRun connectCashRun(LixiInvoice invoice, LixiOrder order, HttpServletRequest request) throws IOException{
+        // CashRun
+        // ORDER_DESC
+        StringBuilder orderDesc = new StringBuilder("");
+        //ORDER_QUANTITY
+        StringBuilder orderQuantity = new StringBuilder("");
+        // ORDER_PRICE
+        StringBuilder orderPrice = new StringBuilder("");
+        
+        for(LixiOrderGift gift : order.getGifts()){
+            orderDesc.append(gift.getProductName()).append(";");
+            orderQuantity.append(gift.getProductQuantity()).append(";");
+            orderPrice.append(LiXiUtils.getNumberFormat().format(gift.getProductPrice()));
+        }
+        
+        /**
+         * RECEIVER_DETAILS[]	Required
+         * https://cashshieldasia.cashrun.com/merchant/iguide/guide_main.php
+         */
+        List<RecipientInOrder> rio = LiXiUtils.genMapRecGifts(order);
+        //String[] receivers = null;
+        List<NameValuePair> receivers = new ArrayList<>();
+        if(rio != null && !rio.isEmpty()){
+            for(int i = 0; i < rio.size(); i++){
+                
+                RecipientInOrder rec = rio.get(i);
+                StringBuilder t = new StringBuilder();
+                
+                t.append(rec.getRecipient().getFullName());
+                t.append(";");
+                t.append(rec.getRecipient().getDialCode());
+                t.append(rec.getRecipient().getPhone());
+                t.append(";");
+                t.append(rec.getRecipient().getEmail());
+                t.append(";");
+                t.append(rec.getRecipient().getNote());
+                
+                log.info(t.toString());
+                
+                receivers.add(new BasicNameValuePair("RECEIVER_DETAILS[]", t.toString()));
+            }
+        }
+        
+        Connection conn = Jsoup.connect(LiXiGlobalConstants.CASHRUN_PRODUCTION_PAGE).timeout(0).maxBodySize(0);
+
+        for(NameValuePair nv : receivers){
+            conn.data(nv.getName(), nv.getValue());
+        }
+        
+        Connection.Response doc = conn.data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+            .data("ORDER_ID", invoice.getId().toString())
+            .data("SESSION_ID", request.getSession().getId())
+            .data("CUSTOMER_ID", invoice.getPayer().toString())
+            .data("HAS_RETURNS", "N")
+            .data("BILLING_FIRST_NAME", order.getCard().getBillingAddress().getFirstName())
+            .data("BILLING_LAST_NAME", order.getCard().getBillingAddress().getLastName())
+            .data("BILLING_STREET", order.getCard().getBillingAddress().getAddress())
+            .data("BILLING_CITY", order.getCard().getBillingAddress().getCity())
+            .data("BILLING_ZIP", order.getCard().getBillingAddress().getZipCode())
+            .data("BILLING_EMAIL", order.getSender().getEmail())
+            .data("BILLING_COUNTRY", countryService.findByName(order.getCard().getBillingAddress().getCountry()).getCode())
+            .data("IP_ADDRESS", LiXiGlobalUtils.getClientIp(request))
+            .data("AMOUNT", LiXiUtils.getNumberFormat().format(invoice.getTotalAmount()))
+            .data("BILLING_CURRENCY", "USD")
+            .data("ORDER_DESC", orderDesc.toString())
+            .data("ORDER_QUANTITY", orderQuantity.toString())
+            .data("ORDER_PRICE", orderPrice.toString())
+            .data("PAYMENT_METHOD", LiXiUtils.getPaymentMethod4CashRun(order.getCard().getCardType()))
+            .data("PAYMENT_STATUS", "1")
+            .data("LANG", "EN")
+            .data("DOMAIN", "lixi.global")
+            .data("CUSTOMER_STATUS", "2")
+            .data("PAYMENT_BIN", order.getCard().getCardBin())
+            .data("PAYMENT_FIRST_NAME", order.getSender().getFirstName())
+            .data("PAYMENT_CARDNO", order.getCard().getCardNumber())
+            .data("PAYMENT_EXPIRYDATE", LiXiUtils.getCardExpiryDateMMYY(order.getCard().getExpMonth(), order.getCard().getExpYear()))
+            .data("PAYMENT_3DSECURE", "0")
+            .data("TEST_FLAG", "0")
+            .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
+            .ignoreContentType(true)
+            //"Mozilla"
+            .userAgent(request.getHeader("User-Agent"))
+            .method(Connection.Method.POST)
+            .execute();
+            //.post();
+
+        /* */
+        insertLxCashRun(invoice.getId(), order.getId(), doc.body());
+        
+        //CashRun cashRunResult = LiXiUtils.parseCashRunResult(doc.body());
+
+        return null;
     }
     /**
      * 
@@ -621,6 +726,9 @@ public class CheckOutController {
 
             this.invoiceService.save(invoice);
             
+            //
+            connectCashRun(invoice, order, request);
+            
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
             boolean chargeResult = paymentService.chargeByCustomerProfile(invoice);
             if (chargeResult == false) {
@@ -649,46 +757,8 @@ public class CheckOutController {
                     orderPrice.append(LiXiUtils.getNumberFormat().format(gift.getProductPrice()));
                 }
                 
-                Document doc = Jsoup.connect(LiXiGlobalConstants.CASHRUN_PRODUCTION_PAGE)
-                    .timeout(0)
-                    .maxBodySize(0)
-                    .data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-                    .data("ORDER_ID", invoice.getId().toString())
-                    .data("SESSION_ID", request.getSession().getId())
-                    .data("CUSTOMER_ID", invoice.getPayer().toString())
-                    .data("BILLING_FIRST_NAME", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-                    .data("BILLING_LAST_NAME", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-                    .data("BILLING_STREET", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-                    .data("BILLING_CITY", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-                    .data("BILLING_ZIP", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-                    .data("BILLING_EMAIL", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-                    .data("BILLING_COUNTRY", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-                    .data("IP_ADDRESS", LiXiGlobalUtils.getClientIp(request))
-                    .data("AMOUNT", LiXiUtils.getNumberFormat().format(invoice.getTotalAmount()))
-                    .data("BILLING_CURRENCY", "USD")
-                    .data("ORDER_DESC", orderDesc.toString())
-                    .data("ORDER_QUANTITY", orderQuantity.toString())
-                    .data("ORDER_PRICE", orderPrice.toString())
-                    .data("PAYMENT_METHOD", LiXiUtils.getPaymentMethod4CashRun(order.getCard().getCardType()))
-                    .data("PAYMENT_STATUS", "1")
-                    .data("LANG", "EN")
-                    .data("DOMAIN", "lixi.global")
-                    .data("CUSTOMER_STATUS", "2")
-                    .data("PAYMENT_BIN", order.getCard().getCardBin())
-                    .data("PAYMENT_FIRST_NAME", order.getSender().getFirstName())
-                    .data("PAYMENT_CARDNO", order.getCard().getCardNumber())
-                    .data("PAYMENT_EXPIRYDATE", LiXiUtils.getCardExpiryDateMMYY(order.getCard().getExpMonth(), order.getCard().getExpYear()))
-                    .data("PAYMENT_3DSECURE", "0")
-                    .data("TEST_FLAG", "0")
-                    .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
-                    //"Mozilla"
-                    .userAgent(request.getHeader("User-Agent"))
-                    .post();
                 
-                CashRun cashRunResult = LiXiUtils.parseCashRunResult(doc.toString());
-                
-                /* */
-                insertLxCashRun(invoice.getId(), order.getId(), doc.toString());
+                CashRun cashRunResult = connectCashRun(invoice, order, request);;
                 
                 if(cashRunResult!=null && "001".equals(cashRunResult.getCode())){
                 ////////////////////////////////////////////////////////////////
