@@ -628,13 +628,14 @@ public class CheckOutController {
             }
         }
         
-        Connection conn = Jsoup.connect(LiXiGlobalConstants.CASHRUN_PRODUCTION_PAGE).timeout(0).maxBodySize(0);
+        Connection conn = Jsoup.connect(LiXiGlobalConstants.CASHRUN_SANDBOX_PAGE).timeout(0).maxBodySize(0);
 
         for(NameValuePair nv : receivers){
             conn.data(nv.getName(), nv.getValue());
         }
         
         Connection.Response doc = conn.data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+            .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
             .data("ORDER_ID", invoice.getId().toString())
             .data("SESSION_ID", request.getSession().getId())
             .data("CUSTOMER_ID", invoice.getPayer().toString())
@@ -662,8 +663,7 @@ public class CheckOutController {
             .data("PAYMENT_CARDNO", order.getCard().getCardNumber())
             .data("PAYMENT_EXPIRYDATE", LiXiUtils.getCardExpiryDateMMYY(order.getCard().getExpMonth(), order.getCard().getExpYear()))
             .data("PAYMENT_3DSECURE", "0")
-            .data("TEST_FLAG", "0")
-            .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
+            .data("TEST_FLAG", "1")
             .ignoreContentType(true)
             //"Mozilla"
             .userAgent(request.getHeader("User-Agent"))
@@ -674,9 +674,9 @@ public class CheckOutController {
         /* */
         insertLxCashRun(invoice.getId(), order.getId(), doc.body());
         
-        //CashRun cashRunResult = LiXiUtils.parseCashRunResult(doc.body());
+        CashRun cashRunResult = LiXiUtils.parseCashRunResult(doc.body());
 
-        return null;
+        return cashRunResult;
     }
     /**
      * 
@@ -726,9 +726,6 @@ public class CheckOutController {
 
             this.invoiceService.save(invoice);
             
-            //
-            connectCashRun(invoice, order, request);
-            
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
             boolean chargeResult = paymentService.chargeByCustomerProfile(invoice);
             if (chargeResult == false) {
@@ -744,20 +741,6 @@ public class CheckOutController {
             }
             else {
                 // CashRun
-                // ORDER_DESC
-                StringBuilder orderDesc = new StringBuilder("");
-                //ORDER_QUANTITY
-                StringBuilder orderQuantity = new StringBuilder("");
-                // ORDER_PRICE
-                StringBuilder orderPrice = new StringBuilder("");
-                
-                for(LixiOrderGift gift : order.getGifts()){
-                    orderDesc.append(gift.getProductName()).append(";");
-                    orderQuantity.append(gift.getProductQuantity()).append(";");
-                    orderPrice.append(LiXiUtils.getNumberFormat().format(gift.getProductPrice()));
-                }
-                
-                
                 CashRun cashRunResult = connectCashRun(invoice, order, request);;
                 
                 if(cashRunResult!=null && "001".equals(cashRunResult.getCode())){

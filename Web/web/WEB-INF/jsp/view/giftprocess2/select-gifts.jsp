@@ -45,6 +45,11 @@
                         $('#recFirstName').html("...");
                     }
                 });
+                
+                $(".gift-product-thumb").each(function(){
+                    var zoom = $(this).attr("zoomWindowPosition");
+                    $(this).elevateZoom({zoomWindowPosition:parseInt(zoom)});
+                });
             });
 
             function showGiftValueFor() {
@@ -145,6 +150,7 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.twbsPagination.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/gifts.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.elevatezoom.js"/>"></script>
     </jsp:attribute>
 
     <jsp:body>

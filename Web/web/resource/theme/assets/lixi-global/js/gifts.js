@@ -11,6 +11,10 @@ function loadPage(pageNum) {
             //
             //addHandlerToCheckboxAndSelect();
             LixiGlobal.Gift.initSentGiftPage();
+            $(".gift-product-thumb").each(function(){
+                var zoom = $(this).attr("zoomWindowPosition");
+                $(this).elevateZoom({zoomWindowPosition:parseInt(zoom)});
+            });
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -33,6 +37,11 @@ function loadNewPrice(price) {
             //
             //addHandlerToCheckboxAndSelect();
             LixiGlobal.Gift.initSentGiftPage();
+            
+            $(".gift-product-thumb").each(function(){
+                var zoom = $(this).attr("zoomWindowPosition");
+                $(this).elevateZoom({zoomWindowPosition:zoom});
+            });
             
             overlayOff();
             
