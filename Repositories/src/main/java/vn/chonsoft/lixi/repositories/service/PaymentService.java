@@ -33,4 +33,6 @@ public interface PaymentService {
     boolean charge(LixiInvoice lxInvoice);
     
     boolean chargeByCustomerProfile(LixiInvoice lxInvoice);
+    
+    boolean capturePreviouslyAuthorizedAmount(LixiInvoice lxInvoice);
 }

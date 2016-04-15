@@ -771,6 +771,33 @@ public class PaymentServiceImpl implements PaymentService{
         return handleTransactionResponse(response, lxInvoice);
     }
 
+    @Override
+    public boolean capturePreviouslyAuthorizedAmount(LixiInvoice lxInvoice){
+        
+        ApiOperationBase.setEnvironment(getEnvironment());
+
+        MerchantAuthenticationType merchantAuthenticationType  = new MerchantAuthenticationType() ;
+        merchantAuthenticationType.setName(apiLoginId);
+        merchantAuthenticationType.setTransactionKey(transactionKey);
+        ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
+
+        // Create the payment transaction request
+        TransactionRequestType txnRequest = new TransactionRequestType();
+        txnRequest.setTransactionType(TransactionTypeEnum.PRIOR_AUTH_CAPTURE_TRANSACTION.value());
+        txnRequest.setRefTransId(lxInvoice.getNetTransId());
+
+        // Make the API Request
+        CreateTransactionRequest apiRequest = new CreateTransactionRequest();
+        apiRequest.setTransactionRequest(txnRequest);
+        CreateTransactionController controller = new CreateTransactionController(apiRequest);
+        controller.execute(); 
+
+        CreateTransactionResponse response = controller.getApiResponse();
+        
+        /* handle and return*/
+        return handleTransactionResponse(response, lxInvoice);
+    }
+    
     /**
      *
      * @param response

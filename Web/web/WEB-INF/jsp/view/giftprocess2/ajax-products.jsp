@@ -1,5 +1,5 @@
 <c:forEach items="${PRODUCTS}" var="p" varStatus="theCount">
-    <div class="col-md-3 col-sm-4 col-xs-6 col-for-five gift-product-item-col" id="product${p.id}">
+    <div class="col-md-3 col-sm-4 col-xs-6 col-for-five gift-product-item-col" id="product${p.id}" style="opacity:.99">
         <div class="gift-product-item text-center" id="gift-product-item-${p.id}">
             <c:set var="zoomPosition" value="1"/>
             <c:choose>
@@ -38,8 +38,8 @@
             <div class="button-control">
                 <button class="btn btn-default title buy btn-buy-item-event"><spring:message code="message.buy"/></button>
             </div>
-            <span class="gift-item-checkbox">
-                <input style="z-index: 9999;" type="checkbox" class="custom-checkbox-input" onclick="LixiGlobal.Gift.chooseGiftItem(this);" name="item" id="item${p.id}" value="${p.id}" <c:if test="${p.selected eq true}">checked</c:if>/>
+            <span class="gift-item-checkbox" style="z-index: 1001;">
+                <input type="checkbox" class="custom-checkbox-input" onclick="LixiGlobal.Gift.chooseGiftItem(this);" name="item" id="item${p.id}" value="${p.id}" <c:if test="${p.selected eq true}">checked</c:if>/>
             </span>
         </div>
     </div>

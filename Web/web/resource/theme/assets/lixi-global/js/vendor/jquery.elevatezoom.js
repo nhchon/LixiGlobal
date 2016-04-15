@@ -153,7 +153,7 @@ if ( typeof Object.create !== 'function' ) {
 						+ "height: " + String(self.options.zoomWindowHeight)
 						+ "px;float: left;"
 						+ "background-size: "+ self.largeWidth/self.currentZoomLevel+ "px " +self.largeHeight/self.currentZoomLevel + "px;"
-						+ "display: none;z-index:100;"
+						+ "display: none;z-index:99999;"
 						+ "border: " + String(self.options.borderSize) 
 						+ "px solid " + self.options.borderColour 
 						+ ";background-repeat: no-repeat;"
@@ -316,7 +316,7 @@ if ( typeof Object.create !== 'function' ) {
 						self.$elem.trigger('click');
 					});
 				}              
-				self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css("width",self.options.zoomWindowWidth);
+				self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css({"width":self.options.zoomWindowWidth, "z-index":99999});
 				self.zoomWindow.wrap(self.zoomWindowContainer);
 
 

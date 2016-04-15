@@ -678,6 +678,25 @@ public class CheckOutController {
 
         return cashRunResult;
     }
+    
+    /**
+     * 
+     * @param model
+     * @param invoice
+     * @return 
+     */
+    private ModelAndView failedAuthorizeNet(Map<String, Object> model, LixiInvoice invoice){
+        
+        /* update invoice's status */
+        invoice.setNetTransStatus(EnumTransactionStatus.paymentError.getValue());
+        this.invoiceService.save(invoice);
+
+        /**/
+        setReturnValue(model, "1", "/checkout/paymentMethods?wrong=1", "error.payment-method");
+        //return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
+        return new ModelAndView("ajax/place-order-message", model);
+        
+    }
     /**
      * 
      * @param request
@@ -730,108 +749,108 @@ public class CheckOutController {
             boolean chargeResult = paymentService.chargeByCustomerProfile(invoice);
             if (chargeResult == false) {
                 
-                /* update invoice's status */
-                invoice.setNetTransStatus(EnumTransactionStatus.paymentError.getValue());
-                this.invoiceService.save(invoice);
-                
-                /**/
-                setReturnValue(model, "1", "/checkout/paymentMethods?wrong=1", "error.payment-method");
-                //return new ModelAndView(new RedirectView("/checkout/paymentMethods?wrong=1", true, true));
-                return new ModelAndView("ajax/place-order-message", model);
+                return failedAuthorizeNet(model, invoice);
             }
             else {
                 // CashRun
                 CashRun cashRunResult = connectCashRun(invoice, order, request);;
                 
                 if(cashRunResult!=null && "001".equals(cashRunResult.getCode())){
-                ////////////////////////////////////////////////////////////////
-                /* update invoice's status */
-                invoice.setNetTransStatus(EnumTransactionStatus.inProgress.getValue());
-                this.invoiceService.save(invoice);
-                
-                /* update top up status */
-                if(order.getTopUpMobilePhones()!= null){
-                    order.getTopUpMobilePhones().forEach(t -> {t.setStatus(EnumLixiOrderStatus.TopUpStatus.UN_SUBMITTED.getValue());});
-                    this.topUpService.save(order.getTopUpMobilePhones());
-                }
-                
-                /* update order status */
-                order.setLixiStatus(EnumLixiOrderStatus.UN_PROCESSED.getValue());
-                order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
-                order.setModifiedDate(currDate);
-                this.lxorderService.save(order);
-                
-                /* Transaction Monitor, Async */
-                this.transMoniService.transactions(order);
-                
-                // send mail to sender
-                final String emailSender = order.getSender().getEmail();
-                final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
-                final LixiOrder refOrder = order;
-                // order date
-                SimpleDateFormat sdfr = new SimpleDateFormat("MMM/dd/yyyy KK:mm:ss a");
-                final String orderDate = sdfr.format(order.getModifiedDate());
+                    
+                    /* Capture a Previously Authorized Transaction */
+                    boolean capture = paymentService.capturePreviouslyAuthorizedAmount(invoice);
+                    if(capture == false){
                         
-                MimeMessagePreparator preparator = new MimeMessagePreparator() {
-                    @SuppressWarnings({"rawtypes", "unchecked"})
-                    @Override
-                    public void prepare(MimeMessage mimeMessage) throws Exception {
-                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
-                        message.setTo(emailSender);
-                        message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
-                        message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
-                        message.setFrom("support@lixi.global");
-                        message.setSubject("LiXi.Global - Invoice Alert");
-                        message.setSentDate(Calendar.getInstance().getTime());
-
-                        Map<String, Object> model = new HashMap<>();
-                        model.put("sender", u);
-                        model.put("orderDate", orderDate);
-                                
-                        model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId(refOrder.getId()));
-                        model.put("LIXI_ORDER", refOrder);
-                        model.put("REC_GIFTS", recGifts);
-                        /* get billing address */
-                        BillingAddress bl = LiXiUtils.getBillingAddress(refOrder);
-                        // calculate fee
-                        LiXiUtils.calculateFee(model, refOrder, feeService.findByCountry(countryService.findByName(bl.getCountry())));
-
-                        String text = VelocityEngineUtils.mergeTemplateIntoString(
-                                velocityEngine, "emails/paid-order-alert.vm", "UTF-8", model);
-                        message.setText(text, true);
+                        return failedAuthorizeNet(model, invoice);
                     }
-                };
-                // send oldEmail
-                taskScheduler.execute(() -> mailSender.send(preparator));
+                    ////////////////////////////////////////////////////////////////
+                    /* update invoice's status */
+                    invoice.setNetTransStatus(EnumTransactionStatus.inProgress.getValue());
+                    this.invoiceService.save(invoice);
 
-                ////////////////////////////////////////////////////////////////////
-                log.info("Call Async methods");
-                if(LiXiConstants.YES.equals(loginedUser.getConfig(LiXiConstants.VTC_AUTO))){
-                    // The order is paid, top up mobile
-                    lxAsyncMethods.processTopUpItems(order);
+                    /* update top up status */
+                    if(order.getTopUpMobilePhones()!= null){
+                        order.getTopUpMobilePhones().forEach(t -> {t.setStatus(EnumLixiOrderStatus.TopUpStatus.UN_SUBMITTED.getValue());});
+                        this.topUpService.save(order.getTopUpMobilePhones());
+                    }
 
-                    // Buy Cards
-                    //lxAsyncMethods.processBuyCardItems(order);
-                }
-                //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
-                log.info("submitOrdersToBaoKim");
+                    /* update order status */
+                    order.setLixiStatus(EnumLixiOrderStatus.UN_PROCESSED.getValue());
+                    order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
+                    order.setModifiedDate(currDate);
+                    this.lxorderService.save(order);
 
-                lxAsyncMethods.submitOrdersToBaoKim(order);
+                    /* Transaction Monitor, Async */
+                    this.transMoniService.transactions(order);
 
-                log.info(" // END of submitOrdersToBaoKim");
-                ////////////////////////////////////////////////////////////////////
-                log.info("END OF Call Async methods");
+                    // send mail to sender
+                    final String emailSender = order.getSender().getEmail();
+                    final List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
+                    final LixiOrder refOrder = order;
+                    // order date
+                    SimpleDateFormat sdfr = new SimpleDateFormat("MMM/dd/yyyy KK:mm:ss a");
+                    final String orderDate = sdfr.format(order.getModifiedDate());
 
-                setReturnValue(model, "0", "/checkout/paymentMethods?wrong=1", "error.payment-method");
-                return new ModelAndView("giftprocess2/thank-you", model);
-                
-                // jump to thank you page
-                //return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
+                    MimeMessagePreparator preparator = new MimeMessagePreparator() {
+                        @SuppressWarnings({"rawtypes", "unchecked"})
+                        @Override
+                        public void prepare(MimeMessage mimeMessage) throws Exception {
+                            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+                            message.setTo(emailSender);
+                            message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                            message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                            message.setFrom("support@lixi.global");
+                            message.setSubject("LiXi.Global - Invoice Alert");
+                            message.setSentDate(Calendar.getInstance().getTime());
+
+                            Map<String, Object> model = new HashMap<>();
+                            model.put("sender", u);
+                            model.put("orderDate", orderDate);
+
+                            model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId(refOrder.getId()));
+                            model.put("LIXI_ORDER", refOrder);
+                            model.put("REC_GIFTS", recGifts);
+                            /* get billing address */
+                            BillingAddress bl = LiXiUtils.getBillingAddress(refOrder);
+                            // calculate fee
+                            LiXiUtils.calculateFee(model, refOrder, feeService.findByCountry(countryService.findByName(bl.getCountry())));
+
+                            String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                    velocityEngine, "emails/paid-order-alert.vm", "UTF-8", model);
+                            message.setText(text, true);
+                        }
+                    };
+                    // send oldEmail
+                    taskScheduler.execute(() -> mailSender.send(preparator));
+
+                    ////////////////////////////////////////////////////////////////////
+                    log.info("Call Async methods");
+                    if(LiXiConstants.YES.equals(loginedUser.getConfig(LiXiConstants.VTC_AUTO))){
+                        // The order is paid, top up mobile
+                        lxAsyncMethods.processTopUpItems(order);
+
+                        // Buy Cards
+                        //lxAsyncMethods.processBuyCardItems(order);
+                    }
+                    //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
+                    log.info("submitOrdersToBaoKim");
+
+                    lxAsyncMethods.submitOrdersToBaoKim(order);
+
+                    log.info(" // END of submitOrdersToBaoKim");
+                    ////////////////////////////////////////////////////////////////////
+                    log.info("END OF Call Async methods");
+
+                    setReturnValue(model, "0", "/checkout/thank-you", "error.payment-method");
+                    return new ModelAndView("ajax/place-order-message", model);
+
+                    // jump to thank you page
+                    //return new ModelAndView(new RedirectView("/checkout/thank-you", true, true));
                 }
                 else{
                     // cashrun returns NO OK
-                    setReturnValue(model, "0", "/checkout/paymentMethods?wrong=1", "error.payment-method");
-                    return new ModelAndView("giftprocess2/thank-you", model);
+                    setReturnValue(model, "1", "/checkout/paymentMethods?wrong=1", "error.payment-method");
+                    return new ModelAndView("ajax/place-order-message", model);
                 }
             } // charge is success
         }
@@ -839,8 +858,8 @@ public class CheckOutController {
 
             // order not exist, go to Choose recipient page
             // return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true));
-            setReturnValue(model, "0", "/checkout/paymentMethods?wrong=1", "error.payment-method");
-            return new ModelAndView("giftprocess2/thank-you", model);
+            setReturnValue(model, "1", "/gifts/chooseCategory", "error.payment-method");
+            return new ModelAndView("ajax/place-order-message", model);
         }
 
     }
