@@ -8,6 +8,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiInvoice;
@@ -51,6 +55,23 @@ public class LixiInvoiceServiceImpl implements LixiInvoiceService{
         return invoice;
     }
 
+    @Override
+    public LixiInvoice findFirstPurchase(Long payer, String invStatus){
+        
+        Pageable just1rec = new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
+        
+        Page<LixiInvoice> pInv = this.invoiceRepository.findByPayerAndInvoiceStatus(payer, invStatus, just1rec);
+        
+        if(pInv != null){
+            List<LixiInvoice> ls = pInv.getContent();
+            if(ls != null && !ls.isEmpty()){
+                return ls.get(0);
+            }
+        }
+        
+        return null;
+    }
+    
     @Override
     @Transactional
     public LixiInvoice findByOrder(LixiOrder order) {

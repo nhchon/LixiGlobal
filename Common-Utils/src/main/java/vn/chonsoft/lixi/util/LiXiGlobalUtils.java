@@ -36,10 +36,10 @@ public abstract class LiXiGlobalUtils {
     
     public static String getClientIp(HttpServletRequest request){
         
-        //is client behind something?
-        String ipAddress = request.getHeader("X-FORWARDED-FOR");  
+        String ipAddress = request.getRemoteAddr();
         if (ipAddress == null) {  
-            ipAddress = request.getRemoteAddr();  
+            //is client behind something?
+            ipAddress = request.getHeader("X-FORWARDED-FOR");
         }
         
         return ipAddress;

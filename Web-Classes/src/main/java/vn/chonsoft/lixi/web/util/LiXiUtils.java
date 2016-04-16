@@ -63,7 +63,7 @@ public class LiXiUtils {
     private final static DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
 
     static {
-        df.applyPattern("###,###.##");
+        df.applyPattern("###,###.#0");
     }
 
     public static String getCardExpiryDateMMYY(int mm, int yy){

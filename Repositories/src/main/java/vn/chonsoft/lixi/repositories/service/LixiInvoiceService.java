@@ -21,6 +21,8 @@ public interface LixiInvoiceService {
     @Transactional
     LixiInvoice findById(long id);
     
+    LixiInvoice findFirstPurchase(Long payer, String invStatus);
+    
     @Transactional
     LixiInvoice findByNetTransId(String transId);
     

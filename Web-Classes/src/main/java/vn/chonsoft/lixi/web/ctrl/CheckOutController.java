@@ -597,7 +597,7 @@ public class CheckOutController {
         for(LixiOrderGift gift : order.getGifts()){
             orderDesc.append(gift.getProductName()).append(";");
             orderQuantity.append(gift.getProductQuantity()).append(";");
-            orderPrice.append(LiXiUtils.getNumberFormat().format(gift.getProductPrice()));
+            orderPrice.append(LiXiUtils.getNumberFormat().format(gift.getUsdPrice())).append(";");
         }
         
         /**
@@ -634,6 +634,16 @@ public class CheckOutController {
             conn.data(nv.getName(), nv.getValue());
         }
         
+        // get first purchase for DATE_FIRSTPURCHASE
+        // Date of customer's first successful purchase
+        LixiInvoice firstPurchase = this.invoiceService.findFirstPurchase(invoice.getPayer(), LiXiGlobalConstants.TRANS_REPORT_STATUS_PROCESSED);
+        if(firstPurchase != null){
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
+            conn.data("DATE_FIRSTPURCHASE", sdf.format(firstPurchase.getCreatedDate()));
+        }
+        
+        String countryCode = countryService.findByName(order.getCard().getBillingAddress().getCountry()).getCode();
         Connection.Response doc = conn.data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
             .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
             .data("ORDER_ID", invoice.getId().toString())
@@ -646,7 +656,14 @@ public class CheckOutController {
             .data("BILLING_CITY", order.getCard().getBillingAddress().getCity())
             .data("BILLING_ZIP", order.getCard().getBillingAddress().getZipCode())
             .data("BILLING_EMAIL", order.getSender().getEmail())
-            .data("BILLING_COUNTRY", countryService.findByName(order.getCard().getBillingAddress().getCountry()).getCode())
+            .data("BILLING_COUNTRY", countryCode)
+            .data("SHIPPING_FIRST_NAME", order.getCard().getBillingAddress().getFirstName())
+            .data("SHIPPING_LAST_NAME", order.getCard().getBillingAddress().getLastName())
+            .data("SHIPPING_STREET", order.getCard().getBillingAddress().getAddress())
+            .data("SHIPPING_CITY", order.getCard().getBillingAddress().getCity())
+            .data("SHIPPING_ZIP", order.getCard().getBillingAddress().getZipCode())
+            .data("SHIPPING_EMAIL", order.getSender().getEmail())
+            .data("SHIPPING_COUNTRY", countryCode)
             .data("IP_ADDRESS", LiXiGlobalUtils.getClientIp(request))
             .data("AMOUNT", LiXiUtils.getNumberFormat().format(invoice.getTotalAmount()))
             .data("BILLING_CURRENCY", "USD")
@@ -654,15 +671,19 @@ public class CheckOutController {
             .data("ORDER_QUANTITY", orderQuantity.toString())
             .data("ORDER_PRICE", orderPrice.toString())
             .data("PAYMENT_METHOD", LiXiUtils.getPaymentMethod4CashRun(order.getCard().getCardType()))
-            .data("PAYMENT_STATUS", "1")
+            .data("PAYMENT_STATUS", "0")
+            .data("PAYMENT_PROVIDER", "Authorize.Net")
             .data("LANG", "EN")
             .data("DOMAIN", "lixi.global")
             .data("CUSTOMER_STATUS", "2")
+            .data("PRODUCT_TYPE", "2")
             .data("PAYMENT_BIN", order.getCard().getCardBin())
             .data("PAYMENT_FIRST_NAME", order.getSender().getFirstName())
+            .data("PAYMENT_LAST_NAME", order.getSender().getLastName())
             .data("PAYMENT_CARDNO", order.getCard().getCardNumber())
             .data("PAYMENT_EXPIRYDATE", LiXiUtils.getCardExpiryDateMMYY(order.getCard().getExpMonth(), order.getCard().getExpYear()))
             .data("PAYMENT_3DSECURE", "0")
+            .data("CUST_RATING", "0")
             .data("TEST_FLAG", "1")
             .ignoreContentType(true)
             //"Mozilla"
