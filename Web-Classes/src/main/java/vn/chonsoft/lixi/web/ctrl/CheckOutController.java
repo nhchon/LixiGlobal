@@ -663,6 +663,7 @@ public class CheckOutController {
             .data("SHIPPING_CITY", order.getCard().getBillingAddress().getCity())
             .data("SHIPPING_ZIP", order.getCard().getBillingAddress().getZipCode())
             .data("SHIPPING_EMAIL", order.getSender().getEmail())
+            .data("SHIPPING_PHONE", order.getSender().getPhone())
             .data("SHIPPING_COUNTRY", countryCode)
             .data("IP_ADDRESS", LiXiGlobalUtils.getClientIp(request))
             .data("AMOUNT", LiXiUtils.getNumberFormat().format(invoice.getTotalAmount()))

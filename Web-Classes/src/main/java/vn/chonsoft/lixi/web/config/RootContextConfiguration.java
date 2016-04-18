@@ -55,6 +55,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.beans.CategoriesBean;
 import vn.chonsoft.lixi.web.beans.VtcPayClient;
@@ -279,8 +280,8 @@ public class RootContextConfiguration  implements
     public LiXiSecurityManager securityManager() throws Exception{
         
         LiXiSecurityManager sm = new LiXiSecurityManager();
-        sm.setPrivateKeyBytes(LiXiUtils.readKeyBytesFromFile(new ClassPathResource(env.getProperty("rsa.private_key_file")).getFile()));
-        sm.setPublicKeyBytes(LiXiUtils.readKeyBytesFromFile(new ClassPathResource(env.getProperty("rsa.public_key_file")).getFile()));
+        sm.setPrivateKeyBytes(LiXiGlobalUtils.readKeyBytesFromFile(new ClassPathResource(env.getProperty("rsa.private_key_file")).getFile()));
+        sm.setPublicKeyBytes(LiXiGlobalUtils.readKeyBytesFromFile(new ClassPathResource(env.getProperty("rsa.public_key_file")).getFile()));
         sm.initializeKeys();
         
         return sm;
