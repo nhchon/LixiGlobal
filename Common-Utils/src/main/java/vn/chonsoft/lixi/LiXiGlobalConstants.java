@@ -62,7 +62,11 @@ public abstract class LiXiGlobalConstants {
     
     public static final String CASHRUN_SANDBOX_PAGE = "https://cashshieldasia.cashrun.com/devtest/risk_score.php";
     
+    public static final String CASHRUN_SANDBOX_PAGE_TRANSACTION_STATUS_UPDATE = "https://cashshieldasia.cashrun.com/devtest/transaction_update.php";
+    
     public static final String CASHRUN_PRODUCTION_PAGE = "https://cashshieldasia.cashrun.com/live/risk_score.php";
+    
+    public static final String CASHRUN_PRODUCTION_PAGE_TRANSACTION_STATUS_UPDATE = "https://cashshieldasia.cashrun.com/live/transaction_update.php";
     
     public static final int LIXI_DEFAULT_BUY_RATE = -2;
     

@@ -9,12 +9,14 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -33,9 +35,11 @@ import vn.chonsoft.lixi.model.TopUpResult;
 import vn.chonsoft.lixi.model.VtcResponseCode;
 import vn.chonsoft.lixi.model.VtcServiceCode;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.LixiCashrun;
 import vn.chonsoft.lixi.repositories.service.BuyCardResultService;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.DauSoService;
+import vn.chonsoft.lixi.repositories.service.LixiCashrunService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
@@ -56,44 +60,83 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
 
     private static final Logger log = LogManager.getLogger(LixiAsyncMethodsImpl.class);
 
-    @Inject
+    @Autowired
     private LixiOrderService orderService;
 
-    @Inject
+    @Autowired
     private LixiOrderGiftService orderGiftService;
 
-    @Inject
+    @Autowired
     private DauSoService dauSoService;
 
-    @Inject
+    @Autowired
+    private LixiCashrunService cashRunService;
+
+    @Autowired
     private VtcServiceCodeService vtcServiceCodeService;
 
-    @Inject
+    @Autowired
     private VtcPayClient vtcClient;
 
-    @Inject
+    @Autowired
     private TopUpMobilePhoneService topUpService;
 
-    @Inject
+    @Autowired
     private TopUpResultService turService;
 
-    @Inject
+    @Autowired
     private JavaMailSender mailSender;
 
-    @Inject
+    @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
 
-    @Inject
+    @Autowired
     private VelocityEngine velocityEngine;
 
-    @Inject
+    @Autowired
     private VtcResponseCodeService responseCodeService;
 
-    @Inject
+    @Autowired
     private BuyCardResultService bcrService;
 
-    @Inject
+    @Autowired
     private BuyCardService bcService;
+
+    @Override
+    @Async
+    public void cashRunTransactionStatusUpdate(String userAgent, long invoiceId, long orderId, String amount, String currency){
+        
+        try {
+        Connection conn = Jsoup.connect(LiXiGlobalConstants.CASHRUN_SANDBOX_PAGE_TRANSACTION_STATUS_UPDATE).timeout(0).maxBodySize(0);
+        Connection.Response doc = conn.data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
+            .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
+            .data("ORDER_ID", orderId+"")
+            .data("AMOUNT", amount)
+            .data("CURRENCY", "USD")
+            .data("PAYMENT_STATUS", "1")
+            .ignoreContentType(true)
+            //"Mozilla"
+            .userAgent(userAgent)
+            .method(Connection.Method.POST)
+            .execute();
+            //.post();
+        
+        log.info("CashShield Post Transaction Status Update: " + doc.body());
+
+        LixiCashrun lxCashRun = new LixiCashrun();
+        
+        lxCashRun.setActionType("CashShield Post Transaction Status Update");
+        lxCashRun.setCashrun(doc.body());
+        lxCashRun.setInvId(invoiceId);
+        lxCashRun.setOrderId(orderId);
+        lxCashRun.setCreatedDate(Calendar.getInstance().getTime());
+
+        this.cashRunService.save(lxCashRun);
+        } catch (Exception e) {
+            log.info("Post Transaction Status Update URL:", e);
+        }
+        
+    }
 
     /**
      *

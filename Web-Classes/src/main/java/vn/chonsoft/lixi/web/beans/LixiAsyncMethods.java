@@ -33,4 +33,7 @@ public interface LixiAsyncMethods {
     
     @Async
     void processBuyCardItems(LixiOrder order);
+    
+    @Async
+    void cashRunTransactionStatusUpdate(String userAgent, long invoiceId, long orderId, String amount, String currency);
 }

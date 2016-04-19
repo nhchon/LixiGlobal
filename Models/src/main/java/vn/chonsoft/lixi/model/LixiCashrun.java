@@ -16,7 +16,6 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -45,6 +44,9 @@ public class LixiCashrun implements Serializable {
     @Lob
     @Column(name = "cashrun")
     private String cashrun;
+    
+    @Column(name = "action_type")
+    private String actionType;
     
     @Basic(optional = false)
     @Column(name = "created_date")
@@ -95,6 +97,14 @@ public class LixiCashrun implements Serializable {
 
     public void setCashrun(String cashrun) {
         this.cashrun = cashrun;
+    }
+
+    public String getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(String actionType) {
+        this.actionType = actionType;
     }
 
     public Date getCreatedDate() {

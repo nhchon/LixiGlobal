@@ -16,17 +16,14 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,8 +40,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiGlobalFee;
@@ -571,11 +566,13 @@ public class CheckOutController {
         
     }
     
-    private void insertLxCashRun(long inv, long order, String cashrun){
+    private void insertLxCashRun(long inv, long order, String cashrun, String actionType){
         
         log.info(cashrun);
 
         LixiCashrun lxCashRun = new LixiCashrun();
+        
+        lxCashRun.setActionType(actionType);
         lxCashRun.setCashrun(cashrun);
         lxCashRun.setInvId(inv);
         lxCashRun.setOrderId(order);
@@ -694,7 +691,7 @@ public class CheckOutController {
             //.post();
 
         /* */
-        insertLxCashRun(invoice.getId(), order.getId(), doc.body());
+        insertLxCashRun(invoice.getId(), order.getId(), doc.body(), "Creating POST Request");
         
         CashRun cashRunResult = LiXiUtils.parseCashRunResult(doc.body());
 
@@ -854,6 +851,9 @@ public class CheckOutController {
                         // Buy Cards
                         //lxAsyncMethods.processBuyCardItems(order);
                     }
+                    /* CashShield Post Transaction Status Update */
+                    lxAsyncMethods.cashRunTransactionStatusUpdate(request.getHeader("User-Agent"), invoice.getId(), orderId, LiXiUtils.getNumberFormat().format(invoice.getTotalAmount()), "USD");
+                    
                     //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
                     log.info("submitOrdersToBaoKim");
 
