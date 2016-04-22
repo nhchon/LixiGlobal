@@ -36,9 +36,8 @@
                         </form>
                     </div>
                     <p style="margin-top: 10px;">
-                        Be sure to check your spam filter if you can’t find the email in
-                        your inbox. You may aslo contact
-                        <a href="help.html">Customer Service</a> for help.
+                        <c:url value="/support/post?method=Email" var="supportUrl"/>
+                        <spring:message code="mess.be-sure-to-check-your-spam-filter"/>. <spring:message code="mess.contact-customer-service-href" arguments="${supportUrl}"/>.
                     </p>
                 </c:if>
 

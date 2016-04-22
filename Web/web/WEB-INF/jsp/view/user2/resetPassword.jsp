@@ -53,17 +53,17 @@
                             </ul>
                         </div></c:if>
                     <c:if test="${codeIsInvalid == 'yes'}">
-                        <div class="msg msg-error">There is something wrong. Please try again !</div>
+                        <div class="msg msg-error"><spring:message code="gift.wrong_with_value"/></div>
                     </c:if>
                     <spring:message code="message.password_format" var="passwordMessage"/>
                     <form:form onsubmit="return validResetPassForm();" class="form-horizontal" modelAttribute="userResetPasswordForm">
-                            <h2 class="title">Reset Your Password</h2>
+                        <h2 class="title"><spring:message code="mess.reset-pass"/></h2>
                             <div class="desc">
-                                Please enter your new password.
+                                <spring:message code="mess.enter-your-new-pass"/>.
                             </div>
                             <div class="form-group">
                                 <div class="col-md-3">
-                                    <label for="email" class="control-label">Your new password</label>
+                                    <label for="email" class="control-label"><spring:message code="mess.your-new-pass"/></label>
                                 </div>
                                 <div class="col-md-6">
                                     <form:password path="password" class="form-control" placeholder="${passwordMessage}"/>
@@ -73,7 +73,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-3">
-                                    <label for="confPassword" class="control-label">Retype your new password</label>
+                                    <label for="confPassword" class="control-label"><spring:message code="mess.re-your-new-pass"/></label>
                                 </div>
                                 <div class="col-md-6">
                                     <form:password path="confPassword" class="form-control" placeholder="${passwordMessage}"/>
@@ -84,7 +84,7 @@
                                 <div class="col-md-3"></div>
                                 <div class="col-md-9">
                                     <form:hidden path="code"/>
-                                    <button type="submit" class="btn btn-primary">Change Password</button>
+                                    <button type="submit" class="btn btn-primary"><spring:message code="message.change_password"/></button>
                                 </div>
                             </div>
                     </form:form>

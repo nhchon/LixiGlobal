@@ -13,12 +13,12 @@
             <div class="container post-wrapper">
                 <div class="row">
                     <div class="col-md-12">
-                        <p>An email was sent to ${inUseEmail}. In order to complete the e-mail
-                        verification process, you must click on the link in the e-mail we sent you</p>
+                        <p><spring:message code="mess.email-was-sent-to" arguments="${inUseEmail}"/>. <spring:message code="mess.in-order-to-complete"/></p>
                         
                         <p>
-                            Be sure to check your spam filters if you can't find the e-mail in your in-box. You may also 
-                            <a href="<c:url value="/support/post?method=Email"/>">contact customer service</a> for help.
+                            <spring:message code="mess.be-sure-to-check-your-spam-filter"/>. 
+                            <c:url value="/support/post?method=Email" var="supportUrl"/>
+                            <spring:message code="mess.contact-customer-service-href" arguments="${supportUrl}"/>.
                         </p>
                     </div>
                 </div>

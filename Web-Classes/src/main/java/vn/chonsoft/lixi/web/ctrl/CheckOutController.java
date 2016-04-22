@@ -625,7 +625,7 @@ public class CheckOutController {
             }
         }
         
-        Connection conn = Jsoup.connect(LiXiGlobalConstants.CASHRUN_SANDBOX_PAGE).timeout(0).maxBodySize(0);
+        Connection conn = Jsoup.connect(LiXiGlobalConstants.CASHRUN_PRODUCTION_PAGE).timeout(0).maxBodySize(0);
 
         for(NameValuePair nv : receivers){
             conn.data(nv.getName(), nv.getValue());

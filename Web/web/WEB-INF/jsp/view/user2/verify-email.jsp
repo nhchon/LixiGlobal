@@ -38,24 +38,24 @@
             <div class="container post-wrapper">
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 class="title">Verify email</h2>
-                        <div>Before we continue, we need to verify your email address</div>
+                        <h2 class="title"><spring:message code="mess.verify-email"/></h2>
+                        <div><spring:message code="mess.before-we-continue"/></div>
                         
-                        <h5>Your email:</h5>
+                        <h5><spring:message code="mess.your-email"/>:</h5>
                         <div>${inUseEmail}</div>
                         <br/>
-                        <div style="font-size: 16px;">Type the characters you see in this image</div>
+                        <div style="font-size: 16px;"><spring:message code="mess.type-the-char"/></div>
                         <div>
                             <img style="cursor: pointer;" title="Click to Reload Image" id="captchaImg" alt="Captcha" src="<c:url value="/captcha"/>" />
                         </div>
                         
-                        <div>Type character</div>
+                            <div><spring:message code="mess.type-character"/></div>
                         <div>
                             <input type="text" name="captcha" id="captcha" class="form-control"/>
                         </div>
                         <br/>
                         <div>
-                            <button class="btn btn-primary" onclick="postInvisibleForm('<c:url value="/user/verify/sendEmail"/>', {captcha: $('#captcha').val()})">Continue</button>
+                            <button class="btn btn-primary" onclick="postInvisibleForm('<c:url value="/user/verify/sendEmail"/>', {captcha: $('#captcha').val()})"><spring:message code="mess.continue"/></button>
                         </div>
                     </div>
                 </div>

@@ -15,7 +15,7 @@
                     <div class="col-lg-12">
                         <c:if test="${wrongSecretCode eq 1}">
                             <div class="msg msg-error">
-                                There is something wrong with your verification code. Please try again !
+                                <spring:message code="mess.verification-code-wrong"/>. <spring:message code="mess.try-again"/> !
                             </div>
                         </c:if>
                     </div>

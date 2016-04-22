@@ -31,20 +31,19 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="alert alert-warning" role="alert">
-                                <strong>Email address already in use</strong><br/>
-                                You indicated your are a new customer, but an account already exists with 
-                                the e-mail <b>${inUseEmail}</b>
+                                <strong><spring:message code="mess.email-in-use"/></strong><br/>
+                                <spring:message code="mess.new-customer-exists-email" arguments="${inUseEmail}"/>
                             </div>
-                            <h4>A you a returning customer?</h4>
-                            <a href="<c:url value="/user/signIn"/>">Sign In</a><br/>
-                            <a href="<c:url value="/user/passwordAssistance2"/>">Forgot your password?</a>
+                                <h4><spring:message code="mess.return-cus"/>?</h4>
+                                <a href="<c:url value="/user/signIn"/>"><spring:message code="message.sign_in"/></a><br/>
+                                <a href="<c:url value="/user/passwordAssistance2"/>"><spring:message code="message.forgot_your_passwo"/>?</a>
 
-                            <h4>New to Lixi.Global?</h4>
-                            <div>Create a new account with <a href="<c:url value="/user/signUp"/>">a different e-mail address</a></div>
-                            <div>Create a new account with <a href="javascript:postInvisibleForm('<c:url value="/user/verifyThisEmail"/>', {inUseEmail:'${inUseEmail}'});">this e-mail address</a></div>
+                                <h4><spring:message code="mess.new-to-lixi"/>?</h4>
+                                <div><spring:message code="mess.new-account-with"/> <a href="<c:url value="/user/signUp"/>"><spring:message code="mess.a-diff-email"/></a></div>
+                                <div><spring:message code="mess.new-account-with"/> <a href="javascript:postInvisibleForm('<c:url value="/user/verifyThisEmail"/>', {inUseEmail:'${inUseEmail}'});"><spring:message code="mess.this-email"/></a></div>
 
-                            <h4>Still need help?</h4>
-                            <a href="<c:url value="/support/post?method=Email"/>">Contact Customer Service</a>
+                                <h4><spring:message code="mess.still-need-help"/>?</h4>
+                                <a href="<c:url value="/support/post?method=Email"/>"><spring:message code="mess.c-c-s"/></a>
                         </div>
                     </div>
                 </div>

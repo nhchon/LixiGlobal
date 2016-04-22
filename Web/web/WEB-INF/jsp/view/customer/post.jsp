@@ -23,15 +23,15 @@
         <section class="section-gift bg-default main-section">
             <div class="container post-wrapper" style="padding-top:30px;">
                 <div class="section-receiver">
-                    <h2 class="title">Help</h2>
+                    <h2 class="title"><spring:message code="mess.help"/></h2>
                     <p>
-                        <b>What can we help you with</b>
+                        <b><spring:message code="mess.can-help-with"/></b>
                     </p>
                     <form:form class="form-horizontal" modelAttribute="customerProblemForm">
 
                         <div class="row">
                             <div class="col-md-3">
-                                Please select an issue
+                                <spring:message code="mess.select-an-issue"/>
                             </div>
                             <div class="col-md-6">
                                 <form:select path="subject" cssClass="form-control">
@@ -52,7 +52,7 @@
 
                         <div class="row">
                             <div class="col-md-3">
-                                Content
+                                <spring:message code="mess.content"/>
                             </div>
                             <div class="col-md-6">
                                 <form:textarea path="content"  cssClass="form-control" rows="6"/>
@@ -62,7 +62,7 @@
 
                         <div class="row">
                             <div class="col-md-3">
-                                How would you like us to contact you?
+                                <spring:message code="mess.how-us-contact"/>?
                             </div>
                             <div class="col-md-6">
                                 <form:select path="contactMethod" cssClass="form-control">
@@ -75,7 +75,7 @@
 
                         <div class="row">
                             <div class="col-md-3">
-                                Please input your contact data
+                                <spring:message code="mess.your-contact-data"/>
                             </div>
                             <div class="col-md-6">
                                 <form:input path="contactData" cssClass="form-control"/>
@@ -85,8 +85,8 @@
 
                         <div class="row">
                             <div class="col-md-3">
-                                Please tell us your order Id<br/>
-                                <span class="help-block">(Check your email)</span>
+                                <spring:message code="mess.your-order-id"/><br/>
+                                <span class="help-block">(<spring:message code="mess.check-email"/>)</span>
                             </div>
                             <div class="col-md-6">
                                 <form:input path="orderId" cssClass="form-control"/>
@@ -96,8 +96,8 @@
                         <div class="row">
                             <div class="col-md-3"></div>
                             <div class="col-md-6">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                                <button class="btn btn-warning">Cancel</button>
+                                <button type="submit" class="btn btn-primary"><spring:message code="mess.submit"/></button>
+                                <button class="btn btn-warning"><spring:message code="message.cancel"/></button>
                             </div>
                         </div>
                     </form:form>

@@ -16,9 +16,10 @@
             <div class="container post-wrapper" style="padding-top:30px;">
                 <div class="section-receiver">
                         <form class="form-horizontal">
-                            <h2 class="title">Congratulation</h2>
+                            <h2 class="title"><spring:message code="mess.congratulation"/></h2>
                                 <div class="desc">
-                                    Your password has been reset. Please <a href="<c:url value="/user/signIn"/>">Login</a> to start Lixi.Global
+                                    <c:url value="/user/signIn" var="signInUrl"/>
+                                    <spring:message code="mess.pass-has-been-reset"/>. <spring:message code="mess.login-to-start" arguments="${signInUrl}"/>
                                 </div>
                         </form>
                     </div>

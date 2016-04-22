@@ -53,10 +53,10 @@
                                     </div>
                                 </c:if>
 
-                                <h3 class="title">Login</h3>
+                                <h3 class="title"><spring:message code="mess.login"/></h3>
                                 <c:url value="/user/signIn" var="signInFormUrl"/>
                                 <form:form method="post" action="${signInFormUrl}" cssClass="form-horizontal" modelAttribute="userSignInForm" autocomplete="off">
-                                    <p>If you have already registered with LIXI GLOBAL, please sign in here</p>
+                                    <p><spring:message code="mess.if-already-registered"/></p>
                                     <div class="form-group">
                                         <div class="col-md-12">
                                             <form:input path="email" cssErrorClass="form-control input-error" cssClass="form-control" required="true" placeholder="User Name"/>
@@ -70,21 +70,21 @@
                                         </div>
                                     </div>
                                     <p>
-                                        <a href="#"  data-toggle="modal" data-target="#myModal">Forgotten your password?</a>
+                                        <a href="#"  data-toggle="modal" data-target="#myModal"><spring:message code="mess.forgot-pass"/>?</a>
                                     </p>
                                     <div class="button-control">
-                                        <button type="submit" class="btn btn-primary">LOGIN</button>
+                                        <button type="submit" class="btn btn-primary"><spring:message code="mess.clogin"/></button>
                                     </div>
                                 </form:form>
                             </div>
                         </div>
                         <div class="col-md-6 col-height">
                             <div class="register-wrapper">
-                                <h3 class="title">New to Lixi.Global?</h3>
-                                <c:if test="${action eq 'login'}"><button id="btnShowRegister" type="button" class="btn btn-primary">CREATE ACCOUNT</button></c:if>
+                                <h3 class="title"><spring:message code="mess.new-to-lixi"/>?</h3>
+                                <c:if test="${action eq 'login'}"><button id="btnShowRegister" type="button" class="btn btn-primary"><spring:message code="mess.c-create-account"/></button></c:if>
                                 <div id="divRegister" style="display: <c:if test="${action eq 'login'}">none;</c:if>">
-                                        <h4>CREATE AN ACCOUNT WITH LIXI GLOBAL</h4>
-                                        <p><sup>*</sup>All form fields are mandatory</p>
+                                    <h4><spring:message code="mess.c-create-account-with-lixi"/></h4>
+                                    <p><sup>*</sup><spring:message code="mess.all-fields-required"/></p>
                                     <%-- place holder message --%>
                                     <spring:message code="message.first_name" var="firstNameMessage"/>
                                     <spring:message code="message.middle_ini" var="middleMessage"/>
@@ -129,7 +129,7 @@
                                             <div class="has-error"><form:errors path="agree" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="button-control">
-                                            <button type="submit" class="btn btn-primary">CREATE ACCOUNT</button>
+                                            <button type="submit" class="btn btn-primary"><spring:message code="mess.c-create-account"/></button>
                                         </div>
                                     </form:form>
                                 </div>
@@ -145,16 +145,16 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 id="headerForgotPassword" class="modal-title">Forgot Password</h4>
+                            <h4 id="headerForgotPassword" class="modal-title"><spring:message code="message.forgot_password"/></h4>
                             <p id="descForgotPassword"><spring:message code="message.forgot_password_no_problem" text=""/></p>
                         </div>
                         <div class="modal-body" id="resetPasswordBody">
                             <form role="form">
                                 <div class="form-group">
-                                    <label for="email">Email address:</label>
+                                    <label for="email"><spring:message code="mess.email-address"/>:</label>
                                     <input type="email" class="form-control" id="email4ResetPassword" placeholder="your.name@example.com">
                                 </div>
-                                <button id="resetPasswordBtn" type="button" class="btn btn-primary">Send me reset password link</button>
+                                    <button id="resetPasswordBtn" type="button" class="btn btn-primary"><spring:message code="mess.send-reset-pass-link"/></button>
                                 <input type="hidden" id="csrfSpring" name="${_csrf.parameterName}" value="${_csrf.token}" />
                             </form>
                         </div>

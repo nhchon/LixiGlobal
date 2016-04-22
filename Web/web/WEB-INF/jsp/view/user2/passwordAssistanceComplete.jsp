@@ -18,9 +18,10 @@
                 <div class="row">
                     <div class="col-md-12">
                         <form class="form-horizontal">
-                                <h2 class="title">Password Assistance</h2>
+                            <h2 class="title"><spring:message code="mess.pass-ass"/></h2>
                                 <div class="desc">
-                                    An email was sent to <a>${email}</a>. Please follow the instructions to change your password.
+                                    <spring:message code="mess.email-was-sent-to" arguments="${email}"/>. 
+                                    <spring:message code="mess.follow-instructions"/>.
                                 </div>
                         </form>
                     </div>

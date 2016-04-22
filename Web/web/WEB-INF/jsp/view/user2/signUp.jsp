@@ -195,7 +195,9 @@
                         </form:form>
                         <br />
                         <div id="desc">
-                            Be creating account, you agree to <a href="<c:url value="/support/terms"/>">lixi.global's Conditions of Use</a> and <a href="<c:url value="/support/privacy"/>">Privacy Notice</a>.
+                            <c:url value="/support/terms" var="termUrl"/>
+                            <c:url value="/support/privacy" var="privacyUrl"/>
+                            <spring:message code="mess.you-agree-to" arguments="${termUrl};${privacyUrl}" argumentSeparator=";"/>.
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>

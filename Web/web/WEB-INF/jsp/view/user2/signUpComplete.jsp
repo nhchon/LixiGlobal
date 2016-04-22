@@ -14,13 +14,12 @@
         <section class=" main-section bg-default">
             <div class="container post-wrapper">
                 <div class="text-center">
-                    <h2 class="title">THANK YOU FOR REGISTERING WITH US</h2>
+                    <h2 class="title"><spring:message code="mess.c-thank-you-for-regis"/></h2>
                     <p><spring:message code="signup.an_email_was_sent" arguments="${email}"/></p>
-                    <p>Please remember that the activation code will be expired after one day.</p>
+                    <p><spring:message code="mess.activation-code-be-expired"/>.</p>
                     <p>
-                        Be sure to check your spam filter if you can’t find the email in
-                        your inbox. You may aslo contact
-                        <a href="<c:url value="/support/post"/>">Customer Service</a> for help.
+                        <c:url value="/support/post" var="supportUrl"/>
+                        <spring:message code="mess.be-sure-to-check-your-spam-filter"/>. <spring:message code="mess.contact-customer-service-href" arguments="${supportUrl}"/>.
                     </p>
                 </div>
             </div>

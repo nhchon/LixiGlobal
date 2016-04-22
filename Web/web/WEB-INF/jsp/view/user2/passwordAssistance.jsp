@@ -52,20 +52,18 @@
                 <div class="row"><div class="col-md-12">
                         <c:if test="${passwordAssistance eq 1}">
                             <div class="msg msg-error">
-                                There is something wrong with your email/captcha code. Please try again !
+                                <spring:message code="mess.something-wrong-email-captcha"/>. <spring:message code="mess.try-again"/> !
                             </div>
                         </c:if>
                         <c:url value="/user/passwordAssistance2" var="passwordAssistanceUrl"/>
                         <form onsubmit="return validPassAssistanceForm();" class="form-horizontal" method="post" action="${passwordAssistanceUrl}">
-                            <h2 class="title">Password Assistance</h2>
+                            <h2 class="title"><spring:message code="mess.pass-ass"/></h2>
                             <div class="desc">
-                                Enter the email address associated with your Lixi.global account,
-                                then click Next. We'll email you a link to a page where you can
-                                easily create a new password.
+                                <spring:message code="mess.address-associated"/>. <spring:message code="mess.we-will-email"/>.
                             </div>
                             <div class="form-group">
                                 <div class="col-lg-5 col-md-5">
-                                    <label for="email" class="control-label">Your email address</label>
+                                    <label for="email" class="control-label"><spring:message code="signin.your_email_address"/></label>
                                 </div>
                                 <div class="col-lg-7 col-md-7">
                                     <input type="email" class="form-control" id="email" name="email" placeholder="myemail@domainname.com">
@@ -73,7 +71,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-lg-5 col-md-5">
-                                    <label for="captcha" class="control-label">Type the characters you see in this image</label>
+                                    <label for="captcha" class="control-label"><spring:message code="mess.type-the-char"/></label>
                                 </div>
                                 <div class="col-lg-7 col-md-7">
                                     <div id="captcha-img">
@@ -86,14 +84,14 @@
                                 <div class="col-lg-5 col-md-5"></div>
                                 <div class="col-lg-7">
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                    <button type="submit" class="btn btn-primary">Next</button>
+                                    <button type="submit" class="btn btn-primary"><spring:message code="message.next"/></button>
                                 </div>
                             </div>
                         </form>
                         <br />
                         <div id="desc">
                             Has your email address changed? If you no longer use the email associated
-                            with your Lixi.global account, you may contact <a href="help.html">Customer Service</a>
+                            with your Lixi.global account, you may contact <a href="<c:url value="/support/post?method=Email"/>">Customer Service</a>
                             for help restoring access to your account.
                         </div>
                     </div>

@@ -599,13 +599,13 @@
                         <div class="button-control-page" id="btnDiv">
                             <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/choose"/>">Keep Shopping</button>
                             <c:if test="${LIXI_FINAL_TOTAL gt 0}">
-                                <button id="btnSubmit" type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>
+                                <%--<button id="btnSubmit" type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>--%>
+                                <button type="button" class="btn btn-primary" onclick="processingYourOrder()" style="color:#fff;">Place Order</button>    
                                 <button id="btnLogOut" style="display:none;" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'">Log Out</button>
                             </c:if>
                             <c:if test="${LIXI_FINAL_TOTAL eq 0}">
                                 <button id="btnLogOut" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'">Log Out</button>
                             </c:if>
-                                <button type="button" class="btn btn-danger" onclick="processingYourOrder()" style="color:#fff;">New Place Order</button>    
                         </div>
                     </div>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />        
@@ -627,7 +627,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12" style="text-align:center;">
-                                <p>Please wait! We are processing your order. <b>Please DO NOT close or reload your browser tab</b>.</p>
+                                <p>Please wait ! We are processing your order. <b>Please DO NOT close or reload your browser tab</b>.</p>
                             </div>
                         </div>
                         <div class="row">

@@ -41,18 +41,18 @@
         <section class="section-gift bg-default main-section">
             <div class="container post-wrapper" style="padding-top:30px;">
                 <div class="section-receiver">
-                    <h2 class="title">Your Payment Methods</h2>
+                    <h2 class="title"><spring:message code="mess.your-payment-method"/></h2>
                     <c:if test="${param.add eq 1}">
-                        <div class="alert alert-success" role="alert"> <strong>Well done!</strong> You successfully add a new card. </div>
+                        <div class="alert alert-success" role="alert"> <strong><spring:message code="mess.wedonell-done"/>!</strong> <spring:message code="mess.new-card-successfully"/>. </div>
                     </c:if>
                     <c:if test="${param.error eq 1}">
-                        <div class="alert alert-warning" role="alert"> <strong>Error!</strong> Something wrong with your card information. </div>
+                        <div class="alert alert-warning" role="alert"> <strong><spring:message code="message.error"/>!</strong> <spring:message code="mess.wrong-card-information"/>. </div>
                     </c:if>
                         
                     <div class="row" style="margin-bottom: 5px;">
-                        <div class="col-md-4"><c:if test="${not empty cards}"><b>Credit & Debit Cards</b></c:if></div>
-                        <div class="col-md-4"><c:if test="${not empty cards}"><b>Expires</b></c:if></div>
-                        <div class="col-md-4" style="text-align: right;"><a href="<c:url value="/user/addCard"/>"><i class="fa fa-plus-circle"></i> Add Credit/Debit Card</a></div>
+                        <div class="col-md-4"><c:if test="${not empty cards}"><b><spring:message code="mess.credit-debit"/></b></c:if></div>
+                        <div class="col-md-4"><c:if test="${not empty cards}"><b><spring:message code="mess.expires"/></b></c:if></div>
+                        <div class="col-md-4" style="text-align: right;"><a href="<c:url value="/user/addCard"/>"><i class="fa fa-plus-circle"></i> <spring:message code="mess.add-credit-debit-card"/></a></div>
                     </div>
                     <c:forEach items="${cards}" var="c">
                         <div class="panel panel-default">
@@ -74,7 +74,7 @@
                                                 <img width="47" height="29" src="<c:url value="/resource/theme/assets/lixi-global/images/card-amex.jpg"/>"/> Amex
                                             </c:when>
                                         </c:choose>                                                    
-                                        <span> ending in ${fn:substring(c.cardNumber, lengthCard-4, lengthCard)}</span>
+                                        <span> <spring:message code="mess.end-in"/> ${fn:substring(c.cardNumber, lengthCard-4, lengthCard)}</span>
 
                                     </div>
                                     <div class="col-md-4">
@@ -88,11 +88,11 @@
                             <div class="panel-body" style="display:none;" id="panelBody${c.id}">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <b>Name on card</b><br/>
+                                        <b><spring:message code="mess.name-on-card"/></b><br/>
                                         ${c.cardName}
                                     </div>
                                     <div class="col-md-4">
-                                        <b>Billing address</b><br/>
+                                        <b><spring:message code="ba.title"/></b><br/>
                                         <b>${c.billingAddress.firstName}&nbsp;${c.billingAddress.lastName}</b><br/>
                                         ${c.billingAddress.address}<br/>
                                         ${c.billingAddress.city}, ${c.billingAddress.state}, ${c.billingAddress.zipCode}, ${c.billingAddress.country}<br/>
@@ -103,14 +103,14 @@
                                     <div class="col-md-4"></div>
                                     <div class="col-md-4"></div>
                                     <div class="col-md-4" style="text-align: right;">
-                                        <button class="btn btn-default btn-sm" onclick="deleteCard(${c.id})">Delete</button>
+                                        <button class="btn btn-default btn-sm" onclick="deleteCard(${c.id})"><spring:message code="message.delete"/></button>
                                         <!--<button class="btn btn-default btn-sm btn-has-link-event">Edit</button>-->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </c:forEach>
-                    <p style="color:black;font-weight: bold;">* In order to change credit card information, you need to delete the old card and reenter your new card under "Add Card"</p>
+                    <p style="color:black;font-weight: bold;">* <spring:message code="mess.in-order-to-change-credit-card"/></p>
                 </div>
             </div>
         </section>

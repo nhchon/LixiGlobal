@@ -107,7 +107,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     public void cashRunTransactionStatusUpdate(String userAgent, long invoiceId, long orderId, String amount, String currency){
         
         try {
-        Connection conn = Jsoup.connect(LiXiGlobalConstants.CASHRUN_SANDBOX_PAGE_TRANSACTION_STATUS_UPDATE).timeout(0).maxBodySize(0);
+        Connection conn = Jsoup.connect(LiXiGlobalConstants.CASHRUN_PRODUCTION_PAGE_TRANSACTION_STATUS_UPDATE).timeout(0).maxBodySize(0);
         Connection.Response doc = conn.data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
             .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
             .data("ORDER_ID", orderId+"")

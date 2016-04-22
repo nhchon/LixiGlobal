@@ -47,10 +47,10 @@
         <section class="section-gift bg-default main-section">
             <div class="container post-wrapper" style="padding-top:30px;">
                 <div class="section-receiver">
-                    <h2 class="title">order history</h2>
+                    <h2 class="title"><spring:message code="mess.order-history"/></h2>
                     <h4 class="title">
-                        <c:if test="${not empty orders.content}">${fn:length(orders.content)} orders place in</c:if>
-                        <c:if test="${empty orders.content}">There is no order place in</c:if>
+                        <c:if test="${not empty orders.content}">${fn:length(orders.content)} <spring:message code="mess.order-place-in"/></c:if>
+                        <c:if test="${empty orders.content}"><spring:message code="mess.no-order-place-in"/></c:if>
                         </h4>
                         <div class="form-group">
                             <select id="timeCombo" class="selectpicker">
@@ -61,13 +61,13 @@
                             </select>
                         </div>
                     <c:if test="${param.voidRs eq 3}">
-                        <div class="alert alert-danger" role="alert">Unsuccessfully Voided The Order</div>
+                        <div class="alert alert-danger" role="alert"><spring:message code="err.unvoid-order"/></div>
                     </c:if>
                     <c:if test="${param.voidRs eq 1}">
-                        <div class="alert alert-success" role="alert">Successfully Voided The Order</div>
+                        <div class="alert alert-success" role="alert"><spring:message code="err.void-order"/></div>
                     </c:if>
                     <c:if test="${param.voidRs eq 0}">
-                        <div class="alert alert-danger" role="alert">Your order was processed. It can no longer be cancelled.</div>
+                        <div class="alert alert-danger" role="alert"><spring:message code="mess.order-processed"/>. <spring:message code="mess.no-longer-cancelled"/>.</div>
                     </c:if>
                     <c:forEach items="${mOs}" var="m">
                         <c:if test="${m.key.invoice.netTransStatus ne 'beforePayment' && m.key.invoice.netTransStatus ne 'paymentError' && m.key.invoice.netTransStatus ne 'voidedByUser'}">
@@ -76,26 +76,26 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div style="font-size:16px;">
-                                                <b>Order Number:</b> ${m.key.invoice.invoiceCode}
+                                                <b><spring:message code="mess.order-number"/>:</b> ${m.key.invoice.invoiceCode}
                                             </div>
                                             <div style="font-size:14px;padding-top: 8px;">
-                                                <a href="<c:url value="/user/orderDetail/${m.key.id}"/>">Order Detail</a>
+                                                <a href="<c:url value="/user/orderDetail/${m.key.id}"/>"><spring:message code="mess.order-detail"/></a>
                                                 <c:if test="${m.key.invoice.translatedStatus eq 'In Progress'}">
-                                                    | <a href="javascript:cancelOrder(${m.key.id});">Cancel Order</a>
+                                                    | <a href="javascript:cancelOrder(${m.key.id});"><spring:message code="mess.cancel-order"/></a>
                                                 </c:if>
                                                 <c:if test="${m.key.invoice.translatedStatus eq 'Complete'}">
-                                                    | <a href="javascript:void(0);" >Order Again</a>
+                                                    | <a href="javascript:void(0);" ><spring:message code="mess.order-again"/></a>
                                                 </c:if>    
                                             </div>
                                         </div>
                                         <div class="col-md-2" style="text-align:center;">
-                                            <div style="font-size:16px;">ORDER DATE</div>
+                                            <div style="font-size:16px;"><spring:message code="mess.order-date"/></div>
                                             <div style="font-size:14px;padding-top: 8px;">
                                                 <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>
                                             </div>
                                         </div>
                                         <div class="col-md-2" style="text-align:center;">
-                                            <div style="font-size:16px;">STATUS</div>
+                                            <div style="font-size:16px;"><spring:message code="mess.status"/></div>
                                             <div style="font-size:14px;padding-top: 8px;">
                                                 ${m.key.invoice.translatedStatus}
                                                 <c:set var="lastCheck" value="Last check: "/>
@@ -163,7 +163,7 @@
                                         <c:forEach items="${rio.topUpMobilePhones}" var="t">
                                             <div class="row" style="margin-bottom: 5px;">
                                                 <div class="col-md-3" style="padding-left:50px;">
-                                                    Top Up Mobile Phone
+                                                    <spring:message code="mess.top-up"/>
                                                 </div>
                                                 <div class="col-md-2" style="text-align: center;">
                                                     1
