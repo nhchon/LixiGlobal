@@ -85,7 +85,7 @@
             <div class="form-group right">
                 <div class="col-lg-4 col-md-4"></div>
                 <div class="col-lg-8 col-md-8">
-                    <button onclick="return saveNewBillingAddress();" type="submit" class="btn btn-primary">Save</button>
+                    <button onclick="return saveNewBillingAddress();" type="submit" class="btn btn-primary"><spring:message code="message.save"/></button>
                 </div>
             </div>
         </fieldset>

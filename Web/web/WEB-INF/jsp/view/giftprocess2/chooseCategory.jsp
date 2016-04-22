@@ -17,7 +17,7 @@
                 <c:set var="localStep" value="1"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="gift-category">
-                    <h2 class="title text-center"><span>gift select your category</span></h2>
+                    <h2 class="title text-center"><span><spring:message code="mess.select-category"/></span></h2>
                     <div class="gift-category-content">
                         <div class="row">
                             <div class="col-md-3 col-sm-3">

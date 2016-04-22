@@ -23,7 +23,7 @@
                     <c:if test="${not empty validationErrors}">
                     <div class="alert alert-warning alert-dismissible bg-white" role="alert">
                         <div class="alert-message">
-                            <h4 class="text-red">There was problem</h4>
+                            <h4 class="text-red"><spring:message code="message.there-was-problem"/></h4>
                             <c:forEach items="${validationErrors}" var="error">
                                 <div><c:out value="${error.message}" /></div>
                             </c:forEach>
@@ -43,7 +43,7 @@
                         </div>
                     </c:if>
                 <form:form modelAttribute="addCardForm" cssClass="form-add-a-payment">
-                    <h2 class="title">add a payment menthod</h2>
+                    <h2 class="title"><spring:message code="message.add-payment-method"/></h2>
                     <div class="form-content">
                         <div class="form-group">
                             <div class="cc-selector-2">
@@ -56,21 +56,16 @@
                                 <span title="Master Card">
                                     <label class="drinkcard-cc mastercard"for="mastercard2"></label>
                                 </span>
-                                <%--
-                                <span title="AMEX Card">
-                                    <label class="drinkcard-cc card-type2"for="card-type2"></label>
-                                </span>
-                                --%>
                             </div>
                         </div>
-                        <h4 class="text-color-link text-uppercase">Card details</h4>
+                        <h4 class="text-color-link text-uppercase"><spring:message code="mess.card-details"/></h4>
                         <div class="row">
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group form-group-selectpicker-full">
-                                    <label for="cardType">Select Card Type:</label>
+                                    <label for="cardType"><spring:message code="mess.select-card-type"/>:</label>
                                     <div class="clearfix"></div>
                                     <form:select path="cardType" class="form-control" required="true">
-                                        <option value="">Select a Card Type</option>
+                                        <option value=""><spring:message code="mess.select-a-card-type"/></option>
                                         <option value="1" <c:if test="${addCardForm.cardType eq 1}">selected=""</c:if>>Visa</option>
                                         <option value="2" <c:if test="${addCardForm.cardType eq 2}">selected=""</c:if>>Master Card</option>
                                         <option value="3" <c:if test="${addCardForm.cardType eq 3}">selected=""</c:if>>Discover</option>
@@ -83,14 +78,14 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group">
-                                    <label for="cardNumber">Card Number:</label>
+                                    <label for="cardNumber"><spring:message code="mess.card-number"/>:</label>
                                     <form:input path="cardNumber" required="true" class="form-control" placeholder="Card Number"/>
                                     <div class="has-error"><form:errors path="cardNumber" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group">
-                                    <label for="nameOnCard">Name on Card:</label>
+                                    <label for="nameOnCard"><spring:message code="mess.name-on-card"/>:</label>
                                     <form:input path="cardName" required="true" class="form-control" placeholder="Your name, as it appears on card"/>
                                     <div class="has-error"><form:errors path="cardName" cssClass="help-block" element="div"/></div>
                                 </div>
@@ -99,9 +94,9 @@
                         <div class="row">
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label for="expirationDate">Expiration Month</label>
+                                    <label for="expirationDate"><spring:message code="mess.expire-month"/></label>
                                     <form:select path="expMonth" class="form-control" required="true">
-                                        <option value="">Exp. Month</option>
+                                        <option value=""><spring:message code="mess.exp-month"/></option>
                                         <option value="01" <c:if test="${addCardForm.expMonth eq 1}">selected=""</c:if>>Jan</option>
                                         <option value="02" <c:if test="${addCardForm.expMonth eq 2}">selected=""</c:if>>Feb</option>
                                         <option value="03" <c:if test="${addCardForm.expMonth eq 3}">selected=""</c:if>>Mar</option>
@@ -120,9 +115,9 @@
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label for="expirationDate">Expiration Year</label>
+                                    <label for="expirationDate"><spring:message code="mess.expire-year"/></label>
                                     <form:select path="expYear" class="form-control" required="true">
-                                        <option value="">Exp. Year</option>
+                                        <option value=""><spring:message code="mess.exp-year"/></option>
                                         <jsp:useBean id="now" class="java.util.Date" />
                                         <fmt:formatDate var="currYear" value="${now}" pattern="yyyy" />
                                         <c:forEach begin="${currYear}" end="${currYear + 10}" var="year">
@@ -134,25 +129,25 @@
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label for="cvv">CVV:</label>
+                                    <label for="cvv"><spring:message code="mess.cvv"/>:</label>
                                     <form:input path="cvv" class="form-control" required="true" placeholder="CCV number"/>
                                     <div class="has-error"><form:errors path="cvv" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
 
                         </div>
-                            <h4 class="text-color-link text-uppercase">Billing address <a href="javascript:showPageBillAdd(1);" style="font-size: 13px;text-transform: none;cursor: pointer;">(choose one)</a></h4>
+                            <h4 class="text-color-link text-uppercase"><spring:message code="mess.billing-address"/> <a href="javascript:showPageBillAdd(1);" style="font-size: 13px;text-transform: none;cursor: pointer;">(<spring:message code="mess.choose-one"/>)</a></h4>
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group">
-                                    <label for="streetAddress">First Name:</label>
+                                    <label for="streetAddress"><spring:message code="mess.first-name"/>:</label>
                                     <form:input path="firstName" class="form-control" required="true" placeholder="Street address"/>
                                     <div class="has-error"><form:errors path="firstName" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group">
-                                    <label for="city">Last Name:</label>
+                                    <label for="city"><spring:message code="mess.last-name"/>:</label>
                                     <form:input path="lastName"  class="form-control" required="true" placeholder="City"/>
                                     <div class="has-error"><form:errors path="lastName" cssClass="help-block" element="div"/></div>
                                 </div>
@@ -161,14 +156,14 @@
                         <div class="row">
                             <div class="col-md-8 col-sm-8">
                                 <div class="form-group">
-                                    <label for="streetAddress">Street Address:</label>
+                                    <label for="streetAddress"><spring:message code="mess.street-address"/>:</label>
                                     <form:input path="address" class="form-control" required="true" placeholder="Street address"/>
                                     <div class="has-error"><form:errors path="address" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label for="city">City:</label>
+                                    <label for="city"><spring:message code="mess.city"/>:</label>
                                     <form:input path="city"  class="form-control" required="true" placeholder="City"/>
                                     <div class="has-error"><form:errors path="city" cssClass="help-block" element="div"/></div>
                                 </div>
@@ -177,21 +172,21 @@
                         <div class="row">
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label for="state">State/Province/Region:</label>
+                                    <label for="state"><spring:message code="mess.state-pro-reg"/>:</label>
                                     <form:input path="state" class="form-control" required="true" placeholder="State/Province/Region"/>
                                     <div class="has-error"><form:errors path="state" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label for="zipCode">Zip:</label>
+                                    <label for="zipCode"><spring:message code="ba.zip"/>:</label>
                                     <form:input path="zipCode" class="form-control" required="true" placeholder="Zip code"/>
                                     <div class="has-error"><form:errors path="zipCode" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group form-group-selectpicker-full">
-                                    <label for="county">County:</label><div class="clearfix"></div>
+                                    <label for="county"><spring:message code="mess.county"/>:</label><div class="clearfix"></div>
                                     <form:select class="form-control" path="country" required="true">
                                         <option value="" selected="">Choose country</option>
                                         <c:forEach items="${COUNTRIES}" var="c">
@@ -206,17 +201,10 @@
                     <div class="button-control text-center text-uppercase">
                         <div class="button-control-page">
                             <form:hidden path="blId"/>
-                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="${returnUrl}"/>">BACK</button>
-                            <button class="btn btn-primary" type="submit">NEXT</button>
+                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="${returnUrl}"/>"><spring:message code="message.back"/></button>
+                            <button class="btn btn-primary" type="submit"><spring:message code="message.next"/></button>
                         </div>
                     </div>
-                            <!--
-                    <div class="clearfix border-bottom"></div>
-                    <h4 class="title">add a bank account</h4>
-                    <p>
-                        <strong class="text-color-link"><a href="<c:url value="/checkout/addBankAccount"/>">Add a checking account</a></strong>.(You can review your order before it’s final)
-                    </p>
-                            -->
                 </form:form>
             </div>
             <!-- Billing Address Modal -->

@@ -1,6 +1,6 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">Edit Receiver Information</h4>
+    <h4 class="modal-title"><spring:message code="edit-rec"/></h4>
 </div>
 <div class="modal-body">
     <c:if test="${validationErrors != null}"><div class="msg msg-error">
@@ -88,7 +88,7 @@
         </div>
         <div class="form-group">
             <div class="col-lg-12">
-                <span class="errors">*</span> : <i>is required</i>
+                <span class="errors">*</span> : <i><spring:message code="is-required"/></i>
             </div>
         </div>
         <div class="form-group row">

@@ -34,15 +34,15 @@
                 <c:url value="/checkout/paymentMethods" var="choosePaymentMethodUrl"/>
                 <form id="changePaymentForm" action="${choosePaymentMethodUrl}" method="post" class="receiver-form" onsubmit="return checkSelectedPayment()">
                     <div class="section-receiver">
-                        <h2 class="title">Select a payment method</h2>
+                        <h2 class="title"><spring:message code="select-payment-method"/></h2>
 
                         <div class="table-responsive table-select-payment table-responsive-mobi">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="width: 60%; text-align: left;">your credit and debit cards</th>
-                                        <th style="width: 20%">name of card </th>
-                                        <th style="width: 20%">expires on</th>
+                                        <th style="width: 60%; text-align: left;"><spring:message code="your-card"/></th>
+                                        <th style="width: 20%"><spring:message code="mess.name-on-card"/></th>
+                                        <th style="width: 20%"><spring:message code="expires-on"/></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -77,48 +77,18 @@
                                     </c:forEach>
                                 </tbody>
                             </table>
-                            <%--
-                            <c:if test="${not empty ACCOUNTS}">
-                            <p>&nbsp;</p>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th style="width: 60%; text-align: left;">your checking accounts</th>
-                                        <th style="width: 20%"></th>
-                                        <th style="width: 20%"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <c:forEach items="${ACCOUNTS}" var="acc">
-                                    <c:set var="lengthCard" value="${fn:length(acc.checkingAccount)}"/>
-                                        <tr>
-                                            <td data-title="Card">
-                                                <div>
-                                                    <input type="radio" name="accId" value="${acc.id}" class="custom-checkbox-input" <c:if test="${not empty LIXI_ORDER.bankAccount && LIXI_ORDER.bankAccount.id == acc.id}">checked=""</c:if>/>
-                                                    <span class="text-uppercase">Ending in ${fn:substring(acc.checkingAccount, lengthCard-4, lengthCard)}</span>
-                                                </div>
-                                            </td>
-                                            <td data-title="Name" class="text-center">${acc.name}</td>
-                                            <td data-title="Expires on" class="text-center">
-                                            </td>
-                                        </tr>
-                                </c:forEach>
-                                </tbody>
-                            </table>
-                            </c:if>
-                            --%>
                         </div>
                     </div>
                     <div class="button-control text-uppercase">
                         <div class="row">
                             <div class="col-md-6 text-left">
-                                <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/chooseCategory"/>">Keep shopping</button>
-                                <button class="btn btn-primary text-uppercase"  type="submit">use this payment method</button>
+                                <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/chooseCategory"/>"><spring:message code="keep-shopping"/></button>
+                                <button class="btn btn-primary text-uppercase"  type="submit"><spring:message code="use-this-payment-method"/></button>
                             </div>
                             <div class="col-md-6 text-right">
                                 <c:set var="numOfCard" value="${fn:length(CARDS)}"/>
                                 <c:if test="${numOfCard < 5}">
-                                    <button class="btn btn-primary btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/checkout/addCard"/>">add new card</button>
+                                    <button class="btn btn-primary btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/checkout/addCard"/>"><spring:message code="add-new-card"/></button>
                                 </c:if>
                             </div>
                         </div>

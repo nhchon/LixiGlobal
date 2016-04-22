@@ -417,17 +417,17 @@
                 <c:url value="/checkout/place-order" var="placeOrderUrl"/>
                 <form id="placeOrderForm" method="post" class="receiver-form" action="${placeOrderUrl}">
                     <div class="section-receiver">
-                        <h2 class="title">review your order</h2>
+                        <h2 class="title"><spring:message code="review-your-order"/></h2>
 
                         <c:if test="${LIXI_FINAL_TOTAL eq 0}">
                             <p class="text-uppercase" id="thankyouBeing">
-                                Your Shopping Cart is empty !
+                                <spring:message code="cart-empty"/> !
                             </p>
-                            <p>Tang qua. Tang niem vui.</p>
+                            <p><spring:message code="sologan"/></p>
                         </c:if>
                         <c:if test="${LIXI_FINAL_TOTAL gt 0}">
                             <p class="text-uppercase" id="thankyouBeing">
-                                Thank you for being a customer!  
+                                <spring:message code="thank-being-a-cus"/>!  
                             </p>
                         </c:if>
                         <div class="clean-paragraph"></div>
@@ -437,22 +437,22 @@
                                     <c:forEach items="${REC_GIFTS}" var="entry">
                                         <div class="receiver-info-item" id="receiver${entry.recipient.id}">
                                             <div class="receiver-sent-to">
-                                                <h4 class="text-color-link">Send To: <span id="recName${entry.recipient.id}">${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</span> <span id="editRecipientSpan${entry.recipient.id}"><a href="javascript:editRecipient(${entry.recipient.id});" class="edit-info-event"></a></span></h4>
+                                                <h4 class="text-color-link"><spring:message code="order.send_to"/>: <span id="recName${entry.recipient.id}">${entry.recipient.firstName}&nbsp;${entry.recipient.middleName}&nbsp;${entry.recipient.lastName}</span> <span id="editRecipientSpan${entry.recipient.id}"><a href="javascript:editRecipient(${entry.recipient.id});" class="edit-info-event"></a></span></h4>
                                                 <div>
-                                                    <strong>Email Address:</strong><span id="recEmail${entry.recipient.id}">${entry.recipient.email}</span>
+                                                    <strong><spring:message code="mess.email-address"/>:</strong><span id="recEmail${entry.recipient.id}">${entry.recipient.email}</span>
                                                 </div>
                                                 <div>
-                                                    <strong>Mobile Phone:</strong><span id="recPhone${entry.recipient.id}">${entry.recipient.phone}</span>
+                                                    <strong><spring:message code="message.mobile_number"/>:</strong><span id="recPhone${entry.recipient.id}">${entry.recipient.phone}</span>
                                                 </div>
                                             </div>
                                             <div class="receiver-order-summary">
-                                                <h4 style="padding-left:18px;margin-bottom: 0px;">Order summary</h4>
+                                                <h4 style="padding-left:18px;margin-bottom: 0px;"><spring:message code="order-summary"/></h4>
                                                 <table class="table table-striped">
                                                     <thead>
                                                     <th style="padding:0px;">
                                                         <div class="col-md-6"></div>
-                                                        <div class="col-md-3">Quantity</div>
-                                                        <div class="col-md-3">Price</div>
+                                                        <div class="col-md-3"><spring:message code="quantity"/></div>
+                                                        <div class="col-md-3"><spring:message code="message.price"/></div>
                                                     </th>
                                                     </thead>
                                                     <tbody>
@@ -486,32 +486,32 @@
                                         <div class="receiver-order-item">
                                             <div class="receiver-order-gift-price">
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left text-bold">Gift Price</strong><span class="receiver-order-gift-price-right">USD <span id="giftPriceUsd"><fmt:formatNumber value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/></span> ~ VND <span id="giftPriceVnd"><fmt:formatNumber value="${LIXI_GIFT_PRICE_VND}" pattern="###,###.##"/></span></span>
+                                                    <strong class="receiver-order-gift-price-left text-bold"><spring:message code="mess.gift-price"/></strong><span class="receiver-order-gift-price-right">USD <span id="giftPriceUsd"><fmt:formatNumber value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/></span> ~ VND <span id="giftPriceVnd"><fmt:formatNumber value="${LIXI_GIFT_PRICE_VND}" pattern="###,###.##"/></span></span>
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left">Card Processing fee</strong><span class="receiver-order-gift-price-right">USD <span id="CARD_PROCESSING_FEE_THIRD_PARTY"><fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></span></span>
+                                                    <strong class="receiver-order-gift-price-left"><spring:message code="mess.card-process-fee"/></strong><span class="receiver-order-gift-price-right">USD <span id="CARD_PROCESSING_FEE_THIRD_PARTY"><fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></span></span>
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left">Lixi handing fee</strong><span class="receiver-order-gift-price-right">USD <span id="lixiHandlingFeeTotal"><fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></span> (<fmt:formatNumber value="${LIXI_HANDLING_FEE}" pattern="###,###.##"/> per / person )</span>
+                                                    <strong class="receiver-order-gift-price-left"><spring:message code="mess.lixi-handle-fee"/></strong><span class="receiver-order-gift-price-right">USD <span id="lixiHandlingFeeTotal"><fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></span> (<fmt:formatNumber value="${LIXI_HANDLING_FEE}" pattern="###,###.##"/> per / person )</span>
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left">Sale Tax</strong><span class="receiver-order-gift-price-right">USD <span id="saleTax"><fmt:formatNumber value="0" pattern="###,###.##"/></span></span>
+                                                    <strong class="receiver-order-gift-price-left"><spring:message code="mess.sale-tax"/></strong><span class="receiver-order-gift-price-right">USD <span id="saleTax"><fmt:formatNumber value="0" pattern="###,###.##"/></span></span>
                                                 </div>
                                                 <div>
                                                     <strong class="receiver-order-gift-price-left text-bold" style="color: #000">Total</strong><strong class="receiver-order-gift-price-right text-bold" style="color: #000">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
                                                 </div>
                                             </div>
-                                            <h4 class="text-color-link">Payment method <a href="<c:url value="/checkout/paymentMethods"/>" class="edit-info-event"></a></h4>
+                                                <h4 class="text-color-link"><spring:message code="mess.payment-method"/> <a href="<c:url value="/checkout/paymentMethods"/>" class="edit-info-event"></a></h4>
                                                 <c:if test="${not empty LIXI_ORDER.card}">
                                                     <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.card.cardNumber)}"/>
                                                 <div>
-                                                    <strong>${LIXI_ORDER.card.cardTypeName}:</strong> <span>ending with ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}</span> 
+                                                    <strong>${LIXI_ORDER.card.cardTypeName}:</strong> <span><spring:message code="ending-with"/> ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}</span> 
                                                 </div>
                                                 <div>
-                                                    <strong>Order #:</strong><span>${LIXI_ORDER_ID}</span>
+                                                    <strong><spring:message code="mess.order"/> #:</strong><span>${LIXI_ORDER_ID}</span>
                                                 </div>
                                                 <div>
-                                                    <strong>Billing address:</strong><span>${LIXI_ORDER.card.billingAddress.firstName}&nbsp;${LIXI_ORDER.card.billingAddress.lastName}, ${LIXI_ORDER.card.billingAddress.address}</span>
+                                                    <strong><spring:message code="mess.billing-address"/>:</strong><span>${LIXI_ORDER.card.billingAddress.firstName}&nbsp;${LIXI_ORDER.card.billingAddress.lastName}, ${LIXI_ORDER.card.billingAddress.address}</span>
                                                 </div>
                                             </c:if>
                                             <c:if test="${not empty LIXI_ORDER.bankAccount}">
@@ -521,7 +521,7 @@
                                                 </div>
                                                 <br/>
                                                 <div>
-                                                    <b>Billing address:</b> <span id="billingAdd">${LIXI_ORDER.bankAccount.billingAddress.fullName}, ${LIXI_ORDER.bankAccount.billingAddress.add1}
+                                                    <b><spring:message code="mess.billing-address"/>:</b> <span id="billingAdd">${LIXI_ORDER.bankAccount.billingAddress.fullName}, ${LIXI_ORDER.bankAccount.billingAddress.add1}
                                                 </div>    
                                             </c:if>
                                         </div>
@@ -532,7 +532,7 @@
                                                         <td style="padding-left:15px;">
                                                             <div class="checkbox">
                                                                 <label style="padding-left: 0px;"><input name="setting" value="0" type="radio" <c:if test="${LIXI_ORDER.setting eq 0}"> checked="checked"</c:if>  class="custom-checkbox-input" style="margin-top: 6px;"/>
-                                                                        Gift only ( Do not allow refund to receiver )
+                                                                    <spring:message code="gift-only"/>
                                                                     </label>
                                                                 </div>
 
@@ -540,7 +540,7 @@
                                                             <td style="padding-left:15px;">
                                                                 <div class="checkbox">
                                                                     <label><input name="setting" value="1" type="radio" <c:if test="${LIXI_ORDER.setting eq 1}">checked="checked"</c:if> class="custom-checkbox-input" style="margin-top: 6px;"/>
-                                                                        Allow Refund ( No refund for mobile top up )
+                                                                        <spring:message code="allow-refund"/>
                                                                     </label>
                                                                 </div>                                                            
                                                             </td>
@@ -555,39 +555,14 @@
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2" style="padding-left:15px;">
-                                                                <p>(Receiver will be notified right away. Delivery varies by vendor. Settlement of refund will be 48 to 72 hours)</p>
-                                                                <p> By placing this order, you agree to <a href="<c:url value="/support/terms"/>" target="_blank">Lixi.Global Terms of Use</a> and <a href="<c:url value="/support/privacy"/>" target="_blank">Privacy Policy</a>.</p>
+                                                                <p>(<spring:message code="place-desc-1"/>)</p>
+                                                                <p> 
+                                                                    <c:url value="/support/terms" var="termUrl"/>
+                                                                    <c:url value="/support/privacy" var="privacyUrl"/>
+                                                                    <spring:message code="place-desc-2" argumentSeparator=";" arguments="${termUrl};${privacyUrl}"/>.
+                                                                </p>
                                                         </td>
                                                 </table>
-                                                <%--
-                                                <div class="col-md-4">
-
-                                                    <div class="checkbox">
-                                                        <label style="padding-left: 0px;"><input name="setting" value="0" type="radio" <c:if test="${LIXI_ORDER.setting eq 0}"> checked="checked"</c:if>  class="custom-checkbox-input" style="margin-top: 6px;"/>
-                                                                Gift only ( Do not allow refund to receiver )
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="checkbox">
-                                                            <label><input name="setting" value="1" type="radio" <c:if test="${LIXI_ORDER.setting eq 1}">checked="checked"</c:if> class="custom-checkbox-input" style="margin-top: 6px;"/>
-                                                                Allow Refund ( No refund for mobile top up )
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <!-- (c) 2005, 2016. Authorize.Net is a registered trademark of CyberSource Corporation --> 
-                                                        <div class="AuthorizeNetSeal"> 
-                                                            <script type="text/javascript" language="javascript">var ANS_customer_id = "8d3196bc-e4f9-4a2a-b283-292c0687257d";</script> 
-                                                            <script type="text/javascript" language="javascript" src="//verify.authorize.net/anetseal/seal.js" ></script> 
-                                                            <a href="http://www.authorize.net/" id="AuthorizeNetText" target="_blank">Internet Payment Gateway</a> 
-                                                        </div>
-                                                    </div>
-                                                --%>
-                                                <%--
-                                                <p>(Receiver will be notified right away. Delivery varies by vendor. Settlement of refund will be 48 to 72 hours)</p>
-                                                <p> By placing this order, you agree to <a href="<c:url value="/support/terms"/>" target="_blank">Lixi.Global Terms of Use</a> and <a href="<c:url value="/support/privacy"/>" target="_blank">Privacy Policy</a>.</p>
-                                                --%>
                                             </div>
                                         </div>
                                     </div>
@@ -597,14 +572,14 @@
                     </div>
                     <div class="button-control gift-total-wrapper text-center text-uppercase" style="padding-bottom: 20px;">
                         <div class="button-control-page" id="btnDiv">
-                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/choose"/>">Keep Shopping</button>
+                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/choose"/>"><spring:message code="keep-shopping"/></button>
                             <c:if test="${LIXI_FINAL_TOTAL gt 0}">
                                 <%--<button id="btnSubmit" type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>--%>
-                                <button type="button" class="btn btn-primary" onclick="processingYourOrder()" style="color:#fff;">Place Order</button>    
-                                <button id="btnLogOut" style="display:none;" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'">Log Out</button>
+                                <button type="button" class="btn btn-primary" onclick="processingYourOrder()" style="color:#fff;"><spring:message code="place-order"/></button>    
+                                <button id="btnLogOut" style="display:none;" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'"><spring:message code="log-out"/></button>
                             </c:if>
                             <c:if test="${LIXI_FINAL_TOTAL eq 0}">
-                                <button id="btnLogOut" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'">Log Out</button>
+                                <button id="btnLogOut" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'"><spring:message code="log-out"/></button>
                             </c:if>
                         </div>
                     </div>
@@ -627,7 +602,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12" style="text-align:center;">
-                                <p>Please wait ! We are processing your order. <b>Please DO NOT close or reload your browser tab</b>.</p>
+                                <p><spring:message code="we-are-process-your-order"/>.</p>
                             </div>
                         </div>
                         <div class="row">

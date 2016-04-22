@@ -202,7 +202,7 @@
                             <div class="button-control-page">
                                 <form:hidden path="blId"/>
                                 <button class="btn btn-primary" type="submit"><spring:message code="message.save"/></button>
-                                <button style="color:#fff;" class="btn btn-warning" type="button" onclick="location.href='<c:url value="/user/payments"/>'">Cancel</button>
+                                <button style="color:#fff;" class="btn btn-warning" type="button" onclick="location.href='<c:url value="/user/payments"/>'"><spring:message code="message.cancel"/></button>
                             </div>
                         </div>
                     </form:form>

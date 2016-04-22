@@ -40,7 +40,7 @@
         <section class="section-85-0">
             <div class="container">
                 <fieldset>
-                    <legend>Welcome ${TRADER_LOGIN_USERNAME} ! Please input your exchange rate</legend>
+                    <legend>Welcome ${TRADER_LOGIN_USERNAME} ! <spring:message code="input-your-exchange-rate"/></legend>
                     <div class="row">
                         <div class="col-lg-12">
                             <h4><spring:message code="message.vcb_official"/> at ${VCB.time}</h4>
@@ -71,7 +71,7 @@
                             </table>
                         </div>
                     </div>
-                    <h4>Your Exchange Rate</h4>
+                    <h4><spring:message code="your-ex-rate"/></h4>
                     <div class="row">
                         <c:if test="${validationErrors != null}"><div class="errors">
                                 <ul>
@@ -111,7 +111,7 @@
                             </div>
                             <div class="col-lg-2">
                                 <label>&nbsp;</label>
-                                <button type="submit" class="btn btn-primary form-control" style="margin-top: 0px;">Save</button>
+                                <button type="submit" class="btn btn-primary form-control" style="margin-top: 0px;"><spring:message code="message.save"/></button>
                             </div>
                             <input type="hidden" name="vcbBuy" id="vcbBuy"/>
                             <input type="hidden" name="vcbSell" id="vcbSell"/>

@@ -237,7 +237,7 @@
                 <div class="section-receiver">
                     <!--  <span style="font-size: 18px;text-transform: none;">(for ${SELECTED_RECIPIENT.firstName})</span> -->
                     <h2 class="title">
-                        <span class="top-up-mobile-phone-text">Top up mobile phone</span>
+                        <span class="top-up-mobile-phone-text"><spring:message code="mess.top-up"/></span>
                         <span class="top-up-mobile-phone-icon">
                             <img rel="tooltip" title="Mobile Phone"  alt="Mobile Phone" src="<c:url value="/resource/theme/assets/lixi-global/images/icon-mobiphone.png"/>">
                             <img rel="tooltip" title="Viettel"  alt="Viettel"  src="<c:url value="/resource/theme/assets/lixi-global/images/icon-viettel.png"/>">
@@ -262,13 +262,13 @@
                                         </c:if>
                                         <c:if test="${addSuccess eq 1}">
                                             <div class="alert alert-success" role="alert">
-                                                Top Up Mobile Minute is success
+                                                <spring:message code="top-up-success"/>
                                             </div>
                                         </c:if>
                                         <c:url value="/topUp/topUpMobilePhone" var="topUpMobilePhoneUrl"/>
                                         <form class="form-horizontal" role="form" method="post" action="${topUpMobilePhoneUrl}">
                                             <div class="form-group">
-                                                <label class="col-md-3" for="email">Select a receiver</label>
+                                                <label class="col-md-3" for="email"><spring:message code="select-a-rec"/></label>
                                                 <div class="col-md-7">
                                                     <div class="row">
                                                         <div class="col-md-6" style="padding-right: 0px;">
@@ -290,10 +290,10 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-md-3" for="email">Amount you want to top up</label>
+                                                <label class="col-md-3" for="email"><spring:message code="amount-top-up"/></label>
                                                 <div class="col-md-7">
                                                     <select id="amountTopUp" name="amountTopUp" class="form-control">
-                                                        <option value="0" <c:if test="${amountTopUp eq 0}">selected=""</c:if>>Please select amount to top up</option>
+                                                        <option value="0" <c:if test="${amountTopUp eq 0}">selected=""</c:if>><spring:message code="please-amount-top-up"/></option>
                                                         <option value="100000" <c:if test="${amountTopUp eq 100000}">selected=""</c:if>>100,000 VND</option>
                                                         <option value="200000" <c:if test="${amountTopUp eq 200000}">selected=""</c:if>>200,000 VND</option>
                                                         <option value="300000" <c:if test="${amountTopUp eq 300000}">selected=""</c:if>>300,000 VND</option>
@@ -302,7 +302,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-md-3" for="pwd">Currency conversion rate</label>
+                                                    <label class="col-md-3" for="pwd"><spring:message code="gift.conversion_rate"/></label>
                                                     <div class="col-md-3"> 
                                                         <input type="text" class="form-control" value="1 USD" readonly="">
                                                     </div>
@@ -311,38 +311,19 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-md-3" for="pwd">Top up in USD</label>
+                                                <label class="col-md-3" for="pwd"><spring:message code="top-up-usd"/></label>
                                                 <div class="col-md-7"> 
                                                     <input type="text" name="topUpInUSD" id="topUpInUSD" class="form-control" placeholder="O USD" readonly="">
                                                 </div>
                                             </div>
-                                            <!--
-                                        <div class="form-group">
-                                            <label class="col-md-3"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
-                                            <div class="col-md-7">
-                                                <div class="row">
-                                                    <div class="col-md-2" style="padding-right: 0px;">
-                                                        <input type="text" name="recDialCode" class="form-control" value="${SELECTED_RECIPIENT.dialCode}" readonly="" style="padding: 6px;"/>
-                                                    </div>
-                                                    <div class="col-md-8" style="padding-left: 0px;padding-right: 0px;">
-                                                        <input type="text" id="recPhone" name="recPhone" class="form-control" readonly="" value="${SELECTED_RECIPIENT.phone}"/>
-                                                        <span class="help-block errors"></span>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-default" onclick="editRecipient('phone');">Change</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                            -->
                                             <div class="row">
                                                 <div class="col-md-3"></div>
                                                 <div class="col-md-7">
                                                     <input type="hidden" id="topUpId" name="topUpId" value="${topUpId}"/>
                                                     <input type="hidden" value="" id="topUpAction" name="topUpAction"/>
                                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                                    <button id="btnTopUpBuyNow" type="submit" class="btn btn-primary">Buy Now</button>
-                                                    <button id="btnTopUpKeepShopping" type="button" class="btn btn-warning" onclick="cancelTopUp()">Cancel</button>
+                                                    <button id="btnTopUpBuyNow" type="submit" class="btn btn-primary"><spring:message code="buy-now"/></button>
+                                                    <button id="btnTopUpKeepShopping" type="button" class="btn btn-warning" onclick="cancelTopUp()"><spring:message code="message.cancel"/></button>
                                                 </div>
                                             </div>
                                         </form>
@@ -354,7 +335,7 @@
                                     <div class="col-md-7">
                                         <div class="button-control gift-total-wrapper text-uppercase" style="margin-top:0px;">
                                             <div class="gift-total-box" style="margin:0px;width:400px;">
-                                                <span class="gift-total-box-left">order Total</span>
+                                                <span class="gift-total-box-left"><spring:message code="order-total"/></span>
                                                 <span class="gift-total-box-right">usd $ <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span></span>
                                             </div>
                                         </div>

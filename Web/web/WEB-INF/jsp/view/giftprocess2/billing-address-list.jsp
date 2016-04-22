@@ -4,16 +4,16 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">Choose a billing address</h4>
+    <h4 class="modal-title"><spring:message code="mess.choose-a-bl"/></h4>
 </div>
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12" style="padding-left: 30px;">
-            Please choose a billing address from your address book below<!--, or <a href="javascript:newBillingAddress();">enter a new billing address</a>-->
+            <spring:message code="mess.choose-a-bl-below"/><!--, or <a href="javascript:newBillingAddress();">enter a new billing address</a>-->
         </div>
     </div>
     <div class="page-header" style="margin:20px 10px 20px">
-        <h3>Your address book</h3>
+        <h3><spring:message code="mess.your-add-book"/></h3>
     </div>
     <div class="row">
         <div class="col-md-12" style="padding-left: 30px;">

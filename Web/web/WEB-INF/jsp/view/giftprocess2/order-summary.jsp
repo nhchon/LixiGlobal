@@ -36,9 +36,9 @@
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <form action="" method="get" class="receiver-form">
                     <div class="section-receiver">
-                        <h2 class="title">order summary</h2>
+                        <h2 class="title"><spring:message code="order-summary"/></h2>
                         <c:if test="${empty REC_GIFTS}">
-                            <p>Your order is empty.</p>
+                            <p><spring:message code="order-empty"/>.</p>
                         </c:if>
                         <c:if test="${not empty REC_GIFTS}">
                         <div class="table-responsive table-responsive-mobi">
@@ -46,12 +46,12 @@
                                 <thead>
                                     <tr>
                                         <th class="table-col-checkbox">&nbsp;</th>
-                                        <th>Receiver</th>
-                                        <th class="table-col-thumb">Items</th>
-                                        <th>DESCRIPTION</th>
-                                        <th class="table-col-Quantity">Quantity</th>
-                                        <th>unit price</th>
-                                        <th class="table-col-action">Action</th>
+                                        <th><spring:message code="mess.rec"/></th>
+                                        <th class="table-col-thumb"><spring:message code="items"/></th>
+                                        <th><spring:message code="desc"/></th>
+                                        <th class="table-col-Quantity"><spring:message code="quantity"/></th>
+                                        <th><spring:message code="unit-price"/></th>
+                                        <th class="table-col-action"><spring:message code="act"/></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -128,7 +128,6 @@
                                                 <div nowrap><strong>VND <span id="topUpVnd${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span></strong></div>
                                             </td>
                                             <td data-title="Action" class="table-row-action-btn">
-                                                <!--<p><button type="button" class="btn btn-default text-uppercase" onclick="location.href='<c:url value="/topUp/change/${t.id}"/>';"><spring:message code="message.change"/></button></p>-->
                                                 <p> <button type="button" class="btn btn-primary text-uppercase" onclick="deleteTopUpOnSummary(${t.id})"><spring:message code="message.delete"/></button></p>
                                             </td>
                                         </tr>
@@ -149,15 +148,15 @@
                             </table>
                         </div>
                         <p style="margin-top: 10px;">
-                            ( <sup>*</sup> You can shop for up to 5 different persons )
+                            ( <sup>*</sup> <spring:message code="shop-for-5-persons"/> )
                         </p>
                         </c:if>        
                     </div>
                     <c:if test="${not empty REC_GIFTS}">
                     <div class="button-control text-center text-uppercase">
                         <div class="button-control-page">
-                            <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/choose"/>">Keep shopping</button>
-                            <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/checkout/paymentMethods"/>">NEXT</button>
+                            <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/choose"/>"><spring:message code="keep-shopping"/></button>
+                            <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/checkout/paymentMethods"/>"><spring:message code="message.next"/></button>
                         </div>
                     </div>
                     </c:if>        

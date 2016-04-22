@@ -95,7 +95,7 @@
                             </div></c:if>
                         <form:form method="post" role="form" modelAttribute="traderCreateForm">
                             <fieldset>
-                                <legend>Trader Registration</legend>
+                                <legend><spring:message code="trader-regis"/></legend>
                                 <div class="desc">
                                     <spring:message code="signup.new_to_lixi"/>
                                 </div>

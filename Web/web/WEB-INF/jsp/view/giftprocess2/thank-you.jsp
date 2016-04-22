@@ -17,17 +17,17 @@
                 <c:set var="localStep" value="7"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="section-receiver">
-                    <h1>Thank you!</h1>
+                    <h1><spring:message code="mess.thank-you"/>!</h1>
                     <br />
-                    <p>Your order confirmation number is <strong>${LIXI_ORDER_ID}</strong>. An email has been sent to you and the receiver of your gift in Vietnam.</p>
+                    <p><spring:message code="thank-1" arguments="${LIXI_ORDER_ID}"/>. <spring:message code="thank-2"/>.</p>
                     <br />
-                    <p>The recipient will be notified within the hour of the gift waiting for them at www.baokim.vn. He or she will need to log in to claim the gift. Once the gift is reveived by the receiver, you will be notified.</p>
+                    <p><spring:message code="thank-3"/>. <spring:message code="thank-4"/>. <spring:message code="thank-5"/>.</p>
                     <br />
-                    <p>Email us with any questions at <a href="mailto:support@lixi.global">support@lixi.global</a>. Please paste the order confirmation number to the subject line.</p>
+                    <p><spring:message code="thank-6"/>. <spring:message code="thank-7"/>.</p>
                     <br /><br /><br />
                     <div class="btns" style="text-align:center;">
-                        <a href="<c:url value="/gifts/choose"/>" class="btn btn-primary">Continue Giving</a>
-                        <a href="<c:url value="/user/signOut"/>" class="btn btn-primary">Log Out</a>
+                        <a href="<c:url value="/gifts/choose"/>" class="btn btn-primary"><spring:message code="continue-giving"/></a>
+                        <a href="<c:url value="/user/signOut"/>" class="btn btn-primary"><spring:message code="log-out"/></a>
                     </div>
                     <p>&nbsp;</p>
                     <p>&nbsp;</p>

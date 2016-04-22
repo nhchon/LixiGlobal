@@ -166,7 +166,7 @@
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="section-gift-top">
                     <div class="row">
-                        <div class="col-md-3" style="padding-right: 0px;"><h2 class="title" style="text-transform: none;">Select a receiver </h2></div>
+                        <div class="col-md-3" style="padding-right: 0px;"><h2 class="title" style="text-transform: none;"><spring:message code="select-a-rec"/> </h2></div>
                         <div class="col-md-3" style="padding-left: 0px;">
                             <select class="form-control" id="recId" name="recId">
                                 <option value="0"><spring:message code="gift.select_recipient"/></option>
@@ -176,18 +176,19 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <button id="btnEditReceiver" style="<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>" class="btn btn-primary" onclick="doEditRecipient()">Edit receiver info</button>
-                            <button class="btn btn-primary" onclick="createNewRecipient()">Create new receiver</button>
+                            <button id="btnEditReceiver" style="<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>" class="btn btn-primary" onclick="doEditRecipient()"><spring:message code="edit-rec"/></button>
+                            <button class="btn btn-primary" onclick="createNewRecipient()"><spring:message code="create-new-rec"/></button>
                         </div>
                     </div>
-                    <h2 id="giftValueFor" class="title" style="text-transform: none;<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>">Gift value for <span id="recFirstName">${SELECTED_RECIPIENT_FIRST_NAME}</span></h2>
-                    <p>( We will select only gift at your price range )</p>
-                    <%-- <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 250}" pattern="###,###.##"/> --%>
-                    <h5 class="maximum-purchase">Maximum purchase is VND 3,500,000  or USD 150</h5>
+                    <h2 id="giftValueFor" class="title" style="text-transform: none;<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>"><spring:message code="gift-value-for"/> <span id="recFirstName">${SELECTED_RECIPIENT_FIRST_NAME}</span></h2>
+                    <p>( <spring:message code="we-select-at-your-range"/> )</p>
+                    <c:set value="150" var="maximumValue"/>
+                    <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * maximumValue}" pattern="###,###.##" var="maximumValueVnd"/>
+                    <h5 class="maximum-purchase">Maximum purchase is VND ${maximumValueVnd}  or USD ${maximumValue}</h5>
                     <div class="change-curency-box">
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">
-                                <span class="des-box">Your locked-in exchange rate</span>
+                                <span class="des-box"><spring:message code="locked-exchange-rate"/></span>
                                 <span class="amount-box">USD 1 = <strong><fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/></strong> VND</span>
                             </button>
                             <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
@@ -231,7 +232,7 @@
                         <div class="clean-paragraph"></div>
                         <div class="button-control gift-total-wrapper text-center text-uppercase">
                             <div class="gift-total-box">
-                                <span class="gift-total-box-left">order Total</span>
+                                <span class="gift-total-box-left"><spring:message code="order-total"/></span>
                                 <span class="gift-total-box-right">
                                     <span>usd</span>
                                     <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span>
@@ -241,8 +242,8 @@
                                 </span>
                             </div>
                             <div class="button-control-page">
-                                <button class="btn btn-default">BACK</button>
-                                <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/gifts/order-summary"/>">NEXT</button>
+                                <button class="btn btn-default"><spring:message code="message.back"/></button>
+                                <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/gifts/order-summary"/>"><spring:message code="message.next"/></button>
                                 <!--<input type="hidden" id="recId" value="${SELECTED_RECIPIENT_ID}"/>-->
                             </div>
                         </div>
@@ -259,7 +260,7 @@
                 <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Please select a category</h4>
+                        <h4 class="modal-title"><spring:message code="please-select-category"/></h4>
                     </div>
                     <div class="modal-body">
                         <div class="gift-selection">
@@ -269,7 +270,7 @@
                                         <div class="gift-icon">
                                             <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.candies.id}"/>">
                                                     <span class="gift-icon-category gift-icon-2"></span>
-                                                    <h5>Candies</h5>
+                                                    <h5><spring:message code="mess.candies"/></h5>
                                                 </a>
                                             </div>
                                         </div>
@@ -277,7 +278,7 @@
                                             <div class="gift-icon">
                                                 <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.jewelries.id}"/>">
                                                     <span class="gift-icon-category gift-icon-3"></span>
-                                                    <h5>Jewelries</h5>
+                                                    <h5><spring:message code="mess.jewelries"/></h5>
                                                 </a>
                                             </div>
                                         </div>
@@ -285,7 +286,7 @@
                                             <div class="gift-icon">
                                                 <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.perfume.id}"/>">
                                                     <span class="gift-icon-category gift-icon-4"></span>
-                                                    <h5>Perfume</h5>
+                                                    <h5><spring:message code="mess.perfume"/></h5>
                                                 </a>
                                             </div>
                                         </div>
@@ -295,7 +296,7 @@
                                             <div class="gift-icon">
                                                 <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.cosmetics.id}"/>">
                                                     <span class="gift-icon-category gift-icon-5"></span>
-                                                    <h5>Cosmetic</h5>
+                                                    <h5><spring:message code="mess.cosmetic"/></h5>
                                                 </a>
                                             </div>
                                         </div>
@@ -303,7 +304,7 @@
                                             <div class="gift-icon">
                                                 <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.childrentoy.id}"/>">
                                                     <span class="gift-icon-category gift-icon-6"></span>
-                                                    <h5>Children Toys</h5>
+                                                    <h5><spring:message code="mess.children-toy"/></h5>
                                                 </a>
                                             </div>
                                         </div>
@@ -311,7 +312,7 @@
                                             <div class="gift-icon">
                                                 <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.flowers.id}"/>">
                                                     <span class="gift-icon-category gift-icon-7"></span>
-                                                    <h5>Flowers</h5>
+                                                    <h5><spring:message code="mess.flowers"/></h5>
                                                 </a>
                                             </div>
                                         </div>
@@ -321,7 +322,7 @@
                                             <div class="gift-icon">
                                                 <a href="<c:url value="/topUp"/>">
                                                     <span class="gift-icon-category gift-icon-1"></span>
-                                                    <h5>Mobile Top up</h5>
+                                                    <h5><spring:message code="mess.mobile-top-up"/></h5>
                                                 </a>
                                             </div>
                                         </div>
