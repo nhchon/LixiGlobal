@@ -6,22 +6,22 @@
                     <c:if test="${not empty sessionScope['scopedTarget.loginedUser'].email}">
                         <li><a href="javascript:void(0);">Hello ${sessionScope['scopedTarget.loginedUser'].email}</a></li>
                         <li>
-                            <a class="hvr-underline-from-center" href="<c:url value="/user/signOut"/>">Log Out</a>
+                            <a class="hvr-underline-from-center" href="<c:url value="/user/signOut"/>"><spring:message code="log-out"/></a>
                         </li>
                     </c:if>
                     <c:if test="${empty sessionScope['scopedTarget.loginedUser'].email}">
                         <li class="nav-top-border-right">
-                            <a class="hvr-underline-from-center nav-login-event" href="<c:url value="/user/signIn"/>"><i class="fa fa-user"></i> LOGIN</a>
+                            <a class="hvr-underline-from-center nav-login-event" href="<c:url value="/user/signIn"/>"><i class="fa fa-user"></i> <spring:message code="mess.clogin"/></a>
                         </li>
                         <li class="nav-top-border-right">
-                            <a class="hvr-underline-from-center nav-register-event" href="<c:url value="/user/signUp"/>">REGISTER</a>
+                            <a class="hvr-underline-from-center nav-register-event" href="<c:url value="/user/signUp"/>"><spring:message code="c-register"/></a>
                         </li>
                     </c:if>
                     <li class="nav-top-border-right">
-                        <a class="hvr-underline-from-center nav-lang nav-lang-en" href="?locale=en_US">English</a>
+                        <a class="hvr-underline-from-center nav-lang nav-lang-en" href="?locale=en_US"><spring:message code="message.english"/></a>
                     </li>
                     <li>
-                        <a class="hvr-underline-from-center nav-lang nav-lang-vn" href="?locale=vi_VN">Vietnam</a>
+                        <a class="hvr-underline-from-center nav-lang nav-lang-vn" href="?locale=vi_VN"><spring:message code="viet-nam"/></a>
                     </li>
                 </ul>
             </div>
@@ -49,47 +49,47 @@
             <div class="collapse navbar-collapse" id="navbar-collapse-main">
                 <ul class="nav navbar-nav navbar-left">
                     <li>
-                        <a class="hvr-underline-from-center nav-link" href="<c:url value="/"/>">Home</a>
+                        <a class="hvr-underline-from-center nav-link" href="<c:url value="/"/>"><spring:message code="home"/></a>
                     </li>
                     <li>
-                        <a class="hvr-underline-from-center nav-link" href="<c:url value="/gifts/choose"/>">Send gift</a>
+                        <a class="hvr-underline-from-center nav-link" href="<c:url value="/gifts/choose"/>"><spring:message code="send-gift"/></a>
                     </li>
                     <li class="has-dropdown dropdown">
-                        <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="<c:url value="/user/orderHistory"/>">Account <i class="fa fa-angle-down"></i></a>
+                        <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="<c:url value="/user/orderHistory"/>"><spring:message code="account"/> <i class="fa fa-angle-down"></i></a>
                         <ul class="dropdown-menu nav-level-1">
                             <li>
-                                <a class="nav-sub-link no-boder-top" href="<c:url value="/user/orderHistory"/>">Orders</a>
+                                <a class="nav-sub-link no-boder-top" href="<c:url value="/user/orderHistory"/>"><spring:message code="orders"/></a>
                                 <ul class="nav-level-2">
-                                    <li><a href="<c:url value="/user/orderHistory"/>">View, Track<br/> or cancel an orders</a></li>
+                                    <li><a href="<c:url value="/user/orderHistory"/>"><spring:message code="view-track-cancel"/></a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a class="nav-sub-link" href="#payment-link">Payment Method</a>
+                                <a class="nav-sub-link" href="#payment-link"><spring:message code="mess.payment-method"/></a>
                                 <ul class="nav-level-2">
-                                    <li><a href="<c:url value="/user/payments"/>">Manage payment options</a></li>
-                                    <li><a href="<c:url value="/user/addCard"/>">Add a Credit/ Debit cards</a></li>
+                                    <li><a href="<c:url value="/user/payments"/>"><spring:message code="manage-payment-options"/></a></li>
+                                    <li><a href="<c:url value="/user/addCard"/>"><spring:message code="add-a-credit-debit-card"/></a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a class="nav-sub-link" href="#">Account setting</a>
+                                <a class="nav-sub-link" href="#"><spring:message code="account-setting"/></a>
                                 <ul class="nav-level-2">
-                                    <li><a href="<c:url value="/user/yourAccount"/>">Change email, password,<br/> name and mobile phone</a></li>
+                                    <li><a href="<c:url value="/user/yourAccount"/>"><spring:message code="change-email-password-name-mobile"/></a></li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
                     <li class="has-dropdown dropdown">
-                        <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="javascript:void(0);">Support <i class="fa fa-angle-down"></i></a>
+                        <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="javascript:void(0);"><spring:message code="support"/> <i class="fa fa-angle-down"></i></a>
                         <ul class="dropdown-menu nav-level-1">
                             <li>
-                                <a class="nav-sub-link no-boder-top" href="<c:url value="/support/refundPolicy"/>">Returns and Refund Policy</a>
+                                <a class="nav-sub-link no-boder-top" href="<c:url value="/support/refundPolicy"/>"><spring:message code="returns-refund"/></a>
                             </li>
                             <li>
-                                <a class="nav-sub-link" href="#">Customer Service</a>
+                                <a class="nav-sub-link" href="#"><spring:message code="cus-ser"/></a>
                                 <ul class="nav-level-2">
-                                    <li><a href="<c:url value="/support/post?method=Email"/>">Email</a></li>
-                                    <li><a href="<c:url value="/support/post?method=Phone"/>">Phone</a></li>
-                                    <li><a href="<c:url value="/support/post?method=Chat"/>">Chat</a></li>
+                                    <li><a href="<c:url value="/support/post?method=Email"/>"><spring:message code="message.email"/></a></li>
+                                    <li><a href="<c:url value="/support/post?method=Phone"/>"><spring:message code="message.phone"/></a></li>
+                                    <li><a href="<c:url value="/support/post?method=Chat"/>"><spring:message code="message.chat"/></a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -27,17 +27,16 @@
                 </c:otherwise>
             </c:choose>
         </section>
-
         <section class="section-gift bg-default">
             <div class="container">
                 <div class="section-gift-top">
-                    <h2 class="text-center ">Gifting overseas has never been easier...<br/>
-                        <strong>in three easy steps</strong><br/> 
-                        with a simple fee of just <strong>USD 1.00<sup>*</sup></strong></h2>
+                    <h2 class="text-center "><spring:message code="index-1"/><br/>
+                        <strong><spring:message code="index-2"/></strong><br/> 
+                        <spring:message code="index-3"/> <strong>USD 1.00<sup>*</sup></strong></h2>
                     <div class="change-curency-box">
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">
-                                <span class="des-box">Your locked-in exchange rate</span>
+                                <span class="des-box"><spring:message code="locked-exchange-rate"/></span>
                                 <span class="amount-box">USD 1 = <strong><fmt:formatNumber value="${lastXr.buy}" pattern="###,###.##"/></strong> VND</span>
                             </button>
                             <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
@@ -59,8 +58,8 @@
                                     <i class="fa fa-newspaper-o fa-stack-1x fa-stack-custom fa-inverse"></i>
                                 </span>
                                 <div class="clearfix"></div>
-                                <h3>Choose the gift<br/>you want to buy</h3>
-                                <small><sup>*</sup>$1.00 per person. Max purchase is $150.00</small>
+                                <h3><spring:message code="choose-the-gift-you-want"/></h3>
+                                <small><sup>*</sup><spring:message code="index-4"/></small>
                             </div>
                         </div>
                         <div class="col-md-1 col-sm-1 col-xs-1 col-has-gift-arrow">
@@ -74,7 +73,7 @@
                                     <i class="fa fa-credit-card fa-stack-1x fa-stack-custom  fa-inverse"></i>
                                 </span>
                                 <div class="clearfix"></div>
-                                <h3>Pay by Credit/Debit Card<br/> or with bank account
+                                <h3><spring:message code="index-5"/>
                             </div>
                         </div>
                         <div class="col-md-1 col-sm-1 col-xs-1  col-has-gift-arrow">
@@ -88,15 +87,13 @@
                                     <i class="fa fa-send fa-stack-1x fa-stack-custom  fa-inverse"></i>
                                 </span>
                                 <div class="clearfix"></div>
-                                <h3>Confirmation is sent<br/>
-                                    right away<br/>
-                                    to the receiver </h3>
+                                <h3><spring:message code="index-6"/></h3>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="gift-category">
-                    <h2 class="title text-center"><span>SELECT YOUR GIFT CATEGORY</span></h2>
+                    <h2 class="title text-center"><span><spring:message code="select-your-gift-category"/></span></h2>
                     <div class="gift-category-content">
                         <div class="row">
                             <div class="col-md-3 col-sm-3">
@@ -107,8 +104,8 @@
                                     <div class="gift-item-col-content">
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                            <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.perfume.id}"/>">${LIXI_CATEGORIES.perfume.english}</a></h2>
-                                            <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.perfume.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                            <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.perfume.id}"/>">${LIXI_CATEGORIES.perfume.getName(pageContext.response.locale)}</a></h2>
+                                            <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.perfume.id}"/>"><spring:message code="shop-now"/> <i class="fa fa-chevron-right"></i></a></div>
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +117,7 @@
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>
                                             <h2 class="gift-item-col-content-title"><a href="<c:url value="/topUp"/>">MOBILE CARDS</a></h2>
-                                            <div class="gift-item-col-content-link"><a href="<c:url value="/topUp"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                            <div class="gift-item-col-content-link"><a href="<c:url value="/topUp"/>"><spring:message code="shop-now"/> <i class="fa fa-chevron-right"></i></a></div>
                                         </div>
                                     </div>
                                 </div>
@@ -135,8 +132,8 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.cosmetics.id}"/>">${LIXI_CATEGORIES.cosmetics.english}</a></h2>
-                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.cosmetics.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.cosmetics.id}"/>">${LIXI_CATEGORIES.cosmetics.getName(pageContext.response.locale)}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.cosmetics.id}"/>"><spring:message code="shop-now"/> <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -149,8 +146,8 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.candies.id}"/>">${LIXI_CATEGORIES.candies.english}</a></h2>
-                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.candies.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.candies.id}"/>">${LIXI_CATEGORIES.candies.getName(pageContext.response.locale)}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.candies.id}"/>"><spring:message code="shop-now"/> <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -161,8 +158,8 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.flowers.id}"/>">${LIXI_CATEGORIES.flowers.english}</a></h2>
-                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.flowers.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.flowers.id}"/>">${LIXI_CATEGORIES.flowers.getName(pageContext.response.locale)}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.flowers.id}"/>"><spring:message code="shop-now"/> <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -177,8 +174,8 @@
                                             <div class="gift-item-col-content">
                                                 <div class="gift-item-col-content-text">
                                                     <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.jewelries.id}"/>">${LIXI_CATEGORIES.jewelries.english}</a></h2>
-                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.jewelries.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                                    <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.jewelries.id}"/>">${LIXI_CATEGORIES.jewelries.getName(pageContext.response.locale)}</a></h2>
+                                                    <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.jewelries.id}"/>"><spring:message code="shop-now"/> <i class="fa fa-chevron-right"></i></a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -195,8 +192,8 @@
                                     <div class="gift-item-col-content">
                                         <div class="gift-item-col-content-text">
                                             <span class="gift-arrow-item gift-arrow-item-top"></span>
-                                            <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.childrentoy.id}"/>">${LIXI_CATEGORIES.childrentoy.english}</a></h2>
-                                            <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.childrentoy.id}"/>">Shop now <i class="fa fa-chevron-right"></i></a></div>
+                                            <h2 class="gift-item-col-content-title"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.childrentoy.id}"/>">${LIXI_CATEGORIES.childrentoy.getName(pageContext.response.locale)}</a></h2>
+                                            <div class="gift-item-col-content-link"><a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.childrentoy.id}"/>"><spring:message code="shop-now"/> <i class="fa fa-chevron-right"></i></a></div>
                                         </div>
                                     </div>
                                 </div>
