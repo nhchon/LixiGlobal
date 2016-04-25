@@ -771,6 +771,11 @@ public class PaymentServiceImpl implements PaymentService{
         return handleTransactionResponse(response, lxInvoice);
     }
 
+    /**
+     * 
+     * @param lxInvoice
+     * @return 
+     */
     @Override
     public boolean capturePreviouslyAuthorizedAmount(LixiInvoice lxInvoice){
         

@@ -641,6 +641,10 @@ public class CheckOutController {
         }
         
         String countryCode = countryService.findByName(order.getCard().getBillingAddress().getCountry()).getCode();
+        String clientIpAddress = LiXiGlobalUtils.getClientIp(request);
+        
+        log.info("Connect CashRun from Client Ip: " + clientIpAddress);
+        
         Connection.Response doc = conn.data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
             .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
             .data("ORDER_ID", invoice.getId().toString())
@@ -662,7 +666,7 @@ public class CheckOutController {
             .data("SHIPPING_EMAIL", order.getSender().getEmail())
             .data("SHIPPING_PHONE", order.getSender().getPhone())
             .data("SHIPPING_COUNTRY", countryCode)
-            .data("IP_ADDRESS", LiXiGlobalUtils.getClientIp(request))
+            .data("IP_ADDRESS", clientIpAddress)
             .data("AMOUNT", LiXiUtils.getNumberFormat().format(invoice.getTotalAmount()))
             .data("BILLING_CURRENCY", "USD")
             .data("ORDER_DESC", orderDesc.toString())
@@ -682,7 +686,7 @@ public class CheckOutController {
             .data("PAYMENT_EXPIRYDATE", LiXiUtils.getCardExpiryDateMMYY(order.getCard().getExpMonth(), order.getCard().getExpYear()))
             .data("PAYMENT_3DSECURE", "0")
             .data("CUST_RATING", "0")
-            .data("TEST_FLAG", "1")
+            .data("TEST_FLAG", "0")
             .ignoreContentType(true)
             //"Mozilla"
             .userAgent(request.getHeader("User-Agent"))
