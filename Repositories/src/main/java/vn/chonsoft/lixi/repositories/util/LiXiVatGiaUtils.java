@@ -138,6 +138,7 @@ public class LiXiVatGiaUtils {
         p.setCategoryId(pj.getCategory_id());
         p.setCategoryName(pj.getCategory_name());
         p.setName(pj.getName());
+        p.setDescription(pj.getDescription());
         p.setPrice(pj.getPrice());
         p.setImageUrl(pj.getImage_url());
         p.setImageFullSize(pj.getImage_full_size());

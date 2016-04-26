@@ -41,6 +41,10 @@ public class VatgiaProduct implements Serializable {
     @Column(name = "name")
     private String name;
     
+    @Basic
+    @Column(name = "description")
+    private String description;
+    
     @Basic(optional = false)
     @Column(name = "price")
     private double price;
@@ -117,6 +121,14 @@ public class VatgiaProduct implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getPrice() {

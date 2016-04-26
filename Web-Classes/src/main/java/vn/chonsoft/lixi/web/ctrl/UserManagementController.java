@@ -327,6 +327,7 @@ public class UserManagementController {
                     
                     //update session
                     request.getSession().setAttribute(LiXiConstants.USER_LOGIN_EMAIL, form.getEmail());
+                    loginedUser.setEmail(form.getEmail());
                     
                     // send Email
                     MimeMessagePreparator preparator = new MimeMessagePreparator() {
