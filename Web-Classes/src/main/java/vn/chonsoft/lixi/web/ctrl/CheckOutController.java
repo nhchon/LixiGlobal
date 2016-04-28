@@ -549,9 +549,16 @@ public class CheckOutController {
             return new ModelAndView(new RedirectView("/gifts/choose", true, true));
         }
         
+        // check payment
+        BillingAddress bl = LiXiUtils.getBillingAddress(order);
+        if(bl == null){
+            // chua co thong tin thanh toan
+            return new ModelAndView(new RedirectView("/checkout/addCard", true, true));
+        }
+        
         // calculate fee
         LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
-                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+                this.countryService.findByName(bl.getCountry())));
 
         model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId(orderId));
         

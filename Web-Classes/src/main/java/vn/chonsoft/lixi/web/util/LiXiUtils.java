@@ -308,7 +308,10 @@ public class LiXiUtils {
             return order.getCard().getBillingAddress();
         }
         
-        return order.getBankAccount().getBillingAddress();
+        if(order.getBankAccount() != null) 
+            return order.getBankAccount().getBillingAddress();
+        
+        return null;
     }
     /**
      * 

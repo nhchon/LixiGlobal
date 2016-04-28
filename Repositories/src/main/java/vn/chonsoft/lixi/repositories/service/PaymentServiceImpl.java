@@ -487,17 +487,19 @@ public class PaymentServiceImpl implements PaymentService{
                 returned = LiXiGlobalConstants.OK;
             } else {
 
-                System.out.println("Failed to create payment profile:  " + response.getMessages().getResultCode());
-                for (MessagesType.Message m : response.getMessages().getMessage()) {
-                    returned += ("<div>" + m.getCode() + " : " + m.getText() + "</div>");
-                }
+                log.info("Failed to create payment profile:  " + response.getMessages().getResultCode());
+                //for (MessagesType.Message m : response.getMessages().getMessage()) {
+                //    returned += ("<div>" + m.getCode() + " : " + m.getText() + "</div>");
+                //}
+                returned = "err.unable-process-this-card";
             }
         } else {
 
             payResult.setResponseCode("-999");
             payResult.setResponseText("CAN NOT CREATE CreateCustomerPaymentProfileResponse");
             //
-            returned = "There was a problem with your card information";
+            //returned = "There was a problem with your card information";
+            returned = "err.unable-process-this-card";
         }
 
         // save

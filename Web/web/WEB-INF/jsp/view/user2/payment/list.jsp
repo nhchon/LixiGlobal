@@ -74,7 +74,7 @@
                                                 <img width="47" height="29" src="<c:url value="/resource/theme/assets/lixi-global/images/card-amex.jpg"/>"/> Amex
                                             </c:when>
                                         </c:choose>                                                    
-                                        <span> <spring:message code="mess.end-in"/> ${fn:substring(c.cardNumber, lengthCard-4, lengthCard)}</span>
+                                                <span> <spring:message code="mess.end-in"/>&nbsp; ${fn:substring(c.cardNumber, lengthCard-4, lengthCard)}</span>
 
                                     </div>
                                     <div class="col-md-4">

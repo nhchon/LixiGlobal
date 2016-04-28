@@ -630,7 +630,7 @@ public class UserManagementController {
             @Valid AddCardForm form, Errors errors, HttpServletRequest request) {
         
         /* for turn back */
-        //model.put("COUNTRIES", this.countryService.findAll());
+        model.put("COUNTRIES", this.countryService.findAll());
         
         if (errors.hasErrors()) {
             return new ModelAndView("user2/payment/add-a-card");
