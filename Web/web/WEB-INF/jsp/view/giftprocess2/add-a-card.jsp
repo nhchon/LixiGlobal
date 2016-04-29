@@ -33,7 +33,7 @@
                     <c:if test="${(not empty authorizeError) and (authorizeError ne 'OK')}">
                     <div class="alert alert-warning alert-dismissible bg-white" role="alert">
                         <div class="alert-message">
-                            ${authorizeError}
+                            <spring:message code="${authorizeError}" text="${authorizeError}"/>
                         </div>
                     </div>
                     </c:if>

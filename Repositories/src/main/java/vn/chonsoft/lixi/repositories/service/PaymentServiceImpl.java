@@ -606,16 +606,18 @@ public class PaymentServiceImpl implements PaymentService{
             } else {
 
                 System.out.println("Failed to create customer profile:  " + response.getMessages().getResultCode());
-                for (MessagesType.Message m : response.getMessages().getMessage()) {
-                    returned += ("<div>" + m.getCode() + " : " + m.getText() + "</div>");
-                }
+                //for (MessagesType.Message m : response.getMessages().getMessage()) {
+                    //returned += ("<div>" + m.getCode() + " : " + m.getText() + "</div>");
+                //}
+                returned = "err.unable-process-this-card";
             }
         } else {
 
             cus.setResponseCode("-999");
             cus.setResponseText("CAN NOT CREATE CreateCustomerProfileResponse");
             //
-            returned = "There was a problem with your card information";
+            //returned = "There was a problem with your card information";
+            returned = "err.unable-process-this-card";
         }
 
         // save

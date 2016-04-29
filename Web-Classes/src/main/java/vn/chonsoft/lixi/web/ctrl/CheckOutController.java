@@ -548,17 +548,23 @@ public class CheckOutController {
             // order not exist, go to Choose recipient page
             return new ModelAndView(new RedirectView("/gifts/choose", true, true));
         }
-        
-        // check payment
-        BillingAddress bl = LiXiUtils.getBillingAddress(order);
-        if(bl == null){
-            // chua co thong tin thanh toan
+        // check card is exist
+        if((order.getCard() == null) || (this.ucService.findById(order.getCard().getId())==null)){
+            // chua co thong tin thanh toan, hoac card da bi removed
             return new ModelAndView(new RedirectView("/checkout/addCard", true, true));
         }
         
+        /* no need anymore ? */
+        // check payment
+        //BillingAddress bl = LiXiUtils.getBillingAddress(order);
+        //if(bl == null){
+            // chua co thong tin thanh toan
+            //return new ModelAndView(new RedirectView("/checkout/addCard", true, true));
+        //}
+        
         // calculate fee
         LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
-                this.countryService.findByName(bl.getCountry())));
+                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
 
         model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId(orderId));
         
