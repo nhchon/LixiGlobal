@@ -57,7 +57,7 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${c.name eq 'VTC_AUTO'}">
-                                                <select class="form-control">
+                                                <select class="form-control" name="value">
                                                     <option value="YES" <c:if test="${c.value eq 'YES'}">selected=""</c:if>>YES</option>
                                                     <option value="NO" <c:if test="${c.value eq 'NO'}">selected=""</c:if>>NO</option>
                                                 </select>

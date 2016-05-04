@@ -610,6 +610,12 @@ public class CheckOutController {
             orderPrice.append(LiXiUtils.getNumberFormat().format(gift.getUsdPrice())).append(";");
         }
         
+        for(TopUpMobilePhone t : order.getTopUpMobilePhones()){
+            orderDesc.append("Topup mobile number ").append(t.getPhone()).append(";");
+            orderQuantity.append("1").append(";");
+            orderPrice.append(LiXiUtils.getNumberFormat().format(t.getAmountUsd())).append(";");
+        }
+        
         /**
          * RECEIVER_DETAILS[]	Required
          * https://cashshieldasia.cashrun.com/merchant/iguide/guide_main.php

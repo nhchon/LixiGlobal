@@ -494,7 +494,7 @@ public class LixiOrdersController {
         
         switch(back){
             case "info":
-                return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.PROCESSED.getValue(), true, true));
+                return new ModelAndView(new RedirectView("/Administration/Orders/newOrders?oStatus=" + EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue(), true, true));
             case "report":
                 return new ModelAndView(new RedirectView("/Administration/Orders/report", true, true));
             default:
