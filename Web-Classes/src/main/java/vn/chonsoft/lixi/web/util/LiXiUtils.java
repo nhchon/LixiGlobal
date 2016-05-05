@@ -128,8 +128,18 @@ public class LiXiUtils {
         // login date
         l.setLoginedDate(Calendar.getInstance().getTime());
         
-        configs.forEach(c -> {l.addConfig(c.getName(), c.getValue());});
+        setConfigsLoginedUser(l, configs);
         
+    }
+    
+    /**
+     * 
+     * @param l
+     * @param configs 
+     */
+    public static void setConfigsLoginedUser(LoginedUser l, List<LixiConfig> configs){
+    
+        configs.forEach(c -> {l.addConfig(c.getName(), c.getValue());});
     }
     
     /**

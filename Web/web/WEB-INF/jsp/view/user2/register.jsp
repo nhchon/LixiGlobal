@@ -92,6 +92,8 @@
                                     <spring:message code="message.email_place_holder" var="emailMessage"/>
                                     <spring:message code="signup.retype_email" var="retypeEmailMessage"/>
                                     <spring:message code="message.password_format" var="passwordMessage"/>
+                                    <spring:message code="mess.re-your-pass" var="reTypePass"/>
+                                    <spring:message code="message.phone" var="phoneMessage"/>
                                     <c:url value="/user/signUp" var="signUpFormUrl"/>
                                     <form:form class="form-horizontal" action="${signUpFormUrl}" modelAttribute="userSignUpForm" cssClass="register-form">
                                         <div class="form-group">
@@ -115,11 +117,11 @@
                                             <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input type="password" class="form-control" path="confPassword" placeholder="Please retype your password"/>
+                                            <form:input type="password" class="form-control" path="confPassword" placeholder="${reTypePass}"/>
                                             <div class="has-error"><form:errors path="confPassword" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input class="form-control bfh-phone" data-format="+1 (ddd) ddd-dddd" path="phone" placeholder="Phone"/>
+                                            <form:input class="form-control bfh-phone" data-format="+1 (ddd) ddd-dddd" path="phone" placeholder="${phoneMessage}"/>
                                             <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="checkbox">

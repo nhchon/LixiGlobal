@@ -266,12 +266,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                 this.topUpService.save(topUp);
                 
                 /* check if order just have this topup */
-                if(topUp.getOrder().getGifts() == null || topUp.getOrder().getGifts().isEmpty()){
-                
-                    /* update order complete */
-                    //this.orderService.updateStatus(EnumLixiOrderStatus.COMPLETED.getValue(), topUp.getOrder().getId());
-                    
-                }
+                // what to do ??
                 
                 // send email
                 MimeMessagePreparator preparator = new MimeMessagePreparator() {

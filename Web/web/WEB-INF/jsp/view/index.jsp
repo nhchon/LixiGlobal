@@ -32,7 +32,7 @@
                 <div class="section-gift-top">
                     <h2 class="text-center "><spring:message code="index-1"/><br/>
                         <strong><spring:message code="index-2"/></strong><br/> 
-                        <spring:message code="index-3"/> <strong>USD 1.00<sup>*</sup></strong></h2>
+                        <spring:message code="index-3"/>&nbsp;<strong>USD 1.00<sup>*</sup></strong></h2>
                     <div class="change-curency-box">
                         <div class="btn-group">
                             <button class="btn change-curency-box-des" type="button">

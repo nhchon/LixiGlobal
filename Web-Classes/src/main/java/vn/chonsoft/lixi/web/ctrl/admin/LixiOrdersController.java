@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.web.ctrl.admin;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -241,8 +242,11 @@ public class LixiOrdersController {
         
         Page<LixiOrder> pOrder = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), oStatus, page);
         
-        List<LixiOrder> orders = pOrder.getContent();
-        if(orders != null){
+        List<LixiOrder> orders = null;
+        if(pOrder.getContent() != null){
+            // new list
+            orders = new ArrayList<>(pOrder.getContent());
+            
             Iterator<LixiOrder> iterator = orders.iterator();
             
             while(iterator.hasNext()){
@@ -315,7 +319,7 @@ public class LixiOrdersController {
     @RequestMapping(value = "sendMoneyInfo", method = RequestMethod.GET)
     public ModelAndView sendMoneyInfo(Map<String, Object> model){
         
-        List<LixiOrder> orders = this.lxOrderService.findByLixiSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
+        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
         
         if(orders != null){
             Iterator<LixiOrder> iterator = orders.iterator();

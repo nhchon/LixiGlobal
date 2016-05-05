@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.text.SimpleDateFormat;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
@@ -245,6 +247,42 @@ public class UserManagementController {
                 // currentPassword is OK
                 // update password
                 this.userService.updatePassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()), u.getId());
+                
+                // send Email
+                MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+                    @SuppressWarnings({ "rawtypes", "unchecked" })
+                    @Override
+                    public void prepare(MimeMessage mimeMessage) throws Exception {
+
+                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                        message.setTo(u.getEmail());
+                        message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                        message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                        message.setFrom("support@lixi.global");
+                        message.setSubject("LiXi.Global - Your password has been changed");
+                        message.setSentDate(Calendar.getInstance().getTime());
+
+                        Map model = new HashMap();	             
+                        model.put("user", u);
+                        model.put("time", (new SimpleDateFormat("MM/dd/yyy HH:mm")).format(Calendar.getInstance().getTime()));
+                        // built the path
+                        String lixiGlobalLink = "https://www.lixi.global/user/signIn";//
+                        try {
+                            // this throws nullexception sometime, don't know why
+                            lixiGlobalLink =LiXiUtils.remove8080(ServletUriComponentsBuilder.fromRequest(request).path("/user/signIn").build().toUriString());
+                        } catch (Exception e) {}
+                        model.put("lixiGlobalLink", lixiGlobalLink);
+                        
+                        String text = VelocityEngineUtils.mergeTemplateIntoString(
+                           velocityEngine, "emails/change-password.vm", "UTF-8", model);
+                        message.setText(text, true);
+                      }
+                };        
+
+                // send oldEmail
+                taskScheduler.execute(() -> mailSender.send(preparator));
+                    
                 
                 // return your account page
                 model.put("editSuccess", 1);

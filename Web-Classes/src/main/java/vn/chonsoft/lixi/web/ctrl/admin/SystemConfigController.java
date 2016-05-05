@@ -49,6 +49,8 @@ import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
+import static vn.chonsoft.lixi.web.util.LiXiUtils.setConfigsLoginedUser;
 
 /**
  *
@@ -60,6 +62,10 @@ import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 public class SystemConfigController {
 
     private static final Logger log = LogManager.getLogger(SystemConfigController.class);
+
+    /* session bean - Login user */
+    @Autowired
+    private LoginedUser loginedUser;
 
     @Inject
     private CurrencyTypeService currencyService;
@@ -78,9 +84,6 @@ public class SystemConfigController {
     
     @Inject
     private LixiCategoryService lxcService;
-    
-    @Inject
-    private SupportLocaleService slService;
     
     @Autowired
     private LixiConfigService configService;
@@ -141,6 +144,9 @@ public class SystemConfigController {
         if(id>0) config.setId(id);
         
         this.configService.save(config);
+        
+        // reload config
+        LiXiUtils.setConfigsLoginedUser(loginedUser, this.configService.findAll());
         
         RedirectView r = new RedirectView("/Administration/SystemConfig/configs", true, true);
         r.setExposeModelAttributes(false);
