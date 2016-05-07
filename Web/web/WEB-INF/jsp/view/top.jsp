@@ -100,8 +100,9 @@
                 <ul class="nav navbar-nav navbar-right">
 
                     <li class="nav-search">
-                        <form class="search-form" method="post">
-                            <input class="form-control" name="keyword" placeholder="Keyword..."/>
+                        <c:url value="/Search/search" var="searchUrl"/>
+                        <form class="search-form" method="get" action="${searchUrl}">
+                            <input class="form-control" name="search" placeholder="Keyword..."/>
                             <button type="submit"><i class="fa fa-search"></i></button>
                         </form>
                     </li>

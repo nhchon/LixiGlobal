@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiInvoice;
-import vn.chonsoft.lixi.model.LixiMonitor;
 import vn.chonsoft.lixi.model.LixiOrder;
-import vn.chonsoft.lixi.model.UserCard;
 
 /**
  *
@@ -36,9 +34,6 @@ public class TransactionMonitorServiceImpl implements TransactionMonitorService 
     private static final int OVER_100_USD = 1;
     private static final int NAME_ON_CARD_WRONG = 2;
     private static final int OVER_MAX_NUM_ORDER = 3;
-
-    @Autowired
-    private LixiMonitorService monitor;
 
     @Autowired
     private LixiInvoiceService invService;

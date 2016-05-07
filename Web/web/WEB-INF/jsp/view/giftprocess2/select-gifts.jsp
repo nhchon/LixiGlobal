@@ -180,7 +180,7 @@
                             <button class="btn btn-primary" onclick="createNewRecipient()"><spring:message code="create-new-rec"/></button>
                         </div>
                     </div>
-                    <h2 id="giftValueFor" class="title" style="text-transform: none;<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>"><spring:message code="gift-value-for"/> <span id="recFirstName">${SELECTED_RECIPIENT_FIRST_NAME}</span></h2>
+                    <h2 id="giftValueFor" class="title" style="text-transform: none;<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>"><spring:message code="gift-value-for"/>&nbsp;<span id="recFirstName">${SELECTED_RECIPIENT_FIRST_NAME}</span></h2>
                     <p>( <spring:message code="we-select-at-your-range"/> )</p>
                     <c:set value="150" var="maximumValue"/>
                     <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * maximumValue}" pattern="###,###.##" var="maximumValueVnd"/>

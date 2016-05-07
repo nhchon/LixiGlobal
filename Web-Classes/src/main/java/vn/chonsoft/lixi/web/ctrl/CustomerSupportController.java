@@ -6,7 +6,6 @@ package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import javax.validation.Valid;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import vn.chonsoft.lixi.model.form.support.CustomerProblemForm;
 import vn.chonsoft.lixi.EnumCustomerProblemStatus;

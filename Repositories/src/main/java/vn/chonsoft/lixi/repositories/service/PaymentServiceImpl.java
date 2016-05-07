@@ -231,7 +231,6 @@ public class PaymentServiceImpl implements PaymentService{
                     
                     LixiOrder order = this.orderService.findById(invoice.getOrder().getId());
                     order.setLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue());
-                    order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
                     /* update order to processed */
                     this.orderService.save(order);
                 }

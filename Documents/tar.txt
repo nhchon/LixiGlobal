@@ -1,3 +1,5 @@
 tar -cvf LixiGlobal-2015-08-01.tar /home/chonnh/Projects/YuricProjects/LixiGlobal --exclude .git --exclude "*.log"
 
+
+
 tar -cvf LixiGlobal-2015-09-24.tar /home/chonnh/Projects/YuricProjects/LixiGlobal

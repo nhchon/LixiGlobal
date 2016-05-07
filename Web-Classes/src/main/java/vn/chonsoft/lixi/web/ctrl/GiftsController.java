@@ -55,9 +55,9 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
  */
 @WebController
 @RequestMapping("gifts")
-public class GiftsController2 {
+public class GiftsController {
     
-    private static final Logger log = LogManager.getLogger(GiftsController2.class);
+    private static final Logger log = LogManager.getLogger(GiftsController.class);
 
     /* session bean - Login user */
     @Autowired

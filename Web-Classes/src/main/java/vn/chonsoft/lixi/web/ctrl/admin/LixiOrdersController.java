@@ -180,8 +180,11 @@ public class LixiOrdersController {
         model.put("searchForm", form);
         model.put("results", pOrder);
         
-        List<LixiOrder> orders = pOrder.getContent();
-        if(orders != null){
+        List<LixiOrder> orders = null;
+        if(pOrder.getContent() != null){
+            // new list
+            orders = new ArrayList<>(pOrder.getContent());
+            
             Iterator<LixiOrder> iterator = orders.iterator();
             
             while(iterator.hasNext()){

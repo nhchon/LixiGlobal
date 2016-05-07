@@ -19,9 +19,9 @@
             <c:set var="imageFullSize" value="${p.imageUrl}"/>
             <c:if test="${not empty p.imageFullSize}"><c:set var="imageFullSize" value="${p.imageFullSize}"/></c:if>
             <div title="${p.name}"  class="gift-product-thumb" zoomWindowPosition="${zoomPosition}" src="${p.imageUrl}" data-zoom-image="${imageFullSize}" style="background: url(${p.imageUrl}) no-repeat scroll center center transparent;"> </div>
-            <h4 class="title" title="${p.name}">${p.name}</h4>
+            <h4 class="title" title="${p.name}" style="font-size: 0.8em;">${p.name}</h4>
             <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
-            <h4 class="title price">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
+            <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
             <div class="gift-number-box">
                 <div class="input-group text-center">
                     <span class="input-group-btn">
