@@ -40,12 +40,12 @@ public class SearchController {
     /**
      * 
      * @param model
-     * @param search
+     * @param keyword
      * @param request
      * @return 
      */
-    @RequestMapping(value = "search", method = RequestMethod.GET)
-    public ModelAndView search(Map<String, Object> model, @RequestParam String search, HttpServletRequest request) {
+    @RequestMapping(value = "search", params = "search=true", method = RequestMethod.GET)
+    public ModelAndView search(Map<String, Object> model, @RequestParam String keyword, HttpServletRequest request) {
         
         return new ModelAndView("search/search");
         

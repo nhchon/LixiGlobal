@@ -505,7 +505,7 @@
                                                 <c:if test="${not empty LIXI_ORDER.card}">
                                                     <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.card.cardNumber)}"/>
                                                 <div>
-                                                    <strong>${LIXI_ORDER.card.cardTypeName}:</strong> <span><spring:message code="ending-with"/> ${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}</span> 
+                                                    <strong>${LIXI_ORDER.card.cardTypeName}:</strong> <span><spring:message code="ending-with"/>&nbsp;${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}</span> 
                                                 </div>
                                                 <div>
                                                     <strong><spring:message code="mess.order"/> #:</strong><span>${LIXI_ORDER_ID}</span>
@@ -517,7 +517,7 @@
                                             <c:if test="${not empty LIXI_ORDER.bankAccount}">
                                                 <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.bankAccount.checkingAccount)}"/>
                                                 <div>
-                                                    <b>${LIXI_ORDER.bankAccount.name}</b> ending in ${fn:substring(LIXI_ORDER.bankAccount.checkingAccount, lengthCard-4, lengthCard)}
+                                                    <b>${LIXI_ORDER.bankAccount.name}</b>&nbsp;ending in ${fn:substring(LIXI_ORDER.bankAccount.checkingAccount, lengthCard-4, lengthCard)}
                                                 </div>
                                                 <br/>
                                                 <div>

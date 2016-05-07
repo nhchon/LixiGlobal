@@ -102,7 +102,8 @@
                     <li class="nav-search">
                         <c:url value="/Search/search" var="searchUrl"/>
                         <form class="search-form" method="get" action="${searchUrl}">
-                            <input class="form-control" name="search" placeholder="Keyword..."/>
+                            <input class="form-control" name="keyword" placeholder="Keyword..."/>
+                            <input type="hidden" name="search" value="true"/>
                             <button type="submit"><i class="fa fa-search"></i></button>
                         </form>
                     </li>
