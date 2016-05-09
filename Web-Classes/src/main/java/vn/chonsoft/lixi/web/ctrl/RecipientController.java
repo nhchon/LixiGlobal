@@ -5,18 +5,26 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Inject;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
@@ -42,9 +50,18 @@ public class RecipientController {
     @Autowired
     private RecipientService reciService;
 
-    @Inject
+    @Autowired
     private UserService userService;
 
+    @Autowired
+    private ThreadPoolTaskScheduler taskScheduler;
+    
+    @Autowired
+    private VelocityEngine velocityEngine;
+    
+    @Autowired
+    private JavaMailSender mailSender;
+    
     /**
      *
      * @param model
@@ -126,6 +143,10 @@ public class RecipientController {
             request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_ID, rec.getId());
             request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, form.getFirstName() + " " + StringUtils.defaultIfEmpty(form.getMiddleName(), "") + " " + form.getLastName());
 
+            //email
+            emailNewRecipient(u, rec);
+            
+            // return
             model.put("error", 0);
             model.put("recId", rec.getId());
             
@@ -139,5 +160,37 @@ public class RecipientController {
 
     }
 
-    
+    /**
+     * 
+     * @param u
+     * @param r 
+     */
+    private void emailNewRecipient(User u, Recipient r){
+        // send Email
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @Override
+            public void prepare(MimeMessage mimeMessage) throws Exception {
+
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                message.setTo(u.getEmail());
+                message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                message.setFrom("support@lixi.global");
+                message.setSubject("LiXi.Global - Receiver Info Alert");
+                message.setSentDate(Calendar.getInstance().getTime());
+
+                Map model = new HashMap();	             
+                model.put("user", u);
+                model.put("r", r);
+
+                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                   velocityEngine, "emails/new-receiver.vm", "UTF-8", model);
+                message.setText(text, true);
+              }
+        };        
+
+        // send oldEmail
+        taskScheduler.execute(() -> mailSender.send(preparator));
+    }
 }

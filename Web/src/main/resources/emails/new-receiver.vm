@@ -1,0 +1,23 @@
+<html>
+    <body>
+        <h5>Hi ${user.firstName} !</h5>
+        
+        <p>Thanks for visiting LiXi.Global!</p>
+        
+        <p>You just created/updated receiver information</p>
+        <p>
+            Name: ${r.fullName}<br/>
+            Email: ${r.email}<br/>
+            Phone: ${r.dialCode} ${r.phone}
+        </p>
+
+        <p><b>If NOT YOU, Please go to <a href="${lixiGlobalLink}" target="_blank">Lixi.Global</a> to get reset password link !</b></p>
+
+        <p>Thanks again for going with us.</p>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>
