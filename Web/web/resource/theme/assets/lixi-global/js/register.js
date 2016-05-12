@@ -6,6 +6,14 @@ jQuery.validator.addMethod("lixiPasswordFormat", function(value, element){
     };
 }, PASS_MESSAGE); 
 
+jQuery.validator.addMethod("lixiSenderPhoneFormat", function(value, element){
+    if (isValidPhone13(value)) {
+        return true;
+    } else {
+        return false;
+    };
+}, PHONE_REQUIRED); 
+
 LixiGlobal.RegisterPage = {
     init: function () {
         if ($('#btnShowRegister').length > 0) {
@@ -81,6 +89,8 @@ LixiGlobal.RegisterPage = {
                 },
                 phone:{
                     required: true,
+                    lixiSenderPhoneFormat:true,
+                    minlength: 13
                 },
                 email: {
                     required: true,

@@ -145,6 +145,18 @@ function isValidPassword(password){
     return (isAtLeast8 && hasUppercase && hasNumber && !normalChars);;
 }
 
+function isValidPhone13(phone13){
+    
+    if(phone13 === '')
+        return false;
+
+    var isAtLeast13 = phone13.length >= 13;
+    
+    var startWith = phone13.trim().startsWith('(0');
+    return (isAtLeast13 && !startWith);;
+}
+
+
 function loadTotalCurrentOrder() {
 
     $.ajax({

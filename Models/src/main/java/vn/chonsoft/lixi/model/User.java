@@ -41,6 +41,7 @@ public class User implements Serializable {
     private String lastName;
     private String email;
     private String password;
+    private String dialCode;
     private String phone;
     private boolean accountNonExpired;
     private boolean accountNonLocked;
@@ -176,6 +177,17 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    @Basic
+    @Column(name = "dial_code")
+    public String getDialCode() {
+        return dialCode;
+    }
+
+    public void setDialCode(String dialCode) {
+        this.dialCode = dialCode;
+    }
+
+    
     @Basic
     @Column(name = "phone")
     public String getPhone() {

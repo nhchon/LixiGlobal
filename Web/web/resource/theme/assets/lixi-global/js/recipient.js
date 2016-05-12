@@ -40,7 +40,7 @@ function checkRecipientFormOnModal(){
         return false;
     }
     // phone
-    if($.trim($('#phone').val()) === ''){
+    if($.trim($('#phone').val()) === '' || $('#phone').val().match('^0')){
         
         alert(PHONE_ERROR);
         $('#phone').focus();

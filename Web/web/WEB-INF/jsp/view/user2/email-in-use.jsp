@@ -36,11 +36,11 @@
                             </div>
                                 <h4><spring:message code="mess.return-cus"/>?</h4>
                                 <a href="<c:url value="/user/signIn"/>"><spring:message code="message.sign_in"/></a><br/>
-                                <a href="<c:url value="/user/passwordAssistance2"/>"><spring:message code="message.forgot_your_passwo"/>?</a>
+                                <a href="<c:url value="/user/passwordAssistance2"/>"><spring:message code="message.forgot_your_password"/>?</a>
 
                                 <h4><spring:message code="mess.new-to-lixi"/>?</h4>
-                                <div><spring:message code="mess.new-account-with"/> <a href="<c:url value="/user/signUp"/>"><spring:message code="mess.a-diff-email"/></a></div>
-                                <div><spring:message code="mess.new-account-with"/> <a href="javascript:postInvisibleForm('<c:url value="/user/verifyThisEmail"/>', {inUseEmail:'${inUseEmail}'});"><spring:message code="mess.this-email"/></a></div>
+                                <div><spring:message code="mess.new-account-with"/> &nbsp;<a href="<c:url value="/user/signUp"/>"><spring:message code="mess.a-diff-email"/></a></div>
+                                <div><spring:message code="mess.new-account-with"/> &nbsp;<a href="javascript:postInvisibleForm('<c:url value="/user/verifyThisEmail"/>', {inUseEmail:'${inUseEmail}'});"><spring:message code="mess.this-email"/></a></div>
 
                                 <h4><spring:message code="mess.still-need-help"/>?</h4>
                                 <a href="<c:url value="/support/post?method=Email"/>"><spring:message code="mess.c-c-s"/></a>

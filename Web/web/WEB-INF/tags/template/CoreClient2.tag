@@ -85,7 +85,7 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.js"><\/script>');</script>
 
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap.min.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-formhelpers.min.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.maskedinput.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-dialog.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.validate.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-slider.js"/>"></script>

@@ -42,6 +42,8 @@ public class UserSignUpForm{
     @Password(message = "{message.password_format}")
     private String confPassword;
     
+    private String dialCode;
+    
     @NotNull(message ="validate.not_null")
     private String phone;
 
@@ -102,6 +104,14 @@ public class UserSignUpForm{
 
     public void setConfPassword(String confPassword) {
         this.confPassword = confPassword;
+    }
+
+    public String getDialCode() {
+        return dialCode;
+    }
+
+    public void setDialCode(String dialCode) {
+        this.dialCode = dialCode;
     }
 
     public String getPhone() {

@@ -14,6 +14,7 @@
             
             jQuery(document).ready(function () {
                 LixiGlobal.RegisterPage.init();
+                $("#phone").mask("(999) 999-999?9");
             })
         </script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/register.js"/>"></script>
@@ -93,7 +94,7 @@
                                     <spring:message code="signup.retype_email" var="retypeEmailMessage"/>
                                     <spring:message code="message.password_format" var="passwordMessage"/>
                                     <spring:message code="mess.re-your-pass" var="reTypePass"/>
-                                    <spring:message code="message.phone" var="phoneMessage"/>
+                                    <spring:message code="phone-example" var="phoneMessage"/>
                                     <c:url value="/user/signUp" var="signUpFormUrl"/>
                                     <form:form class="form-horizontal" action="${signUpFormUrl}" modelAttribute="userSignUpForm" cssClass="register-form">
                                         <div class="form-group">
@@ -121,8 +122,20 @@
                                             <div class="has-error"><form:errors path="confPassword" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input class="form-control bfh-phone" data-format="+1 (ddd) ddd-dddd" path="phone" placeholder="${phoneMessage}"/>
-                                            <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
+                                            <div class="row">
+                                                <div class="col-md-2" style="padding-right: 0px;">
+                                                    <form:select class="form-control" path="dialCode">
+                                                        <option value="+1" <c:if test="${userSignUpForm.dialCode eq '+1'}">selected=""</c:if>>+1</option>
+                                                        <option value="+84" <c:if test="${userSignUpForm.dialCode eq '+84'}">selected=""</c:if>>+84</option>
+                                                    </form:select>
+                                                    </div>
+                                                <div class="col-md-10" style="padding-left: 0px;">
+                                                    <form:input path="phone" class="form-control" placeholder="${phoneMessage}"/>
+                                                    <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
+                                                </div>
+                                            </div>
+                                            <%--<form:input class="form-control bfh-phone" data-format="+1 (ddd) ddd-dddd" path="phone" placeholder="${phoneMessage}"/>--%>
+                                            <%--<div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>--%>
                                         </div>
                                         <div class="checkbox">
                                             <c:url value="/support/terms" var="termsUrl"/>

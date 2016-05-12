@@ -92,6 +92,7 @@
                 $('#editRecipientContent').html(data);
                 $('#editRecipientModal').modal({show: true});
 
+                $("#chooseRecipientForm #phone").mask("999999999?9");
                 // handler submit form
                 //callback handler for form submit
                 $("#chooseRecipientForm").submit(function (e)

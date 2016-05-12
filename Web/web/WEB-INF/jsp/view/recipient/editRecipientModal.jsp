@@ -71,11 +71,9 @@
                         <span class="help-block errors"><form:errors path="phone" /></span>
                     </div>
                 </div>
-                <%--
             <div class="row">
-                <div class="col-md-12"><span class="help-block">(Only mobile phone number. No first 0 i.e. 967 00 78 69, 169 262 31 88)</span></div>
+                <div class="col-md-12"><span class="help-block">(<spring:message code="phone-example"/>)</span></div>
             </div>
-                --%>
             </div>
         </div>
         <div class="form-group">
