@@ -55,27 +55,38 @@
                                     </p>
                                 </div>
                             </div>
-                            <form method="post" class="contact-form">
+                            <c:if test="${validationErrors != null}"><div class="msg msg-error">
+                            <ul>
+                                <c:forEach items="${validationErrors}" var="error">
+                                    <li><c:out value="${error.message}" /></li>
+                                    </c:forEach>
+                            </ul>
+                            </div></c:if>
+                            <form:form method="post" class="contact-form" modelAttribute="lixiContactForm">
                                 <div class="form-group">
                                     <label>Name</label>
-                                    <input name="name" placeholder="Name" class="form-control"/>
+                                    <form:input path="name" placeholder="Name" class="form-control"/>
+                                    <div class="has-error"><form:errors path="name" cssClass="help-block" element="div"/></div>
                                 </div>
                                 <div class="form-group">
                                     <label>Mobile phone</label>
-                                    <input name="mobilePhone" placeholder="Mobile phone" class="form-control"/>
+                                    <form:input path="phone" placeholder="Mobile phone" class="form-control"/>
+                                    <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
                                 </div>
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input name="email" placeholder="Emailemail" class="form-control"/>
+                                    <form:input path="email" placeholder="Email" class="form-control"/>
+                                    <div class="has-error"><form:errors path="email" cssClass="help-block" element="div"/></div>
                                 </div>
                                 <div class="form-group">
                                     <label>Message</label>
-                                    <textarea name="message" placeholder="Message" class="form-control"></textarea>
+                                    <form:textarea path="message" placeholder="Message" class="form-control"></form:textarea>
+                                    <div class="has-error"><form:errors path="message" cssClass="help-block" element="div"/></div>
                                 </div>
                                 <div class="button-control">
-                                    <button class="btn btn-primary text-uppercase">SEND</button>
+                                    <button type="submit" class="btn btn-primary text-uppercase">SEND</button>
                                 </div>
-                            </form>
+                            </form:form>
                         </div>
                     </div>
                 </div>

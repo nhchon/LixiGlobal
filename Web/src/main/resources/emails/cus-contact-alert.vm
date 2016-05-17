@@ -1,0 +1,19 @@
+<html>
+    <body>
+        <h5>Hi Yuric !</h5>
+        
+        <p>We have new contact information from customers</p>
+        
+        <p>
+            Name: ${c.name}<br/>
+            Email: ${c.email}<br/>
+            Phone: ${c.phone}<br/>
+            Message: ${c.message}
+        </p>
+
+        <div>
+            Thank you<br/>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>
