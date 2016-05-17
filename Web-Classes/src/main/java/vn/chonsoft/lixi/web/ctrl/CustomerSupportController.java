@@ -240,8 +240,8 @@ public class CustomerSupportController {
             public void prepare(MimeMessage mimeMessage) throws Exception {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                message.setTo(LiXiGlobalConstants.CHONNH_GMAIL);
-                //message.setCc(LiXiGlobalConstants.);
+                message.setTo(LiXiGlobalConstants.YHANNART_GMAIL);
+                message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
                 message.setSubject("LiXi.Global - Customer Contact Alert");
                 message.setSentDate(Calendar.getInstance().getTime());

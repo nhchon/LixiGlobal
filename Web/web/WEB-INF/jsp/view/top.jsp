@@ -85,6 +85,9 @@
                                 <a class="nav-sub-link no-boder-top" href="<c:url value="/support/refundPolicy"/>"><spring:message code="returns-refund"/></a>
                             </li>
                             <li>
+                                <a class="nav-sub-link" href="<c:url value="/support/contact"/>"><spring:message code="contact-us"/></a>
+                            </li>    
+                            <li>
                                 <a class="nav-sub-link" href="#"><spring:message code="cus-ser"/></a>
                                 <ul class="nav-level-2">
                                     <li><a href="<c:url value="/support/post?method=Email"/>"><spring:message code="message.email"/></a></li>

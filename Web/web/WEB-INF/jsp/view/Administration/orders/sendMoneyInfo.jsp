@@ -180,7 +180,7 @@
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: right;">
-                                                <a href="javascript:sent(${m.key.id});">Send</a> | <a href="javascript:cancel(${m.key.id});">Cancel</a>
+                                                <%--<a href="javascript:sent(${m.key.id});">Send</a> | --%><a href="javascript:cancel(${m.key.id});">Cancel</a>
                                             </td>
                                         </tr>
                                     </c:forEach>

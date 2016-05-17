@@ -44,7 +44,7 @@ LixiGlobal.Browser = {
         return s.reverse().join("/");
     },
     getSiteUrl: function () {
-        return this.getHost() + this.getPath();
+        return this.getHost();// + this.getPath();
     }
 };
 var siteUrl = LixiGlobal.Browser.getSiteUrl();

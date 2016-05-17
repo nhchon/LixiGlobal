@@ -41,7 +41,7 @@
                     <div class="col-md-5">
                         <div class="form-contact-wrapper">
                             <div style="padding-bottom:20px;">
-                                <h4 class="title text-uppercase">Contact infomation</h4>
+                                <h4 class="title text-uppercase"><spring:message code="cont-info"/></h4>
                                 <p>
                                     Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
                                 </p>
@@ -64,22 +64,22 @@
                             </div></c:if>
                             <form:form method="post" class="contact-form" modelAttribute="lixiContactForm">
                                 <div class="form-group">
-                                    <label>Name</label>
+                                    <label><spring:message code="message.name"/></label>
                                     <form:input path="name" placeholder="Name" class="form-control"/>
                                     <div class="has-error"><form:errors path="name" cssClass="help-block" element="div"/></div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Mobile phone</label>
+                                    <label><spring:message code="message.mobile_number"/></label>
                                     <form:input path="phone" placeholder="Mobile phone" class="form-control"/>
                                     <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Email</label>
+                                    <label><spring:message code="message.email"/></label>
                                     <form:input path="email" placeholder="Email" class="form-control"/>
                                     <div class="has-error"><form:errors path="email" cssClass="help-block" element="div"/></div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Message</label>
+                                    <label><spring:message code="mess.mess"/></label>
                                     <form:textarea path="message" placeholder="Message" class="form-control"></form:textarea>
                                     <div class="has-error"><form:errors path="message" cssClass="help-block" element="div"/></div>
                                 </div>

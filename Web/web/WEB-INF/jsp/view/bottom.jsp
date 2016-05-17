@@ -70,6 +70,7 @@
                                 <ul>
                                     <li><a href="<c:url value="/support/terms"/>">Terms of Use</a></li>
                                     <li><a href="<c:url value="/support/privacy"/>">Privacy Policy</a></li>
+                                    <li><a href="<c:url value="/support/contact"/>">Contact us</a></li>
                                     <li><span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=25ZSP0L5Lsd3uLmBTIB8PqsJWEv03qyZ8sJtMVacTWHVe1p60GLbLpEo2G4o"></script></span></li>
                                 </ul>
                             </div>
