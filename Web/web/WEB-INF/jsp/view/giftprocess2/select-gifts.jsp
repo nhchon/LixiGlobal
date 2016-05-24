@@ -16,6 +16,7 @@
             var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
             var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
             var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
+            var CONF_EMAIL_ERROR = '<spring:message code="validate.user.emailConf"/>';
             var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
             var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';

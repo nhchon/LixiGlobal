@@ -22,6 +22,7 @@
     <spring:message code="message.middle_ini" var="middleMessage"/>
     <spring:message code="message.last_name" var="lastNameMessage"/>
     <spring:message code="message.email_place_holder" var="emailMessage"/>
+    <spring:message code="signup.retype_email" var="retypeEmail"/>
     <c:url value="/recipient/editRecipient" var="editRecipientUrl"/>
     <form:form action="${editRecipientUrl}" modelAttribute="chooseRecipientForm" class="form-horizontal">
         <div class="form-group name">
@@ -51,6 +52,14 @@
             </div>
             <div class="col-lg-7 col-md-7">
                 <form:input path="email" class="form-control" placeholder="${emailMessage}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-5 col-md-5">
+                <label class="control-label"></label>
+            </div>
+            <div class="col-lg-7 col-md-7">
+                <form:input path="confEmail" class="form-control" placeholder="${retypeEmail}" />
             </div>
         </div>
         <div class="form-group">

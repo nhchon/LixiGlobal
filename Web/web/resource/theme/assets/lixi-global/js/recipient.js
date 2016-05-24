@@ -39,6 +39,14 @@ function checkRecipientFormOnModal(){
         //
         return false;
     }
+    
+    if($('#email').val() !== $('#confEmail').val()){
+        alert(CONF_EMAIL_ERROR);
+        $('#confEmail').focus();
+        //
+        return false;
+    }
+    
     // phone
     if($.trim($('#phone').val()) === '' || $('#phone').val().match('^0')){
         

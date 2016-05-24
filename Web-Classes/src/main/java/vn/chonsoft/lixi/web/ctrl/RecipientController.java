@@ -83,6 +83,7 @@ public class RecipientController {
                 form.setMiddleName(rec.getMiddleName());
                 form.setLastName(rec.getLastName());
                 form.setEmail(rec.getEmail());
+                form.setConfEmail(rec.getEmail());
                 form.setDialCode(rec.getDialCode());
                 form.setPhone(rec.getPhone());
                 form.setNote(rec.getNote());

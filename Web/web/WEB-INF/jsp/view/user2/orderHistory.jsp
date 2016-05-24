@@ -49,7 +49,7 @@
                 <div class="section-receiver">
                     <h2 class="title"><spring:message code="mess.order-history"/></h2>
                     <h4 class="title">
-                        <c:if test="${not empty orders.content}">${fn:length(orders.content)} <spring:message code="mess.order-place-in"/></c:if>
+                        <c:if test="${not empty orders.content}">${fn:length(orders.content)} &nbsp;<spring:message code="mess.order-place-in"/></c:if>
                         <c:if test="${empty orders.content}"><spring:message code="mess.no-order-place-in"/></c:if>
                         </h4>
                         <div class="form-group">

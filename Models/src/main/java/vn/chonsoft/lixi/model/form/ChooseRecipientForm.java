@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.model.form;
 
 import vn.chonsoft.lixi.validations.Email;
+import vn.chonsoft.lixi.validations.FieldMatch;
 import vn.chonsoft.lixi.validations.NotBlank;
 import vn.chonsoft.lixi.validations.NotBlankButNullable;
 
@@ -12,6 +13,7 @@ import vn.chonsoft.lixi.validations.NotBlankButNullable;
  *
  * @author chonnh
  */
+@FieldMatch(first = "email", second = "confEmail", message = "{validate.user.emailConf}")
 public class ChooseRecipientForm{
     
     private Long recId;
@@ -27,6 +29,9 @@ public class ChooseRecipientForm{
     
     @Email
     private String email;
+    
+    @Email
+    private String confEmail;
     
     private String dialCode;
     
@@ -77,6 +82,14 @@ public class ChooseRecipientForm{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getConfEmail() {
+        return confEmail;
+    }
+
+    public void setConfEmail(String confEmail) {
+        this.confEmail = confEmail;
     }
 
     public String getPhone() {

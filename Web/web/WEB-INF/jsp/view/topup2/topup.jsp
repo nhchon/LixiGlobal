@@ -10,6 +10,7 @@
             var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
             var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
             var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
+            var CONF_EMAIL_ERROR = '<spring:message code="validate.user.emailConf"/>';
             var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
             var SELECT_RECEIVER = '<spring:message code="gift.select_recipient" text="Please select a receiver"/>';
             var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
