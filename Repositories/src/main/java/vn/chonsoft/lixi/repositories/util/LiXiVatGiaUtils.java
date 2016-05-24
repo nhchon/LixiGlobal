@@ -7,16 +7,28 @@ package vn.chonsoft.lixi.repositories.util;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -25,6 +37,7 @@ import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.LixiSubmitOrderResult;
@@ -40,18 +53,26 @@ import vn.chonsoft.lixi.util.LiXiGlobalUtils;
  *
  * @author chonnh
  */
+@Service
 public class LiXiVatGiaUtils {
 
     private static final Logger log = LogManager.getLogger(LiXiVatGiaUtils.class);
 
-    private static LiXiVatGiaUtils instance;
-
     private Properties baokimProp = null;
 
+    @Autowired
+    private ThreadPoolTaskScheduler taskScheduler;
+    
+    @Autowired
+    private VelocityEngine velocityEngine;
+    
+    @Autowired
+    private JavaMailSender mailSender;
+    
     /**
      *
      */
-    private LiXiVatGiaUtils() {
+    public LiXiVatGiaUtils() {
 
         try {
 
@@ -65,24 +86,6 @@ public class LiXiVatGiaUtils {
 
         }
 
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static LiXiVatGiaUtils getInstance() {
-
-        if (instance == null) {
-            //synchronized (LiXiVatGiaUtils.class) {
-            if (instance == null) {
-
-                instance = new LiXiVatGiaUtils();
-            }
-            //}
-        }
-
-        return instance;
     }
 
     /* business methods */
@@ -170,6 +173,34 @@ public class LiXiVatGiaUtils {
         return ps;
     }
 
+    private void emailBaoKimSystemError(String error){
+        // send Email
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @Override
+            public void prepare(MimeMessage mimeMessage) throws Exception {
+
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                message.setTo(LiXiGlobalConstants.YHANNART_GMAIL);
+                message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                message.setFrom("support@lixi.global");
+                message.setSubject("LiXi.Global - Bao Kim System Error");
+                message.setSentDate(Calendar.getInstance().getTime());
+
+                Map model = new HashMap();	             
+                model.put("err", error);
+
+                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                   velocityEngine, "emails/baokim-error.vm", "UTF-8", model);
+                message.setText(text, true);
+              }
+        };        
+
+        // send oldEmail
+        taskScheduler.execute(() -> mailSender.send(preparator));
+        
+    }
     /**
      *
      * @return
@@ -194,7 +225,8 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
-
+            
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
         }
 
         return null;
@@ -231,6 +263,7 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
 
         }
 
@@ -371,6 +404,7 @@ public class LiXiVatGiaUtils {
 
                     // log error
                     log.info(e.getMessage(), e);
+                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
                 }
             }
 
@@ -390,6 +424,7 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
         }
 
     }
@@ -457,7 +492,8 @@ public class LiXiVatGiaUtils {
 
                     // log error
                     log.info(e.getMessage(), e);
-                    log.debug(e.getMessage(), e);
+                    //log.debug(e.getMessage(), e);
+                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
                 }
             }
 
@@ -474,7 +510,8 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
-            log.debug(e.getMessage(), e);
+            //log.debug(e.getMessage(), e);
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
         }
 
     }
@@ -559,6 +596,7 @@ public class LiXiVatGiaUtils {
 
                     // log error
                     log.info(e.getMessage(), e);
+                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
                 }
             }
 
@@ -577,6 +615,7 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
         }
         
         return updateOrderStatus;

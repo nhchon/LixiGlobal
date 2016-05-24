@@ -102,6 +102,9 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     @Autowired
     private BuyCardService bcService;
 
+    @Autowired
+    private LiXiVatGiaUtils lxVatGiaUtils;
+    
     @Override
     @Async
     public void cashRunTransactionStatusUpdate(String userAgent, long invoiceId, long orderId, String amount, String currency){
@@ -146,14 +149,14 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     @Async
     public void submitOrdersToBaoKim(LixiOrder order) {
 
-        LiXiVatGiaUtils.getInstance().submitOrdersToBaoKim(order, orderService, orderGiftService);
+        lxVatGiaUtils.submitOrdersToBaoKim(order, orderService, orderGiftService);
 
     }
 
     @Override
     public void submitOrdersToBaoKimNoAsync(LixiOrder order) {
 
-        LiXiVatGiaUtils.getInstance().submitOrdersToBaoKim(order, orderService, orderGiftService);
+        lxVatGiaUtils.submitOrdersToBaoKim(order, orderService, orderGiftService);
 
     }
 
@@ -164,7 +167,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     @Override
     public void cancelOrdersOnBaoKimNoAsync(LixiOrder order){
         
-        LiXiVatGiaUtils.getInstance().cancelOrderOnBaoKim(order, orderService, orderGiftService);
+        lxVatGiaUtils.cancelOrderOnBaoKim(order, orderService, orderGiftService);
         
     }
     
@@ -175,7 +178,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     @Override
     public boolean sendPaymentInfoToBaoKim(LixiOrder order){
         
-        return LiXiVatGiaUtils.getInstance().sendPaymentInfoToBaoKim(order, orderService, orderGiftService);
+        return lxVatGiaUtils.sendPaymentInfoToBaoKim(order, orderService, orderGiftService);
     }
     
     /**

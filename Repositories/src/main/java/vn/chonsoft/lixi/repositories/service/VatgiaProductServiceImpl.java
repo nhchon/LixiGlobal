@@ -5,7 +5,7 @@
 package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +26,14 @@ import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
 @Service
 public class VatgiaProductServiceImpl implements VatgiaProductService{
 
-    @Inject
+    @Autowired
     private VatgiaProductRepository vgpRepository;
     
-    @Inject
+    @Autowired
     private VatgiaCategoryRepository vgcRepository;
     
+    @Autowired
+    private LiXiVatGiaUtils lxVatGiaUtils;
     /**
      * 
      * @param product
@@ -130,9 +132,9 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
         for(VatgiaCategory c : categories){
             
             // get all products in the category (price >= 0)
-            ListVatGiaProduct vgps = LiXiVatGiaUtils.getInstance().getVatGiaProducts(c.getId(), 0);
+            ListVatGiaProduct vgps = lxVatGiaUtils.getVatGiaProducts(c.getId(), 0);
             
-            List<VatgiaProduct> ps = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(vgps);
+            List<VatgiaProduct> ps = lxVatGiaUtils.convertVatGiaProduct2Model(vgps);
             // save to database
             synchronized(this){
                 if(ps != null && !ps.isEmpty()){

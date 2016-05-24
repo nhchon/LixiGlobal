@@ -90,6 +90,8 @@ public class GiftsController {
     @Autowired
     private VatgiaProductService vgpService;
     
+    @Autowired
+    private LiXiVatGiaUtils lxVatGiaUtils;
     /**
      *
      * @param model
@@ -451,8 +453,8 @@ public class GiftsController {
         if(products == null || products.isEmpty()){
             // call BaoKim Rest service
             log.info("No products in database. So call BaoKim Rest service");
-            ListVatGiaProduct pjs = LiXiVatGiaUtils.getInstance().getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
-            products = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(pjs);
+            ListVatGiaProduct pjs = lxVatGiaUtils.getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
+            products = lxVatGiaUtils.convertVatGiaProduct2Model(pjs);
         }
         
         // get current recipient
@@ -576,8 +578,8 @@ public class GiftsController {
         if(products == null || products.isEmpty()){
             // call BaoKim Rest service
             log.info("No products in database. So call BaoKim Rest service");
-            ListVatGiaProduct pjs = LiXiVatGiaUtils.getInstance().getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
-            products = LiXiVatGiaUtils.getInstance().convertVatGiaProduct2Model(pjs);
+            ListVatGiaProduct pjs = lxVatGiaUtils.getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
+            products = lxVatGiaUtils.convertVatGiaProduct2Model(pjs);
         }
         
         if(model.get("recId") != null){

@@ -1,0 +1,14 @@
+<html>
+    <body>
+        <h5>Hi ${user.firstName} !</h5>
+        
+        <p>Bao Kim system is in trouble</p>
+        <p>
+            ${err}
+        </p>
+
+        <div>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

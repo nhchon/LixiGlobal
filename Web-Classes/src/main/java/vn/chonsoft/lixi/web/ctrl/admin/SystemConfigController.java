@@ -87,6 +87,9 @@ public class SystemConfigController {
     
     @Autowired
     private LixiConfigService configService;
+    
+    @Autowired
+    private LiXiVatGiaUtils lxVatGiaUtils;
     /**
      *
      * @return
@@ -272,14 +275,14 @@ public class SystemConfigController {
         //
         List<VatgiaCategory> vgcs = new ArrayList<>();
         // get category from BaoKim service
-        ListVatGiaCategory vgcpojos = LiXiVatGiaUtils.getInstance().getVatGiaCategory();
+        ListVatGiaCategory vgcpojos = lxVatGiaUtils.getVatGiaCategory();
 
         for (VatGiaCategoryPj vgcpojo : vgcpojos.getData()) {
 
             VatgiaCategory vgc = this.vgcService.findOne(vgcpojo.getId());
             if (vgc == null) {
 
-                vgcs.add(LiXiVatGiaUtils.getInstance().convertFromPojo2Model(vgcpojo));
+                vgcs.add(lxVatGiaUtils.convertFromPojo2Model(vgcpojo));
 
             } else {
 
