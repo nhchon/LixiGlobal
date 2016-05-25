@@ -11,7 +11,7 @@
                 <pattern>%d{HH:mm:ss.SSS} [%t] %X{id} %X{username} %-5level %c{36} %l: %msg%n</pattern>
             </PatternLayout>
             <Policies>
-                <SizeBasedTriggeringPolicy size="5 MB" />
+                <SizeBasedTriggeringPolicy size="1 MB" />
             </Policies>
             <DefaultRolloverStrategy min="1" max="4" />
         </RollingFile>

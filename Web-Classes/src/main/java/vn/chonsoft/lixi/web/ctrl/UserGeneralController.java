@@ -726,6 +726,9 @@ public class UserGeneralController {
                 // check the order that unfinished
                 LixiOrder order = this.lxorderService.findLastBySenderAndLixiStatus(u, EnumLixiOrderStatus.UN_FINISHED.getValue());
                 if (order != null) {
+                    
+                    log.info("User " + u.getEmail() + " has order " + order.getId() + " UN_FINISHED");
+
                     /* get latest exchange rate */
                     LixiExchangeRate exRate = this.lxexrateService.findLastRecord(LiXiConstants.USD);
                     order.setLxExchangeRate(exRate);
@@ -752,6 +755,9 @@ public class UserGeneralController {
                     }
                     // continue to finish this order
                     request.getSession().setAttribute(LiXiConstants.LIXI_ORDER_ID, order.getId());
+                }
+                else{
+                    log.info("User " + u.getEmail() + " has no UN_FINISHED order");
                 }
             } else {
 

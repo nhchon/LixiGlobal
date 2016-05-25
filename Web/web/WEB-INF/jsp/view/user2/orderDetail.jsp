@@ -47,7 +47,7 @@
                     <h2 class="title"><spring:message code="mess.order-detail"/></h2>
                     <div class="row" style="font-size: 16px;margin-bottom: 10px;">
                         <div class="col-md-3" style="">
-                            <spring:message code="mess.ordered-on"/> <fmt:formatDate pattern="MMMM dd yyyy" value="${LIXI_ORDER.modifiedDate}"/>
+                            <spring:message code="mess.ordered-on"/> &nbsp;<fmt:formatDate pattern="MMMM dd yyyy" value="${LIXI_ORDER.modifiedDate}"/>
                         </div>
                         <div class="col-md-3" style="">
                             <spring:message code="mess.order"/> # <c:if test="${not empty LIXI_ORDER.invoice}">${LIXI_ORDER.invoice.invoiceCode}</c:if>

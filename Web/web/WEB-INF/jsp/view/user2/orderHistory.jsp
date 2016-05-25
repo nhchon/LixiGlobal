@@ -49,7 +49,7 @@
                 <div class="section-receiver">
                     <h2 class="title"><spring:message code="mess.order-history"/></h2>
                     <h4 class="title">
-                        <c:if test="${not empty orders.content}">${fn:length(orders.content)} &nbsp;<spring:message code="mess.order-place-in"/></c:if>
+                        <c:if test="${not empty orders.content}">${fn:length(orders.content)}&nbsp;<spring:message code="mess.order-place-in"/></c:if>
                         <c:if test="${empty orders.content}"><spring:message code="mess.no-order-place-in"/></c:if>
                         </h4>
                         <div class="form-group">
@@ -70,7 +70,8 @@
                         <div class="alert alert-danger" role="alert"><spring:message code="mess.order-processed"/>. <spring:message code="mess.no-longer-cancelled"/>.</div>
                     </c:if>
                     <c:forEach items="${mOs}" var="m">
-                        <c:if test="${m.key.invoice.netTransStatus ne 'beforePayment' && m.key.invoice.netTransStatus ne 'paymentError' && m.key.invoice.netTransStatus ne 'voidedByUser'}">
+                        <%--<c:if test="${m.key.invoice.netTransStatus ne 'beforePayment' && m.key.invoice.netTransStatus ne 'paymentError' && m.key.invoice.netTransStatus ne 'voidedByUser'}">--%>
+                        <c:if test="${not empty m.key.invoice}">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="row">

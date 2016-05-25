@@ -531,9 +531,9 @@ public class UserManagementController {
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         if(ps.hasContent()){
             ps.getContent().forEach(o -> {
-                log.info("order id : " + o.getId());
-                
-                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+                if(!EnumLixiOrderStatus.UN_FINISHED.getValue().equals(o.getLixiStatus())){
+                    mOs.put(o, LiXiUtils.genMapRecGifts(o));
+                }
             });
         }
         /* forward time */
