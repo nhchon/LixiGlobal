@@ -188,7 +188,8 @@ public class LiXiVatGiaUtils {
                 message.setSubject("LiXi.Global - Bao Kim System Error");
                 message.setSentDate(Calendar.getInstance().getTime());
 
-                Map model = new HashMap();	             
+                Map model = new HashMap();
+                model.put("name", "Yuric");
                 model.put("err", error);
 
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -226,7 +227,7 @@ public class LiXiVatGiaUtils {
 
             log.info(e.getMessage(), e);
             
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
 
         return null;
@@ -263,7 +264,7 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
 
         }
 
@@ -404,7 +405,7 @@ public class LiXiVatGiaUtils {
 
                     // log error
                     log.info(e.getMessage(), e);
-                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
+                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
                 }
             }
 
@@ -424,7 +425,7 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
 
     }
@@ -493,7 +494,7 @@ public class LiXiVatGiaUtils {
                     // log error
                     log.info(e.getMessage(), e);
                     //log.debug(e.getMessage(), e);
-                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
+                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
                 }
             }
 
@@ -511,7 +512,7 @@ public class LiXiVatGiaUtils {
 
             log.info(e.getMessage(), e);
             //log.debug(e.getMessage(), e);
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
 
     }
@@ -596,7 +597,7 @@ public class LiXiVatGiaUtils {
 
                     // log error
                     log.info(e.getMessage(), e);
-                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
+                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
                 }
             }
 
@@ -615,7 +616,7 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e));
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
         
         return updateOrderStatus;
