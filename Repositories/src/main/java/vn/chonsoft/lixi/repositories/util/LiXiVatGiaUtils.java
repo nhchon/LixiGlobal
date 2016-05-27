@@ -38,11 +38,13 @@ import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.LixiSubmitOrderResult;
 import vn.chonsoft.lixi.model.pojo.VatGiaCategoryPj;
 import vn.chonsoft.lixi.model.pojo.VatGiaProductPj;
+import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
@@ -60,6 +62,11 @@ public class LiXiVatGiaUtils {
 
     private Properties baokimProp = null;
 
+    private String administratorEmail = null;
+    
+    @Autowired
+    private LixiConfigService configService;
+    
     @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
     
@@ -173,7 +180,22 @@ public class LiXiVatGiaUtils {
         return ps;
     }
 
+    private void checkAndAssignDefaultEmail(){
+        if(administratorEmail == null || "".equals(administratorEmail)){
+            LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_ADMINISTRATOR_EMAIL);
+            administratorEmail =  c.getValue();
+        }
+        
+        // stil empty
+        if(administratorEmail == null || "".equals(administratorEmail)){
+            administratorEmail = LiXiGlobalConstants.YHANNART_GMAIL;
+        }
+    }
+    
     private void emailBaoKimSystemError(String error){
+        
+        checkAndAssignDefaultEmail();
+        
         // send Email
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
@@ -182,8 +204,9 @@ public class LiXiVatGiaUtils {
             public void prepare(MimeMessage mimeMessage) throws Exception {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                message.setTo(LiXiGlobalConstants.YHANNART_GMAIL);
-                message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                message.setTo(administratorEmail);
+                message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
                 message.setSubject("LiXi.Global - Bao Kim System Error");
                 message.setSentDate(Calendar.getInstance().getTime());
