@@ -8,18 +8,10 @@
         </script>    
     </jsp:attribute>
     <jsp:body>
-        <%-- EnumLixiOrderStatus.java --%>
-        <c:set var="UNFINISHED" value="-9"/>
-        <c:set var="NOT_YET_SUBMITTED" value="-8"/>
-        <c:set var="SENT_INFO" value="-7"/>
-        <c:set var="SENT_MONEY" value="-6"/>
-        <c:set var="PROCESSING" value="0"/>
-        <c:set var="COMPLETED" value="1"/>
-        <c:set var="CANCELED" value="2"/>
-        <!-- content-wrapper -->
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>        <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-            <li><a href="<c:url value="/Administration/Orders/newOrders/-1"/>">Order Detail</a></li>
+            <li><a href="<c:url value="/Administration/Orders/detail/${order.id}"/>">Order Detail</a></li>
         </ul>
 
         <!-- main -->
@@ -34,6 +26,7 @@
                                 <th nowrap>Date</th><%-- 2 --%>
                                 <th nowrap>Transaction No</th><%-- 3 --%>
                                 <th>Sender</th><%-- 4 --%>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,8 +38,21 @@
                                     <fmt:formatDate pattern="HH:mm:ss" value="${order.createdDate}"/>
 
                                 </td>
-                                <td>${order.invoice.netTransId}</td>
+                                <td>${order.invoice.netTransId}<br/>(${order.invoice.translatedStatus})</td>
                                 <td>${order.sender.fullName}</td>
+                                <td>
+                                    <c:if test="${order.lixiStatus eq PROCESSING}">
+                                        Processing<br/>
+                                        <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                        <c:if test="${order.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
+                                    </c:if>
+                                    <c:if test="${order.lixiStatus eq COMPLETED}">
+                                        Completed
+                                    </c:if>
+                                    <c:if test="${order.lixiStatus eq CANCELED}">
+                                        Cancelled
+                                    </c:if>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -72,7 +78,7 @@
                                 </thead>
                                 <tbody>
                                     <c:forEach items="${recGifts}" var="rio" varStatus="theCount">
-                                        <tr id="rowR${m.key.id}">
+                                        <tr id="rowR${rio.recipient.id}">
                                             <td>${rio.recipient.fullName}</td>
                                             <td colspan="4"></td>
                                         </tr>
@@ -88,11 +94,17 @@
                                                 </td>
                                                 <td style="text-align:right;">
                                                     <c:choose>
-                                                        <c:when test="${g.bkStatus eq NOT_YET_SUBMITTED}">
-                                                            <span class="alert-danger">Failed</span>
+                                                        <c:when test="${g.bkStatus eq '0'}">
+                                                            <span class="alert-danger">Processing</span>
+                                                        </c:when>
+                                                        <c:when test="${g.bkStatus eq '1'}">
+                                                            <span class="alert-danger">Completed</span>
+                                                        </c:when>
+                                                        <c:when test="${g.bkStatus eq '2'}">
+                                                            <span class="alert-danger">Cancelled</span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="alert-success">Passed</span>
+                                                            <span class="alert-danger">${g.bkStatus}</span>
                                                         </c:otherwise>
                                                     </c:choose>
                                                     <br/>
