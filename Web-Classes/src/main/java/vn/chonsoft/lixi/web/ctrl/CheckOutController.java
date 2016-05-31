@@ -867,6 +867,7 @@ public class CheckOutController {
 
                     ////////////////////////////////////////////////////////////////////
                     log.info("Call Async methods");
+                    log.info("VTC_AUTO: " + loginedUser.getConfig(LiXiConstants.VTC_AUTO));
                     if(LiXiConstants.YES.equals(loginedUser.getConfig(LiXiConstants.VTC_AUTO))){
                         // The order is paid, top up mobile
                         lxAsyncMethods.processTopUpItems(order);

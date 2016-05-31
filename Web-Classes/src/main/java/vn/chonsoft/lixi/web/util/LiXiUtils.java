@@ -6,10 +6,6 @@ package vn.chonsoft.lixi.web.util;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

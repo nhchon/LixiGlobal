@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.ctrl.admin;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,14 +28,17 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
+import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -57,6 +61,8 @@ public class SystemTopUpController {
     @Autowired
     private LixiAsyncMethods lxAsyncMethods;
     
+    @Autowired
+    private LixiConfigService configService;
     
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public ModelAndView notYetSubmitted(Map<String, Object> model){
@@ -65,9 +71,44 @@ public class SystemTopUpController {
         
         model.put("topUps", topUps);
         
+        LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_TOPUP_BALANCE);
+        
+        model.put("topUpBalance", c.getValue());
+        
         return new ModelAndView("Administration/orders/listTopUp");
     }
     
+    /**
+     * 
+     * @param topUpAmount
+     * @return 
+     */
+    private String remainAmount(double topUpAmount){
+        
+        LixiConfig topUpConfig = configService.findByName(LiXiGlobalConstants.LIXI_TOPUP_BALANCE);
+        LixiConfig vtcConfig = configService.findByName(LiXiGlobalConstants.LIXI_VTC_TRANFER_PERCENT);
+
+        String topUpTotalStr = "0";
+        String vtcPercentStr = "0";
+        if(topUpConfig != null){
+            topUpTotalStr = StringUtils.defaultIfBlank(topUpConfig.getValue(), "0");
+        }
+        if(vtcConfig != null){
+            vtcPercentStr = StringUtils.defaultIfBlank(vtcConfig.getValue(), "0");
+        }
+
+        double topUpTotal = Double.parseDouble(topUpTotalStr);
+        double vtcPercentN = Double.parseDouble(vtcPercentStr);
+        double realAmount = (topUpAmount*vtcPercentN)/100.0;
+
+        double remainAmount = topUpTotal - realAmount;
+
+        String rs = LiXiUtils.getNumberFormat().format(remainAmount);
+        topUpConfig.setValue(rs);
+        configService.save(topUpConfig);
+                
+        return rs;
+    }
     /**
      * 
      * @param model
@@ -92,6 +133,9 @@ public class SystemTopUpController {
             String rs = lxAsyncMethods.processTopUpItemNoAsync(t);
             
             if(LiXiConstants.VTC_OK.equals(rs)){
+                
+                model.put("topUpBalance", remainAmount(t.getAmount()));
+                
                 /* override error attr*/
                 model.put("error", "0");
             }
@@ -225,7 +269,9 @@ public class SystemTopUpController {
         
         //log.info("status: " + statusStr + " toDate: " + toDateStr);
         //log.info("topUps: " + ps.getTotalElements());
+        LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_TOPUP_BALANCE);
         
+        model.put("topUpBalance", LiXiUtils.getNumberFormat().format(Double.parseDouble(c.getValue())));
         model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
         model.put("topUps", ps);
         model.put("status", statusStr);

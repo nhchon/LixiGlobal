@@ -65,6 +65,10 @@
                                             <c:when test="${c.name eq 'LIXI_BAOKIM_TRANFER_PERCENT'}">
                                                 <input type="number" name="value" value="${c.value}" class="form-control"/>
                                             </c:when>
+                                            <c:when test="${c.name eq 'LIXI_ADMINISTRATOR_EMAIL'}">
+                                                <input type="text" name="value" value="${c.value}" class="form-control"/>
+                                                <div class="help-block">Split by ; if we have multi addresses</div>
+                                            </c:when>
                                             <c:otherwise>
                                                 <input type="text" name="value" value="${c.value}" class="form-control"/>
                                             </c:otherwise>

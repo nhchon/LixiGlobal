@@ -56,7 +56,19 @@
         </ul>
 
         <!-- main -->
-        <h2 class="sub-header">Top Up Reports</h2>
+        <div class="row">
+            <div class="col-md-9"><h2 class="sub-header">Top Up Reports</h2></div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-10" style="padding-right: 0px;">
+                        <input id="topUpBalance" type="text" class="form-control" style="margin-top: 20px; text-align: center; font-weight: bold;" readonly="" value="${topUpBalance}"/>
+                    </div>
+                    <div class="col-md-2" style="margin-top: 30px;padding-left:5px;">
+                        <b>VND</b>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <form role="form" id="reportForm" action="<c:url value="/Administration/SystemTopUp/report"/>" method="get">
@@ -146,7 +158,7 @@
                                                     <c:when test="${t.status eq UN_SUBMITTED}">
                                                         Not Sent
                                                     </c:when>
-                                                    <c:when test="${t.status eq COMPLETE}">
+                                                    <c:when test="${t.status eq COMPLETED}">
                                                         Success sent
                                                     </c:when>
                                                 </c:choose>                                                

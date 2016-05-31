@@ -345,10 +345,8 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     @Async
     public void processTopUpItems(LixiOrder order) {
 
-        log.info("Order ID: " + order.getId() + " - TopUp is empty: " + order.getTopUpMobilePhones().isEmpty());
-
         for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
-
+            doProcessTopUp(topUp);
         }// forEach topUps
 
     }

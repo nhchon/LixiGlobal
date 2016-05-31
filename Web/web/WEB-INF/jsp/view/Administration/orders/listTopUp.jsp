@@ -5,113 +5,110 @@
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
-            
-            function cancel(id){
-                overlayOn($('#rowTopUp'+id));
+            function cancel(id) {
+                overlayOn($('#rowTopUp' + id));
                 $("#topUpForm input[name=id]").val(id);
-                
+
                 $.ajax(
-                {
-                    url: '<c:url value="/Administration/SystemTopUp/cancel"/>',
-                    type: "POST",
-                    data: $('#topUpForm').serializeArray(),
-                    dataType: 'json',
-                    success: function (data, textStatus, jqXHR)
-                    {
-                        //data: return data from server
-                        if (data.error === '0') {
-                            
-                            $('#status'+id).html('Canceled');
-                            $('#statusDate'+id).html(data.statusDate);
-                        }
-                        else {
-                            alert('There is something wrong ! Please try again !');
-                        }
-                        overlayOff();
-                    },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
-                        //if fails  
-                        overlayOff();
-                    }
-                });
-            }
-            
-            function check(id){
-                overlayOn($('#rowTopUp'+id));
-                $("#topUpForm input[name=id]").val(id);
-                $.ajax(
-                {
-                    url: '<c:url value="/Administration/SystemTopUp/check"/>',
-                    type: "POST",
-                    data: $('#topUpForm').serializeArray(),
-                    dataType: 'json',
-                    success: function (data, textStatus, jqXHR)
-                    {
-                        //data: return data from server
-                        if (data.error === '0') {
-                            
-                            if(data.status === 'In Progress' || data.status === 'Processed'){
-                                if(confirm('This transaction ' + data.orderId + ' is in ' + data.status + '. Are you sure want to Cancel this top up ?')){
-                                    
-                                    cancel(id);
+                        {
+                            url: '<c:url value="/Administration/SystemTopUp/cancel"/>',
+                            type: "POST",
+                            data: $('#topUpForm').serializeArray(),
+                            dataType: 'json',
+                            success: function (data, textStatus, jqXHR)
+                            {
+                                //data: return data from server
+                                if (data.error === '0') {
+
+                                    $('#status' + id).html('Canceled');
+                                    $('#statusDate' + id).html(data.statusDate);
+                                } else {
+                                    alert('There is something wrong ! Please try again !');
                                 }
+                                overlayOff();
+                            },
+                            error: function (jqXHR, textStatus, errorThrown)
+                            {
+                                //if fails  
+                                overlayOff();
                             }
-                            else{
-                                cancel(id);
-                            }
-                        }
-                        else {
-                            alert('There is something wrong ! Please try again !');
-                            overlayOff();
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
-                        //if fails  
-                        overlayOff();
-                    }
-                });
+                        });
             }
-            
-            function sent(id){
-                overlayOn($('#rowTopUp'+id));
+
+            function check(id) {
+                overlayOn($('#rowTopUp' + id));
                 $("#topUpForm input[name=id]").val(id);
                 $.ajax(
-                {
-                    url: '<c:url value="/Administration/SystemTopUp/send"/>',
-                    type: "POST",
-                    data: $('#topUpForm').serializeArray(),
-                    dataType: 'json',
-                    success: function (data, textStatus, jqXHR)
-                    {
-                        //data: return data from server
-                        if (data.error === '1') {
-                            
-                            if(data.status === 'Declined' || data.status === 'Refunded'){
-                                alert('Can not sent this top up of order Id '+ data.orderId+'. The transaction is in ' + data.status)
+                        {
+                            url: '<c:url value="/Administration/SystemTopUp/check"/>',
+                            type: "POST",
+                            data: $('#topUpForm').serializeArray(),
+                            dataType: 'json',
+                            success: function (data, textStatus, jqXHR)
+                            {
+                                //data: return data from server
+                                if (data.error === '0') {
+
+                                    if (data.status === 'In Progress' || data.status === 'Processed') {
+                                        if (confirm('This transaction ' + data.orderId + ' is in ' + data.status + '. Are you sure want to Cancel this top up ?')) {
+
+                                            cancel(id);
+                                        }
+                                    } else {
+                                        cancel(id);
+                                    }
+                                } else {
+                                    alert('There is something wrong ! Please try again !');
+                                    overlayOff();
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown)
+                            {
+                                //if fails  
+                                overlayOff();
                             }
-                            else{
-                                alert(data.vtcMessage);
-                                $('#vtcMessage'+id).html(data.vtcMessage);
+                        });
+            }
+
+            function sent(id) {
+                overlayOn($('#rowTopUp' + id));
+                $("#topUpForm input[name=id]").val(id);
+                $.ajax(
+                        {
+                            url: '<c:url value="/Administration/SystemTopUp/send"/>',
+                            type: "POST",
+                            data: $('#topUpForm').serializeArray(),
+                            dataType: 'json',
+                            success: function (data, textStatus, jqXHR)
+                            {
+                                //data: return data from server
+                                if (data.error === '1') {
+                                    if (data.status === 'Declined' || data.status === 'Refunded') {
+                                        alert('Can not sent this top up of order Id ' + data.orderId + '. The transaction is in ' + data.status)
+                                    } else {
+                                        alert(data.vtcMessage);
+                                        $('#vtcMessage' + id).html(data.vtcMessage);
+                                    }
+                                } else {
+                                    $('#tdAction'+id).html('');
+                                    $('#status' + id).html('Sent');
+                                    $('#statusDate' + id).html(data.statusDate);
+                                    
+                                    $('#topUpBalance').val(data.topUpBalance);
+                                }
+                                overlayOff();
+                            },
+                            error: function (jqXHR, textStatus, errorThrown)
+                            {
+                                alert(errorThrown);
+                                //if fails  
+                                overlayOff();
                             }
-                        }
-                        else {
-                            $('#status'+id).html('Sent');
-                            $('#statusDate'+id).html(data.statusDate);
-                        }
-                        overlayOff();
-                    },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
-                        //if fails  
-                        overlayOff();
-                    }
-                });
+                        });
             }
             jQuery(document).ready(function () {
                 var url = '';
-                var fields = {id:0};
+                var fields = {id: 0};
                 var form = $('<form id="topUpForm" method="post"></form>')
                         .attr({action: url, style: 'display: none;'});
                 for (var key in fields) {
@@ -136,7 +133,19 @@
         </ul>
 
         <!-- main -->
-        <h2 class="sub-header">Top Up Mobile List</h2>
+        <div class="row">
+            <div class="col-md-9"><h2 class="sub-header">Top Up Mobile List</h2></div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-10" style="padding-right: 0px;">
+                        <input id="topUpBalance" type="text" class="form-control" style="margin-top: 20px; text-align: center; font-weight: bold;" readonly="" value="${topUpBalance}"/>
+                    </div>
+                    <div class="col-md-2" style="margin-top: 30px;padding-left:5px;">
+                        <b>VND</b>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 <!-- Tab panes -->
@@ -180,7 +189,7 @@
                                             <td id="status${t.id}">
                                                 <c:choose>
                                                     <c:when test="${t.status eq UN_SUBMITTED}">
-                                                       Not Sent
+                                                        Not Sent
                                                     </c:when>
                                                     <c:when test="${t.status eq COMPLETED}">
                                                         Completed
@@ -193,7 +202,7 @@
                                             <td id="statusDate${t.id}">
                                             </td>
                                             <td id="vtcMessage${t.id}">${t.responseMessage}</td>
-                                            <td style="text-align: right;" nowrap>
+                                            <td style="text-align: right;" nowrap id="tdAction${t.id}">
                                                 <button class="btn btn-primary" onclick="sent(${t.id})">Send</button>
                                                 <button class="btn btn-warning" onclick="check(${t.id})">Cancel</button>
                                             </td>

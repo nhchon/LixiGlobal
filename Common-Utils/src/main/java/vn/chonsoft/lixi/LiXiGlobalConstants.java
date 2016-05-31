@@ -12,6 +12,10 @@ public abstract class LiXiGlobalConstants {
     
     public static final String LIXI_ADMINISTRATOR_EMAIL = "LIXI_ADMINISTRATOR_EMAIL";
     
+    public static final String LIXI_TOPUP_BALANCE = "LIXI_TOPUP_BALANCE";
+    
+    public static final String LIXI_VTC_TRANFER_PERCENT = "LIXI_VTC_TRANFER_PERCENT";
+    
     public static final String AUTO_SYSTEM = "AUTO_SYSTEM";
     
     public static final String USD = "USD";

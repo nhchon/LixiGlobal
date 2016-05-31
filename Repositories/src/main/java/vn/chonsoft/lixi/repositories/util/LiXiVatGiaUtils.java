@@ -62,7 +62,7 @@ public class LiXiVatGiaUtils {
 
     private Properties baokimProp = null;
 
-    private String administratorEmail = null;
+    private String[] administratorEmail = null;
     
     @Autowired
     private LixiConfigService configService;
@@ -181,14 +181,14 @@ public class LiXiVatGiaUtils {
     }
 
     private void checkAndAssignDefaultEmail(){
-        if(administratorEmail == null || "".equals(administratorEmail)){
+        if(administratorEmail == null || administratorEmail.length==0){
             LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_ADMINISTRATOR_EMAIL);
-            administratorEmail =  c.getValue();
+            administratorEmail =  c.getValue().split(";");
         }
         
         // stil empty
-        if(administratorEmail == null || "".equals(administratorEmail)){
-            administratorEmail = LiXiGlobalConstants.YHANNART_GMAIL;
+        if(administratorEmail == null || administratorEmail.length==0){
+            administratorEmail = new String[] {LiXiGlobalConstants.YHANNART_GMAIL};
         }
     }
     
