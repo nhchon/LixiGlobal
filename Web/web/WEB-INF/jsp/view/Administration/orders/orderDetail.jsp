@@ -84,7 +84,7 @@
                                         </tr>
                                         <c:forEach items="${rio.gifts}" var="g" varStatus="theCount2">
                                             <tr>
-                                                <td></td>
+                                                <td><b># ${g.id}</b></td>
                                                 <td>${g.productQuantity}</td>
                                                 <td>${g.productName}</td>
                                                 <td style="text-align: right;">
