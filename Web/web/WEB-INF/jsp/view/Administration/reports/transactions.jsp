@@ -98,7 +98,21 @@
         </ul>
 
         <!-- main -->
-        <h2 class="sub-header">Transaction Report</h2>
+        <div class="row">
+            <div class="col-md-9"><h2 class="sub-header">Transaction Report</h2></div>
+            <div class="col-md-3">
+                <div class="row" id="rowBaoKimStatus">
+                    <div class="col-md-6" style="padding-right: 0px;"></div>
+                    <div class="col-md-6" style="padding-right: 0px;text-align: center;">
+                        <div class="btn-group" id="toggle_event_editing">
+                            <button id="btnOff" type="button" class="btn btn-default disabled">OFF</button>
+                            <button id="btnOn" type="button" class="btn btn-info disabled">ON</button>
+                        </div>
+                        <p style="margin-top: 10px;"><a href="javascript:checkBaoKimStatus();">BaoKim System Status</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>        
         <div class="row">
             <div class="col-md-12">
                 <form:form modelAttribute="searchForm" method="get">

@@ -390,6 +390,7 @@ public class LiXiVatGiaUtils {
                         vars.add("method_receive", methodReceive);
                         //
                         log.info("///////////////////////////////////////////////////");
+                        log.info("lixi_order_id", order.getId().toString());
                         log.info("order_id:" + gift.getId().toString());
                         log.info("sender_name:" + senderName);
                         log.info("sender_email:" + senderEmail);
@@ -586,12 +587,14 @@ public class LiXiVatGiaUtils {
                          *
                          */
                         MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
+                        vars.add("lixi_order_id", order.getId().toString());
                         vars.add("order_id", gift.getId().toString());
                         vars.add("amount", amount);
                         vars.add("date_transfer", dateTransf);
                         //
                         log.info("///////////////////////////////////////////////////");
                         log.info("sent money order");
+                        log.info("lixi_order_id:" + order.getId().toString());
                         log.info("order_id:" + gift.getId().toString());
                         log.info("amount:" + amount);
                         log.info("date_transfer:" + dateTransf);
