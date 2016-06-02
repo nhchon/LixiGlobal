@@ -156,6 +156,8 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
         if(gift != null){
             //
             gift.getRecipient();
+            
+            gift.getOrder().getId();
         }
         return gift;
         

@@ -25,6 +25,9 @@ public interface LixiAsyncMethods {
     boolean checkBaoKimSystem();
     
     @Async
+    void updateLixiOrderStatus(Long lixiOrderId, String status);
+    
+    @Async
     void submitOrdersToBaoKim(LixiOrder order);
     
     @Async

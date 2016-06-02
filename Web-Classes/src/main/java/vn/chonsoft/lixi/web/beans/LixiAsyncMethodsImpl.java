@@ -36,6 +36,7 @@ import vn.chonsoft.lixi.model.VtcResponseCode;
 import vn.chonsoft.lixi.model.VtcServiceCode;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiCashrun;
+import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.repositories.service.BuyCardResultService;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.DauSoService;
@@ -141,6 +142,30 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
         
     }
 
+    /**
+     * 
+     * @param lixiOrderId
+     * @param status 
+     */
+    @Async
+    @Override
+    public void updateLixiOrderStatus(Long lixiOrderId, String status){
+        
+        LixiOrder order = this.orderService.findById(lixiOrderId);
+        boolean updated = true;
+        for(LixiOrderGift gift : order.getGifts()){
+            
+            if(!gift.getBkStatus().equals(status)){
+                updated = false;
+                break;
+            }
+        }
+        
+        if(updated){
+            order.setLixiStatus(status);
+            this.orderService.save(order);
+        }
+    }
     /**
      * 
      * @return 

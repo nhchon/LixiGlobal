@@ -5,6 +5,8 @@
 package vn.chonsoft.lixi.web.ctrl.admin;
 
 import javax.inject.Inject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -19,6 +21,7 @@ import vn.chonsoft.lixi.model.pojo.LixiSimpleMessage;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.web.annotation.RestEndpoint;
+import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 
 /**
  *
@@ -27,14 +30,19 @@ import vn.chonsoft.lixi.web.annotation.RestEndpoint;
 @RestEndpoint
 public class LixiOrdersRestEndpoint {
     
-    @Inject
+    private static final Logger log = LogManager.getLogger(LixiOrdersRestEndpoint.class);
+    
+    @Autowired
     private LixiOrderService lxOrderService;
     
-    @Inject
+    @Autowired
     private LixiOrderGiftService lxgiftService;
 
     @Autowired
     private MessageSource messageSource;
+    
+    @Autowired
+    private LixiAsyncMethods lxAsyncMethods;
     
     /**
      * 
@@ -59,6 +67,13 @@ public class LixiOrdersRestEndpoint {
             
             message.setError("0");
             message.setMessage(messageSource.getMessage("message.success", new Object[0], LocaleContextHolder.getLocale()));
+            
+            /* */
+            try {
+                lxAsyncMethods.updateLixiOrderStatus(gift.getOrder().getId(), form.getStatus());
+            } catch (Exception e) {
+                log.info("Rest updateLixiOrder:", e);
+            }
         }
         else{
             message.setError("1");
