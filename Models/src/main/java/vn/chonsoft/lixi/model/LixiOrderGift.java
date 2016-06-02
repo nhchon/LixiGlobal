@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -70,6 +71,7 @@ public class LixiOrderGift implements Serializable {
     private String bkSubStatus;
     
     @Basic
+    @Lob
     @Column(name = "bk_message")
     private String bkMessage;
     

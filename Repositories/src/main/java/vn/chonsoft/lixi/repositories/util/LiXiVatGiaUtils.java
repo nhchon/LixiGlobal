@@ -608,6 +608,7 @@ public class LiXiVatGiaUtils {
                         gift.setModifiedDate(Calendar.getInstance().getTime());
                         
                         log.info("bk message:" + result.getData().getMessage());
+                        log.info("lixi order id:" + result.getData().getLixi_order_id());
                         log.info("order id:" + result.getData().getOrder_id());
                         log.info("///////////////////////////////////////////////////");
                         // update

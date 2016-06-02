@@ -15,6 +15,8 @@ public class SubmitOrderResult {
     
     private String order_id;
 
+    private String lixi_order_id;
+    
     public String getMessage() {
         return message;
     }
@@ -30,6 +32,15 @@ public class SubmitOrderResult {
     public void setOrder_id(String order_id) {
         this.order_id = order_id;
     }
+
+    public String getLixi_order_id() {
+        return lixi_order_id;
+    }
+
+    public void setLixi_order_id(String lixi_order_id) {
+        this.lixi_order_id = lixi_order_id;
+    }
+    
     
     @Override
     public String toString(){
