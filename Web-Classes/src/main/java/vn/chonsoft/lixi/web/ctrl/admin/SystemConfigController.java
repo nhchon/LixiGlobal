@@ -151,8 +151,10 @@ public class SystemConfigController {
         // reload config
         LiXiUtils.setConfigsLoginedUser(loginedUser, this.configService.findAll());
         
-        RedirectView r = new RedirectView("/Administration/SystemConfig/configs", true, true);
+        RedirectView r = new RedirectView("/Administration/SystemConfig/configs?save=OK", true, true);
         r.setExposeModelAttributes(false);
+        
+        
         return new ModelAndView(r);
     }
     /**

@@ -1,5 +1,44 @@
 /**
  * 
+ */
+function checkBaoKimStatus(){
+    overlayOn($('#rowBaoKimStatus'));
+    $.ajax(
+        {
+            url: CONTEXT_PATH + '/Administration/Orders/checkBaoKimStatus',
+            type: "GET",
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR)
+            {
+                //data: return data from server
+                if (data.error === '0') {
+                    alert('BaoKim System is alive');
+                    //
+                    $('#btnOff').removeClass("btn-info");
+                    $('#btnOff').addClass("btn-default");
+                    //
+                    $('#btnOn').addClass("btn-info");
+                    $('#btnOn').removeClass("btn-default");
+                }
+                else{
+                    $('#btnOff').removeClass("btn-default");
+                    $('#btnOff').addClass("btn-info");
+                    //
+                    $('#btnOn').addClass("btn-default");
+                    $('#btnOn').removeClass("btn-info");
+                }
+                /* */
+                overlayOff();
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                //if fails  
+                overlayOff();
+            }
+        });
+}
+/**
+ * 
  * @param {type} usd
  * @param {type} vnd
  * @returns {undefined}

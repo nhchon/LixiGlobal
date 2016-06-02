@@ -22,6 +22,8 @@ public interface LixiAsyncMethods {
             
     boolean sendPaymentInfoToBaoKim(LixiOrder order);
     
+    boolean checkBaoKimSystem();
+    
     @Async
     void submitOrdersToBaoKim(LixiOrder order);
     

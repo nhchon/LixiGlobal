@@ -374,6 +374,7 @@ public class LiXiVatGiaUtils {
                          *
                          */
                         MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
+                        vars.add("lixi_order_id", order.getId().toString());
                         vars.add("order_id", gift.getId().toString());
                         vars.add("sender_name", senderName);
                         vars.add("sender_email", senderEmail);

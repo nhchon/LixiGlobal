@@ -8,6 +8,9 @@
                     document.location.href = '<c:url value="/Administration/SystemConfig/configs/delete/"/>' + id;
                 }
             }
+            <c:if test="${param.save eq 'OK'}">
+                alert('The param is saved');
+            </c:if>
         </script>    
     </jsp:attribute>
     <jsp:body>

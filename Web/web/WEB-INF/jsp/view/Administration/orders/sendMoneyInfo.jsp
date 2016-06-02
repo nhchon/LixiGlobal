@@ -84,18 +84,11 @@
                     })
                 });
             }
-            
         </script>    
     </jsp:attribute>
     <jsp:body>
         <%-- EnumLixiOrderStatus.java --%>
-        <c:set var="UNFINISHED" value="-9"/>
-        <c:set var="NOT_YET_SUBMITTED" value="-8"/>
-        <c:set var="SENT_INFO" value="-7"/>
-        <c:set var="SENT_MONEY" value="-6"/>
-        <c:set var="PROCESSING" value="0"/>
-        <c:set var="COMPLETED" value="1"/>
-        <c:set var="CANCELED" value="2"/>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <!-- content-wrapper -->
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
@@ -103,7 +96,22 @@
         </ul>
 
         <!-- main -->
-        <h2 class="sub-header">Order Send Money</h2>
+        <%--<h2 class="sub-header">Order Send Money</h2>--%>
+        <div class="row">
+            <div class="col-md-9"><h2 class="sub-header">Order Send Money</h2></div>
+            <div class="col-md-3">
+                <div class="row" id="rowBaoKimStatus">
+                    <div class="col-md-6" style="padding-right: 0px;"></div>
+                    <div class="col-md-6" style="padding-right: 0px;text-align: center;">
+                        <div class="btn-group" id="toggle_event_editing">
+                            <button id="btnOff" type="button" class="btn btn-default disabled">OFF</button>
+                            <button id="btnOn" type="button" class="btn btn-info disabled">ON</button>
+                        </div>
+                        <p style="margin-top: 10px;"><a href="javascript:checkBaoKimStatus();">BaoKim System Status</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>        
         <c:url value="/Administration/Orders/sendMoneyInfo" var="postMoneyInfo"/>
         <security:authentication property="principal.configs['LIXI_BAOKIM_TRANFER_PERCENT']" var="transferPercent" />
         <c:if test="${empty transferPercent}">

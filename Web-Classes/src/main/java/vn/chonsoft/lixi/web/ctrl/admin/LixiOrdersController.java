@@ -91,6 +91,21 @@ public class LixiOrdersController {
      * @param model
      * @return 
      */
+    @RequestMapping(value = "checkBaoKimStatus", method = RequestMethod.GET)
+    public ModelAndView checkBaoKimStatus(Map<String, Object> model){
+        
+        model.put("error", "1");
+        if(lxAsyncMethods.checkBaoKimSystem()){
+            model.put("error", "0");
+        }
+        
+        return new ModelAndView("Administration/ajax/simple-message");
+    }
+    /**
+     * 
+     * @param model
+     * @return 
+     */
     @RequestMapping(value = "report", method = RequestMethod.GET)
     public ModelAndView report(Map<String, Object> model){
 

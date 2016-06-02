@@ -142,6 +142,18 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     }
 
     /**
+     * 
+     * @return 
+     */
+    @Override
+    public boolean checkBaoKimSystem() {
+        
+        return lxVatGiaUtils.getVatGiaCategory() != null;
+        
+    }
+
+    
+    /**
      *
      * @param order
      */
