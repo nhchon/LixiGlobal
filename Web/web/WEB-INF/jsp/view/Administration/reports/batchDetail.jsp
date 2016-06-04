@@ -2,12 +2,33 @@
 <template:Admin htmlTitle="Administration -:- New Orders">
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/bootstrap-datepicker3.min.css"/>">
+        <style type="text/css">
+            .popover{
+                max-width:600px;
+            }
+        </style>
     </jsp:attribute>
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
             
             jQuery(document).ready(function () {
+                
+                $(function(){
+                    $('[rel="popover"]').popover({
+                        container: 'body',
+                        html: true,
+                        placement:'left',
+                        title : 'Details <a href="#" class="close" data-dismiss="alert">&times;</a>',
+                        content: function () {
+                            var clone = $($(this).data('popover-content')).clone(true).css("display", "block");//removeClass('hide');
+                            return clone;
+                        }
+                    });
+                    $(document).on("click", ".popover .close" , function(e){
+                        $(this).parents(".popover").popover('hide');
+                    });
+                });
                 
                 $('#btnSubmit').click(function () {
 
@@ -176,6 +197,7 @@
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: center;">
+                                                <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
                                                 <c:if test="${m.key.lixiStatus eq PROCESSED}">
                                                     Processed<br/>
                                                     <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
@@ -187,6 +209,52 @@
                                                 <c:if test="${m.key.lixiStatus eq CANCELED}">
                                                     Cancelled
                                                 </c:if>
+                                                </a>
+                                                <div id="detailStatusOrder${m.key.id}" style="display:none;" class="table-responsive">
+                                                    <table class="table table-hover table-responsive table-striped" style="font-size: 12px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th nowrap>Receiver</th><%-- 1 --%>
+                                                                <th nowrap>Quantity</th><%-- 2 --%>
+                                                                <th nowrap>Description</th><%-- 3 --%>
+                                                                <th style="text-align:right;">Status</th><%-- 4 --%>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <c:forEach items="${m.value}" var="rio" varStatus="theCount">
+                                                                <tr>
+                                                                    <td  colspan="4" nowrap>${rio.recipient.fullName}</td>
+                                                                </tr>
+                                                                <c:forEach items="${rio.gifts}" var="g" varStatus="theCount2">
+                                                                    <tr>
+                                                                        <td># ${g.id}</td>
+                                                                        <td>${g.productQuantity}</td>
+                                                                        <td>${g.productName}</td>
+                                                                        <td style="text-align:right;">
+                                                                            <c:choose>
+                                                                                <c:when test="${g.bkStatus eq '0'}">
+                                                                                    <span class="alert-danger">Processing</span>
+                                                                                </c:when>
+                                                                                <c:when test="${g.bkStatus eq '1'}">
+                                                                                    <span class="alert-danger">Completed</span>
+                                                                                </c:when>
+                                                                                <c:when test="${g.bkStatus eq '2'}">
+                                                                                    <span class="alert-danger">Cancelled</span>
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <span class="alert-danger">${g.bkStatus}</span>
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                            <br/>
+                                                                            <br/>
+                                                                        </td>
+                                                                </tr>
+                                                                </c:forEach>
+                                                            </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                    
                                             </td>
                                             <td style="text-align: center;">
                                                 <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.modifiedDate}"/>

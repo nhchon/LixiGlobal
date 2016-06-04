@@ -3,10 +3,10 @@
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/bootstrap-datepicker3.min.css"/>">
         <style type="text/css">
-    .popover{
-        max-width:600px;
-    }
-</style>
+            .popover{
+                max-width:600px;
+            }
+        </style>
     </jsp:attribute>
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
@@ -19,12 +19,16 @@
                         container: 'body',
                         html: true,
                         placement:'left',
+                        title : 'Details <a href="#" class="close" data-dismiss="alert">&times;</a>',
                         content: function () {
                             var clone = $($(this).data('popover-content')).clone(true).css("display", "block");//removeClass('hide');
                             return clone;
                         }
                     }).click(function(e) {
                         e.preventDefault();
+                    });
+                    $(document).on("click", ".popover .close" , function(e){
+                        $(this).parents(".popover").popover('hide');
                     });
                 });
                 
@@ -315,7 +319,6 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                    
                                             </td>
                                             <td style="text-align: center;">
                                                 <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.modifiedDate}"/>
