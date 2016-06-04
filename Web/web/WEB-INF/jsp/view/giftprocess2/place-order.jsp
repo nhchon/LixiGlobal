@@ -486,19 +486,19 @@
                                         <div class="receiver-order-item">
                                             <div class="receiver-order-gift-price">
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left text-bold"><spring:message code="mess.gift-price"/></strong><span class="receiver-order-gift-price-right">USD <span id="giftPriceUsd"><fmt:formatNumber value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/></span> ~ VND <span id="giftPriceVnd"><fmt:formatNumber value="${LIXI_GIFT_PRICE_VND}" pattern="###,###.##"/></span></span>
+                                                    <strong class="receiver-order-gift-price-left text-bold"><spring:message code="mess.gift-price"/></strong><span class="receiver-order-gift-price-right">USD <span id="giftPriceUsd"><fmt:formatNumber minFractionDigits="2" value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/></span> ~ VND <span id="giftPriceVnd"><fmt:formatNumber minFractionDigits="2" value="${LIXI_GIFT_PRICE_VND}" pattern="###,###.##"/></span></span> (FX 1 USD = <fmt:formatNumber value="${LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> VND)
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left"><spring:message code="mess.card-process-fee"/></strong><span class="receiver-order-gift-price-right">USD <span id="CARD_PROCESSING_FEE_THIRD_PARTY"><fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></span></span>
+                                                    <strong class="receiver-order-gift-price-left"><spring:message code="mess.card-process-fee"/></strong><span class="receiver-order-gift-price-right">USD <span id="CARD_PROCESSING_FEE_THIRD_PARTY"><fmt:formatNumber minFractionDigits="2"  value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></span></span>
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left"><spring:message code="mess.lixi-handle-fee"/></strong><span class="receiver-order-gift-price-right">USD <span id="lixiHandlingFeeTotal"><fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></span> (<fmt:formatNumber value="${LIXI_HANDLING_FEE}" pattern="###,###.##"/> per / person )</span>
+                                                    <strong class="receiver-order-gift-price-left"><spring:message code="mess.lixi-handle-fee"/></strong><span class="receiver-order-gift-price-right">USD <span id="lixiHandlingFeeTotal"><fmt:formatNumber minFractionDigits="2" value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></span> (<fmt:formatNumber minFractionDigits="2" value="${LIXI_HANDLING_FEE}" pattern="###,###.##"/> per / person )</span>
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left"><spring:message code="mess.sale-tax"/></strong><span class="receiver-order-gift-price-right">USD <span id="saleTax"><fmt:formatNumber value="0" pattern="###,###.##"/></span></span>
+                                                    <strong class="receiver-order-gift-price-left"><spring:message code="mess.sale-tax"/></strong><span class="receiver-order-gift-price-right">USD <span id="saleTax"><fmt:formatNumber  minFractionDigits="2" value="0.00" pattern="###,###.##"/></span></span>
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left text-bold" style="color: #000">Total</strong><strong class="receiver-order-gift-price-right text-bold" style="color: #000">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
+                                                    <strong class="receiver-order-gift-price-left text-bold" style="color: #000">Total</strong><strong class="receiver-order-gift-price-right text-bold" style="color: #000">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber  minFractionDigits="2" value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
                                                 </div>
                                             </div>
                                                 <h4 class="text-color-link"><spring:message code="mess.payment-method"/> <a href="<c:url value="/checkout/paymentMethods"/>" class="edit-info-event"></a></h4>
