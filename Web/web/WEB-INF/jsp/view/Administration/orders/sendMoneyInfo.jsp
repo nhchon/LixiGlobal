@@ -144,8 +144,21 @@
                                     <c:set var="totalAmountUsd" value="0"/>
                                     <c:forEach items="${mOs}" var="m" varStatus="theCount">
                                         <c:set var="countRec" value="${theCount.count}"/>
+                                        <c:set var="totalAmountVndOfThisOrder" value="0"/>
+                                        <c:set var="totalAmountUsdOfThisOrder" value="0"/>
+                                        <c:forEach items="${m.value}" var="rio">
+                                            <c:if test="${not empty rio.gifts}">
+                                                <c:if test="${m.key.setting eq 0}">
+                                                    <c:set var="totalAmountVndOfThisOrder" value="${totalAmountVndOfThisOrder + rio.giftTotal.vnd * transferPercent/100.0}"/>
+                                                </c:if>
+                                                <c:if test="${m.key.setting eq 1}">
+                                                    <c:set var="totalAmountVndOfThisOrder" value="${totalAmountVndOfThisOrder + rio.giftTotal.vnd}"/>
+                                                </c:if>
+                                                <c:set var="totalAmountUsdOfThisOrder" value="${totalAmountUsdOfThisOrder + rio.giftTotal.usd}"/>
+                                            </c:if>
+                                        </c:forEach>
                                         <tr id="rowO${m.key.id}">
-                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalAmountVnd="${m.key.invoice.totalAmountVnd}" totalAmountUsd="${m.key.invoice.totalAmount}"/></td>
+                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
@@ -174,7 +187,7 @@
                                             <td style="text-align: right;">
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
-                                                    <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
+                                                    <fmt:formatNumber minFractionDigits="2" value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
                                                     <c:if test="${m.key.setting eq 0}">
                                                         <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
                                                         <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd * transferPercent/100.0}"/>
@@ -212,7 +225,7 @@
                             <td>Record(s)</td>
                         </tr>
                         <tr>
-                            <td>Total Amount(fee, tax,...):</td>
+                            <td>Total Amount:</td>
                             <td style="text-align: right;" id="tdOnSelectUsd"></td>
                             <td>USD</td>
                         </tr>

@@ -32,6 +32,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.VatgiaCategory;
@@ -573,13 +574,26 @@ public class LiXiVatGiaUtils {
             String submitUrl = baokimProp.getProperty("baokim.single_payment_notification");
             SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+            LixiConfig baoKimPercentConfig = configService.findByName(LiXiGlobalConstants.LIXI_BAOKIM_TRANFER_PERCENT);
+            int setting = order.getSetting();
+            double baoKimPercent = 100.0;
+            try {
+                baoKimPercent = Double.parseDouble(baoKimPercentConfig.getValue());
+            } catch (Exception e) {}
+            
+            
             for (LixiOrderGift gift : order.getGifts()) {
 
                 try {
 
                     if (EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue().equals(gift.getBkSubStatus())) {
                         String id = gift.getId().toString();
-                        String amount = gift.getProductPrice() + "";
+                        String amount = (gift.getProductPrice()*gift.getProductQuantity()) + "";
+                        if(setting == EnumLixiOrderSetting.GIFT_ONLY.getValue()){
+                            double amountNumber = (gift.getProductPrice()*gift.getProductQuantity() * baoKimPercent)/100.0;
+                            
+                            amount = amountNumber + "";
+                        }
                         String dateTransf = dFormat.format(Calendar.getInstance().getTime());
                         /**
                          *

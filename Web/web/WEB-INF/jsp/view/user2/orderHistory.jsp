@@ -44,6 +44,7 @@
     </jsp:attribute>
 
     <jsp:body>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <section class="section-gift bg-default main-section">
             <div class="container post-wrapper" style="padding-top:30px;">
                 <div class="section-receiver">
@@ -116,6 +117,20 @@
                                                 </c:if>
                                             </div>
                                         </div>
+                                        <div class="col-md-1" style="text-align:center;">
+                                            <div style="font-size:16px;text-transform: uppercase;"><spring:message code="mess.order"/></div>
+                                            <div style="font-size:14px;padding-top: 8px;">
+                                                <c:if test="${m.key.lixiStatus eq PROCESSING}">
+                                                    Processing<br/>
+                                                </c:if>
+                                                <c:if test="${m.key.lixiStatus eq COMPLETED}">
+                                                    Completed
+                                                </c:if>
+                                                <c:if test="${m.key.lixiStatus eq CANCELED}">
+                                                    Cancelled
+                                                </c:if>
+                                            </div>
+                                        </div>
                                         <div class="col-md-2" style="text-align:center;">
                                             <div style="font-size:16px;">TOTAL</div>
                                             <div style="font-size:14px;padding-top: 8px;">
@@ -123,12 +138,12 @@
                                                     --
                                                 </c:if>
                                                 <c:if test="${not empty m.key.invoice}">    
-                                                    USD <fmt:formatNumber value="${m.key.invoice.totalAmount}" pattern="###,###.##"/> - 
+                                                    USD <fmt:formatNumber minFractionDigits="2" value="${m.key.invoice.totalAmount}" pattern="###,###.##"/> - 
                                                     <fmt:formatNumber value="${m.key.invoice.totalAmountVnd}" pattern="###,###.##"/> VND
                                                 </c:if>
                                             </div>
                                         </div>
-                                        <div class="col-md-3" style="text-align: center;">
+                                        <div class="col-md-2" style="text-align: center;">
                                             <div style="font-size:16px;">SETTING <span class="pull-right"><a href="javascript:toogleDetail(${m.key.id})"><i id="iconDetail${m.key.id}" class="fa fa-caret-down"></i></a></span></div>
                                             <div style="font-size:14px;padding-top: 8px;">
                                                 <c:if test="${m.key.setting eq 0}">
