@@ -99,7 +99,12 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-lg-12" style="text-align: right;">
+            <div class="col-lg-4" style="text-align: left;">
+                <c:if test="${not empty chooseRecipientForm.recId}">
+                <button class="btn btn-danger"><spring:message code="message.delete"/></button>
+                </c:if>
+            </div>
+            <div class="col-lg-8" style="text-align: right;">
                 <form:hidden path="recId"/>
                 <form:hidden path="action"/>
                 <button onclick="return checkSubmitRecipientFormOnModal();" id="btnSave" type="button" class="btn btn-primary"><spring:message code="message.save"/></button>
