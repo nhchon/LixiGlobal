@@ -489,6 +489,10 @@ public class GiftsController {
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
         
+        if(u.getRecipients() != null){
+            u.getRecipients().removeIf(r -> r.isActivated()==false);
+        }
+        
         model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         model.put(LiXiConstants.LIXI_CATEGORIES, categories);
         

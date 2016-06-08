@@ -101,7 +101,7 @@
         <div class="form-group row">
             <div class="col-lg-4" style="text-align: left;">
                 <c:if test="${not empty chooseRecipientForm.recId}">
-                <button class="btn btn-danger"><spring:message code="message.delete"/></button>
+                    <button class="btn btn-danger" type="button" onclick="deleteRecipient()"><spring:message code="message.delete"/></button>
                 </c:if>
             </div>
             <div class="col-lg-8" style="text-align: right;">

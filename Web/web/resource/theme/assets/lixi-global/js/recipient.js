@@ -2,6 +2,31 @@
  * For Recipient Form.
  * 
  */
+function deleteRecipient(){
+    if(confirm(CONFIRM_DELETE_MESSAGE)){
+    $.ajax(
+    {
+        url: CONTEXT_PATH + '/recipient/deactivated/'+$('#recId').val(),
+        type: 'GET',
+        dataType: 'json',
+        success: function (data, textStatus, jqXHR)
+        {
+            //data: return data from server
+            if (data.error === '0') {
+                $("#recId option[value='"+data.recId+"']").remove();
+            }
+            else {
+                alert(SOMETHING_WRONG_ERROR);
+            }
+            $('#editRecipientModal').modal('hide');
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            //if fails      
+        }
+    });
+    }
+}
 
 function checkSubmitRecipientFormOnModal(){
     if(checkRecipientFormOnModal() === true){

@@ -61,6 +61,10 @@ public class Recipient implements Serializable {
     @Column(name = "phone")
     private String phone;
     
+    @Basic(optional = false)
+    @Column(name = "activated")
+    private boolean activated;
+
     @Basic
     @Lob
     @Column(name = "note")
@@ -167,6 +171,14 @@ public class Recipient implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 
     public String getNote() {

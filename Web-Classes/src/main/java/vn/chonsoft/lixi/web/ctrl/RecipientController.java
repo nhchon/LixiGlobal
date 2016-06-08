@@ -63,6 +63,28 @@ public class RecipientController {
     private JavaMailSender mailSender;
     
     /**
+     * 
+     * @param model
+     * @param id
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "deactivated/{id}", method = RequestMethod.GET)
+    public ModelAndView deactivated(Map<String, Object> model, @PathVariable Long id) {
+        
+        Recipient rec = this.reciService.findById(id);
+        if(rec != null){
+            rec.setActivated(false);
+            this.reciService.save(rec);
+        }
+        
+        model.put("error", 0);
+        model.put("recId", id);
+        
+        return new ModelAndView("recipient/message");
+    }
+    /**
      *
      * @param model
      * @param id
@@ -135,6 +157,7 @@ public class RecipientController {
             rec.setEmail(form.getEmail());
             rec.setDialCode(form.getDialCode());
             rec.setPhone(form.getPhone());
+            rec.setActivated(true);
             rec.setNote((form.getNote()));// LiXiUtils.fixEncode
             rec.setModifiedDate(Calendar.getInstance().getTime());
 

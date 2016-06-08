@@ -104,51 +104,51 @@
                     var postData = $(this).serializeArray();
                     var formURL = $(this).attr("action");
                     $.ajax(
-                            {
-                                url: formURL,
-                                type: "POST",
-                                data: postData,
-                                dataType: 'json',
-                                success: function (data, textStatus, jqXHR)
-                                {
-                                    //data: return data from server
-                                    if (data.error === '0') {
-                                        // hide popup
-                                        $('#editRecipientModal').modal('hide');
-                                        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
-                                        var firstName = $("#chooseRecipientForm #firstName").val();
-                                        /* new recipient */
-                                        if (parseInt(data.recId) > 0) {
-                                            if(data.action === 'create'){
-                                                $('#recId')
-                                                        .append($("<option></option>")
-                                                                .attr("value", data.recId)
-                                                                .attr("firstname", firstName)
-                                                                .text(name));
+                    {
+                        url: formURL,
+                        type: "POST",
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR)
+                        {
+                            //data: return data from server
+                            if (data.error === '0') {
+                                // hide popup
+                                $('#editRecipientModal').modal('hide');
+                                var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+                                var firstName = $("#chooseRecipientForm #firstName").val();
+                                /* new recipient */
+                                if (parseInt(data.recId) > 0) {
+                                    if(data.action === 'create'){
+                                        $('#recId')
+                                                .append($("<option></option>")
+                                                        .attr("value", data.recId)
+                                                        .attr("firstname", firstName)
+                                                        .text(name));
 
-                                                $('#recId').val(data.recId);
-                                                /* */
-                                                showGiftValueFor();
-                                            }
-                                            else {
-                                                // save successfully
-                                                var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
-
-                                                $("#recId option:selected").attr("firstname", $("#chooseRecipientForm #firstName").val());
-                                                $("#recId option:selected").html(name);
-                                                $('#recFirstName').html(firstName);
-                                            }
-                                        }
+                                        $('#recId').val(data.recId);
+                                        /* */
+                                        showGiftValueFor();
                                     }
                                     else {
-                                        alert(SOMETHING_WRONG_ERROR);
+                                        // save successfully
+                                        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+
+                                        $("#recId option:selected").attr("firstname", $("#chooseRecipientForm #firstName").val());
+                                        $("#recId option:selected").html(name);
+                                        $('#recFirstName').html(firstName);
                                     }
-                                },
-                                error: function (jqXHR, textStatus, errorThrown)
-                                {
-                                    //if fails      
                                 }
-                            });
+                            }
+                            else {
+                                alert(SOMETHING_WRONG_ERROR);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown)
+                        {
+                            //if fails      
+                        }
+                    });
                     if (typeof e !== 'undefined') {
                         e.preventDefault(); //STOP default action
                         //e.unbind(); //unbind. to stop multiple form submit.
@@ -249,7 +249,6 @@
                             <div class="button-control-page">
                                 <button class="btn btn-default"><spring:message code="message.back"/></button>
                                 <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/gifts/order-summary"/>"><spring:message code="message.next"/></button>
-                                <!--<input type="hidden" id="recId" value="${SELECTED_RECIPIENT_ID}"/>-->
                             </div>
                         </div>
                     </div>

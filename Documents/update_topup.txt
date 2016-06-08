@@ -17,3 +17,5 @@ ALTER TABLE `countries` ADD `code` VARCHAR(3) NULL AFTER `name`;
 
 ###
 ALTER TABLE `vatgia_products` ADD `description` TEXT NULL AFTER `name`;
+
+ALTER TABLE `recipients` ADD `activated` TINYINT NOT NULL DEFAULT '1' AFTER `note`;

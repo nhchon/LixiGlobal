@@ -14,6 +14,7 @@
             var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
             var SELECT_RECEIVER = '<spring:message code="gift.select_recipient" text="Please select a receiver"/>';
             var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
+            var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
             var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
             var TOP_UP_EMPTY = '<spring:message code="validate.topup.no_empty"/>';
             var NUM_OF_CARD = '<spring:message code="validate.buyphonecard.num_of_card"/>';

@@ -196,6 +196,10 @@ public class GiftsAjaxController {
         /* get selected category from session */
         Integer selectedCatId = (Integer)request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID);
         
+        if(selectedCatId==null){
+            selectedCatId = 43;
+        }
+        
         /* get category object */
         LixiCategory lxcategory = categories.getById(selectedCatId);
         

@@ -106,6 +106,10 @@ public class TopUpMobileController {
         
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
+        
+        if(u.getRecipients() != null){
+            u.getRecipients().removeIf(r -> r.isActivated()==false);
+        }
         model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         
         LixiOrder order = null;
