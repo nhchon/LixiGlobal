@@ -36,6 +36,8 @@ public interface LixiOrderRepository  extends JpaRepository<LixiOrder, Long>{
     //Page<LixiOrder> findByModifiedDate(@Param("begin") Date begin, @Param("end") Date end, Pageable page);
     LixiOrder findByIdAndSender(Long id, User sender);    
     
+    Page<LixiOrder> findById(Long id, Pageable page);
+    
     Page<LixiOrder> findByModifiedDateBetween(Date begin, Date end, Pageable page);
     
     Page<LixiOrder> findBySenderAndModifiedDateBetween(User sender, Date begin, Date end, Pageable page);

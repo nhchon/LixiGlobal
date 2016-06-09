@@ -29,6 +29,9 @@ public interface LixiOrderService {
     LixiOrder findById(Long id);
 
     @Transactional
+    Page<LixiOrder> findById(Long id, Pageable pageable);
+
+    @Transactional
     LixiOrder findByIdAndSender(Long id, User sender);
 
     @Transactional

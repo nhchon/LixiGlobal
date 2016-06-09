@@ -10,6 +10,7 @@ package vn.chonsoft.lixi.model.form;
  */
 public class LixiOrderSearchForm {
     
+    private Long orderId;
     private String status;
     private String firstName;
     private String lastName;
@@ -17,6 +18,14 @@ public class LixiOrderSearchForm {
     
     private String fromDate;
     private String toDate;
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 
     public String getStatus() {
         return status;

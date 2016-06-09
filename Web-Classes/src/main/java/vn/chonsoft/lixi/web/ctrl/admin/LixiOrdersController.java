@@ -89,6 +89,39 @@ public class LixiOrdersController {
     /**
      * 
      * @param model
+     * @param id
+     * @return 
+     */
+    @RequestMapping(value = "reSendOrder/{id}", method = RequestMethod.GET)
+    public ModelAndView reSendOrder(Map<String, Object> model, @PathVariable Long id){
+        
+        model.put("error", "0");
+        
+        LixiOrder order = this.lxOrderService.findById(id);
+        
+        if(order != null){
+            lxAsyncMethods.reSubmitOrdersToBaoKimNoAsync(order);
+        }
+        
+        /* re-select */
+        order = this.lxOrderService.findById(id);
+        
+        List<RecipientInOrder> rios = LiXiUtils.genMapRecGifts(order);
+        
+        for(RecipientInOrder rio : rios){
+            if(rio.getGifts()!=null && !rio.getGifts().isEmpty()){
+                if("Not Sent".equals(rio.getBkStatus())){
+                    model.put("error", "1");
+                    break;
+                }
+            }
+        }
+        
+        return new ModelAndView("Administration/ajax/simple-message");
+    }
+    /**
+     * 
+     * @param model
      * @return 
      */
     @RequestMapping(value = "checkBaoKimStatus", method = RequestMethod.GET)
@@ -141,57 +174,65 @@ public class LixiOrdersController {
             method = { RequestMethod.GET, RequestMethod.POST })
     public ModelAndView report(Map<String, Object> model, LixiOrderSearchForm form, Pageable pageable) throws ParseException
     {
-        SearchCriteria criteria = SearchCriteria.Builder.create();
+        Page<LixiOrder> pOrder = null;
         
-        /* convert status */
-        String status = "";
-        if(StringUtils.isNotEmpty(form.getStatus())){
+        if(form.getOrderId()!=null){
             
-            /* send money*/
-            if(LiXiGlobalConstants.TRANS_REPORT_STATUS_PROCESSED.equals(form.getStatus())){
-                status = EnumLixiOrderStatus.PROCESSED.getValue();
-            }
-            else
-                if(LiXiGlobalConstants.TRANS_REPORT_STATUS_COMPLETED.equals(form.getStatus())){
-                    status = EnumLixiOrderStatus.COMPLETED.getValue();
+            pOrder = this.lxOrderService.findById(form.getOrderId(), pageable);
+        }
+        else{
+            
+            SearchCriteria criteria = SearchCriteria.Builder.create();
+
+            /* convert status */
+            String status = "";
+            if(StringUtils.isNotEmpty(form.getStatus())){
+
+                /* send money*/
+                if(LiXiGlobalConstants.TRANS_REPORT_STATUS_PROCESSED.equals(form.getStatus())){
+                    status = EnumLixiOrderStatus.PROCESSED.getValue();
                 }
                 else
-                if(LiXiGlobalConstants.TRANS_REPORT_STATUS_CANCELLED.equals(form.getStatus())){
-                    status = EnumLixiOrderStatus.CANCELED.getValue();
-                }
+                    if(LiXiGlobalConstants.TRANS_REPORT_STATUS_COMPLETED.equals(form.getStatus())){
+                        status = EnumLixiOrderStatus.COMPLETED.getValue();
+                    }
+                    else
+                    if(LiXiGlobalConstants.TRANS_REPORT_STATUS_CANCELLED.equals(form.getStatus())){
+                        status = EnumLixiOrderStatus.CANCELED.getValue();
+                    }
+            }
+
+            /* do not get orders that in creation */
+            criteria.add(new Criterion("lixiStatus", Criterion.Operator.NEQ, EnumLixiOrderStatus.UN_FINISHED.getValue()));
+
+            /* check status */
+            if(StringUtils.isNotEmpty(status)){
+
+                log.info("vn.chonsoft.lixi.web.ctrl.admin.LixiOrdersController.report(): " + status);
+
+                criteria.add(new Criterion("lixiStatus", Criterion.Operator.EQ, status));
+            }
+
+            /* created Date */
+            if(StringUtils.isNotEmpty(form.getFromDate())){
+                criteria.add(new Criterion("createdDate", Criterion.Operator.GTE, new Date(
+                        this.formatter.parse(form.getFromDate()).getTime()
+                )));
+            }
+
+
+            if(StringUtils.isNotEmpty(form.getToDate())){
+                criteria.add(new Criterion("createdDate", Criterion.Operator.LTE, new Date(
+                        DateUtils.addDays(this.formatter.parse(form.getToDate()), 1).getTime()
+                )));
+            }
+
+            //if(!StringUtils.isEmpty(form.getFirstName())){
+                //criteria.add(new Criterion("sender.firstName", Criterion.Operator.LIKE, form.getFirstName()));
+            //}
+
+            pOrder = this.lxOrderSearchService.search(criteria, pageable);
         }
-        
-        /* do not get orders that in creation */
-        criteria.add(new Criterion("lixiStatus", Criterion.Operator.NEQ, EnumLixiOrderStatus.UN_FINISHED.getValue()));
-        
-        /* check status */
-        if(StringUtils.isNotEmpty(status)){
-            
-            log.info("vn.chonsoft.lixi.web.ctrl.admin.LixiOrdersController.report(): " + status);
-            
-            criteria.add(new Criterion("lixiStatus", Criterion.Operator.EQ, status));
-        }
-        
-        /* created Date */
-        if(StringUtils.isNotEmpty(form.getFromDate())){
-            criteria.add(new Criterion("createdDate", Criterion.Operator.GTE, new Date(
-                    this.formatter.parse(form.getFromDate()).getTime()
-            )));
-        }
-        
-        
-        if(StringUtils.isNotEmpty(form.getToDate())){
-            criteria.add(new Criterion("createdDate", Criterion.Operator.LTE, new Date(
-                    DateUtils.addDays(this.formatter.parse(form.getToDate()), 1).getTime()
-            )));
-        }
-        
-        //if(!StringUtils.isEmpty(form.getFirstName())){
-            //criteria.add(new Criterion("sender.firstName", Criterion.Operator.LIKE, form.getFirstName()));
-        //}
-        
-        Page<LixiOrder> pOrder = this.lxOrderSearchService.search(criteria, pageable);
-        
         model.put("searchForm", form);
         model.put("results", pOrder);
         

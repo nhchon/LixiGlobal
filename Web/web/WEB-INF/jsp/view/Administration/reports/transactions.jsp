@@ -11,9 +11,9 @@
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
+            var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
             
             jQuery(document).ready(function () {
-                
                 $(function(){
                     $('[rel="popover"]').popover({
                         container: 'body',
@@ -54,12 +54,38 @@
 
                     return true;
                 });
-                <%--
-                <c:if test="${empty results}">$('#searchForm').submit();</c:if>
-                --%>
-                
             });
 
+            function reSendOrder(id){
+                overlayOn($('#rowO' + id));
+                $.ajax(
+                {
+                    url: '<c:url value="/Administration/Orders/reSendOrder/"/>' + id,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR)
+                    {
+                        //data: return data from server
+                        $('#status' + id).html(data);
+
+                        if (data.error === '0') {
+                            alert('Re-Send the Order success');
+                        }
+                        else{
+                            alert('Re-Send the Order failed');
+                        }
+                        /* */
+                        overlayOff();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        //if fails  
+                        overlayOff();
+                    }
+                });
+                
+            }
+            
             function cancel(id){
                 
                 if(confirm('Are you sure want to CANCEL this order id '+ id + ' ???')){
@@ -69,13 +95,49 @@
             }
             
             function viewRecipient(id) {
-                $.get('<c:url value="/Administration/SystemRecipient/view/"/>' + id, function (data) {
-                    $('#editRecipientContent').html(data);
-                    $('#editRecipientModal').modal({show: true});
+                $.get('<c:url value="/Administration/SystemRecipient/edit/"/>' + id, function (data) {
+                    enableEditRecipientHtmlContent(data);
+                });
+            }
+            
+            function enableEditRecipientHtmlContent(data) {
 
-                    $('#editRecipientModal').on('shown.bs.modal', function () {
-                        // TODO
-                    })
+                $('#editRecipientContent').html(data);
+                $('#editRecipientModal').modal({show: true});
+
+                // handler submit form
+                //callback handler for form submit
+                $("#chooseRecipientForm").submit(function (e)
+                {
+                    //alert('hi');
+                    var postData = $(this).serializeArray();
+                    var formURL = $(this).attr("action");
+                    $.ajax(
+                    {
+                        url: formURL,
+                        type: "POST",
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR)
+                        {
+                            //data: return data from server
+                            if (data.error === '0') {
+                                // hide popup
+                                $('#editRecipientModal').modal('hide');
+                            }
+                            else {
+                                alert(SOMETHING_WRONG_ERROR);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown)
+                        {
+                            //if fails      
+                        }
+                    });
+                    if (typeof e !== 'undefined') {
+                        e.preventDefault(); //STOP default action
+                        //e.unbind(); //unbind. to stop multiple form submit.
+                    }
                 });
             }
 
@@ -90,7 +152,8 @@
                 });
             }
             
-        </script>    
+        </script>
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-datepicker.min.js"/>"></script>
     </jsp:attribute>
     <jsp:body>
@@ -123,6 +186,15 @@
                     <input type="hidden" name="search" value="true" />
                     <input type="hidden" name="paging.page"  id="paging.page" value="1"/>
                     <input type="hidden" name="paging.size"  id="paging.size" value="50"/>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="status">Order ID:</label>
+                                <form:input type="number" class="form-control" path="orderId"/>
+                                <div class="help-block">just number, no need 000 ... </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
@@ -325,6 +397,9 @@
                                             </td>
                                             <c:if test="${searchForm.status eq 'All' or searchForm.status eq PROCESSED}">
                                             <td style="text-align: right;">
+                                                <c:if test="${m.key.lixiStatus eq PROCESSED}">
+                                                    <a href="javascript:reSendOrder(${m.key.id});">Re-Send</a> | 
+                                                </c:if>
                                                 <c:if test="${m.key.lixiStatus eq PROCESSED and (m.key.lixiSubStatus eq SENT_MONEY or m.key.lixiSubStatus eq SENT_INFO)}">
                                                     <a href="javascript:cancel(${m.key.id});">Cancel</a>
                                                 </c:if>

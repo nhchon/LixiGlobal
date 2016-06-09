@@ -24,6 +24,9 @@
     <spring:message code="message.email_place_holder" var="emailMessage"/>
     <spring:message code="signup.retype_email" var="retypeEmail"/>
     <c:url value="/recipient/editRecipient" var="editRecipientUrl"/>
+    <c:if test="${not empty adminEditRecipient}">
+        <c:url value="${adminEditRecipient}" var="editRecipientUrl"/>
+    </c:if>
     <form:form action="${editRecipientUrl}" modelAttribute="chooseRecipientForm" class="form-horizontal">
         <div class="form-group name">
             <div class="col-lg-5 col-md-5">
@@ -100,7 +103,7 @@
         </div>
         <div class="form-group row">
             <div class="col-lg-4" style="text-align: left;">
-                <c:if test="${not empty chooseRecipientForm.recId}">
+                <c:if test="${not empty chooseRecipientForm.recId and empty adminEditRecipient}">
                     <button class="btn btn-danger" type="button" onclick="deleteRecipient()"><spring:message code="message.delete"/></button>
                 </c:if>
             </div>

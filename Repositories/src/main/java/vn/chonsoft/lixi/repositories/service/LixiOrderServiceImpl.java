@@ -30,6 +30,24 @@ public class LixiOrderServiceImpl implements LixiOrderService{
 
     /**
      * 
+     * @param id
+     * @param pageable
+     * @return 
+     */
+    @Override
+    public Page<LixiOrder> findById(Long id, Pageable pageable) {
+        
+        Page<LixiOrder> ps = this.lxorderRepository.findById(id, pageable);
+        if(ps != null && ps.hasContent()){
+            ps.getContent().forEach((LixiOrder o) -> LiXiRepoUtils.loadOrder(o));
+        }
+        
+        return ps; 
+    }
+
+    
+    /**
+     * 
      * @param order
      * @return 
      */

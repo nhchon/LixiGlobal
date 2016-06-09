@@ -391,7 +391,7 @@ public class LiXiVatGiaUtils {
                         vars.add("method_receive", methodReceive);
                         //
                         log.info("///////////////////////////////////////////////////");
-                        log.info("lixi_order_id", order.getId().toString());
+                        log.info("lixi_order_id: " + order.getId().toString());
                         log.info("order_id:" + gift.getId().toString());
                         log.info("sender_name:" + senderName);
                         log.info("sender_email:" + senderEmail);
@@ -402,7 +402,7 @@ public class LiXiVatGiaUtils {
                         log.info("receiver_name:" + receiverName);
                         log.info("receiver_email:" + emptyIfNull(gift.getRecipient().getEmail()));
                         log.info("receiver_phone:" + emptyIfNull(LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(gift.getRecipient().getPhone())));
-                        log.info("receiver_adress:" + "xxx");
+                        log.info("receiver_adress: INPUT_BY_BAOKIM");
                         log.info("message:" + gift.getRecipient().getNote());
                         log.info("method_receive:" + methodReceive);
                         log.info("///////////////////////////////////////////////////");
@@ -456,6 +456,130 @@ public class LiXiVatGiaUtils {
 
     }
 
+    /**
+     * 
+     * @param order
+     * @param orderService
+     * @param orderGiftService 
+     */
+    public void reSubmitOrdersToBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService) {
+
+        // check properties is null
+        if (baokimProp == null) {
+            return;
+        }
+        if (order == null) {
+            return;
+        }
+        if (order.getGifts() == null || order.getGifts().isEmpty()) {
+            return;
+        }
+        //
+        try {
+
+            final AuthHttpComponentsClientHttpRequestFactory requestFactory
+                    = new AuthHttpComponentsClientHttpRequestFactory(
+                            HttpClients.createDefault(), HttpHost.create(baokimProp.getProperty("baokim.host")), baokimProp.getProperty("baokim.username"), baokimProp.getProperty("baokim.password"));
+
+            final RestTemplate restTemplate = new RestTemplate(requestFactory);
+
+            String submitUrl = baokimProp.getProperty("baokim.submit_order");
+            String senderName = StringUtils.join(new String[]{order.getSender().getFirstName(), order.getSender().getMiddleName(), order.getSender().getLastName()}, " ");
+            String senderEmail = order.getSender().getEmail();
+            String senderPhone = emptyIfNull(order.getSender().getPhone());
+            boolean updateOrderStatus = true;
+            String methodReceive = convertOrderSetting(order.getSetting()) + "";
+            for (LixiOrderGift gift : order.getGifts()) {
+
+                try {
+
+                        String receiverName = StringUtils.join(new String[]{gift.getRecipient().getFirstName(), gift.getRecipient().getMiddleName(), gift.getRecipient().getLastName()}, " ");
+                        /**
+                         *
+                         * Setting up data to be sent to REST service
+                         *
+                         */
+                        MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
+                        vars.add("lixi_order_id", order.getId().toString());
+                        vars.add("order_id", gift.getId().toString());
+                        vars.add("sender_name", senderName);
+                        vars.add("sender_email", senderEmail);
+                        vars.add("sender_phone", senderPhone);
+                        vars.add("product_id", gift.getProductId() + "");
+                        vars.add("price", gift.getProductPrice() + "");
+                        vars.add("quantity", gift.getProductQuantity() + "");
+                        vars.add("receiver_name", receiverName);
+                        vars.add("receiver_email", emptyIfNull(gift.getRecipient().getEmail()));
+                        vars.add("receiver_phone", emptyIfNull(LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(gift.getRecipient().getPhone())));
+                        vars.add("receiver_adress", "INPUT_BY_BAOKIM");// TODO: add address to recipient
+                        vars.add("message", gift.getRecipient().getNote());
+                        vars.add("method_receive", methodReceive);
+                        //
+                        log.info("///////////////////////////////////////////////////");
+                        log.info("lixi_order_id:" +  order.getId().toString());
+                        log.info("order_id:" + gift.getId().toString());
+                        log.info("sender_name:" + senderName);
+                        log.info("sender_email:" + senderEmail);
+                        log.info("sender_phone:" + senderPhone);
+                        log.info("product_id:" + gift.getProductId() + "");
+                        log.info("price:" + gift.getProductPrice() + "");
+                        log.info("quantity:" + gift.getProductQuantity() + "");
+                        log.info("receiver_name:" + receiverName);
+                        log.info("receiver_email:" + emptyIfNull(gift.getRecipient().getEmail()));
+                        log.info("receiver_phone:" + emptyIfNull(LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(gift.getRecipient().getPhone())));
+                        log.info("receiver_adress:INPUT_BY_BAOKIM");
+                        log.info("message:" + gift.getRecipient().getNote());
+                        log.info("method_receive:" + methodReceive);
+                        log.info("///////////////////////////////////////////////////");
+
+                        LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
+
+                        gift.setBkStatus(EnumLixiOrderStatus.PROCESSING.getValue());
+                        gift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
+                        gift.setBkMessage(result.getData().getMessage());
+                        gift.setModifiedDate(Calendar.getInstance().getTime());
+                        
+                        log.info("bk message:" + result.getData().getMessage());
+                        log.info("order id:" + result.getData().getOrder_id());
+                        log.info("///////////////////////////////////////////////////");
+                        // update
+                        orderGiftService.save(gift);
+                        
+                } catch (Exception e) {
+                    // error
+                    gift.setBkStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
+                    gift.setBkMessage(e.getMessage());
+                    // update
+                    orderGiftService.save(gift);
+                    // don't update order status
+                    updateOrderStatus = false;
+
+                    // log error
+                    log.info(e.getMessage(), e);
+                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+                }
+            }
+
+            // update order
+            log.info("updateOrderStatus: " + updateOrderStatus);
+
+            if (updateOrderStatus) {
+
+                order.setLixiStatus(EnumLixiOrderStatus.PROCESSING.getValue());
+                order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
+                order.setLixiMessage("Sent Order Info");
+                order.setModifiedDate(Calendar.getInstance().getTime());
+                
+                orderService.save(order);
+
+            }
+        } catch (Exception e) {
+
+            log.info(e.getMessage(), e);
+            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+        }
+
+    }
     /**
      *
      * @param order
