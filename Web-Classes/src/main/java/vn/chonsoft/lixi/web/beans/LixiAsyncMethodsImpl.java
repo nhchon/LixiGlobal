@@ -178,8 +178,8 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     }
 
     @Override
-    public void reSubmitOrdersToBaoKimNoAsync(LixiOrder order){
-        lxVatGiaUtils.reSubmitOrdersToBaoKim(order, orderService, orderGiftService);
+    public boolean reSubmitOrdersToBaoKimNoAsync(LixiOrder order){
+        return lxVatGiaUtils.reSubmitOrdersToBaoKim(order, orderService, orderGiftService);
     }
     
     /**

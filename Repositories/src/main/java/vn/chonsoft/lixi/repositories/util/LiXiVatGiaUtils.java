@@ -461,19 +461,21 @@ public class LiXiVatGiaUtils {
      * @param order
      * @param orderService
      * @param orderGiftService 
+     * @return boolean
      */
-    public void reSubmitOrdersToBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService) {
+    public boolean reSubmitOrdersToBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService) {
 
         // check properties is null
         if (baokimProp == null) {
-            return;
+            return false;
         }
         if (order == null) {
-            return;
+            return false;
         }
         if (order.getGifts() == null || order.getGifts().isEmpty()) {
-            return;
+            return false;
         }
+        boolean updateOrderStatus = true;
         //
         try {
 
@@ -487,7 +489,6 @@ public class LiXiVatGiaUtils {
             String senderName = StringUtils.join(new String[]{order.getSender().getFirstName(), order.getSender().getMiddleName(), order.getSender().getLastName()}, " ");
             String senderEmail = order.getSender().getEmail();
             String senderPhone = emptyIfNull(order.getSender().getPhone());
-            boolean updateOrderStatus = true;
             String methodReceive = convertOrderSetting(order.getSetting()) + "";
             for (LixiOrderGift gift : order.getGifts()) {
 
@@ -534,24 +535,11 @@ public class LiXiVatGiaUtils {
 
                         LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
 
-                        gift.setBkStatus(EnumLixiOrderStatus.PROCESSING.getValue());
-                        gift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
-                        gift.setBkMessage(result.getData().getMessage());
-                        gift.setModifiedDate(Calendar.getInstance().getTime());
-                        
-                        log.info("bk message:" + result.getData().getMessage());
+                        log.info("resend bk message:" + result.getData().getMessage());
                         log.info("order id:" + result.getData().getOrder_id());
                         log.info("///////////////////////////////////////////////////");
-                        // update
-                        orderGiftService.save(gift);
                         
                 } catch (Exception e) {
-                    // error
-                    gift.setBkStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
-                    gift.setBkMessage(e.getMessage());
-                    // update
-                    orderGiftService.save(gift);
-                    // don't update order status
                     updateOrderStatus = false;
 
                     // log error
@@ -560,25 +548,13 @@ public class LiXiVatGiaUtils {
                 }
             }
 
-            // update order
-            log.info("updateOrderStatus: " + updateOrderStatus);
-
-            if (updateOrderStatus) {
-
-                order.setLixiStatus(EnumLixiOrderStatus.PROCESSING.getValue());
-                order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
-                order.setLixiMessage("Sent Order Info");
-                order.setModifiedDate(Calendar.getInstance().getTime());
-                
-                orderService.save(order);
-
-            }
         } catch (Exception e) {
-
+            updateOrderStatus = false;
             log.info(e.getMessage(), e);
             emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
-
+        
+        return updateOrderStatus;
     }
     /**
      *

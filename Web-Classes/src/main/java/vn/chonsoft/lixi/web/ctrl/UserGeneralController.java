@@ -227,7 +227,7 @@ public class UserGeneralController {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(form.getEmail());
-                message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                //message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
                 message.setSubject("LiXi.Global - Confirm your registration");
                 message.setSentDate(Calendar.getInstance().getTime());

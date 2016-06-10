@@ -99,23 +99,12 @@ public class LixiOrdersController {
         
         LixiOrder order = this.lxOrderService.findById(id);
         
+        boolean rs = true;
         if(order != null){
-            lxAsyncMethods.reSubmitOrdersToBaoKimNoAsync(order);
+            rs = lxAsyncMethods.reSubmitOrdersToBaoKimNoAsync(order);
         }
         
-        /* re-select */
-        order = this.lxOrderService.findById(id);
-        
-        List<RecipientInOrder> rios = LiXiUtils.genMapRecGifts(order);
-        
-        for(RecipientInOrder rio : rios){
-            if(rio.getGifts()!=null && !rio.getGifts().isEmpty()){
-                if("Not Sent".equals(rio.getBkStatus())){
-                    model.put("error", "1");
-                    break;
-                }
-            }
-        }
+        model.put("error", rs?"0":"1");
         
         return new ModelAndView("Administration/ajax/simple-message");
     }

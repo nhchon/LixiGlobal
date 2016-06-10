@@ -16,7 +16,7 @@ public interface LixiAsyncMethods {
     
     String processTopUpItemNoAsync(TopUpMobilePhone topUp);
     
-    void reSubmitOrdersToBaoKimNoAsync(LixiOrder order);
+    boolean reSubmitOrdersToBaoKimNoAsync(LixiOrder order);
     
     void submitOrdersToBaoKimNoAsync(LixiOrder order);
             
