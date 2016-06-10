@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.BillingAddress;
+import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.pojo.Exrate;
@@ -47,6 +49,9 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
     private LixiExchangeRateRepository lxrRepository;
     
     @Autowired
+    private LixiConfigService configService;
+    
+    @Autowired
     private CurrencyTypeService currencyService;
     
     @Autowired
@@ -58,6 +63,19 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
     @Autowired
     private VelocityEngine velocityEngine;
 
+    /**
+     * 
+     */
+    private String[] checkAndAssignDefaultEmail(){
+        LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_ADMINISTRATOR_EMAIL);
+        if(c == null || StringUtils.isBlank(c.getValue())){
+            return new String[] {LiXiGlobalConstants.YHANNART_GMAIL};
+        }
+        else{
+            return c.getValue().split(";");
+        }
+    }
+    
     /**
      * 
      */
@@ -91,8 +109,9 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
                 log.info("Sell: " + usdEx.getSell());
                 
                 /* */
+                String[] administratorEmails = checkAndAssignDefaultEmail();
+                
                 LixiExchangeRate lxExch = this.findLastRecord(LiXiGlobalConstants.USD);
-                    
                 /* create new lixi exchange rate */
                 double newBuyRate = usdEx.getBuy() + (usdEx.getBuy() * LiXiGlobalConstants.LIXI_DEFAULT_BUY_RATE / 100.0);
                 final double roundNewBuyRate = Math.floor(newBuyRate/100.0) * 100;
@@ -123,8 +142,8 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
                         @Override
                         public void prepare(MimeMessage mimeMessage) throws Exception {
                             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
-                            message.setTo(LiXiGlobalConstants.YHANNART_GMAIL);
-                            message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                            message.setTo(administratorEmails);
+                            message.addCc(LiXiGlobalConstants.YHANNART_GMAIL);
                             message.setFrom("support@lixi.global");
                             message.setSubject("LiXi.Global - Lixi Ex Rate has ben changed");
                             message.setSentDate(Calendar.getInstance().getTime());

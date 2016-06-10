@@ -839,8 +839,8 @@ public class CheckOutController {
                         public void prepare(MimeMessage mimeMessage) throws Exception {
                             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
                             message.setTo(emailSender);
-                            message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
-                            message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                            //message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                            //message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                             message.setFrom("support@lixi.global");
                             message.setSubject("LiXi.Global - Invoice Alert");
                             message.setSentDate(Calendar.getInstance().getTime());

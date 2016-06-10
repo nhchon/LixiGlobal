@@ -257,8 +257,8 @@ public class UserManagementController {
 
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                         message.setTo(u.getEmail());
-                        message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
-                        message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                        //message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                        //message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Your password has been changed");
                         message.setSentDate(Calendar.getInstance().getTime());
@@ -377,7 +377,7 @@ public class UserManagementController {
                             MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                             message.setTo(u.getEmail());
                             message.addTo(oldEmail);
-                            message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                            //message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                             message.setFrom("support@lixi.global");
                             message.setSubject("Revision to Your LiXi.Global Account");
                             message.setSentDate(Calendar.getInstance().getTime());

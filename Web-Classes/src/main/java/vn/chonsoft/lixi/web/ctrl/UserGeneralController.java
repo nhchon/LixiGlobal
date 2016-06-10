@@ -346,7 +346,7 @@ public class UserGeneralController {
 
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                         message.setTo(u.getEmail());
-                        message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                        //message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Resend activation code");
                         message.setSentDate(Calendar.getInstance().getTime());
@@ -441,7 +441,7 @@ public class UserGeneralController {
 
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                         message.setTo(u.getEmail());
-                        message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                        //message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Reset Your Password");
                         message.setSentDate(Calendar.getInstance().getTime());
@@ -520,7 +520,7 @@ public class UserGeneralController {
 
                     MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                     message.setTo(u.getEmail());
-                    message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                    //message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                     message.setFrom("support@lixi.global");
                     message.setSubject("LiXi.Global - Reset Your Password");
                     message.setSentDate(Calendar.getInstance().getTime());
@@ -857,8 +857,8 @@ public class UserGeneralController {
 
                     MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                     message.setTo(u.getEmail());
-                    message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
-                    message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                    //message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                    //message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                     message.setFrom("support@lixi.global");
                     message.setSubject("LiXi.Global - Verify your email");
                     message.setSentDate(Calendar.getInstance().getTime());

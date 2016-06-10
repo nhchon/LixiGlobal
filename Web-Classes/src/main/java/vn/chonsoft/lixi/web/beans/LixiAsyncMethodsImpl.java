@@ -319,8 +319,8 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
                     public void prepare(MimeMessage mimeMessage) throws Exception {
                         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
                         message.setTo(rec.getEmail());
-                        message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
-                        message.addCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                        //message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                        //message.addCc(LiXiGlobalConstants.YHANNART_GMAIL);
                         message.setFrom("support@lixi.global");
                         message.setSubject("LiXi.Global - Top Up Mobile Minutes Alert");
                         message.setSentDate(Calendar.getInstance().getTime());

@@ -62,8 +62,6 @@ public class LiXiVatGiaUtils {
     private static final Logger log = LogManager.getLogger(LiXiVatGiaUtils.class);
 
     private Properties baokimProp = null;
-
-    private String[] administratorEmail = null;
     
     @Autowired
     private LixiConfigService configService;
@@ -181,21 +179,22 @@ public class LiXiVatGiaUtils {
         return ps;
     }
 
-    private void checkAndAssignDefaultEmail(){
-        if(administratorEmail == null || administratorEmail.length==0){
-            LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_ADMINISTRATOR_EMAIL);
-            administratorEmail =  c.getValue().split(";");
+    /**
+     * 
+     */
+    private String[] checkAndAssignDefaultEmail(){
+        LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_ADMINISTRATOR_EMAIL);
+        if(c == null || StringUtils.isBlank(c.getValue())){
+            return new String[] {LiXiGlobalConstants.YHANNART_GMAIL};
         }
-        
-        // stil empty
-        if(administratorEmail == null || administratorEmail.length==0){
-            administratorEmail = new String[] {LiXiGlobalConstants.YHANNART_GMAIL};
+        else{
+            return c.getValue().split(";");
         }
     }
     
     private void emailBaoKimSystemError(String error){
         
-        checkAndAssignDefaultEmail();
+        String[] administratorEmails = checkAndAssignDefaultEmail();
         
         // send Email
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
@@ -205,7 +204,7 @@ public class LiXiVatGiaUtils {
             public void prepare(MimeMessage mimeMessage) throws Exception {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                message.setTo(administratorEmail);
+                message.setTo(administratorEmails);
                 message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                 message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
