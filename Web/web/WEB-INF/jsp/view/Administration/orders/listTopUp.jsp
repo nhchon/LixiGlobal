@@ -59,8 +59,8 @@
                                     }
                                 } else {
                                     alert('There is something wrong ! Please try again !');
-                                    overlayOff();
                                 }
+                                overlayOff();
                             },
                             error: function (jqXHR, textStatus, errorThrown)
                             {

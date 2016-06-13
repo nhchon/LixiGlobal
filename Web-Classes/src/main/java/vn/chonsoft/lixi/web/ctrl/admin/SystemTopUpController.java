@@ -32,6 +32,7 @@ import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
+import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
@@ -52,6 +53,9 @@ public class SystemTopUpController {
     
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     
+    @Autowired
+    private LixiExchangeRateService lxexrateService;
+
     @Autowired
     private TopUpMobilePhoneService topUpService;
     
@@ -96,7 +100,10 @@ public class SystemTopUpController {
         if(vtcConfig != null){
             vtcPercentStr = StringUtils.defaultIfBlank(vtcConfig.getValue(), "0");
         }
-
+        
+        // remove sign , in string topUpTotal
+        topUpTotalStr = topUpTotalStr.replaceAll(",", "");
+        
         double topUpTotal = Double.parseDouble(topUpTotalStr);
         double vtcPercentN = Double.parseDouble(vtcPercentStr);
         double realAmount = (topUpAmount*vtcPercentN)/100.0;
@@ -246,7 +253,7 @@ public class SystemTopUpController {
         /* list status */
         List<String> statuses = Arrays.asList(statusStr);
         if(ALL_TOPUP.equals(statusStr)){
-            statuses = Arrays.asList(EnumLixiOrderStatus.TopUpStatus.UN_SUBMITTED.getValue(), EnumLixiOrderStatus.COMPLETED.getValue());
+            statuses = Arrays.asList(EnumLixiOrderStatus.TopUpStatus.UN_SUBMITTED.getValue(), EnumLixiOrderStatus.COMPLETED.getValue(), EnumLixiOrderStatus.CANCELED.getValue());
         }
         
         Page<TopUpMobilePhone> ps = null;
@@ -270,9 +277,12 @@ public class SystemTopUpController {
         //log.info("status: " + statusStr + " toDate: " + toDateStr);
         //log.info("topUps: " + ps.getTotalElements());
         LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_TOPUP_BALANCE);
+        String topUpTotalStr = c.getValue();
+        topUpTotalStr = topUpTotalStr.replaceAll(",", "");
         
-        model.put("topUpBalance", LiXiUtils.getNumberFormat().format(Double.parseDouble(c.getValue())));
-        model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
+        model.put("topUpBalance", LiXiUtils.getNumberFormat().format(Double.parseDouble(topUpTotalStr)));
+        //model.put("VCB", LiXiGlobalUtils.getVCBExchangeRates());
+        model.put("currentFX", this.lxexrateService.findLastRecord(LiXiConstants.USD).getBuy());
         model.put("topUps", ps);
         model.put("status", statusStr);
         model.put("fromDate", fromDateStr);

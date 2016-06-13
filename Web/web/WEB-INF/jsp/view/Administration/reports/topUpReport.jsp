@@ -126,6 +126,7 @@
                                         <th>#</th>
                                         <th>Order ID</th>
                                         <th>Trans ID</th>
+                                        <th>Sender</th>
                                         <th>Receiver</th>
                                         <th>Phone</th>
                                         <th>Amount</th>
@@ -145,7 +146,8 @@
                                         <tr id="rowTopUp${t.id}">
                                             <td>${t.id}</td>
                                             <td>${t.order.invoice.invoiceCode}</td>
-                                            <td>${t.order.invoice.netTransId}</td>
+                                            <td>${t.order.invoice.netTransId}<br/>(${t.order.invoice.translatedStatus})</td>
+                                            <td>${t.order.sender.fullName}<br/><a href='<c:url value="/Administration/SystemSender/detail/${t.order.sender.id}"/>'>${t.order.sender.beautyId}</a></td>
                                             <td>${t.recipient.fullName}</td>
                                             <td>${t.phone}</td>
                                             <td style="text-align: center;">
@@ -174,7 +176,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="9">
+                                        <td colspan="10">
                                             <%-- Paging --%>
                                             <nav>
                                                 <ul class="pagination pull-right">
@@ -248,19 +250,21 @@
                             <td>USD</td>
                         </tr>
                         </c:if>
-                        <c:if test="${not empty VCB}">
                         <tr>
-                            <td nowrap>Current FX Rate<br/>(${VCB.time})</td>
-                            <c:set var="currentFX" value="0"/>
-                            <c:forEach items="${VCB.exrates}" var="ex">
-                            <c:if test="${ex.code == 'USD'}">
-                                <c:set var="currentFX" value="${ex.buy}"/>
+                            <td nowrap>Current FX Rate<%--<br/>(${VCB.time})--%></td>
+                            <%--
+                            <c:if test="${not empty VCB}">
+                                <c:set var="currentFX" value="0"/>
+                                <c:forEach items="${VCB.exrates}" var="ex">
+                                <c:if test="${ex.code == 'USD'}">
+                                    <c:set var="currentFX" value="${ex.buy}"/>
+                                </c:if>
+                                </c:forEach>
                             </c:if>
-                        </c:forEach>                            
+                            --%>
                             <td nowrap style="text-align: right;">1 USD = <fmt:formatNumber value="${currentFX}" pattern="###,###.##"/></td>
                             <td>VND</td>
                         </tr>
-                        </c:if>
                     </tbody>
                 </table>
             </div>

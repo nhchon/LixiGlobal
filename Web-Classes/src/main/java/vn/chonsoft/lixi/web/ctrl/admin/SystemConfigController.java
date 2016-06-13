@@ -8,18 +8,27 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.ConstraintViolationException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
@@ -41,7 +51,6 @@ import vn.chonsoft.lixi.repositories.service.ExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
-import vn.chonsoft.lixi.repositories.service.SupportLocaleService;
 import vn.chonsoft.lixi.repositories.service.TraderService;
 import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -50,7 +59,6 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
-import static vn.chonsoft.lixi.web.util.LiXiUtils.setConfigsLoginedUser;
 
 /**
  *
@@ -90,6 +98,16 @@ public class SystemConfigController {
     
     @Autowired
     private LiXiVatGiaUtils lxVatGiaUtils;
+    
+    @Autowired
+    private ThreadPoolTaskScheduler taskScheduler;
+    
+    @Autowired
+    private VelocityEngine velocityEngine;
+    
+    @Autowired
+    private JavaMailSender mailSender;
+    
     /**
      *
      * @return
@@ -157,6 +175,53 @@ public class SystemConfigController {
         
         return new ModelAndView(r);
     }
+    /**
+     * 
+     */
+    private String[] checkAndAssignDefaultEmail(){
+        LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_ADMINISTRATOR_EMAIL);
+        if(c == null || StringUtils.isBlank(c.getValue())){
+            return new String[] {LiXiGlobalConstants.YHANNART_GMAIL};
+        }
+        else{
+            return c.getValue().split(";");
+        }
+    }
+    
+    private void emailSystemConfigChanged(String error){
+        
+        String[] administratorEmails = checkAndAssignDefaultEmail();
+        
+        // send Email
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @Override
+            public void prepare(MimeMessage mimeMessage) throws Exception {
+
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                message.setTo(administratorEmails);
+                message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                message.setFrom("support@lixi.global");
+                message.setSubject("LiXi.Global - Bao Kim System Error");
+                message.setSentDate(Calendar.getInstance().getTime());
+
+                Map model = new HashMap();
+                model.put("name", "Yuric");
+                model.put("err", error);
+
+                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                   velocityEngine, "emails/baokim-error.vm", "UTF-8", model);
+                message.setText(text, true);
+              }
+        };        
+
+        // send oldEmail
+        taskScheduler.execute(() -> mailSender.send(preparator));
+        
+    }
+    
     /**
      * 
      * 
