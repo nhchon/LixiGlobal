@@ -145,10 +145,16 @@
                                         <c:set var="customerPurchaseUsd" value="${customerPurchaseUsd + t.amountUsd}"/>
                                         <tr id="rowTopUp${t.id}">
                                             <td>${t.id}</td>
-                                            <td>${t.order.invoice.invoiceCode}</td>
+                                            <td nowrap style="text-align:center;">
+                                                <a href="<c:url value="/Administration/Orders/detail/${t.order.id}"/>">
+                                                    ${t.order.invoice.invoiceCode}
+                                                </a>
+                                                <br/>
+                                                1 USD = ${t.order.lxExchangeRate.buy} VND
+                                            </td>
                                             <td>${t.order.invoice.netTransId}<br/>(${t.order.invoice.translatedStatus})</td>
                                             <td>${t.order.sender.fullName}<br/><a href='<c:url value="/Administration/SystemSender/detail/${t.order.sender.id}"/>'>${t.order.sender.beautyId}</a></td>
-                                            <td>${t.recipient.fullName}</td>
+                                            <td>${t.recipient.fullName}<br/><a href="javascript:viewRecipient(${t.recipient.id});">${t.recipient.beautyId}</a></td>
                                             <td>${t.phone}</td>
                                             <td style="text-align: center;">
                                                 VND <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>
@@ -162,6 +168,9 @@
                                                     </c:when>
                                                     <c:when test="${t.status eq COMPLETED}">
                                                         Success sent
+                                                    </c:when>
+                                                    <c:when test="${t.status eq CANCELED}">
+                                                        Canceled
                                                     </c:when>
                                                 </c:choose>                                                
                                             </td>
