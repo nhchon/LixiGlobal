@@ -38,6 +38,17 @@
                 });
             });
             
+            function viewRecipient(id) {
+                $.get('<c:url value="/Administration/SystemRecipient/view/"/>' + id, function (data) {
+                    $('#editRecipientContent').html(data);
+                    $('#editRecipientModal').modal({show: true});
+
+                    $('#editRecipientModal').on('shown.bs.modal', function () {
+                        // TODO
+                    })
+                });
+            }
+            
             function jump(page, size){
                 $('#paging.page').val(page);
                 $('#paging.size').val(size);
@@ -84,6 +95,7 @@
                                     <option value="All" <c:if test="${status eq 'All'}">selected=""</c:if>>All</option>
                                     <option value="${UN_SUBMITTED}" <c:if test="${status eq UN_SUBMITTED}">selected=""</c:if>>Failed Sent</option>
                                     <option value="${COMPLETED}" <c:if test="${status eq COMPLETED}">selected=""</c:if>>Success Sent</option>
+                                    <option value="${CANCELED}" <c:if test="${status eq CANCELED}">selected=""</c:if>>Canceled</option>
                                 </select>
                             </div>
                         </div>
@@ -276,6 +288,12 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" id="editRecipientContent">
+                </div>
             </div>
         </div>
     </jsp:body>

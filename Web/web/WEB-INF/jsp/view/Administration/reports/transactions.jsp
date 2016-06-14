@@ -335,6 +335,23 @@
                                             </td>
                                             <td style="text-align: center;">
                                                 <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
+                                                    <c:choose>
+                                                        <c:when test="${m.key.lixiStatus eq PROCESSING}">
+                                                            Processing<br/>
+                                                            <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                                            <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
+                                                        </c:when>
+                                                        <c:when test="${m.key.lixiStatus eq COMPLETED}">
+                                                            Completed
+                                                        </c:when>
+                                                        <c:when test="${m.key.lixiStatus eq CANCELED}">
+                                                            Cancelled
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${m.key.lixiStatus}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                            <%--
                                                 <c:if test="${m.key.lixiStatus eq PROCESSING}">
                                                     Processing<br/>
                                                     <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
@@ -346,6 +363,7 @@
                                                 <c:if test="${m.key.lixiStatus eq CANCELED}">
                                                     Cancelled
                                                 </c:if>
+                                                            --%>
                                                 </a>    
                                                 <div id="detailStatusOrder${m.key.id}" style="display:none;" class="table-responsive">
                                                     <table class="table table-hover table-responsive table-striped" style="font-size: 12px;">

@@ -20,6 +20,17 @@ public class LixiConfigServiceImpl implements LixiConfigService{
     @Autowired
     private LixiConfigRepository configRepo;
 
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public LixiConfig findById(Integer id){
+        
+        return this.configRepo.findById(id);
+    }
+    
     @Override
     public void delete(Integer id){
         

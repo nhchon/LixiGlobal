@@ -160,11 +160,20 @@ public class SystemConfigController {
     public ModelAndView saveConfig(Map<String, Object> model, @RequestParam String name, @RequestParam String value, @RequestParam Integer id){
         
         LixiConfig config = new LixiConfig();
+        String oldValue = "";
+        if(id>0){
+            
+            config = this.configService.findById(id);
+            oldValue = config.getValue();
+        }
+        
         config.setName(name);
         config.setValue(value);
-        if(id>0) config.setId(id);
         
         this.configService.save(config);
+        
+        /* */
+        emailSystemConfigChanged(name, oldValue, value);
         
         // reload config
         LiXiUtils.setConfigsLoginedUser(loginedUser, this.configService.findAll());
@@ -188,7 +197,7 @@ public class SystemConfigController {
         }
     }
     
-    private void emailSystemConfigChanged(String error){
+    private void emailSystemConfigChanged(String configName, String oldValue, String newValue){
         
         String[] administratorEmails = checkAndAssignDefaultEmail();
         
@@ -204,15 +213,16 @@ public class SystemConfigController {
                 message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                 message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
-                message.setSubject("LiXi.Global - Bao Kim System Error");
+                message.setSubject("LiXi.Global - Config Changed");
                 message.setSentDate(Calendar.getInstance().getTime());
 
                 Map model = new HashMap();
-                model.put("name", "Yuric");
-                model.put("err", error);
+                model.put("configName", configName);
+                model.put("oldValue", oldValue);
+                model.put("newValue", newValue);
 
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
-                   velocityEngine, "emails/baokim-error.vm", "UTF-8", model);
+                   velocityEngine, "emails/config-changed.vm", "UTF-8", model);
                 message.setText(text, true);
               }
         };        

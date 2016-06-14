@@ -13,5 +13,6 @@ import vn.chonsoft.lixi.model.LixiConfig;
  */
 public interface LixiConfigRepository extends JpaRepository<LixiConfig, Integer>{
     
+    LixiConfig findById(Integer id);
     LixiConfig findByName(String name);
 }

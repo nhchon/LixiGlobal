@@ -20,4 +20,5 @@ public interface LixiConfigService {
     List<LixiConfig> findAll();
     
     LixiConfig findByName(String name);
+    LixiConfig findById(Integer id);
 }
