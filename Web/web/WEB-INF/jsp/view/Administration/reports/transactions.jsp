@@ -405,6 +405,31 @@
                                                                         </td>
                                                                 </tr>
                                                                 </c:forEach>
+                                                                <c:forEach items="${rio.topUpMobilePhones}" var="t">
+                                                                    <tr>
+                                                                        <td># ${t.id}</td>
+                                                                        <td>1</td>
+                                                                        <td>Top Up Mobile: ${t.phone}</td>
+                                                                        <td style="text-align:right;">
+                                                                            <span class="alert-danger">
+                                                                                <c:choose>
+                                                                                    <c:when test="${t.status eq UN_SUBMITTED}">
+                                                                                        Not Sent
+                                                                                    </c:when>
+                                                                                    <c:when test="${t.status eq COMPLETED}">
+                                                                                        Completed
+                                                                                    </c:when>
+                                                                                    <c:when test="${t.status eq CANCELED}">
+                                                                                        Canceled
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        ${t.status}
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                            </span>
+                                                                        </td>
+                                                                </tr>
+                                                                </c:forEach>
                                                             </c:forEach>
                                                         </tbody>
                                                     </table>
