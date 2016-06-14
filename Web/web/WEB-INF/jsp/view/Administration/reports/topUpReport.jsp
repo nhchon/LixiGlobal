@@ -136,14 +136,14 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Order ID</th>
+                                        <th style="text-align:center;">Order ID</th>
                                         <th>Trans ID</th>
                                         <th>Sender</th>
                                         <th>Receiver</th>
                                         <th>Phone</th>
                                         <th>Amount</th>
                                         <th>Status</th>
-                                        <th style="text-align: center;">Status Date</th>
+                                        <th style="text-align: center;" nowrap>Status Date</th>
                                         <th>Message</th>
                                     </tr>
                                 </thead>
@@ -165,10 +165,10 @@
                                                 1 USD = ${t.order.lxExchangeRate.buy} VND
                                             </td>
                                             <td>${t.order.invoice.netTransId}<br/>(${t.order.invoice.translatedStatus})</td>
-                                            <td>${t.order.sender.fullName}<br/><a href='<c:url value="/Administration/SystemSender/detail/${t.order.sender.id}"/>'>${t.order.sender.beautyId}</a></td>
+                                            <td nowrap>${t.order.sender.fullName}<br/><a href='<c:url value="/Administration/SystemSender/detail/${t.order.sender.id}"/>'>${t.order.sender.beautyId}</a></td>
                                             <td>${t.recipient.fullName}<br/><a href="javascript:viewRecipient(${t.recipient.id});">${t.recipient.beautyId}</a></td>
                                             <td>${t.phone}</td>
-                                            <td style="text-align: center;">
+                                            <td style="text-align: right;" nowrap>
                                                 VND <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>
                                                 <br/>
                                                 USD <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/>
