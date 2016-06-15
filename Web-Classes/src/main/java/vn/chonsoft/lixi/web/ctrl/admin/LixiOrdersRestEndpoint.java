@@ -57,6 +57,9 @@ public class LixiOrdersRestEndpoint {
         LixiSimpleMessage message = new LixiSimpleMessage();
         
         LixiOrderGift gift = this.lxgiftService.findById(form.getOrderId());
+        
+        log.info("bkUpdateStatus:" + form.toString());
+        
         if(gift != null){
             gift.setBkStatus(form.getStatus());
             gift.setBkMessage(form.getMessage());

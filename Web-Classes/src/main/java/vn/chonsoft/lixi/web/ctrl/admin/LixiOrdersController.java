@@ -173,33 +173,15 @@ public class LixiOrdersController {
             
             SearchCriteria criteria = SearchCriteria.Builder.create();
 
-            /* convert status */
-            String status = "";
-            if(StringUtils.isNotEmpty(form.getStatus())){
-
-                /* send money*/
-                if(LiXiGlobalConstants.TRANS_REPORT_STATUS_PROCESSED.equals(form.getStatus())){
-                    status = EnumLixiOrderStatus.PROCESSED.getValue();
-                }
-                else
-                    if(LiXiGlobalConstants.TRANS_REPORT_STATUS_COMPLETED.equals(form.getStatus())){
-                        status = EnumLixiOrderStatus.COMPLETED.getValue();
-                    }
-                    else
-                    if(LiXiGlobalConstants.TRANS_REPORT_STATUS_CANCELLED.equals(form.getStatus())){
-                        status = EnumLixiOrderStatus.CANCELED.getValue();
-                    }
-            }
-
             /* do not get orders that in creation */
             criteria.add(new Criterion("lixiStatus", Criterion.Operator.NEQ, EnumLixiOrderStatus.UN_FINISHED.getValue()));
 
             /* check status */
-            if(StringUtils.isNotEmpty(status)){
+            if(!LiXiGlobalConstants.TRANS_REPORT_STATUS_ALL.equals(form.getStatus())){
 
-                log.info("vn.chonsoft.lixi.web.ctrl.admin.LixiOrdersController.report(): " + status);
+                log.info("LixiOrdersController.report(): " + form.getStatus());
 
-                criteria.add(new Criterion("lixiStatus", Criterion.Operator.EQ, status));
+                criteria.add(new Criterion("lixiStatus", Criterion.Operator.EQ, form.getStatus()));
             }
 
             /* created Date */

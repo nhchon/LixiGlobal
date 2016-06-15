@@ -42,6 +42,7 @@ import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
+import vn.chonsoft.lixi.model.pojo.LixiCheckStatusResult;
 import vn.chonsoft.lixi.model.pojo.LixiSubmitOrderResult;
 import vn.chonsoft.lixi.model.pojo.VatGiaCategoryPj;
 import vn.chonsoft.lixi.model.pojo.VatGiaProductPj;
@@ -754,10 +755,108 @@ public class LiXiVatGiaUtils {
                 
                 //
             }
+            
+            /* check order status */
+            checkOrderStatus(order, orderService, orderGiftService);
+            
+            
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
             emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+        }
+        
+        return updateOrderStatus;
+    }
+    
+    /**
+     * 
+     * @param order
+     * @param orderService
+     * @param orderGiftService 
+     */
+    public boolean checkOrderStatus(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService){
+        // check properties is null
+        if (baokimProp == null) {
+            return false;
+        }
+        if (order == null) {
+            return false;
+        }
+        if (order.getGifts() == null || order.getGifts().isEmpty()) {
+            return false;
+        }
+        //
+        boolean updateOrderStatus = true;
+        String lixiOrderStatus = EnumLixiOrderStatus.PROCESSING.getValue();
+        try {
+
+            final AuthHttpComponentsClientHttpRequestFactory requestFactory
+                    = new AuthHttpComponentsClientHttpRequestFactory(
+                            HttpClients.createDefault(), HttpHost.create(baokimProp.getProperty("baokim.host")), baokimProp.getProperty("baokim.username"), baokimProp.getProperty("baokim.password"));
+
+            final RestTemplate restTemplate = new RestTemplate(requestFactory);
+
+            String submitUrl = baokimProp.getProperty("baokim.check_order_status");
+            for (LixiOrderGift gift : order.getGifts()) {
+                try {
+                    if (EnumLixiOrderStatus.GiftStatus.SENT_MONEY.getValue().equals(gift.getBkSubStatus())) {
+                        String id = gift.getId().toString();
+                        /**
+                         *
+                         * Setting up data to be sent to REST service
+                         *
+                         */
+                        MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
+                        vars.add("order_id", gift.getId().toString());
+                        log.info("///////////////////////////////////////////////////");
+                        log.info("check order status ");
+                        log.info("GIFT order_id:" + gift.getId().toString());
+                        log.info("///////////////////////////////////////////////////");
+
+                        LixiCheckStatusResult result = restTemplate.postForObject(submitUrl, vars, LixiCheckStatusResult.class);
+                        
+                        //
+                        lixiOrderStatus = result.getData().getStatus();
+                        //
+                        gift.setBkStatus(result.getData().getStatus());
+                        gift.setBkReceiveMethod(result.getData().getReceive_method());
+                        gift.setBkMessage(result.getData().getMessage());
+                        gift.setBkUpdated(result.getData().getUpdated_on());
+                        
+                        log.info("Check Order Status Result:" + result.getData().toString());
+                        log.info("///////////////////////////////////////////////////");
+                        // update
+                        orderGiftService.save(gift);
+                    }
+                } catch (Exception e) {
+                    log.info(e.getMessage(), e);
+                    updateOrderStatus = false;
+                }
+            }
+
+            // update order
+            if (updateOrderStatus) {
+                boolean updated = true;
+                for(LixiOrderGift gift : order.getGifts()){
+                    if(!gift.getBkStatus().equals(lixiOrderStatus)){
+                        updated = false;
+                        break;
+                    }
+                }
+
+                if(updated){
+                    log.info("Do checkOrderStatus: " + order.getId() + " : " + lixiOrderStatus);
+                    /* */
+                    order.setLixiStatus(lixiOrderStatus);
+                    orderService.save(order);
+                }
+            }
+            
+            
+        } catch (Exception e) {
+
+            log.info(e.getMessage(), e);
         }
         
         return updateOrderStatus;

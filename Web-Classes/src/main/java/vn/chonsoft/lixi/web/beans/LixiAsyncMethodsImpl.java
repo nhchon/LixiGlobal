@@ -151,6 +151,8 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     @Override
     public void updateLixiOrderStatus(Long lixiOrderId, String status){
         
+        log.info("Call updateLixiOrderStatus: " + lixiOrderId + " : " + status);
+        
         LixiOrder order = this.orderService.findById(lixiOrderId);
         boolean updated = true;
         for(LixiOrderGift gift : order.getGifts()){
@@ -164,6 +166,8 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
         if(updated){
             order.setLixiStatus(status);
             this.orderService.save(order);
+            
+            log.info("Do updateLixiOrderStatus: " + lixiOrderId + " : " + status);
         }
     }
     /**

@@ -19,6 +19,11 @@ public class BaoKimStatusForm {
     private String receiveMethod;
     private String updatedOn;
 
+    @Override
+    public String toString(){
+        return "["+orderId+", " + status + ", "+message+", "+ receiveMethod+", "+updatedOn+"]";
+    }
+    
     public Long getOrderId() {
         return orderId;
     }
