@@ -171,7 +171,7 @@
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="section-gift-top">
                     <div class="row">
-                        <div class="col-md-3" style="padding-right: 0px;"><h2 class="title" style="text-transform: none;"><spring:message code="select-a-rec"/> </h2></div>
+                        <div class="col-md-4" style="padding-right: 0px;"><h2 class="title" style="text-transform: none;"><spring:message code="select-a-rec"/> </h2></div>
                         <div class="col-md-3" style="padding-left: 0px;">
                             <select class="form-control" id="recId" name="recId">
                                 <option value="0"><spring:message code="gift.select_recipient"/></option>
@@ -180,7 +180,7 @@
                                 </c:forEach>
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <button id="btnEditReceiver" style="<c:if test="${empty SELECTED_RECIPIENT_FIRST_NAME}">display: none;</c:if>" class="btn btn-primary" onclick="doEditRecipient()"><spring:message code="edit-rec"/></button>
                             <button class="btn btn-primary" onclick="createNewRecipient()"><spring:message code="create-new-rec"/></button>
                         </div>

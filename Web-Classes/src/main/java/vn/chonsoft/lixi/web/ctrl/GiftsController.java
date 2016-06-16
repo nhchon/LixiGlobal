@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -496,6 +497,10 @@ public class GiftsController {
         model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         model.put(LiXiConstants.LIXI_CATEGORIES, categories);
         
+        // store category into session
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, categories.getCandies().getId());
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, categories.getCandies().getName(LocaleContextHolder.getLocale()));
+        
         // get order
         LixiOrder order = null;
         LixiExchangeRate lxExch = null;
@@ -545,7 +550,7 @@ public class GiftsController {
         
         // store category into session
         request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, selectedCatId);
-        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName());
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
 
         // get order
         LixiOrder order = null;

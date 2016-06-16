@@ -1,0 +1,12 @@
+delete FROM `lixi_order_gifts`;
+delete FROM `lixi_invoice_payment`;
+delete FROM `lixi_invoices`;
+delete FROM `lixi_cashrun`;
+delete FROM `top_up_result`;
+delete FROM `top_up_mobile_phone`;
+delete FROM `buy_card_result`;
+delete FROM `buy_card`;
+delete FROM `lixi_batch_orders`;
+delete FROM `lixi_batch`;
+delete FROM `lixi_orders`;
+delete FROM `lixi_order_cards`;
