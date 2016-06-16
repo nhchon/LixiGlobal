@@ -183,7 +183,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
 
     @Override
     public boolean reSubmitOrdersToBaoKimNoAsync(LixiOrder order){
-        return lxVatGiaUtils.reSubmitOrdersToBaoKim(order, orderService, orderGiftService);
+        return lxVatGiaUtils.reSubmitOrdersToBaoKim(order);
     }
     
     /**
@@ -194,14 +194,14 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     @Async
     public void submitOrdersToBaoKim(LixiOrder order) {
 
-        lxVatGiaUtils.submitOrdersToBaoKim(order, orderService, orderGiftService);
+        lxVatGiaUtils.submitOrdersToBaoKim(order);
 
     }
 
     @Override
     public void submitOrdersToBaoKimNoAsync(LixiOrder order) {
 
-        lxVatGiaUtils.submitOrdersToBaoKim(order, orderService, orderGiftService);
+        lxVatGiaUtils.submitOrdersToBaoKim(order);
 
     }
 
@@ -212,7 +212,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     @Override
     public void cancelOrdersOnBaoKimNoAsync(LixiOrder order){
         
-        lxVatGiaUtils.cancelOrderOnBaoKim(order, orderService, orderGiftService);
+        lxVatGiaUtils.cancelOrderOnBaoKim(order);
         
     }
     
@@ -223,7 +223,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     @Override
     public boolean sendPaymentInfoToBaoKim(LixiOrder order){
         
-        return lxVatGiaUtils.sendPaymentInfoToBaoKim(order, orderService, orderGiftService);
+        return lxVatGiaUtils.sendPaymentInfoToBaoKim(order);
     }
     
     /**

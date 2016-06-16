@@ -65,6 +65,12 @@ public class LiXiVatGiaUtils {
     private Properties baokimProp = null;
     
     @Autowired
+    private LixiOrderService orderService;
+
+    @Autowired
+    private LixiOrderGiftService orderGiftService;
+    
+    @Autowired
     private LixiConfigService configService;
     
     @Autowired
@@ -333,10 +339,8 @@ public class LiXiVatGiaUtils {
     /**
      *
      * @param order
-     * @param orderService
-     * @param orderGiftService
      */
-    public void submitOrdersToBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService) {
+    public void submitOrdersToBaoKim(LixiOrder order) {
 
         // check properties is null
         if (baokimProp == null) {
@@ -459,11 +463,9 @@ public class LiXiVatGiaUtils {
     /**
      * 
      * @param order
-     * @param orderService
-     * @param orderGiftService 
      * @return boolean
      */
-    public boolean reSubmitOrdersToBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService) {
+    public boolean reSubmitOrdersToBaoKim(LixiOrder order) {
 
         // check properties is null
         if (baokimProp == null) {
@@ -559,10 +561,8 @@ public class LiXiVatGiaUtils {
     /**
      *
      * @param order
-     * @param orderService
-     * @param orderGiftService
      */
-    public void cancelOrderOnBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService) {
+    public void cancelOrderOnBaoKim(LixiOrder order) {
 
         // check properties is null
         if (baokimProp == null) {
@@ -646,10 +646,8 @@ public class LiXiVatGiaUtils {
     /**
      *
      * @param order
-     * @param orderService
-     * @param orderGiftService
      */
-    public boolean sendPaymentInfoToBaoKim(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService) {
+    public boolean sendPaymentInfoToBaoKim(LixiOrder order) {
 
         // check properties is null
         if (baokimProp == null) {
@@ -757,7 +755,7 @@ public class LiXiVatGiaUtils {
             }
             
             /* check order status */
-            checkOrderStatus(order, orderService, orderGiftService);
+            checkOrderStatus(order);
             
             
         } catch (Exception e) {
@@ -772,10 +770,8 @@ public class LiXiVatGiaUtils {
     /**
      * 
      * @param order
-     * @param orderService
-     * @param orderGiftService 
      */
-    public boolean checkOrderStatus(LixiOrder order, LixiOrderService orderService, LixiOrderGiftService orderGiftService){
+    public boolean checkOrderStatus(LixiOrder order){
         // check properties is null
         if (baokimProp == null) {
             return false;
