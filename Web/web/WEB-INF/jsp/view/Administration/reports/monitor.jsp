@@ -120,7 +120,7 @@
                                                 ${m.key.invoice.invoiceStatus}
                                             </td>
                                             <td style="text-align: right;" nowrap>
-                                                <button class="btn btn-primary btn-sm" onclick="alert('In Implementation')">Got It</button>
+                                                <button class="btn btn-primary btn-sm" onclick="alert('In Implementation')">Check</button>
                                             </td>
                                         </tr>
                                         <c:if test="${m.key.invoice.monitored ne 0}">

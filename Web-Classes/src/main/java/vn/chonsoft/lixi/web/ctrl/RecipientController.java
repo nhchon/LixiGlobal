@@ -199,7 +199,7 @@ public class RecipientController {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(u.getEmail());
-                message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                //message.setCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
                 message.setSubject("LiXi.Global - Receiver Info Alert");
                 message.setSentDate(Calendar.getInstance().getTime());

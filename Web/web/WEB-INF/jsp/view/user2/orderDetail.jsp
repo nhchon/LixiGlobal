@@ -50,8 +50,8 @@
                             <spring:message code="mess.ordered-on"/> &nbsp;<fmt:formatDate pattern="MMMM dd yyyy" value="${LIXI_ORDER.modifiedDate}"/>
                         </div>
                         <div class="col-md-3" style="">
-                            <spring:message code="mess.order"/> # <c:if test="${not empty LIXI_ORDER.invoice}">${LIXI_ORDER.invoice.invoiceCode}</c:if>
-                            <c:if test="${empty LIXI_ORDER.invoice}">${LIXI_ORDER.id}</c:if>
+                            <spring:message code="mess.order"/> # <c:if test="${not empty LIXI_ORDER.invoice}"><b>${LIXI_ORDER.invoice.invoiceCode}</b></c:if>
+                            <c:if test="${empty LIXI_ORDER.invoice}"><b>${LIXI_ORDER.id}</b></c:if>
                         </div>
                         <div class="col-md-6" style="text-align: right;">
                             <button class="btn btn-default" onclick="callPrint()"><spring:message code="mess.view-print-inv"/></button>
@@ -167,9 +167,48 @@
                                         <div class="col-md-1" style="padding-top:40px;text-align: center;">
                                             ${g.productQuantity}
                                         </div>
-                                        <div class="col-md-6" style="padding-top:40px;">
+                                        <div class="col-md-4" style="padding-top:40px;">
                                             ${g.productName}
                                         </div>
+                                        
+                                        <div class="col-md-1" style="padding-top:40px;">
+                                            <c:choose>
+                                                <c:when test="${g.bkReceiveMethod eq 'MONEY'}">
+                                                    Refunded
+                                                </c:when>
+                                                <c:when test="${g.bkReceiveMethod eq 'GIFT'}">
+                                                    Gift Sent
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${g.bkReceiveMethod}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                        
+                                        <div class="col-md-1" style="padding-top:40px; text-align: center;">
+                                            <c:choose>
+                                                <c:when test="${g.bkStatus eq '0'}">
+                                                    <span class="alert-danger">Processing</span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq '1'}">
+                                                    <span class="alert-success">Completed</span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq '2'}">
+                                                    <span class="alert-warning">Cancelled</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${g.bkStatus}
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:choose>
+                                                <c:when test="${fn:startsWith(g.bkUpdated, '0000')}">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span style="font-size: 12px;">${g.bkUpdated}</span>
+                                                </c:otherwise>
+                                            </c:choose>                                        
+                                        </div>
+                                        
                                         <div class="col-md-3" style="padding-top:40px;text-align: right;">
                                             USD <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/>
                                         </div>

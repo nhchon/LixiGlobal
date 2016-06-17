@@ -26,7 +26,7 @@
                                 <th nowrap>Date</th><%-- 2 --%>
                                 <th nowrap>Transaction No</th><%-- 3 --%>
                                 <th>Sender</th><%-- 4 --%>
-                                <th>Status</th>
+                                <th nowrap style="text-align: center;">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,8 +39,8 @@
 
                                 </td>
                                 <td>${order.invoice.netTransId}<br/>(${order.invoice.translatedStatus})</td>
-                                <td>${order.sender.fullName}</td>
-                                <td>
+                                <td><a target="_blank" href='<c:url value="/Administration/SystemSender/detail/${order.sender.id}"/>'>${order.sender.fullName}</a></td>
+                                <td style="text-align: center;">
                                     <c:if test="${order.lixiStatus eq PROCESSING}">
                                         Processing<br/>
                                         <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
@@ -71,7 +71,8 @@
                                         <th nowrap>Receiver</th><%-- 1 --%>
                                         <th nowrap>Item</th><%-- 2 --%>
                                         <th nowrap>Description</th><%-- 3 --%>
-                                        <th>Amount</th><%-- 4 --%>
+                                        <th style="text-align: right;">Amount</th><%-- 4 --%>
+                                        <th>Method</th>
                                         <th style="text-align:right;">Status</th><%-- 5 --%>
                                         <%-- <th>Action</th>6 --%>
                                     </tr>
@@ -80,7 +81,7 @@
                                     <c:forEach items="${recGifts}" var="rio" varStatus="theCount">
                                         <tr id="rowR${rio.recipient.id}">
                                             <td>${rio.recipient.fullName}</td>
-                                            <td colspan="4"></td>
+                                            <td colspan="5"></td>
                                         </tr>
                                         <c:forEach items="${rio.gifts}" var="g" varStatus="theCount2">
                                             <tr>
@@ -92,16 +93,29 @@
                                                     <br/>
                                                     <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> USD
                                                 </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${g.bkReceiveMethod eq 'MONEY'}">
+                                                            Refunded
+                                                        </c:when>
+                                                        <c:when test="${g.bkReceiveMethod eq 'GIFT'}">
+                                                            Gift Sent
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${g.bkReceiveMethod}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
                                                 <td style="text-align:right;">
                                                     <c:choose>
                                                         <c:when test="${g.bkStatus eq '0'}">
                                                             <span class="alert-danger">Processing</span>
                                                         </c:when>
                                                         <c:when test="${g.bkStatus eq '1'}">
-                                                            <span class="alert-danger">Completed</span>
+                                                            <span class="alert-success">Completed</span>
                                                         </c:when>
                                                         <c:when test="${g.bkStatus eq '2'}">
-                                                            <span class="alert-danger">Cancelled</span>
+                                                            <span class="alert-warning">Cancelled</span>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span class="alert-danger">${g.bkStatus}</span>
@@ -122,20 +136,19 @@
                                                     <br/>
                                                     <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/> USD
                                                 </td>
-                                                <td style="text-align:right;">
-                                                    <span class="alert-danger">
+                                                <td style="text-align:right;" colspan="2">
                                                         <c:choose>
                                                             <c:when test="${t.status eq UN_SUBMITTED}">
-                                                                Not Sent
+                                                                <span class="alert-danger">Not Sent</span>
                                                             </c:when>
                                                             <c:when test="${t.status eq COMPLETED}">
-                                                                Completed
+                                                                <span class="alert-success">Completed</span>
                                                             </c:when>
                                                             <c:when test="${t.status eq CANCELED}">
-                                                                Canceled
+                                                                <span class="alert-warning">Canceled</span>
                                                             </c:when>
                                                         </c:choose>
-                                                    </span>
+                                                    
                                                 </td>
                                         </tr>
                                         </c:forEach>
@@ -148,7 +161,7 @@
                                                 <br/>
                                                 <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD
                                             </td>
-                                            <td></td>
+                                            <td colspan="2"></td>
                                         </tr>
                                     </c:forEach>
                                         <%-- GRAND TOTAL --%>

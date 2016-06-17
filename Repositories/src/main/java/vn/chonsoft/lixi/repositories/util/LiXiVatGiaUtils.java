@@ -495,52 +495,55 @@ public class LiXiVatGiaUtils {
             for (LixiOrderGift gift : order.getGifts()) {
 
                 try {
+                    // do not re-send complete or cancelled gift
+                        if (EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue().equals(gift.getBkSubStatus()) || 
+                            EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue().equals(gift.getBkSubStatus()) ||   
+                            EnumLixiOrderStatus.GiftStatus.SENT_MONEY.getValue().equals(gift.getBkSubStatus())) {
+                            String receiverName = StringUtils.join(new String[]{gift.getRecipient().getFirstName(), gift.getRecipient().getMiddleName(), gift.getRecipient().getLastName()}, " ");
+                            /**
+                             *
+                             * Setting up data to be sent to REST service
+                             *
+                             */
+                            MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
+                            vars.add("lixi_order_id", order.getId().toString());
+                            vars.add("order_id", gift.getId().toString());
+                            vars.add("sender_name", senderName);
+                            vars.add("sender_email", senderEmail);
+                            vars.add("sender_phone", senderPhone);
+                            vars.add("product_id", gift.getProductId() + "");
+                            vars.add("price", gift.getProductPrice() + "");
+                            vars.add("quantity", gift.getProductQuantity() + "");
+                            vars.add("receiver_name", receiverName);
+                            vars.add("receiver_email", emptyIfNull(gift.getRecipient().getEmail()));
+                            vars.add("receiver_phone", emptyIfNull(LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(gift.getRecipient().getPhone())));
+                            vars.add("receiver_adress", "INPUT_BY_BAOKIM");// TODO: add address to recipient
+                            vars.add("message", gift.getRecipient().getNote());
+                            vars.add("method_receive", methodReceive);
+                            //
+                            log.info("///////////////////////////////////////////////////");
+                            log.info("lixi_order_id:" +  order.getId().toString());
+                            log.info("order_id:" + gift.getId().toString());
+                            log.info("sender_name:" + senderName);
+                            log.info("sender_email:" + senderEmail);
+                            log.info("sender_phone:" + senderPhone);
+                            log.info("product_id:" + gift.getProductId() + "");
+                            log.info("price:" + gift.getProductPrice() + "");
+                            log.info("quantity:" + gift.getProductQuantity() + "");
+                            log.info("receiver_name:" + receiverName);
+                            log.info("receiver_email:" + emptyIfNull(gift.getRecipient().getEmail()));
+                            log.info("receiver_phone:" + emptyIfNull(LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(gift.getRecipient().getPhone())));
+                            log.info("receiver_adress:INPUT_BY_BAOKIM");
+                            log.info("message:" + gift.getRecipient().getNote());
+                            log.info("method_receive:" + methodReceive);
+                            log.info("///////////////////////////////////////////////////");
 
-                        String receiverName = StringUtils.join(new String[]{gift.getRecipient().getFirstName(), gift.getRecipient().getMiddleName(), gift.getRecipient().getLastName()}, " ");
-                        /**
-                         *
-                         * Setting up data to be sent to REST service
-                         *
-                         */
-                        MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
-                        vars.add("lixi_order_id", order.getId().toString());
-                        vars.add("order_id", gift.getId().toString());
-                        vars.add("sender_name", senderName);
-                        vars.add("sender_email", senderEmail);
-                        vars.add("sender_phone", senderPhone);
-                        vars.add("product_id", gift.getProductId() + "");
-                        vars.add("price", gift.getProductPrice() + "");
-                        vars.add("quantity", gift.getProductQuantity() + "");
-                        vars.add("receiver_name", receiverName);
-                        vars.add("receiver_email", emptyIfNull(gift.getRecipient().getEmail()));
-                        vars.add("receiver_phone", emptyIfNull(LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(gift.getRecipient().getPhone())));
-                        vars.add("receiver_adress", "INPUT_BY_BAOKIM");// TODO: add address to recipient
-                        vars.add("message", gift.getRecipient().getNote());
-                        vars.add("method_receive", methodReceive);
-                        //
-                        log.info("///////////////////////////////////////////////////");
-                        log.info("lixi_order_id:" +  order.getId().toString());
-                        log.info("order_id:" + gift.getId().toString());
-                        log.info("sender_name:" + senderName);
-                        log.info("sender_email:" + senderEmail);
-                        log.info("sender_phone:" + senderPhone);
-                        log.info("product_id:" + gift.getProductId() + "");
-                        log.info("price:" + gift.getProductPrice() + "");
-                        log.info("quantity:" + gift.getProductQuantity() + "");
-                        log.info("receiver_name:" + receiverName);
-                        log.info("receiver_email:" + emptyIfNull(gift.getRecipient().getEmail()));
-                        log.info("receiver_phone:" + emptyIfNull(LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(gift.getRecipient().getPhone())));
-                        log.info("receiver_adress:INPUT_BY_BAOKIM");
-                        log.info("message:" + gift.getRecipient().getNote());
-                        log.info("method_receive:" + methodReceive);
-                        log.info("///////////////////////////////////////////////////");
+                            LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
 
-                        LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
-
-                        log.info("resend bk message:" + result.getData().getMessage());
-                        log.info("order id:" + result.getData().getOrder_id());
-                        log.info("///////////////////////////////////////////////////");
-                        
+                            log.info("resend bk message:" + result.getData().getMessage());
+                            log.info("order id:" + result.getData().getOrder_id());
+                            log.info("///////////////////////////////////////////////////");
+                        }
                 } catch (Exception e) {
                     updateOrderStatus = false;
 

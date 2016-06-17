@@ -57,6 +57,7 @@
             });
 
             function reSendOrder(id){
+                if(confirm('Are you sure want to re-send this order?')){
                 overlayOn($('#rowO' + id));
                 $.ajax(
                 {
@@ -83,7 +84,7 @@
                         overlayOff();
                     }
                 });
-                
+                }
             }
             
             function cancel(id){
@@ -372,29 +373,43 @@
                                                                 <th nowrap>Receiver</th><%-- 1 --%>
                                                                 <th nowrap>Item</th><%-- 2 --%>
                                                                 <th nowrap>Description</th><%-- 3 --%>
+                                                                <th nowrap>Method</th>
                                                                 <th style="text-align:right;">Status</th><%-- 4 --%>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <c:forEach items="${m.value}" var="rio" varStatus="theCount">
                                                                 <tr>
-                                                                    <td  colspan="4" nowrap>${rio.recipient.fullName}</td>
+                                                                    <td  colspan="5" nowrap>${rio.recipient.fullName}</td>
                                                                 </tr>
                                                                 <c:forEach items="${rio.gifts}" var="g" varStatus="theCount2">
                                                                     <tr>
                                                                         <td># ${g.id}</td>
                                                                         <td>${g.productQuantity}</td>
                                                                         <td>${g.productName}</td>
+                                                                        <td>
+                                                                            <c:choose>
+                                                                                <c:when test="${g.bkReceiveMethod eq 'MONEY'}">
+                                                                                    Refunded
+                                                                                </c:when>
+                                                                                <c:when test="${g.bkReceiveMethod eq 'GIFT'}">
+                                                                                    Gift Sent
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    ${g.bkReceiveMethod}
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                        </td>
                                                                         <td style="text-align:right;">
                                                                             <c:choose>
                                                                                 <c:when test="${g.bkStatus eq '0'}">
                                                                                     <span class="alert-danger">Processing</span>
                                                                                 </c:when>
                                                                                 <c:when test="${g.bkStatus eq '1'}">
-                                                                                    <span class="alert-danger">Completed</span>
+                                                                                    <span class="alert-success">Completed</span>
                                                                                 </c:when>
                                                                                 <c:when test="${g.bkStatus eq '2'}">
-                                                                                    <span class="alert-danger">Cancelled</span>
+                                                                                    <span class="alert-warning">Cancelled</span>
                                                                                 </c:when>
                                                                                 <c:otherwise>
                                                                                     <span class="alert-danger">${g.bkStatus}</span>
@@ -409,7 +424,7 @@
                                                                     <tr>
                                                                         <td># ${t.id}</td>
                                                                         <td>1</td>
-                                                                        <td>Top Up Mobile: ${t.phone}</td>
+                                                                        <td colspan="2">Top Up Mobile: ${t.phone}</td>
                                                                         <td style="text-align:right;">
                                                                             <span class="alert-danger">
                                                                                 <c:choose>
