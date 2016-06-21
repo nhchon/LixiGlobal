@@ -40,6 +40,7 @@ import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiConfig;
+import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.LixiCheckStatusResult;
@@ -799,7 +800,7 @@ public class LiXiVatGiaUtils {
             String submitUrl = baokimProp.getProperty("baokim.check_order_status");
             for (LixiOrderGift gift : order.getGifts()) {
                 try {
-                    if (EnumLixiOrderStatus.GiftStatus.SENT_MONEY.getValue().equals(gift.getBkSubStatus())) {
+                    if (!EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue().equals(gift.getBkSubStatus())) {
                         String id = gift.getId().toString();
                         /**
                          *
@@ -835,23 +836,13 @@ public class LiXiVatGiaUtils {
             }
 
             // update order
-            if (updateOrderStatus) {
-                boolean updated = true;
-                for(LixiOrderGift gift : order.getGifts()){
-                    if(!gift.getBkStatus().equals(lixiOrderStatus)){
-                        updated = false;
-                        break;
-                    }
-                }
 
-                if(updated){
-                    log.info("Do checkOrderStatus: " + order.getId() + " : " + lixiOrderStatus);
-                    /* */
-                    order.setLixiStatus(lixiOrderStatus);
-                    orderService.save(order);
-                }
+            if(getOrderStatus(order, EnumLixiOrderStatus.COMPLETED.getValue())){
+                log.info("Do checkOrderStatus: " + order.getId() + " : " + lixiOrderStatus);
+                /* */
+                order.setLixiStatus(EnumLixiOrderStatus.COMPLETED.getValue());
+                orderService.save(order);
             }
-            
             
         } catch (Exception e) {
 
@@ -859,5 +850,28 @@ public class LiXiVatGiaUtils {
         }
         
         return updateOrderStatus;
+    }
+    
+    /**
+     * 
+     * @param order
+     * @param status
+     * @return 
+     */
+    private boolean getOrderStatus(LixiOrder order, String status){
+        boolean completeStatus = true;
+        for(LixiOrderGift gift : order.getGifts()){
+            if(!status.equals(gift.getBkStatus())){
+                return false;
+            }
+        }
+        
+        for(TopUpMobilePhone t : order.getTopUpMobilePhones()){
+            if(!status.equals(t.getStatus())){
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

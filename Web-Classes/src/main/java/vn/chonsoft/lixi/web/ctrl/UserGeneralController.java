@@ -4,12 +4,12 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
-import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
@@ -43,6 +42,7 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserMoneyLevel;
 import vn.chonsoft.lixi.model.UserSecretCode;
+import vn.chonsoft.lixi.model.UserSession;
 import vn.chonsoft.lixi.model.form.UserResetPasswordForm;
 import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
@@ -56,6 +56,7 @@ import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.repositories.service.UserMoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserSecretCodeService;
 import vn.chonsoft.lixi.repositories.service.UserService;
+import vn.chonsoft.lixi.repositories.service.UserSessionService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
@@ -81,19 +82,22 @@ public class UserGeneralController {
     @Autowired
     private VelocityEngine velocityEngine;
 
-    @Inject
+    @Autowired
     private UserService userService;
 
-    @Inject
+    @Autowired
+    private UserSessionService userSessionService;
+    
+    @Autowired
     private UserSecretCodeService uscService;
 
-    @Inject
+    @Autowired
     private MoneyLevelService mlService;
 
-    @Inject
+    @Autowired
     private UserMoneyLevelService umlService;
 
-    @Inject
+    @Autowired
     private LixiOrderService lxorderService;
 
     @Autowired
@@ -108,7 +112,7 @@ public class UserGeneralController {
     @Autowired
     private LixiConfigService configService;
 
-    @Inject
+    @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
 
     /**
@@ -719,7 +723,19 @@ public class UserGeneralController {
 
                 // change session id
                 request.changeSessionId();
-
+                
+                /* save to user session table */
+                //UserSession userSess = this.userSessionService.findByEmail(u.getEmail());
+                //if(userSess == null){
+                //    userSess = new UserSession();
+                //}
+                //userSess.setEmail(u.getEmail());
+                //userSess.setLoginDate(Calendar.getInstance().getTime());
+                //userSess.setCreatedBeanDate(loginedUser.getCreatedDateBean());
+                //SimpleDateFormat sdfr = new SimpleDateFormat("MMM/dd/yyyy KK:mm:ss a");
+                //log.info("setLoginDate: " + sdfr.format(userSess.getLoginDate()) + " - setCreatedBeanDate: " + sdfr.format(loginedUser.getCreatedDateBean()));
+                //this.userSessionService.save(userSess);
+                
                 //
                 LiXiUtils.setLoginedUser(loginedUser, u, this.configService.findAll());
 
@@ -788,6 +804,9 @@ public class UserGeneralController {
     @RequestMapping(value = "signOut", method = RequestMethod.GET)
     public ModelAndView signOut(HttpSession session) {
 
+        /* delete user session */
+        //this.userSessionService.deleteByEmail(loginedUser.getEmail());
+        
         session.invalidate();
         //
         return new ModelAndView(new RedirectView("/", true, true));

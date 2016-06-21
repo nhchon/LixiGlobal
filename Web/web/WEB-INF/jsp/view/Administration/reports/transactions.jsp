@@ -393,7 +393,7 @@
                                                                                     Refunded
                                                                                 </c:when>
                                                                                 <c:when test="${g.bkReceiveMethod eq 'GIFT'}">
-                                                                                    Gift Sent
+                                                                                    Gifted
                                                                                 </c:when>
                                                                                 <c:otherwise>
                                                                                     ${g.bkReceiveMethod}
@@ -426,22 +426,22 @@
                                                                         <td>1</td>
                                                                         <td colspan="2">Top Up Mobile: ${t.phone}</td>
                                                                         <td style="text-align:right;">
-                                                                            <span class="alert-danger">
+                                                                            
                                                                                 <c:choose>
                                                                                     <c:when test="${t.status eq UN_SUBMITTED}">
-                                                                                        Not Sent
+                                                                                        <span class="alert-danger">Not Sent</span>
                                                                                     </c:when>
                                                                                     <c:when test="${t.status eq COMPLETED}">
-                                                                                        Completed
+                                                                                        <span class="alert-success">Completed</span>
                                                                                     </c:when>
                                                                                     <c:when test="${t.status eq CANCELED}">
-                                                                                        Canceled
+                                                                                        <span class="alert-warning">Canceled</span>
                                                                                     </c:when>
                                                                                     <c:otherwise>
-                                                                                        ${t.status}
+                                                                                        <span class="alert-danger">${t.status}</span>
                                                                                     </c:otherwise>
                                                                                 </c:choose>
-                                                                            </span>
+                                                                            
                                                                         </td>
                                                                 </tr>
                                                                 </c:forEach>

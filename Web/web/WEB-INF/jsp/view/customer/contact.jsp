@@ -14,17 +14,9 @@
             <div class="contact-section-top text-center text-white">
                 <div class="container">
                     <div class="contact-section-top-content">
-                        <h1 class="text-uppercase"><span>what is the lixi</span></h1>
+                        <h1 class="text-uppercase"><span><spring:message code="what-is-lixi"/></span></h1>
                         <div>
-                            <p>
-                                Aliquam pulvinar pellentesque purus, nec condimentum nibh. Aenean dapibus iaculis odio id vestibulum. Nam at justo ante. Aenean hendrerit gravida ligula, id lacinia sapien tristique eget. In elit ipsum, vestibulum eu pulvinar sed,
-                            </p>
-                            <p>
-                                Maecenas eros mi, lacinia eu ultricies vel, elementum et justo. Ut at tortor a odio vestibulum suscipit non sit amet dolor. Morbi molestie magna nec metus facilisis, at iaculis mi adipiscing. Praesent ac diam velit. Curabitur lacinia tristique velit ut laoreet. Nam pretium id risus vitae fermentum. Aenean eu euismod justo. Aliquam sodales tortor elit, non luctus felis tristique sit amet.
-                            </p>
-                            <p>
-                                Nunc et risus in massa mattis lacinia. Pellentesque ornare mi sit amet purus malesuada blandit. Quisque scelerisque a lectus vel ornare. Etiam pellentesque justo ipsum, et pretium felis vulputate ac…
-                            </p>
+                            <c:import url="/whatIsLixi"/>
                         </div>
                     </div>
                 </div>
@@ -34,7 +26,7 @@
 
                     <div class="col-md-7">
                         <div class="map-wrapper position-relative">
-                            <input id="pac-input" value="33329 W. Apollo Rd Phoenix,vA285041 USA" class="controls" type="text" placeholder="Search Box">
+                            <input id="pac-input" value="3329 W Apollo Rd Phoenix,AZ 85041" class="controls" type="text" placeholder="Search Box">
                             <div id="google-map"></div>
                         </div>
                     </div>
@@ -43,7 +35,7 @@
                             <div style="padding-bottom:20px;">
                                 <h4 class="title text-uppercase"><spring:message code="cont-info"/></h4>
                                 <p>
-                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                                    <spring:message code="feel-free"/>
                                 </p>
                                 <div>
                                     3329 W. Apollo Rd
@@ -167,11 +159,11 @@
                     title: 'LIXI.GLOBAL'
                 });
                 var title_site = 'LIXI.GLOBAL';
-                var phone_site = 'US+1 123456';
+                //var phone_site = 'US+1 123456';
                 var email_to = '<a style="color:green;" href="mailto:contact@lixi.global">contact@lixi.global</a>';
-                var address_to = '33329 W. Apollo Rd Phoenix,vA285041 USA';
+                var address_to = '3329 W Apollo Rd, Phoenix AZ 85041';
                 var infowindow = new google.maps.InfoWindow({
-                    content: "<div style='text-align: left; color:black;'><div  style=\"color: black; font-weight: bold; font-family: Arial; font-size: 0.9em\">" + title_site + "</div><div style=\"font-family: Arial; font-size: 0.9em\">Phone: " + phone_site + "</div><div style=\"font-family: Arial; font-size: 0.9em; color:black;\">Email: " + email_to + "</div><div style='clear:both;'></div><div style=\"font-family: Arial; font-size: 0.9em\">Address: " + address_to + "</div></div><div style='clear:both;'></div><div style=\"font-family: Arial; font-size: 0.9em; color:black;\">Website: <a style='color:green;' href='" + siteUrl + "'>" + siteUrl + "</a></div>",
+                    content: "<div style='text-align: left; color:black;'><div  style=\"color: black; font-weight: bold; font-family: Arial; font-size: 0.9em\">" + title_site + "</div><div style=\"font-family: Arial; font-size: 0.9em; color:black;\">Email: " + email_to + "</div><div style='clear:both;'></div><div style=\"font-family: Arial; font-size: 0.9em\">Address: " + address_to + "</div></div><div style='clear:both;'></div><div style=\"font-family: Arial; font-size: 0.9em; color:black;\">Website: <a style='color:green;' href='" + siteUrl + "'>" + siteUrl + "</a></div>",
                     maxWidth: 625,
                     boxStyle: {
                         border: "1px solid black"

@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.beans;
 
+import java.text.SimpleDateFormat;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,8 +15,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import vn.chonsoft.lixi.repositories.service.UserService;
-import vn.chonsoft.lixi.web.util.LiXiUtils;
+import vn.chonsoft.lixi.model.UserSession;
+import vn.chonsoft.lixi.repositories.service.UserSessionService;
 
 /**
  *
@@ -29,9 +30,6 @@ public class CheckLoginedUserAspectJ {
     @Autowired
     private LoginedUser loginedUser;
     
-    //@Autowired
-    //private UserService userService;
-    
     @Pointcut("@annotation(vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation)")
     public void annotatedUserSecurityAnnotation(){}
     
@@ -42,10 +40,12 @@ public class CheckLoginedUserAspectJ {
             
             if(StringUtils.isEmpty(loginedUser.getEmail())){
                 
-                return new ModelAndView(new RedirectView("/user/signIn?signInFailed=1", true, true));
-                
-                /* igonred login step */
-                //LiXiUtils.setLoginedUser(loginedUser, this.userService.findByEmail("daothidam88@gmail.com"));
+                if(loginedUser.getLoginedDate()!=null){
+                    return new ModelAndView(new RedirectView("/user/signIn?signInFailed=2", true, true));
+                }
+                else{
+                    return new ModelAndView(new RedirectView("/user/signIn?signInFailed=3", true, true));
+                }
                 
             }
             

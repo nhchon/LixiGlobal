@@ -36,21 +36,39 @@
                                     </div>
                                 </c:if>
                                 <c:if test="${notActivated eq 1}">
-                                    <div class="alert-message" style="min-height:45px;">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
                                         <c:url value="/user/registrationConfirm/not-activated-yet" var="registrationConfirm"/>
                                         <spring:message code="signin.not_activated" arguments="${registrationConfirm}"/>
                                     </div>
                                 </c:if>
                                 <c:if test="${notEnabled eq 1}">
-                                    <div class="alert-message" style="min-height:45px;">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
                                         <spring:message code="signin.not_enabled"/>
                                     </div>
                                 </c:if>
                                 <c:if test="${signInFailed eq 1 || param.signInFailed eq 1}">
-                                    <div class="alert alert-warning alert-dismissible bg-white" role="alert">
-                                        <div class="alert-message" style="min-height:45px;">
-                                            <spring:message code="signin.failed"/>
-                                        </div>
+                                    <div class="alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        <spring:message code="signin.failed"/>
+                                    </div>
+                                </c:if>
+                                <c:if test="${param.signInFailed eq 2}">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        <spring:message code="sess-expired"/>
+                                    </div>
+                                </c:if>
+                                <c:if test="${param.signInFailed eq 3}">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        <spring:message code="please-sign-in"/>
                                     </div>
                                 </c:if>
 

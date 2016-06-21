@@ -130,7 +130,7 @@
                             </div>
                         </c:if>
                         <c:if test="${signInFailed eq 1 || param.signInFailed eq 1}">
-                            <div class="msg msg-error">
+                            <div class="alert alert-danger">
                                 <spring:message code="signin.failed"/>
                             </div>
                         </c:if>

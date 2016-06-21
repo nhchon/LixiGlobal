@@ -1,0 +1,14 @@
+<html>
+    <body>
+        <h5>Hi,</h5>
+        
+        <p>Lixi.Global has encountered an error.</p>
+        <p>Failed URL: ${url}</p>
+        <p>Exception message:  ${errMessage}</p>
+        <p>Details: <br/> ${errDetails}</p>
+
+        <div>
+            <h5> LiXi.Global Team</h5>
+        </div>
+    </body>
+</html>

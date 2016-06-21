@@ -21,6 +21,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,6 +61,20 @@ public class IndexController {
         return "index";
     }
 
+    /**
+     * 
+     * @param model
+     * @return 
+     */
+    @RequestMapping(value = "/whatIsLixi", method = {RequestMethod.GET, RequestMethod.POST})
+    public String whatIsLixi(Map<String, Object> model) {
+
+        String language = LocaleContextHolder.getLocale().getLanguage();
+        String country = LocaleContextHolder.getLocale().getCountry().toUpperCase();
+        
+        return "customer/what-is-"+language+"_"+country;
+    }
+    
     /**
      *
      * for common header content

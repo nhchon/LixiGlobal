@@ -320,22 +320,6 @@ public class RootContextConfiguration  implements
      * 
      * @return 
      */
-    /*
-    @Bean
-    public CreditCardProcesses creditCardProcesses(){
-        
-        CreditCardProcesses processes = new CreditCardProcesses();
-        processes.setApiLoginId(env.getProperty("authorize.net.api_login_id"));
-        processes.setTransactionKey(env.getProperty("authorize.net.transaction_key"));
-        processes.setRunMode(env.getProperty("authorize.net.run_mode"));
-        
-        return processes;
-    }
-    */
-    /**
-     * 
-     * @return 
-     */
     @Bean
     public LixiAsyncMethods lxAsyncMethods(){
         
