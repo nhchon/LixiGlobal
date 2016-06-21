@@ -154,22 +154,36 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
         log.info("Call updateLixiOrderStatus: " + lixiOrderId + " : " + status);
         
         LixiOrder order = this.orderService.findById(lixiOrderId);
-        boolean updated = true;
+        if(getOrderStatus(order, status)){
+            log.info("Do updateLixiOrderStatus: " + order.getId() + " : " + status);
+            /* */
+            order.setLixiStatus(status);
+            orderService.save(order);
+        }
+        
+    }
+    /**
+     * 
+     * @param order
+     * @param status
+     * @return 
+     */
+    private boolean getOrderStatus(LixiOrder order, String status){
         for(LixiOrderGift gift : order.getGifts()){
-            
-            if(!gift.getBkStatus().equals(status)){
-                updated = false;
-                break;
+            if(!status.equals(gift.getBkStatus())){
+                return false;
             }
         }
         
-        if(updated){
-            order.setLixiStatus(status);
-            this.orderService.save(order);
-            
-            log.info("Do updateLixiOrderStatus: " + lixiOrderId + " : " + status);
+        for(TopUpMobilePhone t : order.getTopUpMobilePhones()){
+            if(!status.equals(t.getStatus())){
+                return false;
+            }
         }
+        
+        return true;
     }
+    
     /**
      * 
      * @return 
@@ -313,8 +327,8 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
 
                 this.topUpService.save(topUp);
                 
-                /* check if order just have this topup */
-                // what to do ??
+                // update order status
+                updateLixiOrderStatus(topUp.getOrder().getId(), EnumLixiOrderStatus.COMPLETED.getValue());
                 
                 // send email
                 MimeMessagePreparator preparator = new MimeMessagePreparator() {

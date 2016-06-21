@@ -836,7 +836,6 @@ public class LiXiVatGiaUtils {
             }
 
             // update order
-
             if(getOrderStatus(order, EnumLixiOrderStatus.COMPLETED.getValue())){
                 log.info("Do checkOrderStatus: " + order.getId() + " : " + lixiOrderStatus);
                 /* */
@@ -859,7 +858,6 @@ public class LiXiVatGiaUtils {
      * @return 
      */
     private boolean getOrderStatus(LixiOrder order, String status){
-        boolean completeStatus = true;
         for(LixiOrderGift gift : order.getGifts()){
             if(!status.equals(gift.getBkStatus())){
                 return false;

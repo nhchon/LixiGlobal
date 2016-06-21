@@ -61,7 +61,13 @@ public class LiXiUtils {
     static {
         df.applyPattern("###,###.##");
     }
-
+    
+    /**
+     * 
+     * @param mm
+     * @param yy
+     * @return 
+     */
     public static String getCardExpiryDateMMYY(int mm, int yy){
         String expireMonth = StringUtils.leftPad(mm + "", 2, "0");
         String expireYear = "";
