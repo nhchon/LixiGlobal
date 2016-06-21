@@ -40,6 +40,9 @@
 
                 $('#recId').change(function () {
                     if ($(this).val() !== "0") {
+                        
+                        doEditRecipient();
+                        
                         showGiftValueFor();
                         /* */
                         loadPage(1);
