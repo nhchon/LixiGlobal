@@ -228,11 +228,7 @@ public class PaymentServiceImpl implements PaymentService{
                 this.invoiceService.save(invoice);
                 
                 if(LiXiGlobalConstants.TRANS_STATUS_PROCESSED.equals(translateStatus)){
-                    
-                    LixiOrder order = this.orderService.findById(invoice.getOrder().getId());
-                    order.setLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue());
-                    /* update order to processed */
-                    this.orderService.save(order);
+                    /* what we do here */
                 }
                 
                 log.info("Update invoice id " + invoice.getNetTransId() + " : " + translateStatus + " : " + status + " : " + responseCode);

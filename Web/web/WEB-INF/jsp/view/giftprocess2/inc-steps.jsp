@@ -1,31 +1,5 @@
 <div class="gift-selection-step text-center">
     <div class="row">
-        <!--
-        <div class="col-md-2 gift-selection-step-first">
-            <div class="gift-step">
-                <a class="<c:if test="${localStep eq 1}">active </c:if>hvr-radial-out" href="<c:url value="/gifts/choose"/>">
-                    <span class="step-number">1</span>
-                </a>
-                <h5>Choose gift categories</h5>
-            </div>
-        </div>
-        <div class="col-md-2col-for-seven">
-            <div class="gift-step">
-                <a class="<c:if test="${localStep eq 2}">active </c:if> hvr-radial-out" href="<c:url value="/gifts/choose"/>">
-                    <span class="step-number">2</span>
-                </a>
-                <h5>Input receiver</h5>
-            </div>
-        </div>
-        <div class="col-md-2col-for-seven">
-            <div class="gift-step">
-                <a class="<c:if test="${localStep eq 3}">active </c:if> hvr-radial-out" href="<c:url value="/gifts/choose"/>">
-                    <span class="step-number">3</span>
-                </a>
-                <h5>Select price range</h5>
-            </div>
-        </div>
-        -->
         <div class="col-md-3 gift-selection-step-first">
             <div class="gift-step">
                 <a class="<c:if test="${localStep eq 4}">active </c:if> hvr-radial-out" href="<c:url value="/gifts/choose"/>">

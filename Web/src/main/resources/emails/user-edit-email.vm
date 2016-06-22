@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h5>Hi ${user.firstName} ${user.middleName} ${user.lastName} !</h5>
+        <h5>Hi ${user.firstName} ${user.middleName} ${user.lastName},</h5>
         
         <p>Thanks for visiting LiXi.Global! Per your request, we have changed the e-mail address associated with your account</p>
 
@@ -12,7 +12,7 @@
 
         <div>
             Thank you<br/>
-            <h5> LiXi.Global Team</h5>
+            <h5> LiXi.Global Support Team</h5>
         </div>
     </body>
 </html>

@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h5>Hi ${rec.firstName} ${rec.middleName} ${rec.lastName} !</h5>
+        <h5>Hi ${rec.firstName} ${rec.middleName} ${rec.lastName},</h5>
         
         <div>
             <p>
@@ -25,7 +25,7 @@
 
         <div>
             Thank you<br/>
-            <h5> LiXi.Global Team</h5>
+            <h5> LiXi.Global Support Team</h5>
         </div>
     </body>
 </html>

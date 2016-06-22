@@ -7,6 +7,12 @@
             div.pagination-wrapper{
                 opacity: .99;
             }
+#recId {
+   font-size: 20px;
+   font-weight: bold;
+   padding: 2px 10px;
+}
+            
         </style>
     </jsp:attribute>
 
@@ -173,7 +179,7 @@
                 <c:set var="localStep" value="4"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="section-gift-top">
-                    <div class="row">
+                    <div class="row info">
                         <div class="col-md-4" style="padding-right: 0px;"><h2 class="title" style="text-transform: none;"><spring:message code="select-a-rec"/> </h2></div>
                         <div class="col-md-3" style="padding-left: 0px;">
                             <select class="form-control" id="recId" name="recId">

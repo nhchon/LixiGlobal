@@ -1,8 +1,8 @@
 <html>
     <body>
-        <h5>Hi ${user.firstName} !</h5>
+        <h5>Hi ${user.firstName},</h5>
         
-        <p>Thanks for visiting LiXi.Global!</p>
+        <p>Thanks for visiting Lixi.Global</p>
         
         <p>You just created/updated receiver information</p>
         <p>
@@ -17,7 +17,7 @@
 
         <div>
             Thank you<br/>
-            <h5> LiXi.Global Team</h5>
+            <h5> LiXi.Global Support Team</h5>
         </div>
     </body>
 </html>

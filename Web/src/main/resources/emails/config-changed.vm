@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h5>Hi All !</h5>
+        <h5>Hi All,</h5>
         
         <p>The value of config name ${configName} has been changed</p>
         <p>
@@ -8,7 +8,7 @@
         </p>
 
         <div>
-            <h5> LiXi.Global Team</h5>
+            <h5> LiXi.Global Support Team</h5>
         </div>
     </body>
 </html>

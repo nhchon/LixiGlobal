@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h5>Hi ${user.firstName} ${user.middleName} ${user.lastName} !</h5>
+        <h5>Hi ${user.firstName} ${user.middleName} ${user.lastName},</h5>
         
         <div>Thank you for registering at our site. Please click the link below to complete your registration.</div>
         
@@ -14,7 +14,7 @@
 
         <div>
             Thank you<br/>
-            <h5> LiXi.Global Team</h5>
+            <h5> LiXi.Global Support Team</h5>
         </div>
     </body>
 </html>

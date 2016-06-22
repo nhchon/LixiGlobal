@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h5>Dear ${user.firstName} ${user.middleName} ${user.lastName} !</h5>
+        <h5>Dear ${user.firstName} ${user.middleName} ${user.lastName},</h5>
         
         <div>Someone has requested to re-send activation code to your email.</div>
         
@@ -13,7 +13,7 @@
 
         <div>
             Thank you<br/>
-            <h5> LiXi.Global Team</h5>
+            <h5> LiXi.Global Support Team</h5>
         </div>
     </body>
 </html>

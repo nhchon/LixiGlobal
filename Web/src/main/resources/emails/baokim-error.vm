@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h5>Hi ${name} !</h5>
+        <h5>Hi ${name},</h5>
         
         <p>Bao Kim system is in trouble</p>
         <p>
@@ -8,7 +8,7 @@
         </p>
 
         <div>
-            <h5> LiXi.Global Team</h5>
+            <h5> LiXi.Global Support Team</h5>
         </div>
     </body>
 </html>
