@@ -269,7 +269,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
     private String doProcessTopUp(TopUpMobilePhone topUp){
         
         Recipient rec = topUp.getRecipient();
-        String amount = "10000"; // new Long((long)topUp.getAmount()).toString();
+        String amount = new Long((long)topUp.getAmount()).toString();//"10000";
         String account = LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(topUp.getPhone()); // phone number
 
         DauSo dauSo = getDauSo(account);
