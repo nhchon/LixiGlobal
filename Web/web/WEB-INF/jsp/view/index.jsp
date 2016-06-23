@@ -60,6 +60,7 @@
                                 <div class="clearfix"></div>
                                 <h3><spring:message code="choose-the-gift-you-want"/></h3>
                                 <small><sup>*</sup><spring:message code="index-4"/></small>
+                                <small><sup>*</sup><spring:message code="index-4-1" text=""/></small>
                             </div>
                         </div>
                         <div class="col-md-1 col-sm-1 col-xs-1 col-has-gift-arrow">

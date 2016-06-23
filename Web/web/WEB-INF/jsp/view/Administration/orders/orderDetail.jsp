@@ -17,7 +17,7 @@
         <!-- main -->
         <h2 class="sub-header">Order Detail #${order.invoice.invoiceCode}</h2>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <div class="table-responsive">
                     <table class="table table-hover table-responsive table-striped">
                         <thead>
@@ -25,6 +25,7 @@
                                 <th nowrap>#</th><%-- 1 --%>
                                 <th nowrap>Date</th><%-- 2 --%>
                                 <th nowrap>Transaction No</th><%-- 3 --%>
+                                <th nowrap>Setting</th>
                                 <th>Sender</th><%-- 4 --%>
                                 <th nowrap style="text-align: center;">Status</th>
                             </tr>
@@ -39,6 +40,14 @@
 
                                 </td>
                                 <td>${order.invoice.netTransId}<br/>(${order.invoice.translatedStatus})</td>
+                                <td nowrap>
+                                    <c:if test="${order.setting eq 0}">
+                                        Gift Only
+                                    </c:if>
+                                    <c:if test="${order.setting eq 1}">
+                                        Allow Refund
+                                    </c:if>
+                                </td>
                                 <td><a target="_blank" href='<c:url value="/Administration/SystemSender/detail/${order.sender.id}"/>'>${order.sender.fullName}</a></td>
                                 <td style="text-align: center;">
                                     <c:if test="${order.lixiStatus eq PROCESSING}">
@@ -72,7 +81,7 @@
                                         <th nowrap>Item</th><%-- 2 --%>
                                         <th nowrap>Description</th><%-- 3 --%>
                                         <th style="text-align: right;">Amount</th><%-- 4 --%>
-                                        <th>Method</th>
+                                        <th style="text-align:center;">Method</th>
                                         <th style="text-align:right;">Status</th><%-- 5 --%>
                                         <%-- <th>Action</th>6 --%>
                                     </tr>
@@ -93,18 +102,26 @@
                                                     <br/>
                                                     <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> USD
                                                 </td>
-                                                <td>
+                                                <td style="text-align:center;">
                                                     <c:choose>
                                                         <c:when test="${g.bkReceiveMethod eq 'MONEY'}">
                                                             Refunded
                                                         </c:when>
                                                         <c:when test="${g.bkReceiveMethod eq 'GIFT'}">
-                                                            Gift Sent
+                                                            Gifted
                                                         </c:when>
                                                         <c:otherwise>
                                                             ${g.bkReceiveMethod}
                                                         </c:otherwise>
                                                     </c:choose>
+                                                            <br/>
+                                                    <c:choose>
+                                                        <c:when test="${fn:startsWith(g.bkUpdated, '0000')}">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span style="font-size: 12px;">${g.bkUpdated}</span>
+                                                        </c:otherwise>
+                                                    </c:choose>        
                                                 </td>
                                                 <td style="text-align:right;">
                                                     <c:choose>
@@ -161,7 +178,7 @@
                                                 <br/>
                                                 <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD
                                             </td>
-                                            <td colspan="2"></td>
+                                            <td colspan="3"></td>
                                         </tr>
                                     </c:forEach>
                                         <%-- GRAND TOTAL --%>
@@ -172,7 +189,7 @@
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber value="${order.invoice.giftPrice}" pattern="###,###.##"/> USD
                                             </td>
-                                            <td></td>
+                                            <td></td><td></td>
                                         </tr>
                                         <tr>
                                             <td></td>
@@ -181,7 +198,7 @@
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber value="${order.invoice.cardFee}" pattern="###,###.##"/> USD
                                             </td>
-                                            <td></td>
+                                            <td></td><td></td>
                                         </tr>
                                         <tr>
                                             <td></td>
@@ -190,7 +207,7 @@
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber value="${order.invoice.lixiFee}" pattern="###,###.##"/> USD
                                             </td>
-                                            <td></td>
+                                            <td></td><td></td>
                                         </tr>
                                         <tr>
                                             <td></td>
@@ -199,7 +216,7 @@
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber value="${order.invoice.totalAmount}" pattern="###,###.##"/> USD
                                             </td>
-                                            <td></td>
+                                            <td></td><td></td>
                                         </tr>
                                         <tr>
                                             <td></td>
@@ -208,7 +225,7 @@
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber value="0" pattern="###,###.##"/> USD
                                             </td>
-                                            <td></td>
+                                            <td></td><td></td>
                                         </tr>
                                         <tr>
                                             <td></td>
@@ -219,7 +236,7 @@
                                                 <br/>
                                                 <fmt:formatNumber value="${order.invoice.totalAmount}" pattern="###,###.##"/> USD
                                             </td>
-                                            <td></td>
+                                            <td></td><td></td>
                                         </tr>
                                 </tbody>
                             </table>
