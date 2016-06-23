@@ -7,12 +7,6 @@
             div.pagination-wrapper{
                 opacity: .99;
             }
-#recId {
-   font-size: 20px;
-   font-weight: bold;
-   padding: 2px 10px;
-}
-            
         </style>
     </jsp:attribute>
 
@@ -180,10 +174,10 @@
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="section-gift-top">
                     <div class="row info">
-                        <div class="col-md-4" style="padding-right: 0px;"><h2 class="title" style="text-transform: none;"><spring:message code="select-a-rec"/> </h2></div>
+                        <div class="col-md-4" style="padding-right: 0px;"><h2 class="title" style="text-transform: none;"><spring:message code="input-receiver-info"/> </h2></div>
                         <div class="col-md-3" style="padding-left: 0px;">
                             <select class="form-control" id="recId" name="recId">
-                                <option value="0"><spring:message code="gift.select_recipient"/></option>
+                                <option value="0"><spring:message code="enter-name-mobile-number"/></option>
                                 <c:forEach items="${RECIPIENTS}" var="rec">
                                     <option firstname="${rec.firstName}" value="${rec.id}" <c:if test="${recId == rec.id}">selected</c:if>>${rec.firstName}&nbsp;${rec.middleName}&nbsp;${rec.lastName} </option>
                                 </c:forEach>
