@@ -1,10 +1,35 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <template:Admin htmlTitle="Administration -:- List Transaction Monitor">
     <jsp:attribute name="extraHeadContent">
+        <style type="text/css">
+            .popover{
+                max-width:600px;
+            }
+        </style>
     </jsp:attribute>
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
+            jQuery(document).ready(function () {
+                $(function(){
+                    $('[rel="popover"]').popover({
+                        container: 'body',
+                        html: true,
+                        placement:'left',
+                        title : 'Details <a href="#" class="close" data-dismiss="alert">&times;</a>',
+                        content: function () {
+                            var clone = $($(this).data('popover-content')).clone(true).css("display", "block");//removeClass('hide');
+                            return clone;
+                        }
+                    }).click(function(e) {
+                        e.preventDefault();
+                    });
+                    $(document).on("click", ".popover .close" , function(e){
+                        $(this).parents(".popover").popover('hide');
+                    });
+                });
+            });
+            
             function gotIt(id){
                 overlayOn($('#rowMonitor'+id));
                 $.ajax(
@@ -31,6 +56,91 @@
                     }
                 });
             }
+            function reSendOrder(id){
+                if(confirm('Are you sure want to re-send this order?')){
+                overlayOn($('#rowO' + id));
+                $.ajax(
+                {
+                    url: '<c:url value="/Administration/Orders/reSendOrder/"/>' + id,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR)
+                    {
+                        //data: return data from server
+                        $('#status' + id).html(data);
+
+                        if (data.error === '0') {
+                            alert('Re-Send the Order success');
+                        }
+                        else{
+                            alert('Re-Send the Order failed');
+                        }
+                        /* */
+                        overlayOff();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        //if fails  
+                        overlayOff();
+                    }
+                });
+                }
+            }
+            
+            function cancel(id){
+                
+                if(confirm('Are you sure want to CANCEL this order id '+ id + ' ???')){
+                    
+                    document.location.href = '<c:url value="/Administration/Orders/cancel/"/>' + id + '/monitor';
+                }
+            }
+            function viewRecipient(id) {
+                $.get('<c:url value="/Administration/SystemRecipient/edit/"/>' + id, function (data) {
+                    enableEditRecipientHtmlContent(data);
+                });
+            }
+            
+            function enableEditRecipientHtmlContent(data) {
+
+                $('#editRecipientContent').html(data);
+                $('#editRecipientModal').modal({show: true});
+
+                // handler submit form
+                //callback handler for form submit
+                $("#chooseRecipientForm").submit(function (e)
+                {
+                    //alert('hi');
+                    var postData = $(this).serializeArray();
+                    var formURL = $(this).attr("action");
+                    $.ajax(
+                    {
+                        url: formURL,
+                        type: "POST",
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR)
+                        {
+                            //data: return data from server
+                            if (data.error === '0') {
+                                // hide popup
+                                $('#editRecipientModal').modal('hide');
+                            }
+                            else {
+                                alert(SOMETHING_WRONG_ERROR);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown)
+                        {
+                            //if fails      
+                        }
+                    });
+                    if (typeof e !== 'undefined') {
+                        e.preventDefault(); //STOP default action
+                        //e.unbind(); //unbind. to stop multiple form submit.
+                    }
+                });
+            }
+            
         </script>    
     </jsp:attribute>
     <jsp:body>
@@ -58,13 +168,13 @@
                                 <thead>
                                     <tr>
                                         <th nowrap>Date</th><%-- 1 --%>
-                                        <th nowrap style="text-align:center;">Transaction No</th><%-- 3 --%>
                                         <th nowrap style="text-align:center;">Order</th><%-- 2 --%>
+                                        <th nowrap style="text-align:center;">Transaction No</th><%-- 3 --%>
                                         <th nowrap>Option</th><%-- 4 --%>
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
                                         <th style="text-align: right;">Amount</th><%-- 7 --%>
-                                        <th style="text-align: right;">Status</th><%-- 8 --%>
+                                        <th style="text-align: center;">Status</th><%-- 8 --%>
                                         <th style="text-align: right;">#</th>
                                     </tr>
                                 </thead>
@@ -74,16 +184,16 @@
                                     <c:set var="totalAmountUsd" value="0"/>
                                     <c:forEach items="${mOs}" var="m" varStatus="theCount">
                                         <c:set var="countRec" value="${theCount.count}"/>
-                                        <tr id="rowO${m.key.id}" class="warning">
+                                        <tr id="rowO${m.key.id}" <c:if test="${not empty m.key.invoice.monitored}">class="warning"</c:if>>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
-                                            <td style="text-align:center;"><b>${m.key.invoice.netTransId}</b></td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
-                                                    ${m.key.invoice.invoiceCode}
+                                                    <b>${m.key.invoice.invoiceCode}</b>
                                                 </a>
                                                 <br/>
                                                 1 USD = ${m.key.lxExchangeRate.buy} VND
                                             </td>
+                                            <td style="text-align:center;"><b>${m.key.invoice.netTransId}</b><br/>(${m.key.invoice.translatedStatus})</td>
                                             <td nowrap>
                                                 <c:if test="${m.key.setting eq 0}">
                                                     Gift Only
@@ -92,7 +202,7 @@
                                                     Allow Refund
                                                 </c:if>
                                             </td>
-                                            <td>${m.key.sender.fullName}<br/><a href="<c:url value="/Administration/SystemSender/detail/${m.key.sender.id}"/>">${m.key.sender.beautyId}</a></td>
+                                            <td>${m.key.sender.fullName}<br/><a target="_blank" href="<c:url value="/Administration/SystemSender/detail/${m.key.sender.id}"/>">${m.key.sender.beautyId}</a></td>
                                             <td style="text-align: center;">
                                                 <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
                                                     <c:if test="${not empty rio.gifts}">
@@ -116,14 +226,119 @@
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
-                                            <td style="text-align: right;">
-                                                ${m.key.invoice.invoiceStatus}
+                                            <td style="text-align: center;">
+                                                <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
+                                                    <c:choose>
+                                                        <c:when test="${m.key.lixiStatus eq PROCESSING}">
+                                                            Processing<br/>
+                                                            <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                                            <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
+                                                        </c:when>
+                                                        <c:when test="${m.key.lixiStatus eq COMPLETED}">
+                                                            Completed
+                                                        </c:when>
+                                                        <c:when test="${m.key.lixiStatus eq CANCELED}">
+                                                            Cancelled
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${m.key.lixiStatus}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </a>    
+                                                <div id="detailStatusOrder${m.key.id}" style="display:none;" class="table-responsive">
+                                                    <table class="table table-hover table-responsive table-striped" style="font-size: 12px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th nowrap>Receiver</th><%-- 1 --%>
+                                                                <th nowrap>Item</th><%-- 2 --%>
+                                                                <th nowrap>Description</th><%-- 3 --%>
+                                                                <th nowrap>Method</th>
+                                                                <th style="text-align:right;">Status</th><%-- 4 --%>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <c:forEach items="${m.value}" var="rio" varStatus="theCount">
+                                                                <tr>
+                                                                    <td  colspan="5" nowrap>${rio.recipient.fullName}</td>
+                                                                </tr>
+                                                                <c:forEach items="${rio.gifts}" var="g" varStatus="theCount2">
+                                                                    <tr>
+                                                                        <td># ${g.id}</td>
+                                                                        <td>${g.productQuantity}</td>
+                                                                        <td>${g.productName}</td>
+                                                                        <td>
+                                                                            <c:choose>
+                                                                                <c:when test="${g.bkReceiveMethod eq 'MONEY'}">
+                                                                                    Refunded
+                                                                                </c:when>
+                                                                                <c:when test="${g.bkReceiveMethod eq 'GIFT'}">
+                                                                                    Gifted
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    ${g.bkReceiveMethod}
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                        </td>
+                                                                        <td style="text-align:right;">
+                                                                            <c:choose>
+                                                                                <c:when test="${g.bkStatus eq '0'}">
+                                                                                    <span class="alert-danger">Processing</span>
+                                                                                </c:when>
+                                                                                <c:when test="${g.bkStatus eq '1'}">
+                                                                                    <span class="alert-success">Completed</span>
+                                                                                </c:when>
+                                                                                <c:when test="${g.bkStatus eq '2'}">
+                                                                                    <span class="alert-warning">Cancelled</span>
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <span class="alert-danger">${g.bkStatus}</span>
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                            <br/>
+                                                                            <br/>
+                                                                        </td>
+                                                                </tr>
+                                                                </c:forEach>
+                                                                <c:forEach items="${rio.topUpMobilePhones}" var="t">
+                                                                    <tr>
+                                                                        <td># ${t.id}</td>
+                                                                        <td>1</td>
+                                                                        <td colspan="2">Top Up Mobile: ${t.phone}</td>
+                                                                        <td style="text-align:right;">
+                                                                            
+                                                                                <c:choose>
+                                                                                    <c:when test="${t.status eq UN_SUBMITTED}">
+                                                                                        <span class="alert-danger">Not Sent</span>
+                                                                                    </c:when>
+                                                                                    <c:when test="${t.status eq COMPLETED}">
+                                                                                        <span class="alert-success">Completed</span>
+                                                                                    </c:when>
+                                                                                    <c:when test="${t.status eq CANCELED}">
+                                                                                        <span class="alert-warning">Canceled</span>
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <span class="alert-danger">${t.status}</span>
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                            
+                                                                        </td>
+                                                                </tr>
+                                                                </c:forEach>
+                                                            </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </td>
                                             <td style="text-align: right;" nowrap>
-                                                <button class="btn btn-primary btn-sm" onclick="alert('In Implementation')">Check</button>
+                                                <c:if test="${m.key.lixiStatus eq PROCESSED}">
+                                                    <a href="javascript:reSendOrder(${m.key.id});">Re-Send</a> | 
+                                                </c:if>
+                                                <c:if test="${m.key.lixiStatus eq PROCESSED and (m.key.lixiSubStatus eq SENT_MONEY or m.key.lixiSubStatus eq SENT_INFO)}">
+                                                    <a href="javascript:cancel(${m.key.id});">Cancel</a>
+                                                </c:if>
                                             </td>
                                         </tr>
-                                        <c:if test="${m.key.invoice.monitored ne 0}">
+                                        <c:if test="${not empty m.key.invoice.monitored}">
                                             <tr class="danger">
                                                 <td colspan="9">
                                                     <c:if test="${m.key.invoice.monitored eq OVER_100_USD}">
@@ -140,9 +355,44 @@
                                         </c:if>
                                     </c:forEach>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="9">
+                                            <%-- Paging --%>
+                                            <nav>
+                                            <ul class="pagination pull-right">
+                                                <c:forEach begin="1" end="${pOrders.totalPages}" var="i">
+                                                    <c:choose>
+                                                        <c:when test="${(i - 1) == pOrders.number}">
+                                                            <li class="active">
+                                                                <a href="javascript:void(0)">${i}</a>
+                                                            </li>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <li>
+                                                                <a href="<c:url value="/Administration/TransactionMonitor/report">
+                                                                       <c:param name="paging.page" value="${i}" />
+                                                                       <c:param name="paging.size" value="50" />
+                                                                   </c:url>">${i}</a>
+                                                            </li>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
+                                            </ul>
+                                                </nav>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                                
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" id="editRecipientContent">
                 </div>
             </div>
         </div>

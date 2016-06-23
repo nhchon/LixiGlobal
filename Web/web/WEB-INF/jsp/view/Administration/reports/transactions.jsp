@@ -352,19 +352,6 @@
                                                             ${m.key.lixiStatus}
                                                         </c:otherwise>
                                                     </c:choose>
-                                                            <%--
-                                                <c:if test="${m.key.lixiStatus eq PROCESSING}">
-                                                    Processing<br/>
-                                                    <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
-                                                    <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
-                                                </c:if>
-                                                <c:if test="${m.key.lixiStatus eq COMPLETED}">
-                                                    Completed
-                                                </c:if>
-                                                <c:if test="${m.key.lixiStatus eq CANCELED}">
-                                                    Cancelled
-                                                </c:if>
-                                                            --%>
                                                 </a>    
                                                 <div id="detailStatusOrder${m.key.id}" style="display:none;" class="table-responsive">
                                                     <table class="table table-hover table-responsive table-striped" style="font-size: 12px;">

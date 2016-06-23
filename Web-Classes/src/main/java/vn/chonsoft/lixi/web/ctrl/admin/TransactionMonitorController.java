@@ -12,10 +12,15 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiMonitor;
@@ -52,27 +57,39 @@ public class TransactionMonitorController {
      * @return 
      */
     @RequestMapping(value = "report", method = RequestMethod.GET)
-    public ModelAndView report(Map<String, Object> model){
+    public ModelAndView report(Map<String, Object> model, @PageableDefault(value = 50, sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable){
         
         //List<LixiMonitor> monitors = this.lixiMonitorService.findByProcessed(new Integer(0));
         
-        List<LixiInvoice> invs = this.invService.findByInvoiceStatus(LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS);
+        //List<LixiInvoice> invs = this.invService.findByInvoiceStatus(LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS);
         
-        List<Long> oIds = invs.stream().map(LixiInvoice::getOrder).map(LixiOrder::getId).collect(Collectors.toList());
+        //List<Long> oIds = invs.stream().map(LixiInvoice::getOrder).map(LixiOrder::getId).collect(Collectors.toList());
         
-        List<LixiOrder> orders = this.orderService.findAll(oIds);
+        //List<LixiOrder> orders = this.orderService.findAll(oIds);
+        
+        //Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        
+        //if(orders != null){
+            
+            //orders.forEach(o -> {
+                //mOs.put(o, LiXiUtils.genMapRecGifts(o));
+            //});
+        //}
+        
+        //model.put("mOs", mOs);
+        Page<LixiOrder> pOrders = this.orderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSING.getValue(), pageable);
         
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         
-        if(orders != null){
+        if(pOrders != null){
             
-            orders.forEach(o -> {
+            pOrders.getContent().forEach(o -> {
                 mOs.put(o, LiXiUtils.genMapRecGifts(o));
             });
         }
         
         model.put("mOs", mOs);
-        //model.put("monitors", monitors);
+        model.put("pOrders", pOrders);
         
         return new ModelAndView("Administration/reports/monitor");
     }

@@ -531,6 +531,8 @@ public class LixiOrdersController {
                 return new ModelAndView(new RedirectView("/Administration/Orders/newOrders?oStatus=" + EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue(), true, true));
             case "report":
                 return new ModelAndView(new RedirectView("/Administration/Orders/report", true, true));
+            case "monitor":
+                return new ModelAndView(new RedirectView("/Administration/TransactionMonitor/report", true, true));
             default:
                 return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
         }

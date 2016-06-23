@@ -210,7 +210,7 @@ public class LixiOrderServiceImpl implements LixiOrderService{
         
         Page<LixiOrder> ps = this.lxorderRepository.findByLixiStatus(status, page);
         if(ps != null && ps.hasContent()){
-            ps.getContent().forEach((LixiOrder o) -> o.getGifts().size());
+            ps.getContent().forEach(o -> {LiXiRepoUtils.loadOrder(o);});
         }
         
         return ps;

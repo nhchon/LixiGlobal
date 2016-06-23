@@ -33,7 +33,7 @@ import vn.chonsoft.lixi.web.annotation.WebController;
  */
 @WebController
 @RequestMapping(value = "/Administration")
-public class Administration {
+public class AdministrationController {
     
     private static final Logger log = LogManager.getLogger();
     
@@ -81,7 +81,7 @@ public class Administration {
         }
         else{
             
-            return new ModelAndView(new RedirectView("/Administration/Dashboard", true, true));
+            return new ModelAndView(new RedirectView("/Administration/TransactionMonitor/report", true, true));
             
         }
     }
