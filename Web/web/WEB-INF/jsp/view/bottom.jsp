@@ -74,7 +74,7 @@
                                 </ul>
                             </div>
                                     <div style="text-align: center;">
-                                        <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=25ZSP0L5Lsd3uLmBTIB8PqsJWEv03qyZ8sJtMVacTWHVe1p60GLbLpEo2G4o"></script></span>
+                                        <%--<span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=25ZSP0L5Lsd3uLmBTIB8PqsJWEv03qyZ8sJtMVacTWHVe1p60GLbLpEo2G4o"></script></span>--%>
                                     </div>
                         </div>
                     </div>

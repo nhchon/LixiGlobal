@@ -18,8 +18,9 @@
             </c:choose>
             <c:set var="imageFullSize" value="${p.imageUrl}"/>
             <c:if test="${not empty p.imageFullSize}"><c:set var="imageFullSize" value="${p.imageFullSize}"/></c:if>
-            <div title="${p.name}"  class="gift-product-thumb" zoomWindowPosition="${zoomPosition}" src="${p.imageUrl}" data-zoom-image="${imageFullSize}" style="background: url(${p.imageUrl}) no-repeat scroll center center transparent;"> </div>
-            <h4 class="title" title="${p.name}" style="font-size: 0.8em;">${p.name}</h4>
+            <div id="p_${p.id}" title="${p.name}"  class="gift-product-thumb" zoomWindowPosition="${zoomPosition}" src="${p.imageUrl}" data-zoom-image="${imageFullSize}" style="background: url(${p.imageUrl}) no-repeat scroll center center transparent;background-size: contain;"> </div>
+            <h4 class="tipso title" tooltipTitle="${p.name}" titlePosition="p_${p.id}" contentBy="des_${p.id}" style="font-size: 0.8em;cursor: pointer;">${p.name}</h4>
+            <div id="des_${p.id}" style="display:none;">${p.beautyDes}</div>
             <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
             <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
             <div class="gift-number-box">

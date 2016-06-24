@@ -19,6 +19,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -179,7 +180,7 @@ public class LiXiVatGiaUtils {
         //
         List<VatgiaProduct> ps = new ArrayList<>();
         for (VatGiaProductPj p : pjs.getData()) {
-
+            
             ps.add(convertVatGiaProduct2Model(p));
 
         }

@@ -1,3 +1,32 @@
+function showTooltip(){
+    $('.tipso').each(function(){
+        $(this).tipso({
+            titleContent: $(this).attr('tooltipTitle')
+            ,content: $('#'+$(this).attr("contentBy")).html()
+            ,position:'top'
+            ,width:500
+        });
+    });
+    
+    //$('[tooltipTitle]').each(function() { // Grab all elements with a title attribute,and set "this"
+    //    $(this).qtip({ // 
+    //        content: {
+    //            title:$(this).text(),
+    //            text: $('#'+$(this).attr("contentBy")).html() // WILL work, because .each() sets "this" to refer to each element
+    //        }
+            /*
+            ,position: {
+                my: 'top right',  // Position my top left...
+                at: 'top left' // at the bottom right of...
+                ,target:$('#'+$(this).attr("titlePosition"))
+                ,adjust: {
+                    method:"flipinvert"
+                }
+            }
+            */
+    //    });
+    //});                
+}
 function loadPage(pageNum) {
 
     $.ajax({
@@ -15,6 +44,8 @@ function loadPage(pageNum) {
                 var zoom = $(this).attr("zoomWindowPosition");
                 $(this).elevateZoom({zoomWindowPosition:parseInt(zoom)});
             });
+            //
+            showTooltip();
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -58,8 +89,8 @@ function loadNewPrice(price) {
                     loadPage(page);
                 }
             });
-            
-            
+            //
+            showTooltip();
         },
         error: function (jqXHR, textStatus, errorThrown)
         {

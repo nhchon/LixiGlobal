@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import org.jsoup.Jsoup;
 
 /**
  *
@@ -44,6 +45,9 @@ public class VatgiaProduct implements Serializable {
     @Basic
     @Column(name = "description")
     private String description;
+    
+    @Transient
+    private String beautyDes;
     
     @Basic(optional = false)
     @Column(name = "price")
@@ -129,6 +133,22 @@ public class VatgiaProduct implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getBeautyDes() {
+        if(beautyDes == null){
+            if(getDescription()!=null){
+                // remove all html tags
+                String text = Jsoup.parse(getDescription()).text();
+                // substring
+                if(text.indexOf(" ", 500) > -1){
+                    text = text.substring(0, text.indexOf(" ", 500))+"...";
+                }
+                beautyDes = text;
+            }
+        }
+        
+        return beautyDes;
     }
 
     public double getPrice() {

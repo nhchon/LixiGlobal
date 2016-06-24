@@ -3,6 +3,7 @@
 
     <jsp:attribute name="extraHeadContent">
         <script language="javascript" src="https://cashshieldasia.cashrun.com/crfp.js?SITE_ID=2b57448f3013fc513dcc7a4ab933e6928ab74672&SESSION_ID=${pageContext.session.id}&TYPE=JS" type="text/javascript" charset="UTF-8"></script>
+        <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/js/vendor/tipso/tipso.css"/>">
         <style>
             div.pagination-wrapper{
                 opacity: .99;
@@ -164,6 +165,7 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/gifts.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.elevatezoom.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/tipso/tipso.js"/>"></script>
     </jsp:attribute>
 
     <jsp:body>
