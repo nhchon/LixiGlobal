@@ -14,7 +14,7 @@ import vn.chonsoft.lixi.web.annotation.WebController;
  */
 @WebController
 @RequestMapping(value = "/Administration/Dashboard")
-public class DashBoard {
+public class DashBoardController {
     
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
     public String index(){

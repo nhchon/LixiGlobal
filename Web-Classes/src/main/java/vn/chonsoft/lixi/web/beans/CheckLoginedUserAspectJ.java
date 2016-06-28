@@ -40,13 +40,7 @@ public class CheckLoginedUserAspectJ {
             
             if(StringUtils.isEmpty(loginedUser.getEmail())){
                 
-                if(loginedUser.getLoginedDate()!=null){
-                    return new ModelAndView(new RedirectView("/user/signIn?signInFailed=2", true, true));
-                }
-                else{
-                    return new ModelAndView(new RedirectView("/user/signIn?signInFailed=3", true, true));
-                }
-                
+                return new ModelAndView(new RedirectView("/sessionExpired", true, true));
             }
             
             /* continue to process */

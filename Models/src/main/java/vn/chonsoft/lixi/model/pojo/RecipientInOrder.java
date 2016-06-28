@@ -7,13 +7,14 @@ package vn.chonsoft.lixi.model.pojo;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
-import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
  *
@@ -23,7 +24,11 @@ public class RecipientInOrder {
     
     private static final Logger log = LogManager.getLogger(RecipientInOrder.class);
     
-    private Long orderd;
+    private Long orderId;
+    
+    private Integer orderSetting;
+    
+    private double baoKimTransferPercent;
     
     private LixiExchangeRate lxExchangeRate;
     
@@ -31,30 +36,46 @@ public class RecipientInOrder {
     
     private List<LixiOrderGift> gifts;
     
-    private List<BuyCard> buyPhoneCards;
+    //private List<BuyCard> buyPhoneCards;
     
     private List<TopUpMobilePhone> topUpMobilePhones;
 
     private SumVndUsd giftTotal = null;
-    private SumVndUsd phoneCardTotal = null;
+    //private SumVndUsd phoneCardTotal = null;
     
     private SumVndUsd topUpTotal = null;
     private SumVndUsd allTotal = null;
     
     public Long getOrderId() {
-        return orderd;
+        return orderId;
     }
 
-    public void setOrderId(Long orderd) {
-        this.orderd = orderd;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public Long getOrderd() {
-        return orderd;
+        return orderId;
     }
 
-    public void setOrderd(Long orderd) {
-        this.orderd = orderd;
+    public void setOrderd(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Integer getOrderSetting() {
+        return orderSetting;
+    }
+
+    public void setOrderSetting(Integer orderSetting) {
+        this.orderSetting = orderSetting;
+    }
+
+    public double getBaoKimTransferPercent() {
+        return baoKimTransferPercent;
+    }
+
+    public void setBaoKimTransferPercent(double baoKimTransferPercent) {
+        this.baoKimTransferPercent = baoKimTransferPercent;
     }
 
     public LixiExchangeRate getLxExchangeRate() {
@@ -81,14 +102,6 @@ public class RecipientInOrder {
         this.gifts = gifts;
     }
 
-    public List<BuyCard> getBuyPhoneCards() {
-        return buyPhoneCards;
-    }
-
-    public void setBuyPhoneCards(List<BuyCard> buyPhoneCards) {
-        this.buyPhoneCards = buyPhoneCards;
-    }
-
     public List<TopUpMobilePhone> getTopUpMobilePhones() {
         return topUpMobilePhones;
     }
@@ -97,10 +110,28 @@ public class RecipientInOrder {
         this.topUpMobilePhones = topUpMobilePhones;
     }
     
-    private SumVndUsd calculateGiftTotal(){
+    /**
+     * 
+     * @return 
+     */
+    public double getGiftMargin(){
         
-        /* */
-        double buy = getLxExchangeRate().getBuy();
+        double giftMarginTotal = 0;
+        double marginPercent = 100.0 - baoKimTransferPercent;
+        
+        if (getGifts() != null) {
+            for (LixiOrderGift gift : getGifts()) {
+                if(orderSetting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod())){
+                    
+                    giftMarginTotal += (gift.getProductPrice()*gift.getProductQuantity() * marginPercent)/100.0;
+                }
+            }
+        }
+        
+        return LiXiGlobalUtils.round2Decimal(giftMarginTotal);
+    }
+    
+    private SumVndUsd calculateGiftTotal(){
         
         // gift type
         double sumGiftVND = 0;
@@ -134,36 +165,6 @@ public class RecipientInOrder {
         return giftTotal;
     }
     
-    /**
-     * 
-     * @return 
-     */
-    private SumVndUsd calculatePhoneCardTotal(){
-        
-        /* */
-        double buy = getLxExchangeRate().getBuy();
-        
-        // buy phone card
-        double sumBuyCardUSD = 0;
-        if (getBuyPhoneCards() != null) {
-            for (BuyCard card : getBuyPhoneCards()) {
-                double temp = (card.getValueInUSD(buy) * card.getNumOfCard());
-                sumBuyCardUSD += (double) Math.round(temp * 100) / 100;
-                /* round up */
-                sumBuyCardUSD = Math.round(sumBuyCardUSD * 100.0) / 100.0;
-            }
-        }
-        return new SumVndUsd(LiXiGlobalConstants.LIXI_PHONE_CARD_TYPE, sumBuyCardUSD * buy, sumBuyCardUSD);
-    }
-    
-    public SumVndUsd getPhoneCardTotal(){
-        
-        if(phoneCardTotal == null)
-            phoneCardTotal = calculatePhoneCardTotal();
-        
-        return phoneCardTotal;
-    }
-    
     private SumVndUsd calculateTopUpTotal(){
         
         // top up mobile phone
@@ -190,9 +191,8 @@ public class RecipientInOrder {
         
         SumVndUsd gift = getGiftTotal();
         SumVndUsd topUp = getTopUpTotal();
-        SumVndUsd buyCard = getPhoneCardTotal();
         
-        return new SumVndUsd(LiXiGlobalConstants.LIXI_TOTAL_ALL_TYPE, gift.getVnd() + topUp.getVnd() + buyCard.getVnd(), gift.getUsd() + topUp.getUsd() + buyCard.getUsd());
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_TOTAL_ALL_TYPE, gift.getVnd() + topUp.getVnd(), gift.getUsd() + topUp.getUsd());
     }
     
     /**

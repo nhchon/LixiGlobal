@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/css/bootstrap-datepicker3.min.css"/>">
         <style type="text/css">
             .popover{
-                max-width:600px;
+                max-width:650px;
             }
         </style>
     </jsp:attribute>
@@ -52,6 +52,8 @@
 
                     return true;
                 });
+                //gift margin
+                
             });
 
             function viewRecipient(id) {
@@ -99,6 +101,7 @@
                             <th nowrap class="success">Date</th><%-- 3 --%>
                             <th nowrap class="success">Time</th><%-- 4 --%>
                             <th nowrap style="text-align:right;" class="success">Total</th><%-- 5 --%>
+                            <th nowrap class="success" style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Total Gift Margin(*)</th>
                             <th nowrap style="text-align:right;" class="success">Owner</th>
                         </tr>
                     </thead>
@@ -113,11 +116,12 @@
                                 <fmt:formatNumber value="${batch.sumVnd}" pattern="###,###.##"/> VND<br/>
                                 <fmt:formatNumber value="${batch.sumUsd}" pattern="###,###.##"/> USD
                             </td>
+                            <td id="giftMargin" style="text-align:right;"></td>
                             <td nowrap style="text-align:right;">${batch.createdBy}</td>
                         </tr>
                     </tbody>
                 </table>
-                
+                        <p class="help-block">Gift Margin(*): For ONLY Allow Refund Orders, but Gifted by each user</p>
             </div>
         </div>
         <security:authentication property="principal.configs['LIXI_BAOKIM_TRANFER_PERCENT']" var="transferPercent" />
@@ -141,6 +145,7 @@
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
                                         <th style="text-align: right;">Amount</th><%-- 7 --%>
+                                        <th nowrap style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Gift Margin(*)</th>
                                         <th style="text-align: center;">Status</th><%-- 8 --%>
                                         <th style="text-align: center;">Last Modified Date</th><%-- 9 --%>
                                         <c:if test="${searchForm.status eq 'All' or searchForm.status eq PROCESSED}">
@@ -152,7 +157,9 @@
                                     <c:set var="countRec" value="0"/>
                                     <c:set var="totalAmountVnd" value="0"/>
                                     <c:set var="totalAmountUsd" value="0"/>
+                                    <c:set var="totalGiftMargin" value="0"/>
                                     <c:forEach items="${mOs}" var="m" varStatus="theCount">
+                                        <c:set var="giftMargin" value="0"/>
                                         <c:set var="countRec" value="${theCount.count}"/>
                                         <tr id="rowO${m.key.id}">
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
@@ -183,6 +190,9 @@
                                             <td style="text-align: right;">
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
+                                                        ${rio.giftMargin}
+                                                        <c:set var="totalGiftMargin" value="${totalGiftMargin + rio.giftMargin}"/>
+                                                        <c:set var="giftMargin" value="${giftMargin + rio.giftMargin}"/>
                                                     <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
                                                     <c:if test="${m.key.setting eq 0}">
                                                         <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
@@ -196,6 +206,7 @@
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
+                                            <td id="giftMargin${m.key.id}" style="text-align: right;"></td>
                                             <td style="text-align: center;">
                                                 <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
                                                 <c:if test="${m.key.lixiStatus eq PROCESSED}">
@@ -210,51 +221,7 @@
                                                     Cancelled
                                                 </c:if>
                                                 </a>
-                                                <div id="detailStatusOrder${m.key.id}" style="display:none;" class="table-responsive">
-                                                    <table class="table table-hover table-responsive table-striped" style="font-size: 12px;">
-                                                        <thead>
-                                                            <tr>
-                                                                <th nowrap>Receiver</th><%-- 1 --%>
-                                                                <th nowrap>Quantity</th><%-- 2 --%>
-                                                                <th nowrap>Description</th><%-- 3 --%>
-                                                                <th style="text-align:right;">Status</th><%-- 4 --%>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <c:forEach items="${m.value}" var="rio" varStatus="theCount">
-                                                                <tr>
-                                                                    <td  colspan="4" nowrap>${rio.recipient.fullName}</td>
-                                                                </tr>
-                                                                <c:forEach items="${rio.gifts}" var="g" varStatus="theCount2">
-                                                                    <tr>
-                                                                        <td># ${g.id}</td>
-                                                                        <td>${g.productQuantity}</td>
-                                                                        <td>${g.productName}</td>
-                                                                        <td style="text-align:right;">
-                                                                            <c:choose>
-                                                                                <c:when test="${g.bkStatus eq '0'}">
-                                                                                    <span class="alert-danger">Processing</span>
-                                                                                </c:when>
-                                                                                <c:when test="${g.bkStatus eq '1'}">
-                                                                                    <span class="alert-danger">Completed</span>
-                                                                                </c:when>
-                                                                                <c:when test="${g.bkStatus eq '2'}">
-                                                                                    <span class="alert-danger">Cancelled</span>
-                                                                                </c:when>
-                                                                                <c:otherwise>
-                                                                                    <span class="alert-danger">${g.bkStatus}</span>
-                                                                                </c:otherwise>
-                                                                            </c:choose>
-                                                                            <br/>
-                                                                            <br/>
-                                                                        </td>
-                                                                </tr>
-                                                                </c:forEach>
-                                                            </c:forEach>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                    
+                                                <%@include  file="/WEB-INF/jsp/view/Administration/reports/detailStatusOrder.jsp" %>
                                             </td>
                                             <td style="text-align: center;">
                                                 <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.modifiedDate}"/>
@@ -267,7 +234,9 @@
                                             </td>
                                             </c:if>
                                         </tr>
+                                        <script>document.getElementById('giftMargin${m.key.id}').innerHTML='<fmt:formatNumber value="${giftMargin}" pattern="###,###.##"/> VND';</script>
                                     </c:forEach>
+                                    <script>document.getElementById('giftMargin').innerHTML='<fmt:formatNumber value="${totalGiftMargin}" pattern="###,###.##"/> VND';</script>
                                 </tbody>
                             </table>
                         </div>

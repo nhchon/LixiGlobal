@@ -1,6 +1,10 @@
 function showTooltip(){
     $('.tipso').each(function(){
         $(this).tipso({
+            titleBackground   : '#0090d0',
+            titleColor        : '#fff',
+            color             : '#413833',
+            background: '#faf9f5',
             titleContent: $(this).attr('tooltipTitle')
             ,content: $('#'+$(this).attr("contentBy")).html()
             ,position:'top'
@@ -28,9 +32,13 @@ function showTooltip(){
     //});                
 }
 function loadPage(pageNum) {
+    var recId = 0;
+    if( $('#recId').length )  {
+        recId = $('#recId').val();
+    }
 
     $.ajax({
-        url: AJAX_LOAD_PRODUCTS_PATH + '/' + $('#recId').val() + '/' + pageNum,
+        url: AJAX_LOAD_PRODUCTS_PATH + '/' + recId + '/' + pageNum,
         type: "get",
         dataType: 'html',
         success: function (data, textStatus, jqXHR)
@@ -40,12 +48,14 @@ function loadPage(pageNum) {
             //
             //addHandlerToCheckboxAndSelect();
             LixiGlobal.Gift.initSentGiftPage();
+            /*
             $(".gift-product-thumb").each(function(){
                 var zoom = $(this).attr("zoomWindowPosition");
                 $(this).elevateZoom({zoomWindowPosition:parseInt(zoom)});
             });
+            */
             //
-            showTooltip();
+            //showTooltip();
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -57,8 +67,12 @@ function loadNewPrice(price) {
 
     overlayOn($('.gift-filter-items'));
     
+    var recId = 0;
+    if( $('#recId').length )  {
+        recId = $('#recId').val();
+    }
     $.ajax({
-        url: CONTEXT_PATH + '/gifts/ajax/loadProductsByNewPrice/' + $('#recId').val() + '/1/' + price,
+        url: CONTEXT_PATH + '/gifts/ajax/loadProductsByNewPrice/' + recId + '/1/' + price,
         type: "get",
         dataType: 'html',
         success: function (data, textStatus, jqXHR)
@@ -68,12 +82,12 @@ function loadNewPrice(price) {
             //
             //addHandlerToCheckboxAndSelect();
             LixiGlobal.Gift.initSentGiftPage();
-            
+            /*
             $(".gift-product-thumb").each(function(){
                 var zoom = $(this).attr("zoomWindowPosition");
                 $(this).elevateZoom({zoomWindowPosition:zoom});
             });
-            
+            */
             overlayOff();
             
             var totalPage = $('#newTotalPages').val();
@@ -90,7 +104,7 @@ function loadNewPrice(price) {
                 }
             });
             //
-            showTooltip();
+            //showTooltip();
         },
         error: function (jqXHR, textStatus, errorThrown)
         {

@@ -45,6 +45,12 @@ public class IndexController {
     @Autowired
     private LixiExchangeRateService xrService;
     
+    @RequestMapping(value = "/sessionExpired", method = {RequestMethod.GET, RequestMethod.POST})
+    public String sessionExpired(Map<String, Object> model) {
+        
+        return "sessionExpired";
+    }
+
     /**
      * 
      * @param model 

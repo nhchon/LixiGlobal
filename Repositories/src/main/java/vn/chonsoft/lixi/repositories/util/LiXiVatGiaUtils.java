@@ -692,7 +692,8 @@ public class LiXiVatGiaUtils {
                     if (EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue().equals(gift.getBkSubStatus())) {
                         String id = gift.getId().toString();
                         String amount = (gift.getProductPrice()*gift.getProductQuantity()) + "";
-                        if(setting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equalsIgnoreCase(gift.getBkReceiveMethod())){
+                        // || LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equalsIgnoreCase(gift.getBkReceiveMethod())
+                        if(setting == EnumLixiOrderSetting.GIFT_ONLY.getValue()){
                             double amountNumber = (gift.getProductPrice()*gift.getProductQuantity() * baoKimPercent)/100.0;
                             
                             amount = amountNumber + "";

@@ -23,6 +23,7 @@
             <div id="des_${p.id}" style="display:none;">${p.beautyDes}</div>
             <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
             <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
+            <%--
             <div class="gift-number-box">
                 <div class="input-group text-center">
                     <span class="input-group-btn">
@@ -36,12 +37,16 @@
                     </span>
                 </div><!-- /input-group -->
             </div>
+            --%>
             <div class="button-control">
-                <button class="btn btn-default title buy btn-buy-item-event"><spring:message code="message.buy"/></button>
+                <%--<button class="btn btn-default title buy btn-buy-item-event"><spring:message code="message.buy"/></button>--%>
+                <button style="width:125px;" class="btn btn-default" onclick="window.location='<c:url value="/gifts/detail/${p.id}"/>'"><spring:message code="message.buy"/></button>
             </div>
+            <%--
             <span class="gift-item-checkbox" style="z-index: 1001;">
                 <input type="checkbox" class="custom-checkbox-input" onclick="LixiGlobal.Gift.chooseGiftItem(this);" name="item" id="item${p.id}" value="${p.id}" <c:if test="${p.selected eq true}">checked</c:if>/>
             </span>
+            --%>
         </div>
     </div>
 </c:forEach>

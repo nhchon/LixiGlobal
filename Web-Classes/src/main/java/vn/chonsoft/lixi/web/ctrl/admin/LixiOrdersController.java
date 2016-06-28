@@ -417,34 +417,7 @@ public class LixiOrdersController {
     @RequestMapping(value = "sendMoneyInfo/{id}", method = RequestMethod.GET)
     public ModelAndView sendMoneyInfo(Map<String, Object> model, @PathVariable Long id){
         
-        LixiOrder order = this.lxOrderService.findById(id);
-        
-        LixiBatch batch = createBatch();
-        
-        double percent = getBaoKimPercent();
-        
-        if(order != null){
-            /* attach batch id */
-            order.setBatchId(batch.getId());
-            
-            boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
-            
-            if(rs){
-                /* lưu id */
-                LixiBatchOrder bo = new LixiBatchOrder();
-                bo.setBatch(batch);
-                bo.setOrderId(order.getId());
-                
-                SumVndUsd sum = order.getSumOfGiftVnd(percent);
-                
-                bo.setVndOnlyGift(sum.getVnd());
-                bo.setUsdOnlyGift(sum.getUsd());
-                
-                this.batchOrderService.save(bo);
-            }
-        }
-        
-        return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
+        return sendMoneyInfos(model, new Long[]{id});
     }
     
     /**
@@ -483,6 +456,7 @@ public class LixiOrdersController {
         }
         //
         return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
+        
     }
     
     /**

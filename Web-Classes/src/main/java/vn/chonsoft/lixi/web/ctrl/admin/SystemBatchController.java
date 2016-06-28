@@ -30,6 +30,7 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.form.BatchSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.LixiBatchService;
+import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -61,6 +62,9 @@ public class SystemBatchController {
     @Autowired
     private ScalarFunctionService scalaService;
     
+    @Autowired
+    private LixiConfigService configService;
+    
     /**
      * 
      * @param model
@@ -69,6 +73,8 @@ public class SystemBatchController {
      */
     @RequestMapping(value = "view/{id}", method = RequestMethod.GET)
     public ModelAndView view(Map<String, Object> model, @PathVariable long id){
+        
+        double baoKimTransferPercent = LiXiUtils.getBaoKimPercent(this.configService.findByName("LIXI_BAOKIM_TRANFER_PERCENT").getValue());
         
         LixiBatch batch = this.batchService.findById(id);
         
@@ -86,7 +92,7 @@ public class SystemBatchController {
         if(orders != null){
             
             orders.forEach(o -> {
-                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+                mOs.put(o, LiXiUtils.genMapRecGifts(o, baoKimTransferPercent));
             });
         }
         

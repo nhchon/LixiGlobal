@@ -40,6 +40,7 @@ import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.pojo.CashRun;
@@ -60,6 +61,21 @@ public class LiXiUtils {
 
     static {
         df.applyPattern("###,###.##");
+    }
+    
+    /**
+     * 
+     * @param value
+     * @return 
+     */
+    public static double getBaoKimPercent(String value){
+        
+        double percent = LiXiGlobalConstants.LIXI_BAOKIM_DEFAULT_PERCENT;
+        try {
+            percent = Double.parseDouble(value);
+        } catch (Exception e) {}
+        
+        return percent;
     }
     
     /**
@@ -565,10 +581,21 @@ public class LiXiUtils {
      */
     public static List<RecipientInOrder> genMapRecGifts(LixiOrder order) {
         
+        return genMapRecGifts(order, LiXiGlobalConstants.LIXI_BAOKIM_DEFAULT_PERCENT);
+    }
+
+    /**
+     * 
+     * @param order
+     * @param baoKimTransferPercent
+     * @return 
+     */
+    public static List<RecipientInOrder> genMapRecGifts(LixiOrder order, double baoKimTransferPercent) {
+        
         if(order == null) return null;
         
         Map<Recipient, List<LixiOrderGift>> recGifts = new HashMap<>();
-        Map<Recipient, List<BuyCard>> recPhoneCards = new HashMap<>();
+        //Map<Recipient, List<BuyCard>> recPhoneCards = new HashMap<>();
         Map<Recipient, List<TopUpMobilePhone>> recTopUps = new HashMap<>();
 
         Set<Recipient> recSet = new HashSet<>();
@@ -607,29 +634,14 @@ public class LiXiUtils {
             //
             recSet.add(topUp.getRecipient());
         }
-        // phone card
-        for (BuyCard phoneCard : order.getBuyCards()) {
-
-            if (recPhoneCards.containsKey(phoneCard.getRecipient())) {
-
-                recPhoneCards.get(phoneCard.getRecipient()).add(phoneCard);
-
-            } else {
-
-                List<BuyCard> phoneCards = new ArrayList<>();
-                phoneCards.add(phoneCard);
-
-                recPhoneCards.put(phoneCard.getRecipient(), phoneCards);
-            }
-            //
-            recSet.add(phoneCard.getRecipient());
-        }
         // create RecipientInOrder
         List<RecipientInOrder> recs = new ArrayList<>();
         for (Recipient rec : recSet) {
 
             RecipientInOrder recInOrder = new RecipientInOrder();
             recInOrder.setOrderId(order.getId());
+            recInOrder.setOrderSetting(order.getSetting());
+            recInOrder.setBaoKimTransferPercent(baoKimTransferPercent);
             recInOrder.setLxExchangeRate(order.getLxExchangeRate());
             recInOrder.setRecipient(rec);
 
@@ -639,11 +651,11 @@ public class LiXiUtils {
 
             }
             
-            if (recPhoneCards.containsKey(rec)) {
+            //if (recPhoneCards.containsKey(rec)) {
 
-                recInOrder.setBuyPhoneCards(recPhoneCards.get(rec));
+                //recInOrder.setBuyPhoneCards(recPhoneCards.get(rec));
 
-            }
+            //}
             
             if (recTopUps.containsKey(rec)) {
 
@@ -658,7 +670,6 @@ public class LiXiUtils {
         listRecInOrder.addAll(recs);
         return listRecInOrder;
     }
-
     /**
      *
      * @param amountCode

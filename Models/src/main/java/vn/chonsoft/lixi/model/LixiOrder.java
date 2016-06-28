@@ -286,8 +286,8 @@ public class LixiOrder implements Serializable {
             double sumVnd = 0;
             double sumUsd = 0;
             for(LixiOrderGift g : this.gifts){
-               sumVnd += g.getProductPrice();
-               sumUsd += g.getUsdPrice();
+               sumVnd += (g.getProductPrice() * g.getProductQuantity());
+               sumUsd += (g.getUsdPrice() * g.getProductQuantity());
             }
             
             /* Gift ONLY option */

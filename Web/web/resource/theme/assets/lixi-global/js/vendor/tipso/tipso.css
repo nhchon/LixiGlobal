@@ -6,10 +6,11 @@
 }
 .tipso_bubble {
     position: absolute;
-	text-align: center;
-	border-radius: 6px;
-	z-index: 9999;
-        max-height:500px;
+    text-align: center;
+    border-radius: 6px;
+    z-index: 9999;
+    max-height:500px;
+    border:1px #e0e0e0 solid;
 }
 .tipso_style{
 	cursor: help;
@@ -17,6 +18,7 @@
 }
 .tipso_title {
 	border-radius: 6px 6px 0 0;
+        line-height: 50px;
 }
 .tipso_content {
   	word-wrap: break-word;

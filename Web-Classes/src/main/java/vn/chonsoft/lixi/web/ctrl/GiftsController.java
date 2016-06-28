@@ -5,6 +5,8 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -73,14 +75,8 @@ public class GiftsController {
     @Autowired
     private RecipientService reciService;
 
-    //@Autowired
-    //private CurrencyTypeService currencyService;
-
     @Autowired
     private LixiExchangeRateService lxexrateService;
-
-    //@Autowired
-    //private LixiCategoryService lxcService;
 
     @Autowired
     private LixiOrderService lxorderService;
@@ -122,6 +118,55 @@ public class GiftsController {
 
     }
 
+    /**
+     * 
+     * @param model
+     * @param id
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
+    public ModelAndView giftDetail(Map<String, Object> model, @PathVariable Integer id,  HttpServletRequest request){
+        
+        // get order
+        LixiOrder order = null;
+        LixiExchangeRate lxExch = null;
+        // order already created
+        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
+            
+            order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+            // get exchange rate of the order;
+            lxExch = order.getLxExchangeRate();
+        }
+        else{
+            
+            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+        }
+        
+        VatgiaProduct p = this.vgpService.findById(id);
+        // sender
+        User u = this.userService.findByEmail(loginedUser.getEmail());
+        
+        if(u.getRecipients() != null){
+            //remove inactive
+            u.getRecipients().removeIf(r -> r.isActivated()==false);
+            //sort by name
+            Collections.sort(u.getRecipients(), new Comparator<Recipient>() {
+		@Override
+		public int compare(Recipient r1, Recipient r2) {
+			return r1.getFullName().compareTo(r2.getFullName());
+		}
+	});
+        }
+        
+        model.put("p", p);
+        model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
+        model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
+        
+        return new ModelAndView("giftprocess2/giftDetail");
+    }
+    
     /**
      * 
      * @param id
@@ -478,159 +523,6 @@ public class GiftsController {
 
     }
 
-    /**
-     * 
-     * @param request
-     * @return 
-     */
-    @UserSecurityAnnotation
-    @RequestMapping(value = "choose", method = RequestMethod.GET)
-    public ModelAndView chooseGift(Map<String, Object> model, HttpServletRequest request){
-        
-        // sender
-        User u = this.userService.findByEmail(loginedUser.getEmail());
-        
-        if(u.getRecipients() != null){
-            u.getRecipients().removeIf(r -> r.isActivated()==false);
-        }
-        
-        model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
-        model.put(LiXiConstants.LIXI_CATEGORIES, categories);
-        
-        // store category into session
-        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, categories.getCandies().getId());
-        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, categories.getCandies().getName(LocaleContextHolder.getLocale()));
-        
-        // get order
-        LixiOrder order = null;
-        LixiExchangeRate lxExch = null;
-        // order already created
-        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
-            
-            order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-            // get exchange rate of the order;
-            lxExch = order.getLxExchangeRate();
-        }
-        else{
-            
-            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
-        }
-        
-        model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
-        model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
-        //
-        SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
-        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
-        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
-        
-        return new ModelAndView("giftprocess2/select-gifts");
-    }
-    
-    
-    /**
-     * @param model
-     * @param selectedCatId 
-     * @param request
-     * @return 
-     */
-    @UserSecurityAnnotation
-    @RequestMapping(value = "choose/{selectedCatId}", method = RequestMethod.GET)
-    public ModelAndView chooseGift(Map<String, Object> model, @PathVariable Integer selectedCatId, HttpServletRequest request){
-        
-        // sender
-        User u = this.userService.findByEmail(loginedUser.getEmail());
-        
-        model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
-        
-        // load list products
-        LixiCategory lxcategory = categories.getById(selectedCatId);
-        
-        // check current selected category
-        log.info("selectedCatId: " + selectedCatId + " VG's id : " + lxcategory.getVatgiaId().getId());
-        
-        // store category into session
-        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, selectedCatId);
-        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
-
-        // get order
-        LixiOrder order = null;
-        LixiExchangeRate lxExch = null;
-        // order already created
-        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
-            
-            order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-            // get exchange rate of the order;
-            lxExch = order.getLxExchangeRate();
-        }
-        else{
-            
-            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
-        }
-        
-        // get price, default is 0? VND
-        double price = LiXiConstants.MINIMUM_PRICE_USD * lxExch.getBuy();
-        if(request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND) != null){
-            price = (double)request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND);
-        };
-        
-        /* list product */
-        List<VatgiaProduct> products = null;
-        /* zero-based page index */
-        Pageable page = new PageRequest(0, LiXiConstants.NUM_PRODUCTS_PER_PAGE, new Sort(new Sort.Order(Sort.Direction.ASC, "price")));
-
-        Page<VatgiaProduct> vgps = this.vgpService.findByCategoryIdAndAliveAndPrice(lxcategory.getVatgiaId().getId(), 1, price, page);
-        if(vgps.hasContent()){
-            products = vgps.getContent();
-        }
-        
-        // still null ?
-        if(products == null || products.isEmpty()){
-            // call BaoKim Rest service
-            log.info("No products in database. So call BaoKim Rest service");
-            ListVatGiaProduct pjs = lxVatGiaUtils.getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
-            products = lxVatGiaUtils.convertVatGiaProduct2Model(pjs);
-        }
-        
-        if(model.get("recId") != null){
-            try{
-                // get current recipient
-                Recipient rec = this.reciService.findById((Long)model.get("recId"));
-                /* check already selected product */
-                LiXiUtils.checkSelected(products, order, rec);
-            }
-            catch(Exception ex){}
-        }
-        /* forward recipient's id */
-        //model.put(LiXiConstants.SELECTED_RECIPIENT_ID, recId);
-        model.put(LiXiConstants.PRODUCTS, products);
-        model.put(LiXiConstants.PAGES, vgps);
-        model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
-        model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
-        //
-        SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
-        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
-        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
-        
-        return new ModelAndView("giftprocess2/select-gifts", model);
-
-    }
-    
-    /**
-     * @param model
-     * @param selectedCatId
-     * @param recId
-     * @param request
-     * @return 
-     */
-    @UserSecurityAnnotation
-    @RequestMapping(value = "choose/{selectedCatId}/{recId}", method = RequestMethod.GET)
-    public ModelAndView chooseGift(Map<String, Object> model, @PathVariable Integer selectedCatId, @PathVariable Long recId, HttpServletRequest request){
-        
-        model.put("recId", recId);
-        model.put(LiXiConstants.SELECTED_RECIPIENT_FIRST_NAME, this.reciService.findById(recId).getFirstName());
-        
-        return chooseGift(model, selectedCatId, request);
-    }    
     /**
      *
      * @param model 
