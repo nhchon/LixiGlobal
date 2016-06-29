@@ -121,7 +121,8 @@ public class RecipientInOrder {
         
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
-                if(orderSetting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod())){
+                if(orderSetting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
+                    !gift.isLixiMargined()){
                     
                     giftMarginTotal += (gift.getProductPrice()*gift.getProductQuantity() * marginPercent)/100.0;
                 }
@@ -131,6 +132,10 @@ public class RecipientInOrder {
         return LiXiGlobalUtils.round2Decimal(giftMarginTotal);
     }
     
+    /**
+     * 
+     * @return 
+     */
     private SumVndUsd calculateGiftTotal(){
         
         // gift type
@@ -138,15 +143,23 @@ public class RecipientInOrder {
         double sumGiftUSD = 0;
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
-                //sumGiftVND += (gift.getExchPrice() * gift.getProductQuantity());
-                double temp = gift.getUsdPrice() * gift.getProductQuantity();
-                sumGiftUSD += (Math.round(temp * 100.0) / 100.0);//(gift.getUsdPrice() * gift.getProductQuantity());
-                sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
-                /* round up */
-                sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
-                sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
+                if(orderSetting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
+                    (orderSetting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
+                    gift.isLixiMargined())){
+                    // baoKimTransferPercent
+                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * baoKimTransferPercent)/100.0;
+                }
+                else{
+                    
+                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
+                }
+                sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
+                
             }
         }
+        /* round up */
+        sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+        sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
         
         return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
     }
@@ -158,9 +171,7 @@ public class RecipientInOrder {
      */
     public SumVndUsd getGiftTotal(){
         
-        if(giftTotal == null){
-            giftTotal = calculateGiftTotal();
-        }
+        giftTotal = calculateGiftTotal();
         
         return giftTotal;
     }

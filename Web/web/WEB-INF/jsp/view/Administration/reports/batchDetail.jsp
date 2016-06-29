@@ -190,7 +190,6 @@
                                             <td style="text-align: right;">
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
-                                                        ${rio.giftMargin}
                                                         <c:set var="totalGiftMargin" value="${totalGiftMargin + rio.giftMargin}"/>
                                                         <c:set var="giftMargin" value="${giftMargin + rio.giftMargin}"/>
                                                     <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>

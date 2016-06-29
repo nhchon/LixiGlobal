@@ -95,8 +95,10 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
-            < script src = "<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select/js/bootstrap-select.min.js"/>" ></script>
-    </script>
+            var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
+        </script>
+        <script src = "<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select/js/bootstrap-select.min.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/gifts.js"/>"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -168,7 +170,7 @@
                         <p>&nbsp;</p><p>&nbsp;</p>
                         <div class="row">
                             <div class="col-md-8">
-                                <button class="btn btn-primary" style="line-height: 60px;width: 280px;font-size: 24px;border-radius: 10px;">Buy</button>
+                                <button onclick="checkExceed(30, ${p.id}, 1)" class="btn btn-primary" style="line-height: 60px;width: 280px;font-size: 24px;border-radius: 10px;">Buy</button>
                             </div>
                             <div class="col-md-4" style="text-align: center;margin-top: 15px;color: #0090d0;font-weight: 400;">
 

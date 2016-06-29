@@ -84,6 +84,10 @@ public class LixiOrderGift implements Serializable {
     private String bkUpdated;
 
     @Basic
+    @Column(name = "lixi_margined")
+    private boolean lixiMargined;
+    
+    @Basic
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
@@ -277,6 +281,14 @@ public class LixiOrderGift implements Serializable {
 
     public void setBkUpdated(String bkUpdated) {
         this.bkUpdated = bkUpdated;
+    }
+
+    public boolean isLixiMargined() {
+        return lixiMargined;
+    }
+
+    public void setLixiMargined(boolean lixiMargined) {
+        this.lixiMargined = lixiMargined;
     }
 
     @Override

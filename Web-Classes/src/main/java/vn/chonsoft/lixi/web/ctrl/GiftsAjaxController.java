@@ -413,6 +413,8 @@ public class GiftsAjaxController {
                     lxogift.setProductQuantity(quantity);
                     lxogift.setBkStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());// not yet submitted
                     lxogift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());// not yet submitted
+                    lxogift.setLixiMargined(false);
+                    
                     /* date */
                     Date currDate = Calendar.getInstance().getTime();
                     lxogift.setCreatedDate(currDate);

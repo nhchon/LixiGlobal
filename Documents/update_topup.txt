@@ -19,3 +19,5 @@ ALTER TABLE `countries` ADD `code` VARCHAR(3) NULL AFTER `name`;
 ALTER TABLE `vatgia_products` ADD `description` TEXT NULL AFTER `name`;
 
 ALTER TABLE `recipients` ADD `activated` TINYINT NOT NULL DEFAULT '1' AFTER `note`;
+
+ALTER TABLE `lixi_order_gifts` ADD `lixi_margined` TINYINT NULL DEFAULT '0' AFTER `bk_updated`;

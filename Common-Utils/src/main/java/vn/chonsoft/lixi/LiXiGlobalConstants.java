@@ -69,11 +69,11 @@ public abstract class LiXiGlobalConstants {
     
     public static final String VCB_EXCHANGE_RATES_PAGE = "http://www.vietcombank.com.vn/ExchangeRates/ExrateXML.aspx";
     
-    public static final String CASHRUN_SANDBOX_PAGE = "https://cashshieldasia.cashrun.com/devtest/risk_score.php";
+    public static final String CASHRUN_SANDBOX_PAGE = "https://cashshield.cashrun.com/devtest/risk_score.php";
     
-    public static final String CASHRUN_SANDBOX_PAGE_TRANSACTION_STATUS_UPDATE = "https://cashshieldasia.cashrun.com/devtest/transaction_update.php";
+    public static final String CASHRUN_SANDBOX_PAGE_TRANSACTION_STATUS_UPDATE = "https://cashshield.cashrun.com/devtest/transaction_update.php";
     
-    public static final String CASHRUN_PRODUCTION_PAGE = "https://cashshieldasia.cashrun.com/live/risk_score.php";
+    public static final String CASHRUN_PRODUCTION_PAGE = "https://cashshield.cashrun.com/live/risk_score.php";
     
     public static final String CASHRUN_PRODUCTION_PAGE_TRANSACTION_STATUS_UPDATE = "https://cashshieldasia.cashrun.com/live/transaction_update.php";
     

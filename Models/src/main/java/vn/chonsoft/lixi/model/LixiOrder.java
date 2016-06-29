@@ -281,28 +281,29 @@ public class LixiOrder implements Serializable {
     
     public SumVndUsd getSumOfGiftVnd(double percent){
         
-        if(this.gifts != null && !this.gifts.isEmpty()){
-            
-            double sumVnd = 0;
-            double sumUsd = 0;
-            for(LixiOrderGift g : this.gifts){
-               sumVnd += (g.getProductPrice() * g.getProductQuantity());
-               sumUsd += (g.getUsdPrice() * g.getProductQuantity());
+        // gift type
+        double sumGiftVND = 0;
+        double sumGiftUSD = 0;
+        if (getGifts() != null) {
+            for (LixiOrderGift gift : getGifts()) {
+                if(setting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
+                    (setting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
+                    gift.isLixiMargined())){
+                    // baoKimTransferPercent
+                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * percent)/100.0;
+                }
+                else{
+                    
+                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
+                }
+                sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
+                
             }
-            
-            /* Gift ONLY option */
-            if(this.setting == LiXiGlobalConstants.LIXI_GIFT_ONLY_OPTION){
-                /* canculate the percent */
-                sumVnd = (sumVnd * percent)/100.0;
-            }
-            
-            /* round */
-            sumVnd = LiXiGlobalUtils.round2Decimal(sumVnd);
-            sumUsd = LiXiGlobalUtils.round2Decimal(sumUsd);
-            
-            return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumVnd, sumUsd);
         }
-        else
-            return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, 0d, 0d);
+        /* round up */
+        sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+        sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
+        
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
     }
 }

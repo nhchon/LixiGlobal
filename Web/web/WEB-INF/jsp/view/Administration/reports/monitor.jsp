@@ -281,7 +281,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="9">
+                                        <td colspan="10">
                                             <%-- Paging --%>
                                             <nav>
                                             <ul class="pagination pull-right">

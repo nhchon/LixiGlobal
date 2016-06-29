@@ -364,11 +364,11 @@ public class LixiOrdersController {
         }
         
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
-        
+        double baoKimTransferPercent = LiXiUtils.getBaoKimPercent(this.configService.findByName("LIXI_BAOKIM_TRANFER_PERCENT").getValue());
         if(orders != null){
             
             orders.forEach(o -> {
-                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+                mOs.put(o, LiXiUtils.genMapRecGifts(o, baoKimTransferPercent));
             });
         }
         

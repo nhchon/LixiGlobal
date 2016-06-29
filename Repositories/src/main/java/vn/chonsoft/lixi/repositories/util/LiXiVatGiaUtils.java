@@ -689,10 +689,11 @@ public class LiXiVatGiaUtils {
 
                 try {
 
-                    if (EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue().equals(gift.getBkSubStatus())) {
+                    if (EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue().equals(gift.getBkSubStatus()) || 
+                            LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equalsIgnoreCase(gift.getBkReceiveMethod())) {
                         String id = gift.getId().toString();
                         String amount = (gift.getProductPrice()*gift.getProductQuantity()) + "";
-                        // || LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equalsIgnoreCase(gift.getBkReceiveMethod())
+                        //
                         if(setting == EnumLixiOrderSetting.GIFT_ONLY.getValue()){
                             double amountNumber = (gift.getProductPrice()*gift.getProductQuantity() * baoKimPercent)/100.0;
                             
@@ -725,7 +726,10 @@ public class LiXiVatGiaUtils {
                         gift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_MONEY.getValue());
                         gift.setBkMessage(result.getData().getMessage());
                         gift.setModifiedDate(Calendar.getInstance().getTime());
-                        
+                        if(LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equalsIgnoreCase(gift.getBkReceiveMethod())){
+                            gift.setLixiMargined(true);
+                        }
+                        log.info("Lixi margined GIFT ID:"+gift.getId());
                         log.info("bk message:" + result.getData().getMessage());
                         log.info("lixi order id:" + result.getData().getLixi_order_id());
                         log.info("order id:" + result.getData().getOrder_id());

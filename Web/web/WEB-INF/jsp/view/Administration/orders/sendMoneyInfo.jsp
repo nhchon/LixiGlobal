@@ -13,6 +13,7 @@
                     var count = 0;
                     var totalVnd = 0;
                     var totalUsd = 0;
+                    var totalGiftMargin = 0;
                     $('input[name=oIds]').each(function(){
                        
                        if($(this).prop( "checked" )){
@@ -20,10 +21,12 @@
                            count++;
                            totalVnd = totalVnd + parseFloat($(this).attr('totalAmountVnd'));
                            totalUsd = totalUsd + parseFloat($(this).attr('totalAmountUsd'));
+                           totalGiftMargin = totalGiftMargin + parseFloat($(this).attr('totalGiftMargin'));
                        }
                     });
                     $('#tdOnSelectCount').html(count + '');
                     $('#tdOnSelectVnd').html(totalVnd + '');
+                    $('#tdGiftMarginOnSelect').html(totalVnd + '');
                     $('#tdOnSelectUsd').html(totalUsd.toFixed(2) + '');
                 });
                 
@@ -146,19 +149,16 @@
                                         <c:set var="countRec" value="${theCount.count}"/>
                                         <c:set var="totalAmountVndOfThisOrder" value="0"/>
                                         <c:set var="totalAmountUsdOfThisOrder" value="0"/>
+                                        <c:set var="totalGiftMarginOfThisOrder" value="0"/>
                                         <c:forEach items="${m.value}" var="rio">
                                             <c:if test="${not empty rio.gifts}">
-                                                <c:if test="${m.key.setting eq 0}">
-                                                    <c:set var="totalAmountVndOfThisOrder" value="${totalAmountVndOfThisOrder + rio.giftTotal.vnd * transferPercent/100.0}"/>
-                                                </c:if>
-                                                <c:if test="${m.key.setting eq 1}">
-                                                    <c:set var="totalAmountVndOfThisOrder" value="${totalAmountVndOfThisOrder + rio.giftTotal.vnd}"/>
-                                                </c:if>
+                                                <c:set var="totalAmountVndOfThisOrder" value="${totalAmountVndOfThisOrder + rio.giftTotal.vnd}"/>
                                                 <c:set var="totalAmountUsdOfThisOrder" value="${totalAmountUsdOfThisOrder + rio.giftTotal.usd}"/>
+                                                <c:set var="totalGiftMarginOfThisOrder" value="${totalGiftMarginOfThisOrder + rio.giftMargin}"/>
                                             </c:if>
                                         </c:forEach>
                                         <tr id="rowO${m.key.id}">
-                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
+                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalGiftMargin="${totalGiftMarginOfThisOrder}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
@@ -232,6 +232,11 @@
                         <tr>
                             <td></td>
                             <td style="text-align: right;" id="tdOnSelectVnd"></td>
+                            <td>VND</td>
+                        </tr>
+                        <tr>
+                            <td>Total Gift Margin Amount:</td>
+                            <td style="text-align: right;" id="tdGiftMarginOnSelect"></td>
                             <td>VND</td>
                         </tr>
                     </tbody>
