@@ -665,7 +665,7 @@ public class CheckOutController {
         log.info("Connect CashRun from Client Ip: " + clientIpAddress);
         
         Connection.Response doc = conn.data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-            .data("API_KEY", "UkX5P9GIOL3ruCzMYRKFDJvQxbV86wpa")
+            .data("API_KEY", "8ureDegA2wepusuMaTRu3uraP4az7kAc")
             .data("ORDER_ID", invoice.getId().toString())
             .data("SESSION_ID", request.getSession().getId())
             .data("CUSTOMER_ID", invoice.getPayer().toString())
@@ -704,6 +704,7 @@ public class CheckOutController {
             .data("PAYMENT_CARDNO", order.getCard().getCardNumber())
             .data("PAYMENT_EXPIRYDATE", LiXiUtils.getCardExpiryDateMMYY(order.getCard().getExpMonth(), order.getCard().getExpYear()))
             .data("PAYMENT_3DSECURE", "0")
+            .data("PAYMENT_COUNTRY", order.getCard().getBillingAddress().getCountry())
             .data("CUST_RATING", "0")
             .data("TEST_FLAG", "0")
             .ignoreContentType(true)

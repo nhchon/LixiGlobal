@@ -190,7 +190,7 @@
                                         <form:select class="form-control" path="country" required="true">
                                             <option value="" selected=""><spring:message code="mess.choose-country"/></option>
                                             <c:forEach items="${COUNTRIES}" var="c">
-                                                <option value="${c.name}"  <c:if test="${addCardForm.country eq c.name}">selected=""</c:if>>${c.name}</option>
+                                                <option value="${c.code}"  <c:if test="${addCardForm.country eq c.code}">selected=""</c:if>>${c.name}</option>
                                             </c:forEach>
                                         </form:select>
                                         <div class="has-error"><form:errors path="country" cssClass="help-block" element="div"/></div>

@@ -190,7 +190,7 @@
                                     <form:select class="form-control" path="country" required="true">
                                         <option value="" selected="">Choose country</option>
                                         <c:forEach items="${COUNTRIES}" var="c">
-                                            <option value="${c.name}">${c.name}</option>
+                                            <option value="${c.code}">${c.name}</option>
                                         </c:forEach>
                                     </form:select>
                                     <div class="has-error"><form:errors path="country" cssClass="help-block" element="div"/></div>
