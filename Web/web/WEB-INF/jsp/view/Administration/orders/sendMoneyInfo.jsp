@@ -26,8 +26,12 @@
                     });
                     $('#tdOnSelectCount').html(count + '');
                     $('#tdOnSelectVnd').html(totalVnd + '');
-                    $('#tdGiftMarginOnSelect').html(totalVnd + '');
                     $('#tdOnSelectUsd').html(totalUsd.toFixed(2) + '');
+                    $('#tdGiftMarginOnSelect').html(totalGiftMargin + '');
+                    // input hidden
+                    $('#onSelectVnd').val(totalVnd + '');
+                    $('#onSelectUsd').val(totalUsd.toFixed(2) + '');
+                    $('#onSelectMargin').val(totalGiftMargin + '');
                 });
                 
             });
@@ -160,6 +164,7 @@
                                         <tr id="rowO${m.key.id}">
                                             <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalGiftMargin="${totalGiftMarginOfThisOrder}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
+                                                <br/>${m.key.getSumOfGiftVnd(95.0).vnd} - ${totalAmountVndOfThisOrder}
                                             </td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
                                                     ${m.key.invoice.invoiceCode}
@@ -184,18 +189,12 @@
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
-                                            <td style="text-align: right;">
+                                            <td style="text-align: right;" nowrap>
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
                                                     <fmt:formatNumber minFractionDigits="2" value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                    <c:if test="${m.key.setting eq 0}">
-                                                        <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
-                                                        <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd * transferPercent/100.0}"/>
-                                                    </c:if>
-                                                    <c:if test="${m.key.setting eq 1}">
-                                                        <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
-                                                        <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
-                                                    </c:if>
+                                                    <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
                                                     <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
                                                     </c:if>
                                                 </c:forEach>
@@ -227,16 +226,19 @@
                         <tr>
                             <td>Total Amount:</td>
                             <td style="text-align: right;" id="tdOnSelectUsd"></td>
+                            <input type="hidden" id="onSelectUsd" name="onSelectUsd" value="0"/>
                             <td>USD</td>
                         </tr>
                         <tr>
                             <td></td>
                             <td style="text-align: right;" id="tdOnSelectVnd"></td>
+                            <input type="hidden" id="onSelectVnd" name="onSelectVnd" value="0"/>
                             <td>VND</td>
                         </tr>
                         <tr>
                             <td>Total Gift Margin Amount:</td>
                             <td style="text-align: right;" id="tdGiftMarginOnSelect"></td>
+                            <input type="hidden" id="onSelectMargin" name="onSelectMargin" value="0"/>
                             <td>VND</td>
                         </tr>
                     </tbody>

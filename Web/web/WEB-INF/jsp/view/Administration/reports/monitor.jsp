@@ -218,14 +218,8 @@
                                                     <c:if test="${not empty rio.gifts}">
                                                     <c:set var="totalGiftMargin" value="${totalGiftMargin + rio.giftMargin}"/>
                                                     <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                    <c:if test="${m.key.setting eq 0}">
-                                                        <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
-                                                        <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd * transferPercent/100.0}"/>
-                                                    </c:if>
-                                                    <c:if test="${m.key.setting eq 1}">
                                                         <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
                                                         <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
-                                                    </c:if>
                                                     <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
                                                     </c:if>
                                                 </c:forEach>
@@ -263,7 +257,7 @@
                                         </tr>
                                         <c:if test="${not empty m.key.invoice.monitored}">
                                             <tr class="danger">
-                                                <td colspan="9">
+                                                <td colspan="10">
                                                     <c:if test="${m.key.invoice.monitored eq OVER_100_USD}">
                                                         *** Giao dịch trên 100$
                                                     </c:if>

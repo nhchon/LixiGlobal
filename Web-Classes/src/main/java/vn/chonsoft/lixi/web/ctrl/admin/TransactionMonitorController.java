@@ -65,8 +65,10 @@ public class TransactionMonitorController {
         if(pOrders != null){
             
             pOrders.getContent().forEach(o -> {
-                mOs.put(o, LiXiUtils.genMapRecGifts(o, baoKimTransferPercent));
+                if(o.getGifts()!=null && !o.getGifts().isEmpty())
+                    mOs.put(o, LiXiUtils.genMapRecGifts(o, baoKimTransferPercent));
             });
+            
         }
         
         model.put("mOs", mOs);

@@ -303,19 +303,13 @@
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
-                                            <td style="text-align: right;">
+                                            <td style="text-align: right;" nowrap>
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
                                                         <c:set var="totalGiftMargin" value="${totalGiftMargin + rio.giftMargin}"/>
                                                         <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                        <c:if test="${m.key.setting eq 0}">
-                                                            <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
-                                                            <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd * transferPercent/100.0}"/>
-                                                        </c:if>
-                                                        <c:if test="${m.key.setting eq 1}">
-                                                            <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
-                                                            <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
-                                                        </c:if>
+                                                        <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                        <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
                                                         <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
                                                     </c:if>
                                                 </c:forEach>

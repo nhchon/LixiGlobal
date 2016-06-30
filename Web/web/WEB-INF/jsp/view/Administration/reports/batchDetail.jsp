@@ -161,6 +161,15 @@
                                     <c:forEach items="${mOs}" var="m" varStatus="theCount">
                                         <c:set var="giftMargin" value="0"/>
                                         <c:set var="countRec" value="${theCount.count}"/>
+                                        <c:forEach items="${m.value}" var="rio">
+                                            <c:if test="${not empty rio.gifts}">
+                                                <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
+                                                <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
+                                                <c:set var="giftMargin" value="${giftMargin + rio.giftMargin}"/>
+                                                <c:set var="totalGiftMargin" value="${totalGiftMargin + rio.giftMargin}"/>
+                                            </c:if>
+                                        </c:forEach>
+                                        
                                         <tr id="rowO${m.key.id}">
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
@@ -190,22 +199,13 @@
                                             <td style="text-align: right;">
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
-                                                        <c:set var="totalGiftMargin" value="${totalGiftMargin + rio.giftMargin}"/>
-                                                        <c:set var="giftMargin" value="${giftMargin + rio.giftMargin}"/>
-                                                    <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                    <c:if test="${m.key.setting eq 0}">
-                                                        <fmt:formatNumber value="${rio.giftTotal.vnd * transferPercent/100.0}" pattern="###,###.##"/> VND (${transferPercent}%)<br/>
-                                                        <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd * transferPercent/100.0}"/>
-                                                    </c:if>
-                                                    <c:if test="${m.key.setting eq 1}">
+                                                        <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
                                                         <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
-                                                        <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
-                                                    </c:if>
-                                                    <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
-                                            <td id="giftMargin${m.key.id}" style="text-align: right;"></td>
+                                            <td id="giftMargin${m.key.id}" style="text-align: right;">
+                                                <fmt:formatNumber value="${giftMargin}" pattern="###,###.##"/> VND</td>
                                             <td style="text-align: center;">
                                                 <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
                                                 <c:if test="${m.key.lixiStatus eq PROCESSED}">
@@ -233,7 +233,6 @@
                                             </td>
                                             </c:if>
                                         </tr>
-                                        <script>document.getElementById('giftMargin${m.key.id}').innerHTML='<fmt:formatNumber value="${giftMargin}" pattern="###,###.##"/> VND';</script>
                                     </c:forEach>
                                     <script>document.getElementById('giftMargin').innerHTML='<fmt:formatNumber value="${totalGiftMargin}" pattern="###,###.##"/> VND';</script>
                                 </tbody>
