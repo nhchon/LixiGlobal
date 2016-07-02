@@ -13,8 +13,9 @@
         <section class="main-section contact-section">
             <div class="contact-section-top text-center text-white">
                 <div class="container">
-                    <div class="contact-section-top-content">
-                        <h1 class="text-uppercase"><span><spring:message code="what-is-lixi"/></span></h1>
+                    <%-- text-align:justify;text-justify:inter-word;text-align-last:center;-ms-text-align-last:center;-moz-text-align-last: center;--%>
+                    <div class="contact-section-top-content" style="text-align: left;">
+                        <h1 class="text-uppercase" style="text-align: center;"><span><spring:message code="what-is-lixi"/></span></h1>
                         <div>
                             <c:import url="/whatIsLixi"/>
                         </div>

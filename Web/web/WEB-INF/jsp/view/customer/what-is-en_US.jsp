@@ -10,7 +10,7 @@
 
 <p>If the receiver doesn’t like the gift you send, they can request a cash refund online. No question asked. We deposit the money into their online account with our e-commerce partner in Vietnam and they can withdrawal it to their personal banking account anytime they want. It’s that simple.</p>
 
-<p>We do all this for $0.99 fee per receiver. We allow up to five different re-ceivers on one order. </p>
+<p>We do all this for $0.99 fee per receiver. We allow up to five different receivers on one order. </p>
 
 <p>Caring has never been so affordable and effortless. Go for it. Tell them that you care for any occasion.</p>
 
