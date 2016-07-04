@@ -102,7 +102,7 @@ public class GlobalDefaultExceptionHandler {
                 Map model = new HashMap();
                 model.put("url", url + " - " +req.getRequestURL().toString());
                 model.put("ipAddress", LiXiGlobalUtils.getClientIp(req));
-                model.put("hostName", req.getRemoteHost());
+                model.put("hostName", req.getServerName());
                 model.put("userAgent", req.getHeader("User-Agent"));
                 model.put("errMessage", errMessage);
                 model.put("errDetails", errDetails);
