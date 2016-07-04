@@ -28,6 +28,8 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -70,8 +72,13 @@ public class GlobalDefaultExceptionHandler {
      * 
      * @param error 
      */
-    private void emailLixiGlobalError(String url, String errMessage, String errDetails){
+    private void emailLixiGlobalError(HttpServletRequest req, String url, String errMessage, String errDetails){
         
+        /*
+        call req.getRequestURL().toString() in this function, it returns http://www.lixi.global:8080/WEB-INF/jsp/view/error.jsp , 
+        but not http://www.lixi.global:8080/user/passwordAssistance 
+        So test pass url param
+        */
         String[] administratorEmails = checkAndAssignDefaultEmail();
         
         // send Email
@@ -89,11 +96,14 @@ public class GlobalDefaultExceptionHandler {
                 message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                 message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
-                message.setSubject("LiXi.Global Error - " + errorDate);
+                message.setSubject("LiXi.Global Error - " + errorDate + ": " + StringUtils.defaultIfBlank(errMessage, ""));
                 message.setSentDate(Calendar.getInstance().getTime());
 
                 Map model = new HashMap();
-                model.put("url", url);
+                model.put("url", url + " - " +req.getRequestURL().toString());
+                model.put("ipAddress", LiXiGlobalUtils.getClientIp(req));
+                model.put("hostName", req.getRemoteHost());
+                model.put("userAgent", req.getHeader("User-Agent"));
                 model.put("errMessage", errMessage);
                 model.put("errDetails", errDetails);
 
@@ -124,7 +134,7 @@ public class GlobalDefaultExceptionHandler {
         //}
 
         /* email to admin */
-        emailLixiGlobalError(req.getRequestURL().toString(), e.getMessage(), ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+        emailLixiGlobalError(req, req.getRequestURL().toString(), e.getMessage(), ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
                 
         // Otherwise setup and send the user to a default error-view.
         ModelAndView mav = new ModelAndView();

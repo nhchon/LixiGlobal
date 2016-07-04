@@ -4,6 +4,9 @@
         
         <p>Lixi.Global has encountered an error.</p>
         <p>Failed URL: ${url}</p>
+        <p>Client IP: ${ipAddress}</p>
+        <p>Host Name: ${hostName}</p>
+        <p>User-Agent: ${userAgent}</p>
         <p>Exception message:  ${errMessage}</p>
         <p>Details: <br/> ${errDetails}</p>
 
