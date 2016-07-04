@@ -4,91 +4,7 @@
     <jsp:attribute name="extraHeadContent">
         <script language="javascript" src="https://d1cr9zxt7u0sgu.cloudfront.net/crfp.js?SITE_ID=2b57448f3013fc513dcc7a4ab933e6928ab74672&SESSION_ID=${pageContext.session.id}&TYPE=JS" type="text/javascript" charset="UTF-8"></script>
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/js/vendor/tipso/tipso.css"/>">
-        <style>
-            div.pagination-wrapper{
-                opacity: .99;
-            }
-            .list-pd {
-                display: block;
-                /*width: 1000px;*/
-                float: left;
-                margin-top: 23px;
-                padding-left: 0px;
-            }
-
-            .list-pd li {
-                width: 208px;
-                display: block;
-                float: left;
-                margin-right: 20px;
-                border: 1px solid #e0e0e0;
-                border-radius: 7px;
-                overflow: hidden;
-                position: relative;
-                margin-bottom: 38px;
-                z-index: 9;
-            }
-
-            .list-pd li .img {
-                background: url(https://www.gotit.vn/layouts/v2/images/gradient_bg.jpg);
-                background-size: 100% 100%;
-                height: 230px;
-                overflow: hidden;
-            }
-
-            .list-pd li .img img {
-                max-width: 230px;
-            }
-
-            .list-pd li .copy {
-                width: 100%;
-                background: #fff;
-                text-align: right;
-                padding: 10px 15px 40px 15px;
-                position: relative;
-            }
-
-            .list-pd li .copy h3 {
-                font-family: 'RobotoMedium', 'Roboto';
-                font-size: 14px;
-                color: #000;
-                font-weight: bold;
-            }
-
-            .list-pd li .copy p {
-                font-size: 14px;
-                line-height: 20px;
-                height: 40px;
-                overflow: hidden;
-            }
-
-            .list-pd li .copy .prize {
-                display: inline-block;
-                position: absolute;
-                right: 15px;
-                bottom: 10px;
-                font-family: 'RobotoMedium', 'Roboto';
-                color: #ff5f5f;
-                height: 20px !important;
-            }
-
-            .list-pd li a {
-                display: block;
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                border-radius: 5px;
-            }
-
-            .list-pd li a:hover {
-                border: 2px solid #ff5f5f;
-                border-radius: 7px;
-                background: url(https://www.gotit.vn/layouts/v2/images/icon-view.png) center no-repeat;
-            }
-
-        </style>
+   
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
@@ -248,7 +164,7 @@
 
     <jsp:body>
         <c:import url="/categories"/>
-        <section class="section-gift bg-default section-wrapper">
+        <section class="section-gift section-wrapper">
             <div class="container">
                 <c:set var="localStep" value="4"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
@@ -273,6 +189,9 @@
                     </div>
                 </div>
                 <div class="gift-filter gift-filter-wrapper">
+                    <div class="gift-border-title">
+                        <h2 class="title text-center"><span>Select Price Range</span></h2>
+                    </div>
                     <div class="gift-filter-control">
                         <div class="gift-filter-control-slide">
                             <c:set value="10" var="startPrice"/>
@@ -296,50 +215,50 @@
                         <h2 class="title">${SELECTED_LIXI_CATEGORY_NAME}</h2>
                         <%-- List of products --%>
                         <%--<div class="row" id="divProducts">--%>
-                            <div class="list_cate_product">
-                                <ul class="list-pd">
-                                    <c:forEach items="${PRODUCTS}" var="p" varStatus="theCount">
-                                        <li>
-                                            <div class="img">
-                                                <a href="<c:url value="/gifts/detail/${p.id}"/>">
-                                                    <img src="${p.imageUrl}" alt="${p.name}">
-                                                </a>
-                                            </div>
-                                            <div class="copy js-height" style="height: 109px;">
-                                                <%--<h3>Baskin Robbins</h3>--%>
-                                                <p class="product_name">${p.name}</p>
-                                                <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
-                                                <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
-                                                <%--<p class="prize"><span>290.000<sup>đ</sup> - 330.000<sup>đ</sup></span></p>--%>
-                                            </div>
-                                            <input type="hidden" value="2" id="product_stt">
-                                            <a href="<c:url value="/gifts/detail/${p.id}"/>"><span></span></a>
-                                        </li>
-                                    </c:forEach>
-                                </ul>
+                        <div class="list_cate_product">
+                            <ul class="list-pd">
+                                <c:forEach items="${PRODUCTS}" var="p" varStatus="theCount">
+                                    <li>
+                                        <div class="img">
+                                            <a href="<c:url value="/gifts/detail/${p.id}"/>">
+                                                <img src="${p.imageUrl}" alt="${p.name}">
+                                            </a>
+                                        </div>
+                                        <div class="copy js-height" style="height: 109px;">
+                                            <%--<h3>Baskin Robbins</h3>--%>
+                                            <p class="product_name">${p.name}</p>
+                                            <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
+                                            <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
+                                            <%--<p class="prize"><span>290.000<sup>đ</sup> - 330.000<sup>đ</sup></span></p>--%>
+                                        </div>
+                                        <input type="hidden" value="2" id="product_stt">
+                                        <a href="<c:url value="/gifts/detail/${p.id}"/>"><span></span></a>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                        <%--
+                        <div class="pagination-wrapper">
+                            <ul id="pagination-data" class="pagination-sm"></ul>
+                        </div>
+                        --%>
+                        <div class="clean-paragraph"></div>
+                        <div class="button-control gift-total-wrapper text-center text-uppercase">
+                            <div class="gift-total-box">
+                                <span class="gift-total-box-left"><spring:message code="order-total"/></span>
+                                <span class="gift-total-box-right">
+                                    <span>usd</span>
+                                    <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span>
+                                    <span>~</span>
+                                    <span>VND</span>
+                                    <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span>
+                                </span>
                             </div>
-                            <%--
-                            <div class="pagination-wrapper">
-                                <ul id="pagination-data" class="pagination-sm"></ul>
+                            <div class="button-control-page">
+                                <button class="btn btn-default"><spring:message code="message.back"/></button>
+                                <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/gifts/order-summary"/>"><spring:message code="message.next"/></button>
                             </div>
-                            --%>
-                            <div class="clean-paragraph"></div>
-                            <div class="button-control gift-total-wrapper text-center text-uppercase">
-                                <div class="gift-total-box">
-                                    <span class="gift-total-box-left"><spring:message code="order-total"/></span>
-                                    <span class="gift-total-box-right">
-                                        <span>usd</span>
-                                        <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span>
-                                        <span>~</span>
-                                        <span>VND</span>
-                                        <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span>
-                                    </span>
-                                </div>
-                                <div class="button-control-page">
-                                    <button class="btn btn-default"><spring:message code="message.back"/></button>
-                                    <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/gifts/order-summary"/>"><spring:message code="message.next"/></button>
-                                </div>
-                            </div>
+                        </div>
                         <%--</div>--%>
                     </div>
                 </div>

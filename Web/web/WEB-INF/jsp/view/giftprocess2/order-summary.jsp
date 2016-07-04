@@ -30,7 +30,7 @@
 
     <jsp:body>
         <c:import url="/categories"/>
-        <section class="bg-default main-section">
+        <section class="main-section">
             <div class="container">
                 <c:set var="localStep" value="5"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>

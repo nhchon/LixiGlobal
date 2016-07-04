@@ -571,20 +571,36 @@ h2, .h2 {
     text-transform: uppercase;
 
 }
-.gift-step a{
-    border: 2px solid #dcecf2;
+.gift-step a {
+    background: #fff none repeat scroll 0 0;
+    border: 3px solid #dadada;
     border-radius: 50%;
     display: block;
-    font-size: 3em;
-    height: 100px;
-    padding-top: 15px;
-    text-align: center;
-    width: 100px;
+    font-size: 1.5em;
+    height: 50px;
     margin: 0 auto;
     overflow: hidden;
-    background: #fff;
+    padding-top: 7px;
+    text-align: center;
+    width: 50px;
+    color: #6f6f6f;
 }
+.gift-border-title{
+    margin-top: 30px;
+    display: block;
+}
+.gift-border-title h2{
+    background: rgba(0, 0, 0, 0) url("../images/bg-line-gray.png") repeat-x scroll 0 17px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
 
+}
+.gift-border-title h2 span {
+    background: #fff none repeat scroll 0 0;
+    color: #acacac;
+    padding-left: 20px;
+    padding-right: 20px;
+}
 .gift-step .step-number {
 
 }
@@ -597,11 +613,17 @@ h2, .h2 {
 }
 .gift-step a:hover,
 .gift-step a.active{
-    background: #0090d0;
+    background: #f67c01;
+    color: #fff;
+}
+
+.gift-step .hvr-radial-out::before {
+    background: #f67c01 none repeat scroll 0 0;
 }
 /* filter */
-.gift-filter-control{
-    padding-top: 50px;
+.gift-filter-control {
+    margin-bottom: 20px;
+    padding-top: 35px;
 }
 .gift-filter-control .gift-filter-control-slide {
     background: rgba(0, 0, 0, 0) url("../images/bg-filter.png") no-repeat scroll left top;
@@ -614,10 +636,10 @@ h2, .h2 {
 
 .gift-filter-control .slider-track{
     border-radius:0;
-    background: #0090d0;
+    background: #f67c01;
 }
 .gift-filter-control .slider-selection {
-    background: #0090d0;
+    background: #f67c01;
     background-repeat: repeat-x;
     border-radius:0 0 4px 4px;
 
@@ -633,7 +655,7 @@ h2, .h2 {
     margin-top: -85px!important;
 }
 .gift-filter-label {
-    color: #0090d0;
+    color: #707070;
     display: block;
     font-weight: bold;
     margin-bottom: 10px;
@@ -652,10 +674,14 @@ h2, .h2 {
     display: block;
 }
 .gift-filter-control .slider .tooltip-inner {
-    background: #0090d0 none repeat scroll 0 0;
+    background: #f67c01 none repeat scroll 0 0;
 }
 .gift-filter-control .tooltip.top .tooltip-arrow{
-    border-top-color: #0090d0;
+    border-top-color: #f67c01;
+}
+.slider-handle {
+    background-color: #f67c01;
+    background-image: linear-gradient(to bottom, #f67c01 0%, #f67c01 100%);
 }
 /* Footer */
 footer{
@@ -1134,7 +1160,229 @@ textarea{
     height: 30px;
     margin-top: -5px;
 }
+.reciper-box{
+    background: #faf9f5;
+    border-radius: 10px;
+    padding: 20px;
+    overflow: hidden;
+}
+.reciper-hr{
+
+}
+
+.reciper-box .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.reciper-buy-gift{
+    line-height: 60px;
+    width: 280px;
+    font-size: 24px;
+    border-radius: 10px;
+    background: #f67c01;
+    border-color: #f67c01;
+}
+.gift-total-box-right{
+    font-weight: bold;
+    color: #000;
+}
+
+.wrap_img_detail {
+    max-width: 460px;
+    position: relative;
+}
+.wrap_img_detail .img {
+    background: url(../images/gradient_bg.jpg);
+    background-size: 100% 100%;
+    overflow: hidden;
+    position: relative;
+}
+.bootstrap-select > .dropdown-toggle,
+.btn-danger:hover, .btn-danger:focus, .btn-danger.focus, .btn-danger:active, .btn-danger.active, .open > .dropdown-toggle.btn-danger {
+    background-color: #fff;
+    border-color: #d5d5d5;
+    color: #000;
+}
+
+.tab-pd {
+    padding-top: 40px;
+    width: 100%;
+    clear: both;
+    overflow: hidden;
+}
+
+.tab-pd ul {
+    width: 100%;
+}
+
+.tab-pd ul.list-tab {
+    display: inline-block;
+    float: left;
+    position: relative;
+    z-index: 10;
+}
+
+.tab-pd ul.list-tab li {
+    display: inline-block;
+    float: left;
+    width: 270px;
+    padding: 20px 0;
+    background: #f7f7f7;
+    font-size: 18px;
+    color: #c1c1c1;
+    border: 1px #f7f7f7 solid;
+    border-radius: 10px 10px 0 0;
+    border-bottom: none;
+    text-align: center;
+    font-family: 'RobotoMedium', 'Roboto';
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.tab-pd ul.list-tab li:hover,
+.tab-pd ul.list-tab li.active {
+    border: 1px #e0e0e0 solid;
+    border-bottom: 1px #fff solid;
+    background: #fff;
+    color: #413833;
+}
+
+.tab-pd .content-tab {
+    width: 100%;
+    clear: both;
+    overflow: hidden;
+    padding: 45px 40px;
+    border: 1px #e0e0e0 solid;
+    position: relative;
+    z-index: 9;
+    top: -1px;
+}
+
+.tab-pd .content-tab .tab {
+    display: none;
+}
+
+.tab-pd .content-tab .tab:first-child {
+    display: block;
+}
+
+.tab-pd .content-tab .tab p {
+    font-size: 14px;
+    padding-bottom: 10px;
+    font-family: Roboto;
+}
+
+.tab-pd .content-tab .tab p span {
+    font-size: 14px !important;
+    font-family: 'Roboto' !important;
+}
+
+.break-line-default {
+    border-bottom: 2px solid #ededed;
+    color: #ededed;
+    margin: 20px auto;
+}
+.product-detail-box{
+    padding: 20px 40px;
+}
+.reciper-break-line {
+    border-bottom: 3px solid #ededed;
+    margin: 20px -50px;
+}
+h2.product-detail-title{
+    color: #000;
+    margin-bottom: 30px;
+}
 /* End google map */
+
+div.pagination-wrapper{
+    opacity: .99;
+}
+.list-pd {
+    display: block;
+    /*width: 1000px;*/
+    float: left;
+    margin-top: 23px;
+    padding-left: 0px;
+}
+
+.list-pd li {
+    width: 208px;
+    display: block;
+    float: left;
+    margin-right: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 38px;
+    z-index: 9;
+}
+
+.list-pd li .img {
+    background: url(../images/gradient_bg.jpg);
+    background-size: 100% 100%;
+    height: 230px;
+    overflow: hidden;
+}
+
+.list-pd li .img img {
+    max-width: 230px;
+}
+
+.list-pd li .copy {
+    width: 100%;
+    background: #fff;
+    text-align: right;
+    padding: 10px 15px 40px 15px;
+    position: relative;
+}
+
+.list-pd li .copy h3 {
+    font-family: 'RobotoMedium', 'Roboto';
+    font-size: 14px;
+    color: #000;
+    font-weight: bold;
+}
+
+.list-pd li .copy p {
+    font-size: 14px;
+    line-height: 20px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.list-pd li .copy .prize {
+    display: inline-block;
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+    font-family: 'RobotoMedium', 'Roboto';
+    color: #ff5f5f;
+    height: 20px !important;
+}
+
+.list-pd li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 5px;
+}
+
+.list-pd li a:hover {
+    border: 2px solid #ff5f5f;
+    border-radius: 7px;
+    background: url(../images/icon-view.png) center no-repeat;
+}
+.best-selling-product-content ul{
+    margin-top: 0;
+}
+.best-selling-product .product-detail-title{
+    margin-top: 40px;
+}
 /*==================================================
 =            Bootstrap 3 Media Queries             =
 ==================================================*/
@@ -1153,6 +1401,10 @@ textarea{
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
+    .list-pd li {
+        margin-right: 1% !important;
+        width: 19% !important;
+    }
     .contact-form{
         padding-right: 15px;
     }
@@ -1160,7 +1412,9 @@ textarea{
         width: 100px;
     }
     .gift-selection-step {
-        background: rgba(0, 0, 0, 0) url("../images/bg-border.png") repeat-x scroll 0 65px;
+        background: rgba(0, 0, 0, 0) url("../images/bg-border.png") repeat-x scroll 0 40px;
+        max-width: 75%;
+        margin: 0 auto;
     }
     .gift-selection-step-first {
         background: rgba(0, 0, 0, 0) url("../images/gift-step-bg.png") no-repeat scroll 0 0;

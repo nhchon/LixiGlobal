@@ -16,7 +16,7 @@
 
     <jsp:body>
         <c:import url="/categories"/>
-        <section class="main-section bg-default">
+        <section class="main-section">
             <div class="container">
                 <c:set var="localStep" value="6"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
