@@ -8,7 +8,7 @@
     <body>
         <h1>Error Page</h1>
         <p>Application has encountered an error. Almost everything has been reported and Please contact support on support@lixi.global</p>
-        <p>Or Go <a href="https://www.lixi.global" target="_blank">Home Page</a></p>
+        <p><a href="https://www.lixi.global" target="_blank">Home Page</a></p>
         <%--
         <p>Failed URL: ${url}</p>
         <p>Exception:  ${exception.message}</p>
