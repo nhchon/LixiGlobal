@@ -28,8 +28,7 @@ LixiGlobal.Browser = {
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
         if (results === null) {
             return null;
-        }
-        else {
+        } else {
             return results[1] || 0;
         }
     },
@@ -165,30 +164,30 @@ LixiGlobal.User = {
     }
 };
 /*
-LixiGlobal.Form = {
-    initCheckBox: function (checkboxElement) {
-        var checkBox = $(checkboxElement);
-        $(checkBox).each(function () {
-            $(this).wrap("<span class='custom-checkbox'></span>");
-            if ($(this).is(':checked')) {
-                $(this).parent().addClass("selected");
-            }
-        });
-        $(checkBox).click(function () {
-            $(this).parent().toggleClass("selected");
-        });
-    },
-    sendRedirect: function (_obj) {
-        var obj = $(_obj);
-        var link = obj.attr('data-link');
-        window.location = link;
-    },
-    onCloseDialog: function (_obj) {
-        var obj = $(_obj);
-        obj.closest('.modal-dialog').find('.bootstrap-dialog-close-button .close').click();
-    }
-};
-*/
+ LixiGlobal.Form = {
+ initCheckBox: function (checkboxElement) {
+ var checkBox = $(checkboxElement);
+ $(checkBox).each(function () {
+ $(this).wrap("<span class='custom-checkbox'></span>");
+ if ($(this).is(':checked')) {
+ $(this).parent().addClass("selected");
+ }
+ });
+ $(checkBox).click(function () {
+ $(this).parent().toggleClass("selected");
+ });
+ },
+ sendRedirect: function (_obj) {
+ var obj = $(_obj);
+ var link = obj.attr('data-link');
+ window.location = link;
+ },
+ onCloseDialog: function (_obj) {
+ var obj = $(_obj);
+ obj.closest('.modal-dialog').find('.bootstrap-dialog-close-button .close').click();
+ }
+ };
+ */
 LixiGlobal.Gift = {
     initAddBtn: function (_obj) {
         var obj = $(_obj);
@@ -488,7 +487,7 @@ LixiGlobal.Slider = {
         var sliderObj = $(element);
         if (typeof sliderObj !== "undefined" || sliderObj.length > 0) {
             sliderObj.carousel({
-                interval: 1000*10
+                interval: 1000 * 10
             });
         }
     }
@@ -550,20 +549,20 @@ jQuery(document).ready(function () {
         });
 
     }
-    
+
     //if ($('.custom-checkbox-input').length > 0) {
     //    LixiGlobal.Form.initCheckBox('.custom-checkbox-input');
     //}
-    
+
     /* dumy event */
     $('.btn-has-link-event').click(function () {
         window.location = $(this).attr('data-link');
     });
-    
+
     if ($('.selectpicker').length > 0) {
         $('.selectpicker').selectpicker();
     }
-    
+
     if ($('.post-content-has-scroll').length > 0) {
         $(window).load(function () {
             $('.post-content-has-scroll').mCustomScrollbar();

@@ -1166,21 +1166,21 @@ textarea{
     height: 30px;
     margin-top: -5px;
 }
-.reciper-box{
+.receiver-box{
     background: #faf9f5;
     border-radius: 10px;
     padding: 20px;
     overflow: hidden;
 }
-.reciper-hr{
+.receiver-hr{
 
 }
 
-.reciper-box .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+.receiver-box .bootstrap-select.btn-group .dropdown-toggle .filter-option {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.reciper-buy-gift{
+.receiver-buy-gift{
     line-height: 60px;
     font-size: 24px;
     border-radius: 10px;
@@ -1293,7 +1293,7 @@ textarea{
 .product-detail-box{
     padding: 20px 0px;
 }
-.reciper-break-line {
+.receiver-break-line {
     border-bottom: 3px solid #ededed;
     margin: 20px -50px;
 }
@@ -1399,6 +1399,22 @@ div.pagination-wrapper{
 .product-detail-content h5{
     text-transform: inherit;
 }
+
+button.edit-receiver {
+    background: #6f6f6f none repeat scroll 0 0;
+    border: medium none;
+    color: #fff;
+    display: none;
+    line-height: 15px;
+    padding: 2px 4px;
+    position: absolute;
+    right: 35px;
+    top: 7px;
+    z-index: 3 !important;
+}
+.receiver-control-box .bootstrap-select > .dropdown-toggle {
+  padding-right: 55px;
+}
 /*==================================================
 =            Bootstrap 3 Media Queries             =
 ==================================================*/
@@ -1444,7 +1460,7 @@ div.pagination-wrapper{
 }
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
-    .reciper-buy-gift{
+    .receiver-buy-gift{
         min-width: 280px;
     }
     .list-pd li {
@@ -1897,7 +1913,7 @@ div.pagination-wrapper{
     .testimonial{
         margin-bottom: 20px;
     }
-    .reciper-box [class*="col-md-"]{
+    .receiver-box [class*="col-md-"]{
         width: 100%;
     }
 }

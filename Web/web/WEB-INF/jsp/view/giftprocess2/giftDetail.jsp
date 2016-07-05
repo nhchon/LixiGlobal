@@ -60,25 +60,28 @@
 
                                 </div>
                             </div>
-                            <div class="reciper-box">
+                            <div class="receiver-box">
                                 <div class="row">
                                     <div class="col-md-3 col-sm-3 col-xs-12"><h4>Người nhận</h4></div>
                                     <div class="col-md-5 col-sm-5 col-xs-7">
-                                        <select class="selectpicker show-tick" data-live-search="true" data-style="btn-danger" data-width="100%">
-                                            <option value="0"><spring:message code="select-a-rec"/></option>
-                                            <c:forEach items="${RECIPIENTS}" var="rec">
-                                                <option data-icon="glyphicon-user" value="${rec.id}">${rec.fullName}&nbsp;-&nbsp;${rec.phone}&nbsp;-&nbsp;${rec.email} </option>
-                                            </c:forEach>
-                                        </select>
+                                        <div class="position-relative receiver-control-box">
+                                            <select class="selectpicker show-tick" data-live-search="true" data-style="btn-danger" data-width="100%">
+                                                <option value="0"><spring:message code="select-a-rec"/></option>
+                                                <c:forEach items="${RECIPIENTS}" var="rec">
+                                                    <option data-icon="glyphicon-user" value="${rec.id}">${rec.fullName}&nbsp;-&nbsp;${rec.phone}&nbsp;-&nbsp;${rec.email} </option>
+                                                </c:forEach>
+                                            </select>
+                                            <button type="button" class="edit-receiver" title="Edit receiver" rel="tooltip"><i class="fa fa-edit"></i></button>
+                                        </div>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-xs-5">
                                         <button class="btn btn-default">Create New Receiver</button>
                                     </div>
                                 </div>
-                                <div class="reciper-break-line"></div>
+                                <div class="receiver-break-line"></div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6 col-xs-5">
-                                        <button onclick="checkExceed(30, ${p.id}, 1)" class="btn btn-primary text-uppercase reciper-buy-gift">Buy Gift</button>
+                                        <button onclick="checkExceed(30, ${p.id}, 1)" class="btn btn-primary text-uppercase receiver-buy-gift">Buy Gift</button>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-7" style="margin-top: 15px;color: #0090d0;font-weight: 400;">
 
@@ -92,6 +95,7 @@
                                         </span>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -245,3 +249,32 @@
         </section>
     </jsp:body>
 </template:Client>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        if ($('.receiver-control-box').length > 0) {
+            $('.receiver-control-box .selectpicker').on('change', function () {
+                var obj = $(this);
+                console.log(1);
+                var selected = $(this).find("option:selected").val();
+                var receiverObj = obj.closest('.receiver-control-box').find('.edit-receiver');
+                if (parseInt(selected) > 0) {
+                    receiverObj.attr('data-receiver-id', selected);
+                    receiverObj.fadeIn();
+                } else {
+                    receiverObj.fadeOut();
+                }
+            });
+            jQuery('button.edit-receiver').click(function () {
+                var obj = $(this);
+                var receiverId = obj.attr('data-receiver-id');
+                if (parseInt(receiverId) > 0) {
+                    BootstrapDialog.show({
+                        cssClass: 'dialog-no-header',
+                        title: 'Edit receiver',
+                        message: $('<div class="edit-reciprt-wrapper">Edit receiver ID: ' + receiverId + '</div>')
+                    });
+                }
+            });
+        }
+    });
+</script>
