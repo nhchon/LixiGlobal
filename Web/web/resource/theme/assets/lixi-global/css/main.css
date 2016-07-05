@@ -1301,6 +1301,12 @@ h2.product-detail-title{
     color: #000;
     margin-bottom: 30px;
 }
+.section-gift-top h2.text-color-black{
+    color: #000;
+}
+.price-on-detail{
+    font-size: 2em;
+}
 /* End google map */
 
 div.pagination-wrapper{
@@ -1308,8 +1314,8 @@ div.pagination-wrapper{
 }
 .list-pd {
     display: block;
-    /*width: 1000px;*/
-    float: left;
+    width: 100%;
+    /*float: left;*/
     margin-top: 23px;
     padding-left: 0px;
 }
@@ -1464,8 +1470,8 @@ button.edit-receiver {
         min-width: 280px;
     }
     .list-pd li {
-        margin-right: 1% !important;
-        width: 19% !important;
+        margin-right: 1%;
+        width: 19%;
     }
     .contact-form{
         padding-right: 15px;
