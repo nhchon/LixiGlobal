@@ -1170,7 +1170,7 @@ textarea{
     background: #faf9f5;
     border-radius: 10px;
     padding: 20px;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 .receiver-hr{
 
