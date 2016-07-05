@@ -175,6 +175,7 @@ LixiGlobal.Gift = {
         var quantity = giftItemObj.find("input[name='quantity']").val();
         //alert(productId + " " + quantity)
         overlayOn($("#product" + productId));
+        alert(quantity)
         checkExceed($('#recId').val(), productId, quantity);
         return  false;
     },
