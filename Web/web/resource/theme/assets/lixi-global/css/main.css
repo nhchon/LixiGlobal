@@ -131,7 +131,13 @@ label {
     overflow: hidden;
     padding: 15px 0;
 }
-
+.clean-paragraph-gray {
+    background: rgba(0, 0, 0, 0) url("../images/bg-border-gray.png") repeat-x scroll 0 center;
+    clear: both;
+    display: block;
+    overflow: hidden;
+    padding: 15px 0;
+}
 .btn-primary{
     background: #0090d0;
 }
@@ -144,7 +150,7 @@ label {
 }
 .maximum-purchase,
 .title{
-    color: #0090d0;
+    color: #000;
     text-transform: uppercase;
 }
 .modal-dialog {
@@ -1176,7 +1182,6 @@ textarea{
 }
 .reciper-buy-gift{
     line-height: 60px;
-    width: 280px;
     font-size: 24px;
     border-radius: 10px;
     background: #f67c01;
@@ -1279,11 +1284,14 @@ textarea{
 
 .break-line-default {
     border-bottom: 2px solid #ededed;
+    clear: both;
     color: #ededed;
+    display: block;
     margin: 20px auto;
+    overflow: hidden;
 }
 .product-detail-box{
-    padding: 20px 40px;
+    padding: 20px 0px;
 }
 .reciper-break-line {
     border-bottom: 3px solid #ededed;
@@ -1307,10 +1315,10 @@ div.pagination-wrapper{
 }
 
 .list-pd li {
-    width: 208px;
+    width: 19%;
     display: block;
     float: left;
-    margin-right: 20px;
+    margin-right: 1%;
     border: 1px solid #e0e0e0;
     border-radius: 7px;
     overflow: hidden;
@@ -1327,13 +1335,14 @@ div.pagination-wrapper{
 }
 
 .list-pd li .img img {
-    max-width: 230px;
+    margin: 10px;
+    max-width: 91%;
 }
 
 .list-pd li .copy {
     width: 100%;
     background: #fff;
-    text-align: right;
+    text-align: center;
     padding: 10px 15px 40px 15px;
     position: relative;
 }
@@ -1383,6 +1392,13 @@ div.pagination-wrapper{
 .best-selling-product .product-detail-title{
     margin-top: 40px;
 }
+.product-detail-content h1,
+.product-detail-content h2,
+.product-detail-content h3,
+.product-detail-content h4,
+.product-detail-content h5{
+    text-transform: inherit;
+}
 /*==================================================
 =            Bootstrap 3 Media Queries             =
 ==================================================*/
@@ -1396,21 +1412,6 @@ div.pagination-wrapper{
 
 /* Extra Small Devices, Phones */ 
 @media only screen and (min-width : 480px) {
-
-}
-
-/* Small Devices, Tablets */
-@media only screen and (min-width : 768px) {
-    .list-pd li {
-        margin-right: 1% !important;
-        width: 19% !important;
-    }
-    .contact-form{
-        padding-right: 15px;
-    }
-    .table-col-thumb {
-        width: 100px;
-    }
     .gift-selection-step {
         background: rgba(0, 0, 0, 0) url("../images/bg-border.png") repeat-x scroll 0 40px;
         max-width: 75%;
@@ -1422,6 +1423,41 @@ div.pagination-wrapper{
     .gift-selection-step-last{
         background: rgba(0, 0, 0, 0) url("../images/gift-step-bg.png") no-repeat scroll right 0;
     }
+}
+@media only screen and (min-width : 480px) and (max-width:768px) {
+
+    .gift-selection-step-first {
+        background: rgba(0, 0, 0, 0) url("../images/gift-step-bg.png") no-repeat scroll -30px 0;
+    }
+    .gift-selection-step-last{
+        background: rgba(0, 0, 0, 0) url("../images/gift-step-bg.png") no-repeat scroll 50px 0;
+    }
+}
+@media only screen and (min-width : 700px) and (max-width:768px) {
+
+    .gift-selection-step-first {
+        background: rgba(0, 0, 0, 0) url("../images/gift-step-bg.png") no-repeat scroll -30px 0;
+    }
+    .gift-selection-step-last{
+        background: rgba(0, 0, 0, 0) url("../images/gift-step-bg.png") no-repeat scroll 70px 0;
+    }
+}
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+    .reciper-buy-gift{
+        min-width: 280px;
+    }
+    .list-pd li {
+        margin-right: 1% !important;
+        width: 19% !important;
+    }
+    .contact-form{
+        padding-right: 15px;
+    }
+    .table-col-thumb {
+        width: 100px;
+    }
+
     .col-height {
         display: table-cell;
         float: none;
@@ -1633,6 +1669,10 @@ div.pagination-wrapper{
 
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px) {
+    .list-pd li {
+        width: 24%;
+        margin-right: 1%;
+    }
     .contact-section-top {
         margin-left: -10px;
         margin-right: -10px;
@@ -1806,8 +1846,30 @@ div.pagination-wrapper{
     }
 }
 
+@media only screen and (min-width : 480px) and (max-width : 600px) {
+    .list-pd li {
+        width: 32.2%;
+        margin-right: 1%;
+    }
+
+}
+
+@media only screen and (min-width : 480px) and (max-width : 484px) {
+    .gift-selection-step .col-xs-3{
+        width: 50%;
+    }
+    .gift-selection-step {
+        background: transparent;
+    }
+
+}
+
 /* Extra Small Devices, Phones */ 
 @media only screen and (max-width : 480px) {
+    .list-pd li {
+        width: 49%;
+        margin-right: 1%;
+    }
     .top-up-mobile-phone-text,
     .top-up-mobile-phone-icon{
         display: block;
@@ -1816,9 +1878,11 @@ div.pagination-wrapper{
     /*.section-slider-thumb {
         height: 300px;
     }*/
-    .gift-selection-icon .col-xs-3,
-    .gift-selection-step .col-xs-3{
+    .gift-selection-icon .col-xs-3{
         width: 33.3333%;
+    }
+    .gift-selection-step .col-xs-3{
+        width: 50%;
     }
     footer .col-xs-4{
         width: 100%;
@@ -1833,13 +1897,19 @@ div.pagination-wrapper{
     .testimonial{
         margin-bottom: 20px;
     }
+    .reciper-box [class*="col-md-"]{
+        width: 100%;
+    }
 }
-
+@media only screen and (max-width : 350px) {
+    .list-pd li {
+        width: 100%;
+        margin-right: 0%;
+    }
+}
 /* Custom, iPhone Retina */ 
 @media only screen and (max-width : 320px) {
-    /*.section-slider-thumb {
-        height: 250px;
-    }*/
+
 }
 
 

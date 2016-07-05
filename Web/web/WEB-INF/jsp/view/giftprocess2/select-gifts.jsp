@@ -4,7 +4,7 @@
     <jsp:attribute name="extraHeadContent">
         <script language="javascript" src="https://d1cr9zxt7u0sgu.cloudfront.net/crfp.js?SITE_ID=2b57448f3013fc513dcc7a4ab933e6928ab74672&SESSION_ID=${pageContext.session.id}&TYPE=JS" type="text/javascript" charset="UTF-8"></script>
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/js/vendor/tipso/tipso.css"/>">
-   
+
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
@@ -192,24 +192,30 @@
                     <div class="gift-border-title">
                         <h2 class="title text-center"><span>Select Price Range</span></h2>
                     </div>
-                    <div class="gift-filter-control">
-                        <div class="gift-filter-control-slide">
-                            <c:set value="10" var="startPrice"/>
-                            <c:if test="${not empty SELECTED_AMOUNT_IN_USD}">
-                                <c:set value="${SELECTED_AMOUNT_IN_USD}" var="startPrice"/>
-                            </c:if>
-                            <input type="text" class="gift-filter-slider-input" value="" data-slider-min="10" data-slider-max="150" data-slider-step="5" data-slider-value="10"/>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <div class="gift-filter-control">
+                                <div class="gift-filter-control-slide">
+                                    <c:set value="10" var="startPrice"/>
+                                    <c:if test="${not empty SELECTED_AMOUNT_IN_USD}">
+                                        <c:set value="${SELECTED_AMOUNT_IN_USD}" var="startPrice"/>
+                                    </c:if>
+                                    <input type="text" class="gift-filter-slider-input" value="" data-slider-min="10" data-slider-max="150" data-slider-step="5" data-slider-value="10"/>
+                                </div>
+                                <div class="gift-filter-label">
+                                    <span class="gift-filter-label-min">
+                                        <span class="gift-filter-label-usd">USD 10</span>
+                                        <span class="gift-filter-label-vn">VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 10}" pattern="###,###.##"/></span>
+                                    </span>
+                                    <span class="gift-filter-label-max text-right">
+                                        <span class="gift-filter-label-usd">USD 150</span>
+                                        <span class="gift-filter-label-vn">VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 150}" pattern="###,###.##"/></span>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="gift-filter-label">
-                            <span class="gift-filter-label-min">
-                                <span class="gift-filter-label-usd">USD 10</span>
-                                <span class="gift-filter-label-vn">VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 10}" pattern="###,###.##"/></span>
-                            </span>
-                            <span class="gift-filter-label-max text-right">
-                                <span class="gift-filter-label-usd">USD 150</span>
-                                <span class="gift-filter-label-vn">VND <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * 150}" pattern="###,###.##"/></span>
-                            </span>
-                        </div>
+                        <div class="col-md-1"></div>
                     </div>
                     <div class="gift-filter-items">
                         <h2 class="title">${SELECTED_LIXI_CATEGORY_NAME}</h2>
@@ -237,11 +243,13 @@
                                 </c:forEach>
                             </ul>
                         </div>
-                        <%--
+                        <div class="break-line-default"></div>
                         <div class="pagination-wrapper">
                             <ul id="pagination-data" class="pagination-sm"></ul>
                         </div>
-                        --%>
+                        
+                        
+                        <%--
                         <div class="clean-paragraph"></div>
                         <div class="button-control gift-total-wrapper text-center text-uppercase">
                             <div class="gift-total-box">
@@ -259,6 +267,7 @@
                                 <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/gifts/order-summary"/>"><spring:message code="message.next"/></button>
                             </div>
                         </div>
+                        --%>
                         <%--</div>--%>
                     </div>
                 </div>
