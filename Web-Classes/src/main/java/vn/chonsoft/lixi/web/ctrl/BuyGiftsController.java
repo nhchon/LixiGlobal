@@ -107,6 +107,10 @@ public class BuyGiftsController {
         // load list products
         LixiCategory lxcategory = categories.getById(selectedCatId);
         
+        // store category id into session
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, selectedCatId);
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
+        
         // get order
         LixiOrder order = null;
         LixiExchangeRate lxExch = null;
@@ -124,9 +128,9 @@ public class BuyGiftsController {
         
         // get price, default is 0? VND
         double price = LiXiConstants.MINIMUM_PRICE_USD * lxExch.getBuy();
-        if(request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND) != null){
-            price = (double)request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND);
-        };
+        /* store new value into session */
+        request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND, price);
+        request.getSession().setAttribute(LiXiConstants.SELECTED_AMOUNT_IN_USD, LiXiConstants.MINIMUM_PRICE_USD);
         
         /* list product */
         List<VatgiaProduct> products = null;
@@ -146,18 +150,9 @@ public class BuyGiftsController {
             products = lxVatGiaUtils.convertVatGiaProduct2Model(pjs);
         }
         
-        if(model.get("recId") != null){
-            try{
-                // get current recipient
-                Recipient rec = this.reciService.findById((Long)model.get("recId"));
-                /* check already selected product */
-                LiXiUtils.checkSelected(products, order, rec);
-            }
-            catch(Exception ex){}
-        }
         // store category into session
-        model.put(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, selectedCatId);
-        model.put(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
+        //model.put(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, selectedCatId);
+        //model.put(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
         model.put(LiXiConstants.PRODUCTS, products);
         model.put(LiXiConstants.PAGES, vgps);
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);

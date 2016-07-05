@@ -9,6 +9,33 @@
         <script type="text/javascript">
             /** Page Script **/
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
+            jQuery(document).ready(function () {
+                if ($('.receiver-control-box').length > 0) {
+                    $('.receiver-control-box .selectpicker').on('change', function () {
+                        var obj = $(this);
+                        console.log(1);
+                        var selected = $(this).find("option:selected").val();
+                        var receiverObj = obj.closest('.receiver-control-box').find('.edit-receiver');
+                        if (parseInt(selected) > 0) {
+                            receiverObj.attr('data-receiver-id', selected);
+                            receiverObj.fadeIn();
+                        } else {
+                            receiverObj.fadeOut();
+                        }
+                    });
+                    jQuery('button.edit-receiver').click(function () {
+                        var obj = $(this);
+                        var receiverId = obj.attr('data-receiver-id');
+                        if (parseInt(receiverId) > 0) {
+                            BootstrapDialog.show({
+                                cssClass: 'dialog-no-header',
+                                title: 'Edit receiver',
+                                message: $('<div class="edit-reciprt-wrapper">Edit receiver ID: ' + receiverId + '</div>')
+                            });
+                        }
+                    });
+                }
+            });
         </script>
         <script src = "<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select/js/bootstrap-select.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/gifts.js"/>"></script>
@@ -249,32 +276,3 @@
         </section>
     </jsp:body>
 </template:Client>
-<script type="text/javascript">
-    jQuery(document).ready(function () {
-        if ($('.receiver-control-box').length > 0) {
-            $('.receiver-control-box .selectpicker').on('change', function () {
-                var obj = $(this);
-                console.log(1);
-                var selected = $(this).find("option:selected").val();
-                var receiverObj = obj.closest('.receiver-control-box').find('.edit-receiver');
-                if (parseInt(selected) > 0) {
-                    receiverObj.attr('data-receiver-id', selected);
-                    receiverObj.fadeIn();
-                } else {
-                    receiverObj.fadeOut();
-                }
-            });
-            jQuery('button.edit-receiver').click(function () {
-                var obj = $(this);
-                var receiverId = obj.attr('data-receiver-id');
-                if (parseInt(receiverId) > 0) {
-                    BootstrapDialog.show({
-                        cssClass: 'dialog-no-header',
-                        title: 'Edit receiver',
-                        message: $('<div class="edit-reciprt-wrapper">Edit receiver ID: ' + receiverId + '</div>')
-                    });
-                }
-            });
-        }
-    });
-</script>

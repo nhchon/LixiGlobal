@@ -53,7 +53,7 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
  * @author chonnh
  */
 @WebController
-@RequestMapping("gifts/ajax")
+@RequestMapping("gifts/ajax2")
 public class GiftsAjaxController {
     
     private static final Logger log = LogManager.getLogger(GiftsAjaxController.class);

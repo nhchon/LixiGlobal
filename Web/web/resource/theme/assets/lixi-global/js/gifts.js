@@ -32,85 +32,45 @@ function showTooltip(){
     //});                
 }
 function loadPage(pageNum) {
-    var recId = 0;
-    if( $('#recId').length )  {
-        recId = $('#recId').val();
-    }
-
+    overlayOn($('.gift-filter-items'));
     $.ajax({
-        url: AJAX_LOAD_PRODUCTS_PATH + '/' + recId + '/' + pageNum,
+        url: AJAX_LOAD_PRODUCTS_PATH + '/' + pageNum,
         type: "get",
         dataType: 'html',
         success: function (data, textStatus, jqXHR)
         {
-            //$('#divProducts').html("");
             $('#divProducts').html(data);
-            //
-            //addHandlerToCheckboxAndSelect();
-            LixiGlobal.Gift.initSentGiftPage();
-            /*
-            $(".gift-product-thumb").each(function(){
-                var zoom = $(this).attr("zoomWindowPosition");
-                $(this).elevateZoom({zoomWindowPosition:parseInt(zoom)});
-            });
-            */
-            //
-            //showTooltip();
+            overlayOff();
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
             alert(errorThrown);
+            overlayOff();
         }
     });
 }
-function loadNewPrice(price) {
+function loadNewPrice(price, sliderFilter) {
 
     overlayOn($('.gift-filter-items'));
+    sliderFilter.disable();
     
-    var recId = 0;
-    if( $('#recId').length )  {
-        recId = $('#recId').val();
-    }
     $.ajax({
-        url: CONTEXT_PATH + '/gifts/ajax/loadProductsByNewPrice/' + recId + '/1/' + price,
+        url: CONTEXT_PATH + '/gifts/ajax/loadProductsByNewPrice/1/' + price,
         type: "get",
         dataType: 'html',
         success: function (data, textStatus, jqXHR)
         {
             //$('#divProducts').html("");
             $('#divProducts').html(data);
-            //
-            //addHandlerToCheckboxAndSelect();
-            LixiGlobal.Gift.initSentGiftPage();
-            /*
-            $(".gift-product-thumb").each(function(){
-                var zoom = $(this).attr("zoomWindowPosition");
-                $(this).elevateZoom({zoomWindowPosition:zoom});
-            });
-            */
             overlayOff();
-            
-            var totalPage = $('#newTotalPages').val();
-            if(totalPage === '' || totalPage ==='0'){
-                totalPage = 1;
-            }
-            $('#pagination-data').twbsPagination('destroy');
-            $('#pagination-data').twbsPagination({
-                totalPages: totalPage,
-                visiblePages: 5,
-                onPageClick: function (event, page) {
-                    /* load products - gifts.js */
-                    loadPage(page);
-                }
-            });
-            //
-            //showTooltip();
+            sliderFilter.enable();
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
             alert(errorThrown);
             //
             overlayOff();
+            sliderFilter.enable();
         }
     });
 }

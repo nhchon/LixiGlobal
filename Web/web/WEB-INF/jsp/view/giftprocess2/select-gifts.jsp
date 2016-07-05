@@ -1,10 +1,7 @@
-<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <template:Client htmlTitle="Lixi Global - Select Gifts">
-
     <jsp:attribute name="extraHeadContent">
         <script language="javascript" src="https://d1cr9zxt7u0sgu.cloudfront.net/crfp.js?SITE_ID=2b57448f3013fc513dcc7a4ab933e6928ab74672&SESSION_ID=${pageContext.session.id}&TYPE=JS" type="text/javascript" charset="UTF-8"></script>
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/js/vendor/tipso/tipso.css"/>">
-
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
@@ -36,26 +33,10 @@
                 $('#chooseCategoryModal').modal({backdrop: 'static', keyboard: false});
             }
             --%>
-                $('#recId').change(function () {
-                    if ($(this).val() !== "0") {
-
-                        doEditRecipient();
-
-                        showGiftValueFor();
-                        /* */
-                        loadPage(1);
-                    } else {
-                        $('#giftValueFor').hide();
-                        $('#btnEditReceiver').hide();
-                        /**/
-                        $('#recFirstName').html("...");
-                    }
-                });
-
-                $(".gift-product-thumb").each(function () {
-                    var zoom = $(this).attr("zoomWindowPosition");
-                    $(this).elevateZoom({zoomWindowPosition: parseInt(zoom)});
-                });
+                //$(".gift-product-thumb").each(function () {
+                //    var zoom = $(this).attr("zoomWindowPosition");
+                //    $(this).elevateZoom({zoomWindowPosition: parseInt(zoom)});
+                //});
 
                 //
                 //loadNewPrice(10);
@@ -217,10 +198,8 @@
                         </div>
                         <div class="col-md-1"></div>
                     </div>
-                    <div class="gift-filter-items">
+                    <div class="gift-filter-items" id="divProducts">
                         <h2 class="title">${SELECTED_LIXI_CATEGORY_NAME}</h2>
-                        <%-- List of products --%>
-                        <%--<div class="row" id="divProducts">--%>
                         <div class="list_cate_product">
                             <ul class="list-pd">
                                 <c:forEach items="${PRODUCTS}" var="p" varStatus="theCount">
@@ -245,30 +224,8 @@
                         </div>
                         <div class="break-line-default"></div>
                         <div class="pagination-wrapper">
-                            <ul id="pagination-data" class="pagination-sm"></ul>
+                            <%@include file="/WEB-INF/jsp/view/giftprocess2/paging-gift.jsp" %>
                         </div>
-                        
-                        
-                        <%--
-                        <div class="clean-paragraph"></div>
-                        <div class="button-control gift-total-wrapper text-center text-uppercase">
-                            <div class="gift-total-box">
-                                <span class="gift-total-box-left"><spring:message code="order-total"/></span>
-                                <span class="gift-total-box-right">
-                                    <span>usd</span>
-                                    <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span>
-                                    <span>~</span>
-                                    <span>VND</span>
-                                    <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span>
-                                </span>
-                            </div>
-                            <div class="button-control-page">
-                                <button class="btn btn-default"><spring:message code="message.back"/></button>
-                                <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/gifts/order-summary"/>"><spring:message code="message.next"/></button>
-                            </div>
-                        </div>
-                        --%>
-                        <%--</div>--%>
                     </div>
                 </div>
                 <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

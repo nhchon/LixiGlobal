@@ -372,7 +372,7 @@
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <li>
-                                                                    <a href="javascript:void 0;" onclick="searchForm.elements['paging.page'].value = '${i}'; searchForm.submit();">${i}</a>
+                                                                    <a href="javascript:void(0);" onclick="searchForm.elements['paging.page'].value = '${i}'; searchForm.submit();">${i}</a>
                                                                 </li>
                                                             </c:otherwise>
                                                         </c:choose>
