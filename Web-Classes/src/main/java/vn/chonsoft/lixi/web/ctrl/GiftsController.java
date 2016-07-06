@@ -120,55 +120,6 @@ public class GiftsController {
 
     /**
      * 
-     * @param model
-     * @param id
-     * @param request
-     * @return 
-     */
-    @UserSecurityAnnotation
-    @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    public ModelAndView giftDetail(Map<String, Object> model, @PathVariable Integer id,  HttpServletRequest request){
-        
-        // get order
-        LixiOrder order = null;
-        LixiExchangeRate lxExch = null;
-        // order already created
-        if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
-            
-            order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-            // get exchange rate of the order;
-            lxExch = order.getLxExchangeRate();
-        }
-        else{
-            
-            lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
-        }
-        
-        VatgiaProduct p = this.vgpService.findById(id);
-        // sender
-        User u = this.userService.findByEmail(loginedUser.getEmail());
-        
-        if(u.getRecipients() != null){
-            //remove inactive
-            u.getRecipients().removeIf(r -> r.isActivated()==false);
-            //sort by name
-            Collections.sort(u.getRecipients(), new Comparator<Recipient>() {
-		@Override
-		public int compare(Recipient r1, Recipient r2) {
-			return r1.getFullName().compareTo(r2.getFullName());
-		}
-	});
-        }
-        
-        model.put("p", p);
-        model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);
-        model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
-        
-        return new ModelAndView("giftprocess2/giftDetail");
-    }
-    
-    /**
-     * 
      * @param id
      * @return 
      */
@@ -524,39 +475,6 @@ public class GiftsController {
     }
 
     /**
-     *
-     * @param model 
-     * @param request
-     * @return
-     */
-    @UserSecurityAnnotation
-    @RequestMapping(value = "order-summary", method = RequestMethod.GET)
-    public ModelAndView orderSummary(Map<String, Object> model, HttpServletRequest request) {
-
-        User u = this.userService.findByEmail(loginedUser.getEmail());
-
-        // check order created
-        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
-        if(orderId == null){
-            
-            // to do
-            return new ModelAndView(new RedirectView("/gifts/choose", true, true));
-        }
-        
-        LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
-
-        List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
-        SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order); // in USD
-        
-        model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
-        model.put(LiXiConstants.LIXI_ORDER, order);
-        model.put(LiXiConstants.LIXI_TOTAL_AMOUNT, currentPayments[0]);
-        model.put(LiXiConstants.REC_GIFTS, recGifts);
-
-        return new ModelAndView("giftprocess2/order-summary", model);
-    }
-    
-    /**
      * 
      * @param giftId
      * @param request
@@ -584,37 +502,5 @@ public class GiftsController {
         
     }
     
-    /**
-     * 
-     * @param model
-     * @param giftId
-     * @param request 
-     * @return 
-     */
-    @UserSecurityAnnotation
-    @RequestMapping(value = "change/{giftId}", method = RequestMethod.GET)
-    public ModelAndView changeTheGift(Map<String, Object> model, @PathVariable Long giftId, HttpServletRequest request){
-        
-        // check the order
-        Long orderId = (Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID);
-        if(orderId == null){
-            
-            return new ModelAndView(new RedirectView("/gifts/choose", true, true));
-        }
-        else{
-            
-            //LixiOrder order = this.lxorderService.findById(orderId);
-            LixiOrderGift gift = this.lxogiftService.findById(giftId);
-            Long recId = gift.getRecipient().getId();
-            Integer catId = gift.getCategory().getId();
-            if(gift.getOrder().getId().equals(orderId)){
-                
-                this.lxogiftService.delete(giftId);
-                
-            }
-            
-            return new ModelAndView(new RedirectView("/gifts/choose/" + catId + "/" + recId, true, true));
-        }
-    }
     
 }

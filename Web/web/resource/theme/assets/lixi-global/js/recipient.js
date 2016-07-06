@@ -14,6 +14,7 @@ function deleteRecipient() {
                         //data: return data from server
                         if (data.error === '0') {
                             $("#recId option[value='" + data.recId + "']").remove();
+                            $('.selectpicker').selectpicker('refresh');
                         } else {
                             alert(SOMETHING_WRONG_ERROR);
                         }
@@ -92,6 +93,13 @@ function checkRecipientFormOnModal() {
 }
 function createNewRecipient() {
     $.get(CREATE_REC_URL, function (data) {
+        try{
+            if(jQuery.parseJSON(data).sessionExpired ==='1'){
+                window.location.href = CONTEXT_PATH + '/user/signIn';
+                return;
+            }
+        }catch(err){}
+        
         enableEditRecipientHtmlContent(data);
         // focus on phone field
         $('#editRecipientModal').on('shown.bs.modal', function () {

@@ -100,9 +100,9 @@ public class GlobalDefaultExceptionHandler {
                 message.setSentDate(Calendar.getInstance().getTime());
 
                 Map model = new HashMap();
-                model.put("url", url + " - " +req.getRequestURL().toString());
+                model.put("url", LiXiUtils.replaceHttp8080(url) + " - " +LiXiUtils.replaceHttp8080(req.getRequestURL().toString()));
                 model.put("ipAddress", LiXiGlobalUtils.getClientIp(req));
-                model.put("hostName", req.getServerName());
+                model.put("hostName", req.getRemoteHost());
                 model.put("userAgent", req.getHeader("User-Agent"));
                 model.put("errMessage", errMessage);
                 model.put("errDetails", errDetails);

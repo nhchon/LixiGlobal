@@ -4,9 +4,12 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +21,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderGift;
+import vn.chonsoft.lixi.model.MoneyLevel;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
+import vn.chonsoft.lixi.repositories.service.MoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
@@ -84,7 +93,102 @@ public class BuyGiftsAjaxController {
     @Autowired
     private LiXiVatGiaUtils lxVatGiaUtils;
     
+    @Autowired
+    private MoneyLevelService moneyLevelService;
     
+    /**
+     * 
+     * @param model
+     * @param productId
+     * @param quantity
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "checkExceed/{recId}/{productId}/{quantity}", method = RequestMethod.GET)
+    public ModelAndView checkExceed(Map<String, Object> model, @PathVariable Long recId, @PathVariable Integer productId, @PathVariable Integer quantity, HttpServletRequest request){
+        
+        User u = null;
+        LixiOrder order = null;
+        MoneyLevel ml = null;
+        LixiExchangeRate lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+        double buy = lxExch.getBuy();
+        SumVndUsd[] currentPayments = new SumVndUsd[]{new SumVndUsd(), new SumVndUsd(), new SumVndUsd(), new SumVndUsd()};
+        // get price
+        VatgiaProduct vgp = this.vgpService.findById(productId);
+        double price = vgp.getPrice();
+        
+        // no login
+        if(StringUtils.isEmpty(loginedUser.getEmail())){
+            
+            ml = moneyLevelService.findByIsDefault();
+        }
+        else{
+            
+            // check order already created
+            if (request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) != null) {
+                order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+            }
+            
+            u = this.userService.findByEmail(loginedUser.getEmail());
+            ml = u.getUserMoneyLevel().getMoneyLevel();
+            // get current exchange rate
+            if(order != null){
+                // get buy from order
+                lxExch = order.getLxExchangeRate();
+                buy = lxExch.getBuy();
+            }
+        }
+        
+        /* get recipient */
+        Recipient rec = this.reciService.findById(recId);
+        LixiOrderGift alreadyGift = this.lxogiftService.findByOrderAndRecipientAndProductId(order, rec, productId);
+        
+        currentPayments = LiXiUtils.calculateCurrentPayment(order, alreadyGift);
+        
+        double currentPayment = currentPayments[0].getUsd();//USD
+        double currPaymentVnd = currentPayments[0].getVnd();
+        if(quantity>0){
+            // add selected gift
+            currentPayment += (LiXiUtils.toUsdPrice(price, buy) * quantity);
+            
+            currPaymentVnd += (price * quantity);
+        }
+        
+        if (currentPayment > (ml.getAmount())) {
+
+            // maximum payment is over
+            model.put("exceed", 1);
+            
+            double exceededPaymentVND = (currentPayment - ml.getAmount()) * buy;
+            double exceededPaymentUSD = currentPayment - ml.getAmount();
+            
+            model.put(LiXiConstants.EXCEEDED_VND, exceededPaymentVND);
+            
+            model.put(LiXiConstants.EXCEEDED_USD, exceededPaymentUSD);
+         
+        }
+        else{
+            // the order is not exceeded
+            model.put("exceed", 0);
+        }
+        
+        model.put(LiXiConstants.SELECTED_PRODUCT_ID, productId);
+        model.put(LiXiConstants.SELECTED_PRODUCT_QUANTITY, quantity);
+        // store current payment
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment);
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, currPaymentVnd);
+        
+        return new ModelAndView("giftprocess2/exceed", model);
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param pageNum
+     * @param startPrice
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = "loadProductsByNewPrice/{pageNum}/{startPrice}", method = RequestMethod.GET)
     public ModelAndView loadProductsByNewPrice(Map<String, Object> model, @PathVariable Integer pageNum, @PathVariable Integer startPrice,  HttpServletRequest request) {
         

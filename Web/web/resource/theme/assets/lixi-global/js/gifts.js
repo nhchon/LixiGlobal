@@ -84,7 +84,6 @@ function loadNewPrice(price, sliderFilter) {
  */
 function checkExceed(recId, productId, quantity) {
     if(isInteger(quantity)){
-        if(parseInt(recId) > 0){
             $.ajax({
                 url: AJAX_CHECK_EXCEED_PATH + '/' + recId + '/' + productId + '/' + quantity, // recId = 0
                 type: "get",
@@ -93,46 +92,14 @@ function checkExceed(recId, productId, quantity) {
                 {
                     overlayOff();
                     if (data.exceed === '1') {
-                        //$('#divError').remove();
-                        //$('#divProducts').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
-                        // uncheck
-                        $('input[name=item]').each(function () {
-                            if ($(this).val() == productId) {
-
-                                var giftItemObj = $(this).closest('.gift-product-item');
-                                /* roll back value */
-                                var resetQuantity = data.SELECTED_PRODUCT_QUANTITY;
-                                if(resetQuantity === "") 
-                                    resetQuantity = "1";
-
-                                if (data.SELECTED_PRODUCT_ID > 0) {
-                                    giftItemObj.find("input[name='quantity']").val(resetQuantity);
-                                }
-                                else {
-                                    $(this).attr('checked', false); // Unchecks it
-                                    giftItemObj.find("input[name='quantity']").val(resetQuantity);
-                                }
-                                // out
-                                return false;
-                            }
-                        });
+                        $('#quantity').val(parseInt(data.SELECTED_PRODUCT_QUANTITY) - 1);
                         alert(data.message);
                     } else {
-                        // no exceed, remove error
                         // update current payment
                         $('#currentPaymentVND').html(data.CURRENT_PAYMENT_VND);
                         $('#currentPaymentUSD').html(data.CURRENT_PAYMENT_USD);
                         /* shopping cart */
-                        updateShoppingCart(data.CURRENT_PAYMENT_USD, data.CURRENT_PAYMENT_VND);
-                        //$('#topTotalCurrentOrderUsd').html("USD " + data.CURRENT_PAYMENT_USD)
-                        //$('#topTotalCurrentOrderVnd').html("VND " + data.CURRENT_PAYMENT_VND)
-                        /* */
-                        if(quantity>0)
-                            LixiGlobal.Gift.toCancelStatus($("#gift-product-item-"+productId));
-                        else{
-                            LixiGlobal.Gift.toBuyStatus($("#gift-product-item-"+productId));
-                            $("#product" + productId).find("input[name='quantity']").val(1);
-                        }
+                        //updateShoppingCart(data.CURRENT_PAYMENT_USD, data.CURRENT_PAYMENT_VND);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown)
@@ -142,17 +109,10 @@ function checkExceed(recId, productId, quantity) {
                     //alert('Đã có lỗi, vui lòng thử lại !'); 
                 }
             });
-        }
-        else{
-            alert("Please select a receiver !");
-            $('#item'+productId).attr('checked', false);
-            $('#recId').focus();
-            overlayOff();
-        }
     }
     else{
         alert("Please correct the quantity value");
         overlayOff();
-        $("#product" + productId).find("input[name='quantity']").focus();
+        $("#giftNumberBox").find("input[name='quantity']").focus();
     }
 }

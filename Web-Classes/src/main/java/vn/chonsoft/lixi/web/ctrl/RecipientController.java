@@ -92,7 +92,7 @@ public class RecipientController {
      * @return
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = {"edit/{id}", "ajax/edit/{id}"}, method = RequestMethod.GET)
     public ModelAndView editRecipient(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
 
         ChooseRecipientForm form = new ChooseRecipientForm();
@@ -131,7 +131,7 @@ public class RecipientController {
      * @return
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "editRecipient", method = RequestMethod.POST)
+    @RequestMapping(value = {"editRecipient", "ajax/editRecipient"}, method = RequestMethod.POST)
     public ModelAndView editRecipient(Map<String, Object> model,
             @Valid ChooseRecipientForm form, Errors errors, HttpServletRequest request) {
 

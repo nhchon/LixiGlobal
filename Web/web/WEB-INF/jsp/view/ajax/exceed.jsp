@@ -1,5 +1,6 @@
 {
     "error":"${error}",
+    "sessionExpired": "0",
     "exceed": "${exceed}",
     "EXCEEDED_VND": "<fmt:formatNumber value="${EXCEEDED_VND}" pattern="###,###.##"/>",
     "EXCEEDED_USD":"<fmt:formatNumber value="${EXCEEDED_USD}" pattern="###,###.##"/>",

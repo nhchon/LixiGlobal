@@ -722,6 +722,19 @@ public class LiXiUtils {
 
     /**
      * 
+     * @param path
+     * @return 
+     */
+    public static String replaceHttp8080(String path){
+        
+        if (path == null || "".equals(path)) {
+            return path;
+        }
+
+        return path.replaceFirst("http://", "https://").replaceFirst(":8080", "");
+    }
+    /**
+     * 
      * check if the product is already selected in current order
      * 
      * @param products

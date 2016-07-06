@@ -14,15 +14,17 @@
             var CONF_EMAIL_ERROR = '<spring:message code="validate.user.emailConf"/>';
             var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
             var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
+            var PLEASE_SELECT_REC = '<spring:message code="gift.select_recipient"/>';
+            var CORRECT_QUANTITY = '<spring:message code="correct-quantity" text="correct-quantity"/>';
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
             var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
             var DELETE_RECEIVER_MESSAGE = '<spring:message code="message.delete_receiver"/>';
             var AJAX_LOAD_PRODUCTS_PATH = '<c:url value="/gifts/ajax/products"/>';
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
-            var EDIT_REC_URL = '<c:url value="/recipient/edit/"/>';
-            var CREATE_REC_URL = '<c:url value="/recipient/edit/0"/>';
-            
+            var EDIT_REC_URL = '<c:url value="/recipient/ajax/edit/"/>';
+            var CREATE_REC_URL = '<c:url value="/recipient/ajax/edit/0"/>';
             jQuery(document).ready(function () {
+                
                 if ($('.receiver-control-box').length > 0) {
                     $('.receiver-control-box .selectpicker').on('change', function () {
                         var obj = $(this);
@@ -49,6 +51,17 @@
                         }
                     });
                 }
+                $('#btnSubmit').click(function(){
+                    if(!isInteger($('#quantity').val())){
+                        alert(CORRECT_QUANTITY);
+                        return false;
+                    }
+                    if($('#recId').val()==0){
+                        alert(PLEASE_SELECT_REC);
+                        return false;
+                    }
+                    return true;
+                });
             });
         </script>
         <script src = "<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select/js/bootstrap-select.min.js"/>"></script>
@@ -64,6 +77,8 @@
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="section-gift-top">
                     <div class="row">
+                        <c:url value="/gifts/buy" var="buyGiftUrl"/>
+                        <form method="post" action="${buyGiftUrl}">
                         <div class="col-md-5" style="min-height: 384px;">
                             <div class="wrap_img_detail" style="min-height: 384px;">
                                 <div class="img" style="min-height: 384px;vertical-align: baseline;text-align: center;">
@@ -93,16 +108,17 @@
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 30px;">
-                                <div class="col-md-2 col-sm-3 col-xs-4"><h4>Số lượng</h4></div>
+                                <div class="col-md-2 col-sm-3 col-xs-4"><h4><spring:message code="quantity"/></h4></div>
                                 <div class="col-md-10 col-sm-9 col-xs-8">
-                                    <div class="gift-number-box" style="margin: inherit">
+                                    <div id="giftNumberBox" class="gift-number-box" style="margin: inherit">
                                         <div class="input-group">
                                             <span class="input-group-btn">
                                                 <button onclick="LixiGlobal.Gift.initSubBtn(this);" class="btn btn-default gift-sub-event" type="button"><i class="fa fa-chevron-down"></i></button>
                                             </span>
                                             <c:set var="quantity" value="1"/>
                                             <c:if test="${not empty p.quantity}"><c:set var="quantity" value="${p.quantity}"/></c:if>
-                                            <input style="z-index: 0;" type="text" min="1" name="quantity" value="${quantity}" class="form-control bfh-number gift-number" buttons="false" max="10" placeholder="Number"/>
+                                            <input id="quantity" readonly="" style="z-index: 0;background-color: #fff;" type="text" min="1" name="quantity" value="${quantity}" class="form-control bfh-number gift-number" buttons="false" max="10" placeholder="Number"/>
+                                            <input type="hidden" name="productId" id="productId" value="${p.id}"/>
                                             <span class="input-group-btn">
                                                 <button onclick="LixiGlobal.Gift.initAddBtn(this);"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
                                             </span>
@@ -113,10 +129,10 @@
                             </div>
                             <div class="receiver-box">
                                 <div class="row">
-                                    <div class="col-md-3 col-sm-3 col-xs-12"><h4>Người nhận</h4></div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12"><h4><spring:message code="mess.rec"/></h4></div>
                                     <div class="col-md-5 col-sm-5 col-xs-7">
                                         <div class="position-relative receiver-control-box">
-                                            <select id="recId" class="selectpicker show-tick" data-live-search="true" data-style="btn-danger" data-width="100%">
+                                            <select name="recId" id="recId" class="selectpicker show-tick" data-live-search="true" data-style="btn-danger" data-width="100%">
                                                 <option value="0"><spring:message code="select-a-rec"/></option>
                                                 <c:forEach items="${RECIPIENTS}" var="rec">
                                                     <option data-icon="glyphicon-user" value="${rec.id}">${rec.fullName} - ${rec.phone} - ${rec.email} </option>
@@ -126,29 +142,30 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-xs-5">
-                                        <button class="btn btn-default" onclick="createNewRecipient()">Create New Receiver</button>
+                                        <button class="btn btn-default" onclick="createNewRecipient()"><spring:message code="create-new-rec"/></button>
                                     </div>
                                 </div>
                                 <div class="receiver-break-line"></div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6 col-xs-5">
-                                        <button onclick="checkExceed(30, ${p.id}, 1)" class="btn btn-primary text-uppercase receiver-buy-gift">Buy Gift</button>
+                                        <button id="btnSubmit" type="submit" class="btn btn-primary text-uppercase receiver-buy-gift"><spring:message code="buy-gift" text="Buy Gift"/></button>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-7" style="margin-top: 15px;color: #0090d0;font-weight: 400;">
 
-                                        <span style="color: #696969;">Your order total</span><br/>
+                                        <span style="color: #696969;"><spring:message code="your-order-total" text="Your order total"/></span><br/>
                                         <span class="gift-total-box-right">
                                             <span>USD</span>
-                                            <span id="currentPaymentUSD">193.11</span>
+                                            <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span>
                                             <span>~</span>
                                             <span>VND</span>
-                                            <span id="currentPaymentVND">4,209,000</span>
+                                            <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT_VND}" pattern="###,###.##"/></span>
                                         </span>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                    </form>
                     </div>
                     <div class="break-line-default"></div>
                     <div class="product-detail-box">

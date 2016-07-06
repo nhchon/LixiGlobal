@@ -139,13 +139,7 @@ function checkExceedOnSummaryPage(id, productId, recId, quantity) {
         {
             overlayOff();
             if (data.exceed === '1') {
-                var resetQuantity = data.SELECTED_PRODUCT_QUANTITY;
-                if(resetQuantity === "") 
-                    resetQuantity = "1";
-
-                if (data.SELECTED_PRODUCT_ID > 0) {
-                    $('#quantity'+id).val(resetQuantity);
-                }
+                $('#quantity'+id).val(parseInt(data.SELECTED_PRODUCT_QUANTITY) - 1);
                 alert(data.message);
             } else {
                 // update recipient's total
