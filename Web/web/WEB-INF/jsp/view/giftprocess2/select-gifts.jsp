@@ -7,25 +7,6 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
-            var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
-            var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
-            var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
-            var CONF_EMAIL_ERROR = '<spring:message code="validate.user.emailConf"/>';
-            var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
-            var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
-            var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
-            var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
-            var DELETE_RECEIVER_MESSAGE = '<spring:message code="message.delete_receiver"/>';
-            var AJAX_LOAD_PRODUCTS_PATH = '<c:url value="/gifts/ajax/products"/>';
-            var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
-            var TOTAL_PAGES = 1;
-            <c:if test="${not empty PAGES}">
-            TOTAL_PAGES = ${PAGES.totalPages};
-            </c:if>
-            // maximum is 2 pages
-            if (TOTAL_PAGES > 2)
-                TOTAL_PAGES = 2;
-
             $(document).ready(function () {
                 //alert(window.location.pathname);
             <%--
@@ -47,92 +28,6 @@
                 $('#btnEditReceiver').show();
                 /**/
                 $('#recFirstName').html($("#recId option:selected").attr("firstname"));
-            }
-
-            function createNewRecipient() {
-                $.get('<c:url value="/recipient/edit/0"/>', function (data) {
-                    enableEditRecipientHtmlContent(data);
-                    // focus on phone field
-                    $('#editRecipientModal').on('shown.bs.modal', function () {
-                        // TODO
-                        $("#chooseRecipientForm #firstName").focus();
-                    })
-
-                });
-            }
-
-            function doEditRecipient() {
-                $.get('<c:url value="/recipient/edit/"/>' + $('#recId').val(), function (data) {
-                    enableEditRecipientHtmlContent(data);
-                    // focus on phone field
-                    $('#editRecipientModal').on('shown.bs.modal', function () {
-                        // TODO
-                    })
-
-                });
-            }
-
-            function enableEditRecipientHtmlContent(data) {
-
-                $('#editRecipientContent').html(data);
-                $('#editRecipientModal').modal({show: true});
-
-                $("#chooseRecipientForm #phone").mask("999999999?9");
-                // handler submit form
-                //callback handler for form submit
-                $("#chooseRecipientForm").submit(function (e)
-                {
-                    var postData = $(this).serializeArray();
-                    var formURL = $(this).attr("action");
-                    $.ajax(
-                            {
-                                url: formURL,
-                                type: "POST",
-                                data: postData,
-                                dataType: 'json',
-                                success: function (data, textStatus, jqXHR)
-                                {
-                                    //data: return data from server
-                                    if (data.error === '0') {
-                                        // hide popup
-                                        $('#editRecipientModal').modal('hide');
-                                        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
-                                        var firstName = $("#chooseRecipientForm #firstName").val();
-                                        /* new recipient */
-                                        if (parseInt(data.recId) > 0) {
-                                            if (data.action === 'create') {
-                                                $('#recId')
-                                                        .append($("<option></option>")
-                                                                .attr("value", data.recId)
-                                                                .attr("firstname", firstName)
-                                                                .text(name));
-
-                                                $('#recId').val(data.recId);
-                                                /* */
-                                                showGiftValueFor();
-                                            } else {
-                                                // save successfully
-                                                var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
-
-                                                $("#recId option:selected").attr("firstname", $("#chooseRecipientForm #firstName").val());
-                                                $("#recId option:selected").html(name);
-                                                $('#recFirstName').html(firstName);
-                                            }
-                                        }
-                                    } else {
-                                        alert(SOMETHING_WRONG_ERROR);
-                                    }
-                                },
-                                error: function (jqXHR, textStatus, errorThrown)
-                                {
-                                    //if fails      
-                                }
-                            });
-                    if (typeof e !== 'undefined') {
-                        e.preventDefault(); //STOP default action
-                        //e.unbind(); //unbind. to stop multiple form submit.
-                    }
-                });
             }
 
         </script>
@@ -228,88 +123,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content" id="editRecipientContent">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="chooseCategoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title"><spring:message code="please-select-category"/></h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="gift-selection">
-                                    <div class="gift-selection-icon text-center">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="gift-icon">
-                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.candies.id}"/>">
-                                                        <span class="gift-icon-category gift-icon-2"></span>
-                                                        <h5><spring:message code="mess.candies"/></h5>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="gift-icon">
-                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.jewelries.id}"/>">
-                                                        <span class="gift-icon-category gift-icon-3"></span>
-                                                        <h5><spring:message code="mess.jewelries"/></h5>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="gift-icon">
-                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.perfume.id}"/>">
-                                                        <span class="gift-icon-category gift-icon-4"></span>
-                                                        <h5><spring:message code="mess.perfume"/></h5>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="gift-icon">
-                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.cosmetics.id}"/>">
-                                                        <span class="gift-icon-category gift-icon-5"></span>
-                                                        <h5><spring:message code="mess.cosmetic"/></h5>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="gift-icon">
-                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.childrentoy.id}"/>">
-                                                        <span class="gift-icon-category gift-icon-6"></span>
-                                                        <h5><spring:message code="mess.children-toy"/></h5>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="gift-icon">
-                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.flowers.id}"/>">
-                                                        <span class="gift-icon-category gift-icon-7"></span>
-                                                        <h5><spring:message code="mess.flowers"/></h5>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="gift-icon">
-                                                    <a href="<c:url value="/topUp"/>">
-                                                        <span class="gift-icon-category gift-icon-1"></span>
-                                                        <h5><spring:message code="mess.mobile-top-up"/></h5>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div></div>
-                            </div>
-                        </div>
-                    </div></div>
         </section>
     </jsp:body>
 </template:Client>

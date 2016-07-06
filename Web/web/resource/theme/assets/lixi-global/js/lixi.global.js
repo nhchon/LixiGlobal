@@ -170,13 +170,13 @@ LixiGlobal.Gift = {
         var inputObj = obj.closest('.gift-number-box').find('.gift-number');
         inputObj.val(parseInt(inputObj.val()) + 1);
 
-        var giftItemObj = obj.closest('.gift-product-item');
+        var giftItemObj = obj.closest('.gift-number-box');
         var productId = giftItemObj.find("input[name='item']").val();
         var quantity = giftItemObj.find("input[name='quantity']").val();
         //alert(productId + " " + quantity)
         overlayOn($("#product" + productId));
         alert(quantity)
-        checkExceed($('#recId').val(), productId, quantity);
+        //checkExceed($('#recId').val(), productId, quantity);
         return  false;
     },
     initSubBtn: function (_obj) {
@@ -185,12 +185,13 @@ LixiGlobal.Gift = {
         if (parseInt(inputObj.val()) > 1) {
             inputObj.val(parseInt(inputObj.val()) - 1);
         }
-        var giftItemObj = obj.closest('.gift-product-item');
+        var giftItemObj = obj.closest('.gift-number-box');
         var productId = giftItemObj.find("input[name='item']").val();
         var quantity = giftItemObj.find("input[name='quantity']").val();
         //alert(productId + " " + quantity)
         overlayOn($("#product" + productId));
-        checkExceed($('#recId').val(), productId, quantity);
+        alert(quantity)
+        //checkExceed($('#recId').val(), productId, quantity);
         return  false;
     },
     chooseGiftItem: function (_obj) {

@@ -86,7 +86,6 @@ public class BuyGiftsController {
      * @param request
      * @return 
      */
-    @UserSecurityAnnotation
     @RequestMapping(value = "choose", method = RequestMethod.GET)
     public ModelAndView chooseGift(Map<String, Object> model, HttpServletRequest request){
         /* default category is candies */
@@ -100,7 +99,6 @@ public class BuyGiftsController {
      * @param request
      * @return 
      */
-    @UserSecurityAnnotation
     @RequestMapping(value = "choose/{selectedCatId}", method = RequestMethod.GET)
     public ModelAndView chooseGift(Map<String, Object> model, @PathVariable Integer selectedCatId, HttpServletRequest request){
         
