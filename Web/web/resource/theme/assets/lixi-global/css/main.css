@@ -1388,7 +1388,7 @@ div.pagination-wrapper{
 }
 
 .list-pd li a:hover {
-    border: 2px solid #ff5f5f;
+    border: 2px solid #0961b6;
     border-radius: 7px;
     background: url(../images/icon-view.png) center no-repeat;
 }
