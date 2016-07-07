@@ -8,6 +8,9 @@
         <script type="text/javascript">
             /** Page Script **/
             var SELECT_PAYMENT_METHOD = '<spring:message code="validate.checkout.select_a_card"/>';
+            jQuery(document).ready(function () {
+                loadTotalCurrentOrder();
+            });
         </script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/payment-methods.js"/>"></script>
     </jsp:attribute>
@@ -82,7 +85,7 @@
                     <div class="button-control text-uppercase">
                         <div class="row">
                             <div class="col-md-6 text-left">
-                                <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/chooseCategory"/>"><spring:message code="keep-shopping"/></button>
+                                <button class="btn btn-warning btn-has-link-event text-uppercase"  style="color: white;" type="button" data-link="<c:url value="/gifts/choose"/>"><spring:message code="keep-shopping"/></button>
                                 <button class="btn btn-primary text-uppercase"  type="submit"><spring:message code="use-this-payment-method"/></button>
                             </div>
                             <div class="col-md-6 text-right">

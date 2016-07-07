@@ -727,7 +727,7 @@ public class LiXiUtils {
      */
     public static String replaceHttp8080(String path){
         
-        if (path == null || "".equals(path)) {
+        if (path == null || "".equals(path) || path.contains("localhost")) {
             return path;
         }
 

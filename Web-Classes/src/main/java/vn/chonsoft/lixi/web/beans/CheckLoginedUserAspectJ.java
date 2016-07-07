@@ -41,29 +41,20 @@ public class CheckLoginedUserAspectJ {
             Object[] args = jp.getArgs();
             if (args != null) {
 
-                if (args[args.length - 1] instanceof HttpServletRequest) {
+                if ((args.length>0) && args[args.length - 1] instanceof HttpServletRequest) {
 
                     HttpServletRequest req = (HttpServletRequest) args[args.length - 1];
                     
                     if(req.getRequestURI().contains("/ajax/")){
                         return new ModelAndView(new RedirectView("/sessionExpired", true, true));
                     }
-                    else {
-                        return new ModelAndView(new RedirectView("/user/signIn?signInFailed=3", true, true));
-                    }
                 }
             }
+            // login page
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=3", true, true));
         }
 
         /* continue to process */
         return jp.proceed();
-
-        //} catch (Throwable e) {
-        /**/
-        //    log.info(e.getMessage(), e);
-        /**/
-        //    e.printStackTrace();
-        //}
-        //return null; // keeps in the same page
     }
 }

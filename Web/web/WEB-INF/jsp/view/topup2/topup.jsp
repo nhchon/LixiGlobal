@@ -324,25 +324,27 @@
                                                     <input type="hidden" id="topUpId" name="topUpId" value="${topUpId}"/>
                                                     <input type="hidden" value="" id="topUpAction" name="topUpAction"/>
                                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                                    <button id="btnTopUpBuyNow" type="submit" class="btn btn-primary"><spring:message code="buy-now"/></button>
                                                     <button id="btnTopUpKeepShopping" type="button" class="btn btn-warning" onclick="cancelTopUp()"><spring:message code="message.cancel"/></button>
+                                                    <button id="btnTopUpBuyNow" type="submit" class="btn btn-primary"><spring:message code="buy-gift"/></button>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                                 <%-- current payment --%>
+                                <%--
                                 <div class="row">
                                     <div class="col-md-3"></div>
                                     <div class="col-md-7">
                                         <div class="button-control gift-total-wrapper text-uppercase" style="margin-top:0px;">
                                             <div class="gift-total-box" style="margin:0px;width:400px;">
                                                 <span class="gift-total-box-left"><spring:message code="order-total"/></span>
-                                                <span class="gift-total-box-right">usd $ <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT}" pattern="###,###.##"/></span></span>
+                                                <span class="gift-total-box-right">usd $ <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT_VND}" pattern="###,###.##"/></span></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                --%>
                             </div>
                         </div>
                     </div>

@@ -142,7 +142,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-xs-5">
-                                        <button class="btn btn-default" onclick="createNewRecipient()"><spring:message code="create-new-rec"/></button>
+                                        <button type="button" class="btn btn-default" onclick="createNewRecipient()"><spring:message code="create-new-rec"/></button>
                                     </div>
                                 </div>
                                 <div class="receiver-break-line"></div>

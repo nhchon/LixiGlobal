@@ -311,7 +311,7 @@ public class BuyGiftsController {
             else{
                 if(quantity > 0){
                     // update quantity
-                    alreadyGift.setProductQuantity(quantity);
+                    alreadyGift.setProductQuantity(quantity + alreadyGift.getProductQuantity());
                     this.lxogiftService.save(alreadyGift);
                 }
             }
