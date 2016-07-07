@@ -260,6 +260,7 @@ public class BuyGiftsAjaxController {
                         // uncheck
                         // NOTHING TO DO, just return;
                     }
+                    // alreadyGift == null
                 } else if (quantity > 0) {
                     // update quantity
                     alreadyGift.setProductQuantity(quantity + alreadyGift.getProductQuantity());
@@ -267,7 +268,9 @@ public class BuyGiftsAjaxController {
                 }
             }
             /* re-calculate recipient's total */
-            recInOrder = LiXiUtils.getRecipientInOrder(LiXiUtils.genMapRecGifts(this.lxorderService.findById(order.getId())), recId);
+            if(order != null && recId>0){
+                recInOrder = LiXiUtils.getRecipientInOrder(LiXiUtils.genMapRecGifts(this.lxorderService.findById(order.getId())), recId);
+            }
         }
 
         model.put(LiXiConstants.SELECTED_PRODUCT_ID, productId);
