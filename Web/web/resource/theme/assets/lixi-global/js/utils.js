@@ -215,7 +215,3 @@ function loadTotalCurrentOrder() {
         }
     });
 }
-
-jQuery(document).ready(function () {
-    //loadTotalCurrentOrder();
-});

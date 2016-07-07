@@ -567,6 +567,10 @@ public class CheckOutController {
                 this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
 
         model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId(orderId));
+        // current total order
+        SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, currentPayment[0].getVnd());
+        model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
         
         return new ModelAndView("giftprocess2/place-order");
     }
@@ -663,6 +667,7 @@ public class CheckOutController {
         String clientIpAddress = LiXiGlobalUtils.getClientIp(request);
         
         log.info("Connect CashRun from Client Ip: " + clientIpAddress);
+        log.info("ORDER_ID (invoice.getId().toString()): " + invoice.getId().toString());
         
         Connection.Response doc = conn.data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
             .data("API_KEY", "8ureDegA2wepusuMaTRu3uraP4az7kAc")

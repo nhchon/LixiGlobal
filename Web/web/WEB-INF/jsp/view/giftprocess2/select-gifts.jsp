@@ -7,6 +7,7 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            var AJAX_LOAD_PRODUCTS_PATH = '<c:url value="/gifts/ajax/products"/>';
             $(document).ready(function () {
                 //alert(window.location.pathname);
             <%--

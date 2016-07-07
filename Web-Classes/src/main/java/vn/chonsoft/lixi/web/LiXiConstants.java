@@ -80,7 +80,7 @@ public abstract class LiXiConstants {
     public static final double MINIMUM_PRICE_USD = 10.0;
     public static final String EXCEEDED_VND = "EXCEEDED_VND";
     public static final String EXCEEDED_USD = "EXCEEDED_USD";
-    public static final String CURRENT_PAYMENT = "CURRENT_PAYMENT";
+    //public static final String CURRENT_PAYMENT = "CURRENT_PAYMENT";
     public static final String CURRENT_PAYMENT_VND = "CURRENT_PAYMENT_VND";
     public static final String CURRENT_PAYMENT_USD = "CURRENT_PAYMENT_USD";
     
@@ -100,6 +100,8 @@ public abstract class LiXiConstants {
     public static final String SELECTED_PRODUCT_ID = "SELECTED_PRODUCT_ID";
     public static final String SELECTED_PRODUCT_QUANTITY = "SELECTED_PRODUCT_QUANTITY";
     public static final String RECIPIENT_IN_ORDER = "RECIPIENT_IN_ORDER";
+    public static final String RECIPIENT_PAYMENT_USD = "RECIPIENT_PAYMENT_USD";
+    public static final String RECIPIENT_PAYMENT_VND = "RECIPIENT_PAYMENT_VND";
     
     public static final String CURRENCIES = "CURRENCIES";
     public static final String LIXI_EXCHANGE_RATE = "LIXI_EXCHANGE_RATE";

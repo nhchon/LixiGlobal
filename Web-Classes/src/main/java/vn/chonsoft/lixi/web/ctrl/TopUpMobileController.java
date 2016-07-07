@@ -6,6 +6,8 @@ package vn.chonsoft.lixi.web.ctrl;
 
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 import javax.inject.Inject;
@@ -97,20 +99,21 @@ public class TopUpMobileController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView show(Map<String, Object> model, HttpServletRequest request) {
 
-        //Long recId = (Long)request.getSession().getAttribute(LiXiConstants.SELECTED_RECIPIENT_ID);
-        
-        //if(recId == null){
-            
-            //return new ModelAndView(new RedirectView("/gifts/recipient?nextUrl=/topUp", true, true));
-        //}
-        
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
-        
-        if(u.getRecipients() != null){
+        if(u!=null && u.getRecipients() != null){
+            //remove inactive
             u.getRecipients().removeIf(r -> r.isActivated()==false);
+            //sort by name
+            Collections.sort(u.getRecipients(), new Comparator<Recipient>() {
+		@Override
+		public int compare(Recipient r1, Recipient r2) {
+			return r1.getFullName().compareTo(r2.getFullName());
+		}
+            });
+            //
+            model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         }
-        model.put(LiXiConstants.RECIPIENTS, u.getRecipients());
         
         LixiOrder order = null;
         // check order already created
@@ -142,7 +145,7 @@ public class TopUpMobileController {
         model.put(LiXiConstants.USER_MAXIMUM_PAYMENT, u.getUserMoneyLevel().getMoneyLevel());
         //
         SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
-        model.put(LiXiConstants.CURRENT_PAYMENT, currentPayment[0].getVnd());
+        model.put(LiXiConstants.CURRENT_PAYMENT_VND, currentPayment[0].getVnd());
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
 
         return new ModelAndView("topup2/topup", model);
