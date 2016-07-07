@@ -140,22 +140,24 @@
                                         </c:if>
                                     </c:forEach>
                                     <tr class="has-colspan">
-                                        <td colspan="4" class="no-padding-left" style="text-align: left;"><strong class="text-uppercase text-right">order limit ( USD 250 / vnd <fmt:formatNumber value="${250 * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> ) </strong></td>
+                                        <td colspan="4" class="no-padding-left" style="text-align: left;"><strong class="text-uppercase text-right"><spring:message code="order-limit" text="order limit"/> ( USD <fmt:formatNumber value="${USER_MAXIMUM_PAYMENT.amount}" pattern="###,###.##"/> / vnd <fmt:formatNumber value="${USER_MAXIMUM_PAYMENT.amount * LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> ) </strong></td>
                                         <td colspan="1" class="border-right has-colspan-label"><strong class="text-uppercase text-right  float-right  title">Grand Total</strong></td>
                                         <td colspan="2"><strong class="text-uppercase  title">usd <span id="currentPaymentUSD"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.usd}" pattern="###,###.##"/></span> ~ VND <span id="currentPaymentVND"><fmt:formatNumber value="${LIXI_TOTAL_AMOUNT.vnd}" pattern="###,###.##"/></span></strong></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                                    <%--
                         <p style="margin-top: 10px;">
                             ( <sup>*</sup> <spring:message code="shop-for-5-persons"/> )
                         </p>
+                                    --%>
                         </c:if>        
                     </div>
                     <c:if test="${not empty REC_GIFTS}">
                     <div class="button-control text-center text-uppercase">
                         <div class="button-control-page">
-                            <button class="btn btn-default btn-has-link-event text-uppercase" type="button" data-link="<c:url value="/gifts/choose"/>"><spring:message code="keep-shopping"/></button>
+                            <button class="btn btn-warning btn-has-link-event" style="color: white;" type="button" data-link="<c:url value="/gifts/choose"/>"><spring:message code="keep-shopping"/></button>
                             <button class="btn btn-primary btn-has-link-event"  type="button" data-link="<c:url value="/checkout/paymentMethods"/>"><spring:message code="message.next"/></button>
                         </div>
                     </div>

@@ -8,8 +8,23 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
+            var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
+            var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
+            var CONF_EMAIL_ERROR = '<spring:message code="validate.user.emailConf"/>';
+            var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
+            var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
+            var PLEASE_SELECT_REC = '<spring:message code="gift.select_recipient"/>';
+            var CORRECT_QUANTITY = '<spring:message code="correct-quantity" text="correct-quantity"/>';
+            var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
+            var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
+            var DELETE_RECEIVER_MESSAGE = '<spring:message code="message.delete_receiver"/>';
+            var AJAX_LOAD_PRODUCTS_PATH = '<c:url value="/gifts/ajax/products"/>';
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
+            var EDIT_REC_URL = '<c:url value="/recipient/ajax/edit/"/>';
+            var CREATE_REC_URL = '<c:url value="/recipient/ajax/edit/0"/>';
             jQuery(document).ready(function () {
+                
                 if ($('.receiver-control-box').length > 0) {
                     $('.receiver-control-box .selectpicker').on('change', function () {
                         var obj = $(this);
@@ -27,18 +42,31 @@
                         var obj = $(this);
                         var receiverId = obj.attr('data-receiver-id');
                         if (parseInt(receiverId) > 0) {
-                            BootstrapDialog.show({
-                                cssClass: 'dialog-no-header',
-                                title: 'Edit receiver',
-                                message: $('<div class="edit-reciprt-wrapper">Edit receiver ID: ' + receiverId + '</div>')
-                            });
+                            //BootstrapDialog.show({
+                            //   cssClass: 'dialog-no-header',
+                            //    title: 'Edit receiver',
+                            //    message: $('<div class="edit-reciprt-wrapper">Edit receiver ID: ' + receiverId + '</div>')
+                            //});
+                            doEditRecipient(receiverId);
                         }
                     });
                 }
+                $('#btnSubmit').click(function(){
+                    if(!isInteger($('#quantity').val())){
+                        alert(CORRECT_QUANTITY);
+                        return false;
+                    }
+                    if($('#recId').val()==0){
+                        alert(PLEASE_SELECT_REC);
+                        return false;
+                    }
+                    return true;
+                });
             });
         </script>
         <script src = "<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select/js/bootstrap-select.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/gifts.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
     </jsp:attribute>
 
     <jsp:body>
@@ -49,6 +77,8 @@
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
                 <div class="section-gift-top">
                     <div class="row">
+                        <c:url value="/gifts/buy" var="buyGiftUrl"/>
+                        <form method="post" action="${buyGiftUrl}">
                         <div class="col-md-5" style="min-height: 384px;">
                             <div class="wrap_img_detail" style="min-height: 384px;">
                                 <div class="img" style="min-height: 384px;vertical-align: baseline;text-align: center;">
@@ -78,16 +108,17 @@
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 30px;">
-                                <div class="col-md-2 col-sm-3 col-xs-4"><h4>Số lượng</h4></div>
+                                <div class="col-md-2 col-sm-3 col-xs-4"><h4><spring:message code="quantity"/></h4></div>
                                 <div class="col-md-10 col-sm-9 col-xs-8">
-                                    <div class="gift-number-box" style="margin: inherit">
+                                    <div id="giftNumberBox" class="gift-number-box" style="margin: inherit">
                                         <div class="input-group">
                                             <span class="input-group-btn">
                                                 <button onclick="LixiGlobal.Gift.initSubBtn(this);" class="btn btn-default gift-sub-event" type="button"><i class="fa fa-chevron-down"></i></button>
                                             </span>
                                             <c:set var="quantity" value="1"/>
                                             <c:if test="${not empty p.quantity}"><c:set var="quantity" value="${p.quantity}"/></c:if>
-                                            <input style="z-index: 0;" type="text" min="1" name="quantity" value="${quantity}" class="form-control bfh-number gift-number" buttons="false" max="10" placeholder="Number"/>
+                                            <input id="quantity" readonly="" style="z-index: 0;background-color: #fff;" type="text" min="1" name="quantity" value="${quantity}" class="form-control bfh-number gift-number" buttons="false" max="10" placeholder="Number"/>
+                                            <input type="hidden" name="productId" id="productId" value="${p.id}"/>
                                             <span class="input-group-btn">
                                                 <button onclick="LixiGlobal.Gift.initAddBtn(this);"  class="btn btn-default gift-add-event" type="button"><i class="fa fa-chevron-up"></i></button>
                                             </span>
@@ -98,121 +129,56 @@
                             </div>
                             <div class="receiver-box">
                                 <div class="row">
-                                    <div class="col-md-3 col-sm-3 col-xs-12"><h4>Người nhận</h4></div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12"><h4><spring:message code="mess.rec"/></h4></div>
                                     <div class="col-md-5 col-sm-5 col-xs-7">
                                         <div class="position-relative receiver-control-box">
-                                            <select class="selectpicker show-tick" data-live-search="true" data-style="btn-danger" data-width="100%">
+                                            <select name="recId" id="recId" class="selectpicker show-tick" data-live-search="true" data-style="btn-danger" data-width="100%">
                                                 <option value="0"><spring:message code="select-a-rec"/></option>
                                                 <c:forEach items="${RECIPIENTS}" var="rec">
-                                                    <option data-icon="glyphicon-user" value="${rec.id}">${rec.fullName}&nbsp;-&nbsp;${rec.phone}&nbsp;-&nbsp;${rec.email} </option>
+                                                    <option data-icon="glyphicon-user" value="${rec.id}">${rec.fullName} - ${rec.phone} - ${rec.email} </option>
                                                 </c:forEach>
                                             </select>
                                             <button type="button" class="edit-receiver" title="Edit receiver" rel="tooltip"><i class="fa fa-edit"></i></button>
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-xs-5">
-                                        <button class="btn btn-default">Create New Receiver</button>
+                                        <button class="btn btn-default" onclick="createNewRecipient()"><spring:message code="create-new-rec"/></button>
                                     </div>
                                 </div>
                                 <div class="receiver-break-line"></div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6 col-xs-5">
-                                        <button onclick="checkExceed(30, ${p.id}, 1)" class="btn btn-primary text-uppercase receiver-buy-gift">Buy Gift</button>
+                                        <button id="btnSubmit" type="submit" class="btn btn-primary text-uppercase receiver-buy-gift"><spring:message code="buy-gift" text="Buy Gift"/></button>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-7" style="margin-top: 15px;color: #0090d0;font-weight: 400;">
 
-                                        <span style="color: #696969;">Your order total</span><br/>
+                                        <span style="color: #696969;"><spring:message code="your-order-total" text="Your order total"/></span><br/>
                                         <span class="gift-total-box-right">
                                             <span>USD</span>
-                                            <span id="currentPaymentUSD">193.11</span>
+                                            <span id="currentPaymentUSD"><fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/></span>
                                             <span>~</span>
                                             <span>VND</span>
-                                            <span id="currentPaymentVND">4,209,000</span>
+                                            <span id="currentPaymentVND"><fmt:formatNumber value="${CURRENT_PAYMENT_VND}" pattern="###,###.##"/></span>
                                         </span>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                    </form>
                     </div>
                     <div class="break-line-default"></div>
                     <div class="product-detail-box">
-                        <h2 class="product-detail-title">Thông Tin Sản Phẩm</h2>
+                        <h2 class="product-detail-title"><spring:message code="product-desc" text="Product Description"/></h2>
                         <div class="product-detail-content">
                             ${p.description}
                         </div>
                     </div>
                     <div class="break-line-default"></div>
                     <div class="best-selling-product">
-                        <h2 class="product-detail-title text-uppercase">Best selling products</h2>
+                        <h2 class="product-detail-title text-uppercase"><spring:message code="best-selling" text="Best selling products"/></h2>
                         <div class="best-selling-product-content">
-
                             <ul class="list-pd">
-                                <li>
-                                    <div class="img">
-                                        <a href="<c:url value="/"/>gift/detail/1412">
-                                            <img alt="Bộ 5 gói kẹo hắc sâm Daedong Korea Ginseng Korean Black Ginseng Candy 250g" src="http://vn-live-02.slatic.net/p/bo-5-goi-keo-hac-sam-daedong-korea-ginseng-korean-black-ginseng-candy-250g-8224-5197031-1-product.jpg">
-                                        </a>
-                                    </div>
-                                    <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Bộ 5 gói kẹo hắc sâm Daedong Korea Ginseng Korean Black Ginseng Candy 250g</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 25.21 ~ VND 549,400</h4>
-                                    </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/1412"><span></span></a>
-                                </li>
-                                <li>
-                                    <div class="img">
-                                        <a href="<c:url value="/"/>gifts/detail/1438">
-                                            <img alt="Bộ 3 Gói Kẹo Hồng Sâm Daedong BulRoGeon 500g." src="http://vn-live-02.slatic.net/p/bo-3-goi-keo-hong-sam-daedong-bulrogeon-500g-3383-4170881-1-product.jpg">
-                                        </a>
-                                    </div>
-                                    <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Bộ 3 Gói Kẹo Hồng Sâm Daedong BulRoGeon 500g.</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 25.33 ~ VND 552,000</h4>
-                                    </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/1438"><span></span></a>
-                                </li>
-                                <li>
-                                    <div class="img">
-                                        <a href="<c:url value="/"/>gifts/detail/1457">
-                                            <img alt="Kẹo dẻo bổ sung chất xơ &amp; canxi cho bà bầu Vitafusion Fiber + Calcium 90 viên/ hộp" src="http://vn-live-03.slatic.net/p/keo-deo-bo-sung-chat-xo-and-canxi-cho-ba-bau-vitafusion-fiber-calcium-90-vien-hop-2371-617021-1-product.jpg">
-                                        </a>
-                                    </div>
-                                    <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Kẹo dẻo bổ sung chất xơ &amp; canxi cho bà bầu Vitafusion Fiber + Calcium 90 viên/ hộp</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 25.83 ~ VND 563,000</h4>
-                                    </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/1457"><span></span></a>
-                                </li>
-                                <li>
-                                    <div class="img">
-                                        <a href="<c:url value="/"/>gifts/detail/1466">
-                                            <img alt="Kẹo dẻo bổ sung chất xơ &amp; canxi cho bà bầu Vitafusion Fiber + Calcium 90 viên/ hộp" src="http://vn-live-03.slatic.net/p/keo-deo-bo-sung-chat-xo-and-canxi-cho-ba-bau-vitafusion-fiber-calcium-90-vien-hop-2371-617021-1-product.jpg">
-                                        </a>
-                                    </div>
-                                    <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Kẹo dẻo bổ sung chất xơ &amp; canxi cho bà bầu Vitafusion Fiber + Calcium 90 viên/ hộp</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 25.83 ~ VND 563,000</h4>
-                                    </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/1466"><span></span></a>
-                                </li>
-                                <li>
-                                    <div class="img">
-                                        <a href="<c:url value="/"/>gifts/detail/1490">
-                                            <img alt="Bộ 2 túi bánh xốp Konditesskii BX250GBAP 250g (BAP)" src="http://vn-live-02.slatic.net/p/bo-2-tui-banh-xop-konditesskii-bx250gbap-250g-bap-6377-7592761-1-product.jpg">
-                                        </a>
-                                    </div>
-                                    <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Bộ 2 túi bánh xốp Konditesskii BX250GBAP 250g (BAP)</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 10.3 ~ VND 224,500</h4>
-                                    </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/1490"><span></span></a>
-                                </li>
                                 <li>
                                     <div class="img">
                                         <a href="<c:url value="/"/>gifts/detail/2736">
@@ -282,6 +248,89 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content" id="editRecipientContent">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="chooseCategoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title"><spring:message code="please-select-category"/></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="gift-selection">
+                                    <div class="gift-selection-icon text-center">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="gift-icon">
+                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.candies.id}"/>">
+                                                        <span class="gift-icon-category gift-icon-2"></span>
+                                                        <h5><spring:message code="mess.candies"/></h5>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="gift-icon">
+                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.jewelries.id}"/>">
+                                                        <span class="gift-icon-category gift-icon-3"></span>
+                                                        <h5><spring:message code="mess.jewelries"/></h5>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="gift-icon">
+                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.perfume.id}"/>">
+                                                        <span class="gift-icon-category gift-icon-4"></span>
+                                                        <h5><spring:message code="mess.perfume"/></h5>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="gift-icon">
+                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.cosmetics.id}"/>">
+                                                        <span class="gift-icon-category gift-icon-5"></span>
+                                                        <h5><spring:message code="mess.cosmetic"/></h5>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="gift-icon">
+                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.childrentoy.id}"/>">
+                                                        <span class="gift-icon-category gift-icon-6"></span>
+                                                        <h5><spring:message code="mess.children-toy"/></h5>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="gift-icon">
+                                                    <a href="<c:url value="/gifts/choose/${LIXI_CATEGORIES.flowers.id}"/>">
+                                                        <span class="gift-icon-category gift-icon-7"></span>
+                                                        <h5><spring:message code="mess.flowers"/></h5>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="gift-icon">
+                                                    <a href="<c:url value="/topUp"/>">
+                                                        <span class="gift-icon-category gift-icon-1"></span>
+                                                        <h5><spring:message code="mess.mobile-top-up"/></h5>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div></div>
+                            </div>
+                        </div>
+                    </div></div>
+                                
         </section>
     </jsp:body>
 </template:Client>

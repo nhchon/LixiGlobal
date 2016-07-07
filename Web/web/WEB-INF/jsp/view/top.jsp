@@ -113,8 +113,18 @@
                     <li class="nav-cart-wrapper">
                         <a class="nav-cart-event" href="<c:url value="/checkout/jump2"/>">
                             <div class="nav-cart">
-                                <div class="nav-cart-en" id="topTotalCurrentOrderUsd">&nbsp;</div>
-                                <div class="nav-cart-vn" id="topTotalCurrentOrderVnd">&nbsp;</div>
+                                <div class="nav-cart-en" id="topTotalCurrentOrderUsd">
+                                    <c:if test="${not empty CURRENT_PAYMENT_VND}">
+                                        VND <fmt:formatNumber value="${CURRENT_PAYMENT_VND}" pattern="###,###.##"/>
+                                    </c:if>
+                                    <c:if test="${empty CURRENT_PAYMENT_VND}">&nbsp;</c:if>
+                                </div>
+                                <div class="nav-cart-vn" id="topTotalCurrentOrderVnd">
+                                    <c:if test="${not empty CURRENT_PAYMENT_USD}">
+                                        USD <fmt:formatNumber value="${CURRENT_PAYMENT_USD}" pattern="###,###.##"/>
+                                    </c:if>
+                                    <c:if test="${empty CURRENT_PAYMENT_USD}">&nbsp;</c:if>
+                                </div>
                             </div>
                         </a>
                     </li>
