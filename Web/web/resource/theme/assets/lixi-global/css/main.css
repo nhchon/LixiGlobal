@@ -619,12 +619,12 @@ h2, .h2 {
 }
 .gift-step a:hover,
 .gift-step a.active{
-    background: #f67c01;
+    background: #0090D0;
     color: #fff;
 }
 
 .gift-step .hvr-radial-out::before {
-    background: #f67c01 none repeat scroll 0 0;
+    background: #0090D0 none repeat scroll 0 0;
 }
 /* filter */
 .gift-filter-control {
@@ -642,7 +642,7 @@ h2, .h2 {
 
 .gift-filter-control .slider-track{
     border-radius:0;
-    background: #f67c01;
+    background: #0090D0;
 }
 .gift-filter-control .slider-selection {
     background: #f67c01;
@@ -680,14 +680,14 @@ h2, .h2 {
     display: block;
 }
 .gift-filter-control .slider .tooltip-inner {
-    background: #f67c01 none repeat scroll 0 0;
+    background: #0090D0 none repeat scroll 0 0;
 }
 .gift-filter-control .tooltip.top .tooltip-arrow{
-    border-top-color: #f67c01;
+    border-top-color: #0090D0;
 }
 .slider-handle {
-    background-color: #f67c01;
-    background-image: linear-gradient(to bottom, #f67c01 0%, #f67c01 100%);
+    background-color: #0090D0;
+    background-image: linear-gradient(to bottom, #0090D0 0%, #14A8E8 100%);
 }
 /* Footer */
 footer{
@@ -1184,8 +1184,8 @@ textarea{
     line-height: 60px;
     font-size: 24px;
     border-radius: 10px;
-    background: #f67c01;
-    border-color: #f67c01;
+    background: #0090D0;
+    border-color: #0582B7;
 }
 .gift-total-box-right{
     font-weight: bold;
