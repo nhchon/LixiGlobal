@@ -25,6 +25,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -93,10 +95,14 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
  */
 @WebController
 @RequestMapping("checkout")
+@PropertySource(value = "classpath:cashrun.properties")
 public class CheckOutController {
 
     private static final Logger log = LogManager.getLogger(CheckOutController.class);
-
+    
+    @Autowired
+    private Environment env;
+    
     /* session bean - Login user */
     @Autowired
     private LoginedUser loginedUser;
@@ -648,7 +654,14 @@ public class CheckOutController {
             }
         }
         
-        Connection conn = Jsoup.connect(LiXiGlobalConstants.CASHRUN_PRODUCTION_PAGE).timeout(0).maxBodySize(0);
+        String countryCode = countryService.findByName(order.getCard().getBillingAddress().getCountry()).getCode();
+        String clientIpAddress = LiXiGlobalUtils.getClientIp(request);
+        
+        log.info("Connect CashRun from Client Ip: " + clientIpAddress);
+        log.info("ORDER_ID (order.getId().toString()): " + order.getId().toString());
+        log.info("CASHRUN_PRODUCTION_PAGE: " + env.getProperty("cashrun.production-page"));
+        
+        Connection conn = Jsoup.connect(env.getProperty("cashrun.production-page")).timeout(0).maxBodySize(0);
 
         for(NameValuePair nv : receivers){
             conn.data(nv.getName(), nv.getValue());
@@ -663,15 +676,9 @@ public class CheckOutController {
             conn.data("DATE_FIRSTPURCHASE", sdf.format(firstPurchase.getCreatedDate()));
         }
         
-        String countryCode = countryService.findByName(order.getCard().getBillingAddress().getCountry()).getCode();
-        String clientIpAddress = LiXiGlobalUtils.getClientIp(request);
-        
-        log.info("Connect CashRun from Client Ip: " + clientIpAddress);
-        log.info("ORDER_ID (invoice.getId().toString()): " + invoice.getId().toString());
-        
-        Connection.Response doc = conn.data("SITE_ID", "2b57448f3013fc513dcc7a4ab933e6928ab74672")
-            .data("API_KEY", "8ureDegA2wepusuMaTRu3uraP4az7kAc")
-            .data("ORDER_ID", invoice.getId().toString())
+        Connection.Response doc = conn.data("SITE_ID", env.getProperty("cashrun.site-id"))
+            .data("API_KEY", env.getProperty("cashrun.api-key"))
+            .data("ORDER_ID", order.getId().toString())
             .data("SESSION_ID", request.getSession().getId())
             .data("CUSTOMER_ID", invoice.getPayer().toString())
             .data("HAS_RETURNS", "N")
