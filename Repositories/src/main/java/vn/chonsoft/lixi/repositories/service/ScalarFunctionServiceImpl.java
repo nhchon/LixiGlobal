@@ -24,6 +24,34 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
     @Autowired
     ScalarFunctionDao<BigInteger> scalarDaoL;
     
+    @Autowired
+    ScalarFunctionDao<Integer> scalarDaoI;
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public List<Integer> getBestSellingProducts(){
+        
+        String sql = "SELECT product_id FROM lixi_order_gifts group by product_id order by COUNT(*) DESC Limit 4";
+        
+        List<Integer> rs = scalarDaoI.list(sql);
+        if(rs != null)
+        {
+            List<Integer> rsL = new ArrayList<>();
+            rs.forEach(x -> {
+                
+                rsL.add(x.intValue());
+                
+            });
+            
+            return rsL;
+        }
+        
+        return new ArrayList<>();
+    }
+    
     /**
      * 
      * @param status
@@ -93,7 +121,7 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
     @Override
     public double sumTopUpOfRecipientByOrderStatus(String oStatus, Long id){
         
-        String sql = "select sum(t.amount)from top_up_mobile_phone t, lixi_orders o where t.recipient=? and t.order_id = o.id and o.lixi_status=?";
+        String sql = "select sum(t.amount) from top_up_mobile_phone t, lixi_orders o where t.recipient=? and t.order_id = o.id and o.lixi_status=?";
         Double rs = scalarDao.singleResult(sql, id, oStatus);
         if(rs != null){
             return rs.doubleValue();
@@ -112,7 +140,7 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
     @Override
     public double sumTopUpOfRecipient(String invoiceStatus, Long id){
         
-        String sql = "select sum(t.amount)from top_up_mobile_phone t, lixi_invoices i where t.recipient=? and t.order_id = i.order_id and i.invoice_status=?";
+        String sql = "select sum(t.amount) from top_up_mobile_phone t, lixi_invoices i where t.recipient=? and t.order_id = i.order_id and i.invoice_status=?";
         Double rs = scalarDao.singleResult(sql, id, invoiceStatus);
         if(rs != null){
             return rs.doubleValue();

@@ -62,6 +62,15 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
     
     /**
      * 
+     * @param ids
+     * @return 
+     */
+    @Override
+    public List<VatgiaProduct> findById(Iterable<Integer> ids){
+        return this.vgpRepository.findAll(ids);
+    }
+    /**
+     * 
      * @param id
      * @return 
      */

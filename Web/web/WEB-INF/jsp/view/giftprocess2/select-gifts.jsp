@@ -9,28 +9,7 @@
             /** Page Script **/
             var AJAX_LOAD_PRODUCTS_PATH = '<c:url value="/gifts/ajax/products"/>';
             $(document).ready(function () {
-                //alert(window.location.pathname);
-            <%--
-            if(window.location.pathname === '<c:url value="/gifts/choose"/>'){
-                $('#chooseCategoryModal').modal({backdrop: 'static', keyboard: false});
-            }
-            --%>
-                //$(".gift-product-thumb").each(function () {
-                //    var zoom = $(this).attr("zoomWindowPosition");
-                //    $(this).elevateZoom({zoomWindowPosition: parseInt(zoom)});
-                //});
-
-                //
-                //loadNewPrice(10);
             });
-
-            function showGiftValueFor() {
-                $('#giftValueFor').show();
-                $('#btnEditReceiver').show();
-                /**/
-                $('#recFirstName').html($("#recId option:selected").attr("firstname"));
-            }
-
         </script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.twbsPagination.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/gifts.js"/>"></script>
@@ -106,13 +85,10 @@
                                             </a>
                                         </div>
                                         <div class="copy js-height" style="height: 109px;">
-                                            <%--<h3>Baskin Robbins</h3>--%>
                                             <p class="product_name">${p.name}</p>
                                             <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
                                             <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
-                                            <%--<p class="prize"><span>290.000<sup>đ</sup> - 330.000<sup>đ</sup></span></p>--%>
                                         </div>
-                                        <input type="hidden" value="2" id="product_stt">
                                         <a href="<c:url value="/gifts/detail/${p.id}"/>"><span></span></a>
                                     </li>
                                 </c:forEach>

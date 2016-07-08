@@ -25,6 +25,8 @@ public interface VatgiaProductRepository extends JpaRepository<VatgiaProduct, In
     @Query("update VatgiaProduct p set p.alive = :alive where p.categoryId = :categoryId")
     int updateAlive(@Param("categoryId") Integer categoryId, @Param("alive") Integer alive);
     
+    //List<VatgiaProduct>  findByIdIn(Iterable<Integer> ids);
+    
     List<VatgiaProduct>  findByCategoryIdAndAliveAndPriceIsGreaterThanEqual(int category, int alive, double price);
 
     Page<VatgiaProduct> findByCategoryIdAndAliveAndPriceIsGreaterThanEqual(int category, int alive, double price, Pageable page);

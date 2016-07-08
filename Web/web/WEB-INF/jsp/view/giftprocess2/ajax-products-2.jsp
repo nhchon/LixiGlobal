@@ -13,13 +13,10 @@
                     </a>
                 </div>
                 <div class="copy js-height" style="height: 109px;">
-                    <%--<h3>Baskin Robbins</h3>--%>
                     <p class="product_name">${p.name}</p>
                     <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
                     <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
-                    <%--<p class="prize"><span>290.000<sup>đ</sup> - 330.000<sup>đ</sup></span></p>--%>
                 </div>
-                <input type="hidden" value="2" id="product_stt">
                 <a href="<c:url value="/gifts/detail/${p.id}"/>"><span></span></a>
             </li>
         </c:forEach>

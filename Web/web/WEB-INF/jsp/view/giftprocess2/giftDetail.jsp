@@ -175,78 +175,42 @@
                         </div>
                     </div>
                     <div class="break-line-default"></div>
+                    <c:if test="${not empty BEST_SELLING_PRODUCTS}">
                     <div class="best-selling-product">
                         <h2 class="product-detail-title text-uppercase"><spring:message code="best-selling" text="Best selling products"/></h2>
                         <div class="best-selling-product-content">
                             <ul class="list-pd">
+                                <c:forEach items="${BEST_SELLING_PRODUCTS}" var="p" varStatus="theCount">
+                                    <li>
+                                        <div class="img">
+                                            <a href="<c:url value="/gifts/detail/${p.id}"/>">
+                                                <img src="${p.imageUrl}" alt="${p.name}">
+                                            </a>
+                                        </div>
+                                        <div class="copy js-height" style="height: 109px;">
+                                            <p class="product_name">${p.name}</p>
+                                            <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
+                                            <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
+                                        </div>
+                                        <a href="<c:url value="/gifts/detail/${p.id}"/>"><span></span></a>
+                                    </li>
+                                </c:forEach>
                                 <li>
                                     <div class="img">
-                                        <a href="<c:url value="/"/>gifts/detail/2736">
-                                            <img alt="Combo Sô cô la đen 58% Chocolate Graphics túi 500g và Sô cô la nghệ thuật 1 viên Chocolate Graphics hộp 120g" src="https://cdn02.static-adayroi.com/resize/502_502/100/0/2016/01/22/1453453199849_7287309.jpg">
+                                        <a href="<c:url value="/topUp"/>">
+                                            <img alt="Mobile Top Up" src="<c:url value="/resource/theme/assets/lixi-global/images/icon-topup.png"/>">
                                         </a>
                                     </div>
                                     <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Combo Sô cô la đen 58% Chocolate Graphics túi 500g và Sô cô la nghệ thuật 1 viên Chocolate Graphics hộp 120g</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 26.47 ~ VND 577,000</h4>
+                                        <p class="product_name">Mobile Top up</p>
+                                        <h4 style="font-size: 0.8em;" class="title price">USD <fmt:formatNumber value="${100000.0/LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> ~ VND 100,000</h4>
                                     </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/2736"><span></span></a>
-                                </li>
-                                <li>
-                                    <div class="img">
-                                        <a href="<c:url value="/"/>gifts/detail/2760">
-                                            <img alt="Combo Sô cô la đen 58% Chocolate Graphics túi 500g và Sô cô la nghệ thuật 1 viên Chocolate Graphics hộp 120g" src="https://cdn02.static-adayroi.com/resize/502_502/100/0/2016/01/22/1453453199849_7287309.jpg">
-                                        </a>
-                                    </div>
-                                    <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Combo Sô cô la đen 58% Chocolate Graphics túi 500g và Sô cô la nghệ thuật 1 viên Chocolate Graphics hộp 120g</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 26.47 ~ VND 577,000</h4>
-                                    </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/2760"><span></span></a>
-                                </li>
-                                <li>
-                                    <div class="img">
-                                        <a href="<c:url value="/"/>gifts/detail/1437">
-                                            <img alt="Bộ 4 bịch kẹo hắc sâm Daedong Korea Ginseng Korean Black Ginseng Candy 250g" src="http://vn-live-02.slatic.net/p/bo-4-bich-keo-hac-sam-daedong-korea-ginseng-korean-black-ginseng-candy-250g-8224-1487031-1-product.jpg">
-                                        </a>
-                                    </div>
-                                    <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Bộ 4 bịch kẹo hắc sâm Daedong Korea Ginseng Korean Black Ginseng Candy 250g</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 26.66 ~ VND 581,000</h4>
-                                    </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/1437"><span></span></a>
-                                </li>
-                                <li>
-                                    <div class="img">
-                                        <a href="<c:url value="/"/>gifts/detail/1403">
-                                            <img alt="Bộ 5 bịch Kẹo hồng sâm Hàn Quốc không đường 500g" src="http://vn-live-03.slatic.net/p/bo-5-bich-keo-hong-sam-han-quoc-khong-duong-500g-6241-4402421-1-product.jpg">
-                                        </a>
-                                    </div>
-                                    <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Bộ 5 bịch Kẹo hồng sâm Hàn Quốc không đường 500g</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 26.95 ~ VND 587,500</h4>
-                                    </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/1403"><span></span></a>
-                                </li>
-                                <li>
-                                    <div class="img">
-                                        <a href="<c:url value="/"/>gifts/detail/2748">
-                                            <img alt="Combo Sô cô la Galler (18 mini tablets) túi 144g và Sô cô la 3 viên Chocolate Graphics hộp 60g" src="https://cdn02.static-adayroi.com/resize/502_502/100/0/2016/01/22/1453455050943_4281972.jpg">
-                                        </a>
-                                    </div>
-                                    <div style="height: 109px;" class="copy js-height">
-                                        <p class="product_name">Combo Sô cô la Galler (18 mini tablets) túi 144g và Sô cô la 3 viên Chocolate Graphics hộp 60g</p>
-                                        <h4 style="font-size: 0.8em;" class="title price">USD 27.12 ~ VND 591,000</h4>
-                                    </div>
-                                    <input type="hidden" id="product_stt" value="2">
-                                    <a href="<c:url value="/"/>gifts/detail/2748"><span></span></a>
+                                    <a href="<c:url value="/topUp"/>"><span></span></a>
                                 </li>
                             </ul>
                         </div>
                     </div>
+                    </c:if>
                 </div>
                 <div class="modal fade" id="editRecipientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                     <div class="modal-dialog modal-lg" role="document">

@@ -39,11 +39,13 @@ import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
+import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.MoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
+import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
 import vn.chonsoft.lixi.repositories.service.VatgiaProductService;
@@ -73,6 +75,9 @@ public class BuyGiftsController {
     private CategoriesBean categories;
     
     @Autowired
+    private LixiCategoryService lxCategoryService;
+    
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -91,14 +96,14 @@ public class BuyGiftsController {
     private VatgiaProductService vgpService;
     
     @Autowired
-    private LiXiVatGiaUtils lxVatGiaUtils;
-    
-    @Autowired
     private MoneyLevelService moneyLevelService;
     
     @Autowired
     private VatgiaCategoryService vgcService;
 
+    @Autowired
+    private ScalarFunctionService scalarService;
+    
     /**
      * 
      * @param model
@@ -120,7 +125,6 @@ public class BuyGiftsController {
             
             //LixiOrder order = this.lxorderService.findById(orderId);
             LixiOrderGift gift = this.lxogiftService.findById(giftId);
-            Long recId = gift.getRecipient().getId();
             Integer catId = gift.getCategory().getId();
             if(gift.getOrder().getId().equals(orderId)){
                 
@@ -186,7 +190,7 @@ public class BuyGiftsController {
         MoneyLevel ml = null;
         LixiExchangeRate lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
         double buy = lxExch.getBuy();
-        SumVndUsd[] currentPayments = new SumVndUsd[]{new SumVndUsd(), new SumVndUsd(), new SumVndUsd(), new SumVndUsd()};
+        SumVndUsd[] currentPayments = null;
         // get price
         VatgiaProduct vgp = this.vgpService.findById(productId);
         double price = vgp.getPrice();
@@ -369,6 +373,18 @@ public class BuyGiftsController {
         SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, currentPayment[0].getVnd());
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment[0].getUsd());
+        
+        /* get selling products */
+        List<Integer> sellId = scalarService.getBestSellingProducts();
+        List<VatgiaProduct> bestSelling = this.vgpService.findById(sellId);
+        model.put(LiXiConstants.BEST_SELLING_PRODUCTS, bestSelling);
+        
+        // check
+        if(request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID) == null){
+            // store category id into session
+            
+            request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, p.getCategoryId());
+        }
         
         return new ModelAndView("giftprocess2/giftDetail");
     }

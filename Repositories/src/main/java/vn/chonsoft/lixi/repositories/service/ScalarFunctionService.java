@@ -12,14 +12,13 @@ import java.util.List;
  */
 public interface ScalarFunctionService {
     
-    /* recipient's functions */
-    
-    //List<Long> getListOrderProcessedOreCompletedOfRecipient(Long id);
-    
-    double sumVndOfBatch(long id);
-    double sumUsdOfBatch(long id);
+    List<Integer> getBestSellingProducts();
     
     List<Long> getOrdersOfRecipient(String status, Long id);
+    
+    double sumVndOfBatch(long id);
+    
+    double sumUsdOfBatch(long id);
     
     double sumGiftOfRecipient(String invoiceStatus, Long id);
     

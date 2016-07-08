@@ -26,6 +26,8 @@ public interface VatgiaProductService {
     
     VatgiaProduct findById(Integer id);
     
+    List<VatgiaProduct> findById(Iterable<Integer> ids);
+    
     List<VatgiaProduct> findByCategoryIdAndAliveAndPrice(int category, int alive, double price);
     
     Page<VatgiaProduct> findByCategoryIdAndAliveAndPrice(int category, int alive, double price, Pageable page);
