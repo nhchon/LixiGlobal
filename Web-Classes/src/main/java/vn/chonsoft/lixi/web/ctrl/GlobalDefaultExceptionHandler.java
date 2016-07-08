@@ -6,6 +6,7 @@ package vn.chonsoft.lixi.web.ctrl;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.mail.internet.MimeMessage;
@@ -39,58 +40,57 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
 public class GlobalDefaultExceptionHandler {
 
     public static final String DEFAULT_ERROR_VIEW = "error";
-    
+
     private static final Logger log = LogManager.getLogger(GlobalDefaultExceptionHandler.class);
-    
+
     @Autowired
     private LixiConfigService configService;
-    
+
     @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
-    
+
     @Autowired
     private VelocityEngine velocityEngine;
-    
+
     @Autowired
     private JavaMailSender mailSender;
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
-    private String[] checkAndAssignDefaultEmail(){
+    private String[] checkAndAssignDefaultEmail() {
         LixiConfig c = configService.findByName(LiXiGlobalConstants.LIXI_ADMINISTRATOR_EMAIL);
-        if(c == null || StringUtils.isBlank(c.getValue())){
-            return new String[] {LiXiGlobalConstants.YHANNART_GMAIL};
-        }
-        else{
+        if (c == null || StringUtils.isBlank(c.getValue())) {
+            return new String[]{LiXiGlobalConstants.YHANNART_GMAIL};
+        } else {
             return c.getValue().split(";");
         }
     }
-    
+
     /**
-     * 
-     * @param error 
+     *
+     * @param error
      */
-    private void emailLixiGlobalError(HttpServletRequest req, String url, String errMessage, String errDetails){
-        
+    private void emailLixiGlobalError(HttpServletRequest req, String url, String errMessage, String errDetails) {
+
         /*
         call req.getRequestURL().toString() in this function, it returns http://www.lixi.global:8080/WEB-INF/jsp/view/error.jsp , 
         but not http://www.lixi.global:8080/user/passwordAssistance 
         So test pass url param
-        */
+         */
         String[] administratorEmails = checkAndAssignDefaultEmail();
-        
+
         // send Email
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @SuppressWarnings({"rawtypes", "unchecked"})
             @Override
             public void prepare(MimeMessage mimeMessage) throws Exception {
-                
+
                 SimpleDateFormat sdfr = new SimpleDateFormat("MMM/dd/yyyy KK:mm:ss a");
                 String errorDate = sdfr.format(Calendar.getInstance().getTime());
-                    
+
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(administratorEmails);
                 message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
@@ -100,7 +100,7 @@ public class GlobalDefaultExceptionHandler {
                 message.setSentDate(Calendar.getInstance().getTime());
 
                 Map model = new HashMap();
-                model.put("url", LiXiUtils.replaceHttp8080(url) + " - " +LiXiUtils.replaceHttp8080(req.getRequestURL().toString()));
+                model.put("url", LiXiUtils.replaceHttp8080(url) + " - " + LiXiUtils.replaceHttp8080(req.getRequestURL().toString()));
                 model.put("ipAddress", LiXiGlobalUtils.getClientIp(req));
                 model.put("hostName", req.getRemoteHost());
                 model.put("userAgent", req.getHeader("User-Agent"));
@@ -108,19 +108,19 @@ public class GlobalDefaultExceptionHandler {
                 model.put("errDetails", errDetails);
 
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
-                   velocityEngine, "emails/lixi-error.vm", "UTF-8", model);
+                        velocityEngine, "emails/lixi-error.vm", "UTF-8", model);
                 message.setText(text, true);
-              }
-        };        
+            }
+        };
 
         // send oldEmail
         taskScheduler.execute(() -> mailSender.send(preparator));
-        
+
     }
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     @RequestMapping("/error")
     @ExceptionHandler(value = Exception.class)
@@ -130,12 +130,33 @@ public class GlobalDefaultExceptionHandler {
         // at the start of this post.
         // AnnotationUtils is a Spring Framework utility class.
         //if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) {
-            //throw e;
+        //throw e;
         //}
 
+        /* get all header values */
+        Enumeration eHs = req.getHeaderNames();
+        StringBuilder b = new StringBuilder("<p>");
+        b.append("<TABLE ALIGN=CENTER BORDER=1>");
+        b.append("<tr><th> Header </th><th> Value </th>");
+
+        while (eHs.hasMoreElements()) {
+            String headers = (String) eHs.nextElement();
+            if (headers != null) {
+                b.append("<tr><td align=center><b>" + headers + "</td>");
+                b.append("<td align=center>" + req.getHeader(headers)
+                        + "</td></tr>");
+            }
+        }
+        b.append("</TABLE><BR>");
+        b.append("</p>");
+        
+        b.append("<p>");
+        b.append(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+        b.append("</p>");
+        
         /* email to admin */
-        emailLixiGlobalError(req, req.getRequestURL().toString(), e.getMessage(), ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
-                
+        emailLixiGlobalError(req, req.getRequestURL().toString(), e.getMessage(), b.toString());
+
         // Otherwise setup and send the user to a default error-view.
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", e);

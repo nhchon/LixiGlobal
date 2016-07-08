@@ -92,6 +92,7 @@
                                         <a href="#"  data-toggle="modal" data-target="#myModal"><spring:message code="mess.forgot-pass"/>?</a>
                                     </p>
                                     <div class="button-control">
+                                        <input type="hidden" name="nextUrl" value="${param.nextUrl}"/>
                                         <button type="submit" class="btn btn-primary"><spring:message code="mess.clogin"/></button>
                                     </div>
                                 </form:form>

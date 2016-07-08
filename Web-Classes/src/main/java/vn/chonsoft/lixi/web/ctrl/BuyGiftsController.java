@@ -334,6 +334,12 @@ public class BuyGiftsController {
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public ModelAndView giftDetail(Map<String, Object> model, @PathVariable Integer id,  HttpServletRequest request){
         
+        VatgiaProduct p = this.vgpService.findById(id);
+        // check p
+        if(p == null){
+            return new ModelAndView(new RedirectView("/gifts/choose/"+categories.getCandies().getId(), true, true));
+        }
+        
         // get order
         LixiOrder order = null;
         LixiExchangeRate lxExch = null;
@@ -349,7 +355,6 @@ public class BuyGiftsController {
             lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
         }
         
-        VatgiaProduct p = this.vgpService.findById(id);
         // sender
         User u = this.userService.findByEmail(loginedUser.getEmail());
         
@@ -379,14 +384,10 @@ public class BuyGiftsController {
         List<VatgiaProduct> bestSelling = this.vgpService.findById(sellId);
         model.put(LiXiConstants.BEST_SELLING_PRODUCTS, bestSelling);
         
-        // check
-        if(request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID) == null){
-            LixiCategory lxcategory = this.lxCategoryService.findByVatgiaCategory(this.vgcService.findOne(p.getCategoryId()));
-            
-            // store category id into session
-            request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, lxcategory.getId());
-            request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
-        }
+        // store category id into session
+        LixiCategory lxcategory = this.lxCategoryService.findByVatgiaCategory(this.vgcService.findOne(p.getCategoryId()));
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, lxcategory.getId());
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
         
         return new ModelAndView("giftprocess2/giftDetail");
     }

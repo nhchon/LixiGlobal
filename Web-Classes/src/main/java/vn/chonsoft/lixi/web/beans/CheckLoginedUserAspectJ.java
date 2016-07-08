@@ -35,23 +35,31 @@ public class CheckLoginedUserAspectJ {
     @Around(value = "annotatedUserSecurityAnnotation()")
     public Object doCheckLoginedUser(ProceedingJoinPoint jp) throws Throwable {
 
-        //try {
+        // session expired
         if (StringUtils.isEmpty(loginedUser.getEmail())) {
             
+            HttpServletRequest req = null;
+                    
             Object[] args = jp.getArgs();
             if (args != null) {
-
-                if ((args.length>0) && args[args.length - 1] instanceof HttpServletRequest) {
-
-                    HttpServletRequest req = (HttpServletRequest) args[args.length - 1];
-                    
-                    if(req.getRequestURI().contains("/ajax/")){
-                        return new ModelAndView(new RedirectView("/sessionExpired", true, true));
+                for(int i=0; i< args.length; i++){
+                    if(args[i] instanceof HttpServletRequest){
+                        req = (HttpServletRequest) args[i];
+                        break;
                     }
                 }
             }
+            String nextUrl = "";
+            if (req != null) {
+                if(req.getRequestURI().contains("/ajax/")){
+                    return new ModelAndView(new RedirectView("/sessionExpired", true, true));
+                }
+                else{
+                    nextUrl = "&nextUrl=" + req.getRequestURI();
+                }
+            }
             // login page
-            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=3", true, true));
+            return new ModelAndView(new RedirectView("/user/signIn?signInFailed=3"+nextUrl, true, true));
         }
 
         /* continue to process */

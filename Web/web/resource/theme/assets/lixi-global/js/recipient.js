@@ -95,7 +95,8 @@ function createNewRecipient() {
     $.get(CREATE_REC_URL, function (data) {
         try{
             if(jQuery.parseJSON(data).sessionExpired ==='1'){
-                window.location.href = CONTEXT_PATH + '/user/signIn';
+                var nextUrl = "?nextUrl=" + $(location).attr('pathname').replace(CONTEXT_PATH, '') + $(location).attr('search') + $(location).attr('hash');
+                window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
                 return;
             }
         }catch(err){}

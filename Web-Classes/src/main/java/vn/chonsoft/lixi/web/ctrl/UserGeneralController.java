@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -788,12 +789,15 @@ public class UserGeneralController {
 
         }
 
-        //RedirectView r = new RedirectView("/gifts/chooseCategory", true, true);
-        RedirectView r = new RedirectView("/gifts/choose", true, true);
+        // goto next page
+        String nextUrl = request.getParameter("nextUrl");
+        if(StringUtils.isBlank(nextUrl)){
+            nextUrl = "/gifts/choose";
+        }
+        
+        RedirectView r = new RedirectView(nextUrl, true, true);
         r.setExposeModelAttributes(false);
-        return new ModelAndView(r);
-
-        //return new ModelAndView(new RedirectView("/gifts/chooseCategory", true, true), null);
+        return new ModelAndView(r);        
     }
 
     /**
