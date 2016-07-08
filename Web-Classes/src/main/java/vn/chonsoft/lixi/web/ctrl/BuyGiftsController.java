@@ -381,9 +381,11 @@ public class BuyGiftsController {
         
         // check
         if(request.getSession().getAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID) == null){
-            // store category id into session
+            LixiCategory lxcategory = this.lxCategoryService.findByVatgiaCategory(this.vgcService.findOne(p.getCategoryId()));
             
-            request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, p.getCategoryId());
+            // store category id into session
+            request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, lxcategory.getId());
+            request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
         }
         
         return new ModelAndView("giftprocess2/giftDetail");
@@ -449,17 +451,6 @@ public class BuyGiftsController {
             products = vgps.getContent();
         }
         
-        // still null ?
-        //if(products == null || products.isEmpty()){
-            // call BaoKim Rest service
-        //    log.info("No products in database. So call BaoKim Rest service");
-        //    ListVatGiaProduct pjs = lxVatGiaUtils.getVatGiaProducts(lxcategory.getVatgiaId().getId(), price);
-        //    products = lxVatGiaUtils.convertVatGiaProduct2Model(pjs);
-        //}
-        
-        // store category into session
-        //model.put(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, selectedCatId);
-        //model.put(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
         model.put(LiXiConstants.PRODUCTS, products);
         model.put(LiXiConstants.PAGES, vgps);
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);

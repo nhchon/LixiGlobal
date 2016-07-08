@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import vn.chonsoft.lixi.model.LixiCategory;
+import vn.chonsoft.lixi.model.VatgiaCategory;
 
 /**
  *
@@ -28,6 +29,8 @@ public interface LixiCategoryService {
     LixiCategory findById(Integer id);
     
     LixiCategory findByCode(String code);
+    
+    LixiCategory findByVatgiaCategory(VatgiaCategory vatgiaId);
     
     void deleteByVatGiaId(Integer vatgiaId);
 }

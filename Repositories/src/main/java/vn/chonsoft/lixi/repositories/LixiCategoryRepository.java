@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiCategory;
+import vn.chonsoft.lixi.model.VatgiaCategory;
 
 /**
  *
@@ -24,6 +25,8 @@ public interface LixiCategoryRepository extends JpaRepository<LixiCategory, Inte
     //List<LixiCategory> findByLocale_Code(String code, Sort sort);
     
     LixiCategory findByCode(String code);
+    
+    LixiCategory findByVatgiaId(VatgiaCategory vatgiaId);
     
     @Modifying
     @Transactional

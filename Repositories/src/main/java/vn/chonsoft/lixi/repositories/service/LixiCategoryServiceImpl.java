@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.LixiCategory;
+import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.repositories.LixiCategoryRepository;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
@@ -33,6 +34,17 @@ public class LixiCategoryServiceImpl implements LixiCategoryService{
         
     }
 
+    /**
+     * 
+     * @param vgc
+     * @return 
+     */
+    @Override
+    public LixiCategory findByVatgiaCategory(VatgiaCategory vgc){
+        
+        return this.lxcRepository.findByVatgiaId(vgc);
+        
+    }
     /**
      * 
      * @return 
