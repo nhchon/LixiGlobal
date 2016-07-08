@@ -464,7 +464,7 @@ public class UserManagementController {
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "orderHistory", method = RequestMethod.GET)
-    public ModelAndView orderHistory() {
+    public ModelAndView orderHistory(HttpServletRequest request) {
         
         return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek", true, true));
     }
@@ -474,11 +474,12 @@ public class UserManagementController {
      * @param model
      * @param when
      * @param page
+     * @param request 
      * @return 
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "orderHistory/{when}", method = RequestMethod.GET)
-    public ModelAndView orderHistory(Map<String, Object> model, @PathVariable String when, @PageableDefault(page=0, value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page) {
+    public ModelAndView orderHistory(Map<String, Object> model, @PathVariable String when, @PageableDefault(page=0, value = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page, HttpServletRequest request) {
         
         /**/
         User sender = this.userService.findByEmail(loginedUser.getEmail());
@@ -550,11 +551,12 @@ public class UserManagementController {
      * 
      * @param model
      * @param id
+     * @param request 
      * @return 
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "orderDetail/{id}", method = RequestMethod.GET)
-    public ModelAndView orderHistory(Map<String, Object> model, @PathVariable Long id) {
+    public ModelAndView orderHistory(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
         
         /* */
         User sender = this.userService.findByEmail(loginedUser.getEmail());
@@ -585,11 +587,12 @@ public class UserManagementController {
     /**
      * 
      * @param model
+     * @param 
      * @return 
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "payments", method = RequestMethod.GET)
-    public ModelAndView payments(Map<String, Object> model) {
+    public ModelAndView payments(Map<String, Object> model, HttpServletRequest request) {
         
         User u = this.userService.findByEmail(loginedUser.getEmail());
         List<UserCard> cards = this.cardService.findByUser(u);

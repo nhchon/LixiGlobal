@@ -19,7 +19,7 @@
                             <div class="row">
                                 <div class="col-md-9 col-sm-9">
                                     <label><spring:message code="message.name"/>:</label><div class="clearfix"></div>
-                                    <div>${user.fullName}</div>
+                                    <div><c:out value="${user.fullName}"/></div>
                                 </div>
                                 <div class="col-md-3 col-sm-3 text-right">
                                     <button class="btn btn-primary text-uppercase btn-has-link-event" data-link="<c:url value="/user/editName"/>"><spring:message code="message.edit"/></button>
@@ -30,7 +30,7 @@
                             <div class="row">
                                 <div class="col-md-9 col-sm-9">
                                     <label><spring:message code="message.email"/>:</label><div class="clearfix"></div>
-                                    <div>${user.email}</div>
+                                    <div><c:out value="${user.email}"/></div>
                                 </div>
                                 <div class="col-md-3 col-sm-3 text-right">
                                     <button class="btn btn-primary text-uppercase btn-has-link-event" data-link="<c:url value="/user/editEmail"/>"><spring:message code="message.edit"/></button>
@@ -41,7 +41,7 @@
                             <div class="row">
                                 <div class="col-md-9 col-sm-9">
                                     <label><spring:message code="message.mobile_number"/>:</label><div class="clearfix"></div>
-                                    <div>${user.phone}</div>
+                                    <div><c:out value="${user.phone}"/></div>
                                     <!--<div>Why verify your phone mobile?</div>-->
                                 </div>
                                 <div class="col-md-3 col-sm-3 text-right">
