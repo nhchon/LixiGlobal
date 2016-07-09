@@ -30,6 +30,16 @@ public class CountryServiceImpl implements CountryService{
     
     /**
      * 
+     * @param code
+     * @return 
+     */
+    @Override
+    public Country findByCode(String code){
+        
+        return this.cRepository.findByCode(code);
+    }
+    /**
+     * 
      * @param name
      * @return 
      */

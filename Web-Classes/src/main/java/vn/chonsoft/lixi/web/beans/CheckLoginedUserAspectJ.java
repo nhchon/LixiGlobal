@@ -55,7 +55,7 @@ public class CheckLoginedUserAspectJ {
                     return new ModelAndView(new RedirectView("/sessionExpired", true, true));
                 }
                 else{
-                    nextUrl = "&nextUrl=" + req.getRequestURI();
+                    nextUrl = "&nextUrl=" + req.getRequestURI().substring(req.getContextPath().length());
                 }
             }
             // login page

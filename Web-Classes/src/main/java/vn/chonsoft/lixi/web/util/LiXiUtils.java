@@ -378,7 +378,7 @@ public class LiXiUtils {
 
         //log.info("gift price : " + giftPrice);
         /* get lixi fee */
-        LixiGlobalFee fee = LiXiUtils.getLixiGlobalFee(fees, paymentMethod, giftPrice);
+        LixiGlobalFee fee = LiXiUtils.getLixiGlobalFee(fees, paymentMethod, LiXiGlobalUtils.round2Decimal(giftPrice));
         
         //log.info("LixiGlobalFee == null:" + (fee == null));
         
@@ -551,6 +551,10 @@ public class LiXiUtils {
 
     public static LixiGlobalFee getLixiGlobalFee(List<LixiGlobalFee> fees, int method, double totalCost){
        
+        log.info("fees: " + fees.size());
+        log.info("method: " + method);
+        log.info("totalCost: " + totalCost);
+        
         for(LixiGlobalFee fee : fees){
             if((fee.getPaymentMethod() == method) && (totalCost <= fee.getAmount())) return fee;
         }

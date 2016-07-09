@@ -1,6 +1,10 @@
 /**
  * 
  */
+function getNextUrl(){
+    return $(location).attr('pathname').replace(CONTEXT_PATH, '') + $(location).attr('search') + $(location).attr('hash');
+}
+
 function checkBaoKimStatus(){
     overlayOn($('#rowBaoKimStatus'));
     $.ajax(

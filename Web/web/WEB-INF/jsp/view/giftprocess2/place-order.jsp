@@ -15,10 +15,12 @@
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.number.min.js"/>"></script>
         <script type="text/javascript">
             /** Page Script **/
-            var AJAX_CHECK_TOPUP_EXCEED_PATH = '<c:url value="/topUp/update"/>';
+            var AJAX_CHECK_TOPUP_EXCEED_PATH = '<c:url value="/topUp/ajax/update"/>';
             var FIRST_NAME_ERROR = '<spring:message code="validate.user.firstName"/>';
             var LAST_NAME_ERROR = '<spring:message code="validate.user.lastName"/>';
             var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
+            var EMAIL_ERROR = '<spring:message code="validate.user.email"/>';
+            var CONF_EMAIL_ERROR = '<spring:message code="validate.user.emailConf"/>';
             var PHONE_ERROR = '<spring:message code="validate.phone_required"/>';
             var NOTE_ERROR = '<spring:message code="validate.user.note_required"/>';
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
@@ -27,8 +29,9 @@
             var CALCULATE_FEE_PATH = '<c:url value="/checkout/place-order/calculateFee"/>';
             var PLACE_ORDER_DELETE_RECEIVER_PATH = '<c:url value="/checkout/delete/receiver/"/>';
             var PLACE_ORDER_DELETE_TOPUP_PATH = '<c:url value="/checkout/delete/topUp/"/>';
-            var PLACE_ORDER_DELETE_GIFT_PATH = '<c:url value="/checkout/delete/gift/"/>';
-            var PLACE_ORDER_UPDATE_GIFT_PATH = '<c:url value="/checkout/update/gift/"/>';
+            var PLACE_ORDER_DELETE_GIFT_PATH = '<c:url value="/checkout/ajax/delete/gift/"/>';
+            var PLACE_ORDER_UPDATE_GIFT_PATH = '<c:url value="/checkout/ajax/update/gift/"/>';
+            var EDIT_REC_URL = '<c:url value="/recipient/ajax/edit/"/>';
             var arrQ = [];
 
             function processingYourOrder(){
@@ -71,7 +74,10 @@
 
             function doEditRecipient(id) {
                 $.get('<c:url value="/recipient/edit/"/>' + id, function (data) {
-                    enableEditRecipientHtmlContent(data);
+                    enableEditRecipientHtmlContent(data, recOnPlaceOrder);
+                    <%-- Did not show delete button on place-order page --%>
+                    $('#btnDeleteRec').hide();
+                    
                     // focus on phone field
                     $('#editRecipientModal').on('shown.bs.modal', function () {
                         // TODO
@@ -137,52 +143,6 @@
                 $('#editRecipientSpan' + id).html('<a href="javascript:editRecipient(' + id + ');" class="edit-info-event"></a>');
             }
 
-            function enableEditRecipientHtmlContent(data) {
-
-                $('#editRecipientContent').html(data);
-                $('#editRecipientModal').modal({show: true});
-
-                // handler submit form
-                //callback handler for form submit
-                $("#chooseRecipientForm").submit(function (e)
-                {
-                    var postData = $(this).serializeArray();
-                    var formURL = $(this).attr("action");
-                    $.ajax(
-                            {
-                                url: formURL,
-                                type: "POST",
-                                data: postData,
-                                dataType: 'json',
-                                success: function (data, textStatus, jqXHR)
-                                {
-                                    //data: return data from server
-                                    if (data.error === '0') {
-                                        // save successfully
-                                        // hide popup
-                                        $('#editRecipientModal').modal('hide');
-                                        // get new phone number
-                                        var recId = $("#chooseRecipientForm #recId").val();
-                                        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
-                                        $('#recName' + recId).html(name);
-                                        $('#recPhone' + recId).html($("#chooseRecipientForm #phone").val());
-                                        $('#recEmail' + recId).html($("#chooseRecipientForm #email").val());
-                                    } else {
-                                        alert(SOMETHING_WRONG_ERROR);
-                                    }
-                                },
-                                error: function (jqXHR, textStatus, errorThrown)
-                                {
-                                    //if fails      
-                                }
-                            });
-                    if (typeof e !== 'undefined') {
-                        e.preventDefault(); //STOP default action
-                        //e.unbind(); //unbind. to stop multiple form submit.
-                    }
-                });
-            }
-
             function returnSelected(q, value) {
                 if (q == value)
                     return " selected=''";
@@ -225,23 +185,22 @@
                             url: PLACE_ORDER_UPDATE_GIFT_PATH + id + '/' + combo.val(),
                             type: "get",
                             dataType: 'json',
-                                    success: function (data, textStatus, jqXHR)
-                                    {
+                            success: function (data, textStatus, jqXHR)
+                            {
+                                try{
+                                    if(data.sessionExpired ==='1'){
+                                        var nextUrl = "?nextUrl=" + getNextUrl();
+                                        window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                                        return;
+                                    }
+                                }catch(err){}
+                                
                                 if (data.exceed == "0") {
 
                                     removeEditQuantity(id);
                                     $('#q' + id).html(data.NEW_QUANTITY);
                                     $('#itemTotalUsd' + id).html(data.NEW_TOTAL_ITEM_USD);
                                     $('#itemTotalVnd' + id).html(data.NEW_TOTAL_ITEM_VND);
-                                    //var tBody = $('#trGift' + id).closest('tbody');
-                                    //if (tBody.children("tr").length === 1) {
-                                    // remove the ceiver
-                                    //tBody.closest('.receiver-info-item').remove();
-                                    //}
-                                    //else {
-                                    // remove the row
-                                    //$('#trGift' + id).remove();
-                                    //}
                                     //
                                     $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);
                                     $('#giftPriceVnd').html(data.LIXI_GIFT_PRICE_VND);
@@ -278,8 +237,16 @@
                         url: PLACE_ORDER_DELETE_GIFT_PATH + id,
                         type: "get",
                         dataType: 'json',
-                                success: function (data, textStatus, jqXHR)
-                                {
+                        success: function (data, textStatus, jqXHR)
+                        {
+                            try{
+                                if(data.sessionExpired ==='1'){
+                                    var nextUrl = "?nextUrl=" + getNextUrl();
+                                    window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                                    return;
+                                }
+                            }catch(err){}
+                            
                             if (data.error == "0") {
 
                                 var tBody = $('#trGift' + id).closest('tbody');

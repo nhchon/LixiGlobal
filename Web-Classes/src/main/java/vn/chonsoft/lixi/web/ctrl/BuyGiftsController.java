@@ -36,7 +36,6 @@ import vn.chonsoft.lixi.model.MoneyLevel;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.VatgiaProduct;
-import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
@@ -49,7 +48,6 @@ import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
 import vn.chonsoft.lixi.repositories.service.VatgiaProductService;
-import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -103,6 +101,34 @@ public class BuyGiftsController {
 
     @Autowired
     private ScalarFunctionService scalarService;
+    
+    /**
+     * 
+     * @param giftId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "delete/{giftId}", method = RequestMethod.GET)
+    public ModelAndView delete(@PathVariable Long giftId, HttpServletRequest request) {
+        
+        LixiOrder order = this.lxorderService.findById((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID));
+
+        LixiOrderGift lxogift = this.lxogiftService.findByIdAndOrder(giftId, order);
+
+        if (lxogift != null) {
+
+            this.lxogiftService.delete(lxogift.getId());
+
+        } else {
+
+            log.info("Lixi order gift is null: " + giftId);
+        }
+
+        // jump 
+        return new ModelAndView(new RedirectView("/gifts/order-summary", true, true));
+        
+    }
     
     /**
      * 

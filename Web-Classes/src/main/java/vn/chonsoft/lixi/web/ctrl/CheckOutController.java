@@ -496,7 +496,7 @@ public class CheckOutController {
 
         // calculate fee
         LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
-                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+                this.countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())));
 
         return new ModelAndView("giftprocess2/fees");
     }
@@ -570,7 +570,7 @@ public class CheckOutController {
         
         // calculate fee
         LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
-                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+                this.countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())));
 
         model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId(orderId));
         // current total order
@@ -654,7 +654,7 @@ public class CheckOutController {
             }
         }
         
-        String countryCode = countryService.findByName(order.getCard().getBillingAddress().getCountry()).getCode();
+        String countryCode = order.getCard().getBillingAddress().getCountry();
         String clientIpAddress = LiXiGlobalUtils.getClientIp(request);
         
         log.info("Connect CashRun from Client Ip: " + clientIpAddress);
@@ -783,7 +783,7 @@ public class CheckOutController {
             BillingAddress bl = LiXiUtils.getBillingAddress(order);
 
             // calculate fee
-            LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(this.countryService.findByName(bl.getCountry())));
+            LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(this.countryService.findByCode(bl.getCountry())));
 
             invoice.setOrder(order);
             invoice.setPayer(loginedUser.getId());// payer is sender
@@ -868,7 +868,7 @@ public class CheckOutController {
                             /* get billing address */
                             BillingAddress bl = LiXiUtils.getBillingAddress(refOrder);
                             // calculate fee
-                            LiXiUtils.calculateFee(model, refOrder, feeService.findByCountry(countryService.findByName(bl.getCountry())));
+                            LiXiUtils.calculateFee(model, refOrder, feeService.findByCountry(countryService.findByCode(bl.getCountry())));
 
                             String text = VelocityEngineUtils.mergeTemplateIntoString(
                                     velocityEngine, "emails/paid-order-alert.vm", "UTF-8", model);
@@ -952,7 +952,7 @@ public class CheckOutController {
      * @return 
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "update/gift/{giftId}/{quantity}", method = RequestMethod.GET)
+    @RequestMapping(value = {"update/gift/{giftId}/{quantity}", "ajax/update/gift/{giftId}/{quantity}"}, method = RequestMethod.GET)
     public ModelAndView update(Map<String, Object> model, @PathVariable Long giftId, @PathVariable Integer quantity, HttpServletRequest request) {
         
         // sender
@@ -1041,7 +1041,7 @@ public class CheckOutController {
         
         // calculate fee
         LiXiUtils.calculateFee(model, this.lxorderService.findById(orderId), this.feeService.findByCountry(
-                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+                this.countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())));
 
         return new ModelAndView("ajax/exceed");
     }
@@ -1053,7 +1053,7 @@ public class CheckOutController {
      * @return 
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "delete/gift/{giftId}", method = RequestMethod.GET)
+    @RequestMapping(value = {"delete/gift/{giftId}", "ajax/delete/gift/{giftId}"}, method = RequestMethod.GET)
     public ModelAndView deleteGift(Map<String, Object> model, @PathVariable Long giftId, HttpServletRequest request) {
         
         // check the order
@@ -1081,7 +1081,7 @@ public class CheckOutController {
         LixiOrder order = this.lxorderService.findById(orderId);
         // calculate fee
         LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
-                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+                this.countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())));
         
         return new ModelAndView("ajax/exceed");
     }
@@ -1119,7 +1119,7 @@ public class CheckOutController {
         
         // calculate fee
         LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
-                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+                this.countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())));
         
         return new ModelAndView("ajax/exceed");
         
@@ -1157,7 +1157,7 @@ public class CheckOutController {
         
         // calculate fee
         LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
-                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+                this.countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())));
         
         return new ModelAndView("ajax/exceed");
         

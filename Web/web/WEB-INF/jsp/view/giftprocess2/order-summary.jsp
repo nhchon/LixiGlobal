@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Client htmlTitle="Lixi Global - Orde">
+<template:Client htmlTitle="Lixi Global - Order Summary">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>
@@ -9,8 +9,8 @@
         <script type="text/javascript">
             /** Page Script **/
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
-            var AJAX_CHECK_TOPUP_EXCEED_PATH = '<c:url value="/topUp/update"/>';
-            var DELETE_GIFT_PATH = '<c:url value="/gifts/delete/gift"/>';
+            var AJAX_CHECK_TOPUP_EXCEED_PATH = '<c:url value="/topUp/ajax/update"/>';
+            var DELETE_GIFT_PATH = '<c:url value="/gifts/delete"/>';
             var DELETE_TOPUP_PATH = '<c:url value="/topUp/delete"/>';
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
             var CONFIRM_CHANGE_MESSAGE = '<spring:message code="message.confirm_to_delete" text="This item will be deleted. Would you like to continue?"/>';

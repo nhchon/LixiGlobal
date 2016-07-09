@@ -18,6 +18,8 @@ public interface CountryService {
     
     Country findByName(String name);
     
+    Country findByCode(String code);
+    
     @Transactional
     List<Country> findAll();
 }

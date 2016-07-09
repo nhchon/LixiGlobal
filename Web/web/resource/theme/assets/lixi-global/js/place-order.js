@@ -39,6 +39,14 @@ function checkExceedTopUpOnPlaceOrder(id, amount) {
             dataType: 'json',
             success: function (data, textStatus, jqXHR)
             {
+                try{
+                    if(data.sessionExpired ==='1'){
+                        var nextUrl = "?nextUrl=" + getNextUrl();
+                        window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                        return;
+                    }
+                }catch(err){}
+                
                 overlayOff();
                 if (data.exceed === '1') {
                     alert(data.message);

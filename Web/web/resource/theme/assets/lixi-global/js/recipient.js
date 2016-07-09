@@ -15,6 +15,7 @@ function deleteRecipient() {
                         if (data.error === '0') {
                             $("#recId option[value='" + data.recId + "']").remove();
                             $('.selectpicker').selectpicker('refresh');
+                            $('button.edit-receiver').hide();
                         } else {
                             alert(SOMETHING_WRONG_ERROR);
                         }
@@ -91,38 +92,56 @@ function checkRecipientFormOnModal() {
     //
     return true;
 }
-function createNewRecipient() {
-    $.get(CREATE_REC_URL, function (data) {
-        try{
-            if(jQuery.parseJSON(data).sessionExpired ==='1'){
-                var nextUrl = "?nextUrl=" + $(location).attr('pathname').replace(CONTEXT_PATH, '') + $(location).attr('search') + $(location).attr('hash');
-                window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
-                return;
+
+var recOnPlaceOrder = function handleRecipientHtmlOnPlaceOrder(data){
+    //data: return data from server
+    if (data.error === '0') {
+        // save successfully
+        // hide popup
+        $('#editRecipientModal').modal('hide');
+        // get new phone number
+        var recId = $("#chooseRecipientForm #recId").val();
+        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+        $('#recName' + recId).html(name);
+        $('#recPhone' + recId).html($("#chooseRecipientForm #phone").val());
+        $('#recEmail' + recId).html($("#chooseRecipientForm #email").val());
+    } else {
+        alert(SOMETHING_WRONG_ERROR);
+    }
+}
+
+var recOnDetailGift = function handleRecipientHtmlOnDetailGift(data){
+    //data: return data from server
+    if (data.error === '0') {
+        // hide popup
+        $('#editRecipientModal').modal('hide');
+        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+        var phone = $("#chooseRecipientForm #email").val();
+        var email = $("#chooseRecipientForm #phone").val();
+        var firstName = $("#chooseRecipientForm #firstName").val();
+        /* new recipient */
+        if (parseInt(data.recId) > 0) {
+            if (data.action === 'create') {
+                $('#recId')
+                        .append($("<option></option>")
+                                .attr("value", data.recId)
+                                .attr("firstname", firstName)
+                                .attr("data-icon", "glyphicon-user")
+                                .text(name + " - " + phone + " - " + email));
+
+                $('#recId').val(data.recId);
+            } else {
+                // save successfully
+                $("#recId option:selected").attr("firstname", $("#chooseRecipientForm #firstName").val());
+                $("#recId option:selected").html(name + " - " + phone + " - " + email);
             }
-        }catch(err){}
-        
-        enableEditRecipientHtmlContent(data);
-        // focus on phone field
-        $('#editRecipientModal').on('shown.bs.modal', function () {
-            // TODO
-            $("#chooseRecipientForm #firstName").focus();
-        })
-
-    });
+            $('.selectpicker').selectpicker('refresh')
+        }
+    } else {
+        alert(SOMETHING_WRONG_ERROR);
+    }
 }
-
-function doEditRecipient(recId) {
-    $.get(EDIT_REC_URL + recId, function (data) {
-        enableEditRecipientHtmlContent(data);
-        // focus on phone field
-        $('#editRecipientModal').on('shown.bs.modal', function () {
-            // TODO
-        })
-
-    });
-}
-
-function enableEditRecipientHtmlContent(data) {
+function enableEditRecipientHtmlContent(data, handleFunction) {
 
     $('#editRecipientContent').html(data);
     $('#editRecipientModal').modal({show: true});
@@ -142,35 +161,7 @@ function enableEditRecipientHtmlContent(data) {
                     dataType: 'json',
                     success: function (data, textStatus, jqXHR)
                     {
-                        //data: return data from server
-                        if (data.error === '0') {
-                            // hide popup
-                            $('#editRecipientModal').modal('hide');
-                            var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
-                            var phone = $("#chooseRecipientForm #email").val();
-                            var email = $("#chooseRecipientForm #phone").val();
-                            var firstName = $("#chooseRecipientForm #firstName").val();
-                            /* new recipient */
-                            if (parseInt(data.recId) > 0) {
-                                if (data.action === 'create') {
-                                    $('#recId')
-                                            .append($("<option></option>")
-                                                    .attr("value", data.recId)
-                                                    .attr("firstname", firstName)
-                                                    .attr("data-icon", "glyphicon-user")
-                                                    .text(name + " - " + phone + " - " + email));
-
-                                    $('#recId').val(data.recId);
-                                } else {
-                                    // save successfully
-                                    $("#recId option:selected").attr("firstname", $("#chooseRecipientForm #firstName").val());
-                                    $("#recId option:selected").html(name + " - " + phone + " - " + email);
-                                }
-                                $('.selectpicker').selectpicker('refresh')
-                            }
-                        } else {
-                            alert(SOMETHING_WRONG_ERROR);
-                        }
+                        handleFunction(data);
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {

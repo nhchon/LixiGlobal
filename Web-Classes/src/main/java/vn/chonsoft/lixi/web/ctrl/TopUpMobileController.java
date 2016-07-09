@@ -283,7 +283,7 @@ public class TopUpMobileController {
      * @return 
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "update/{id}/{amount}", method = RequestMethod.GET)
+    @RequestMapping(value = {"update/{id}/{amount}", "ajax/update/{id}/{amount}"}, method = RequestMethod.GET)
     public ModelAndView update(Map<String, Object> model, @PathVariable Long id, @PathVariable Integer amount, HttpServletRequest request){
         
         // sender

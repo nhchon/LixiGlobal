@@ -14,4 +14,6 @@ import vn.chonsoft.lixi.model.Country;
 public interface CountryRepository extends JpaRepository<Country, Long>{
     
     Country findByName(String name);
+    
+    Country findByCode(String code);
 }

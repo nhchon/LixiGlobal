@@ -200,7 +200,7 @@ public class BuyGiftsAjaxController {
             // the order is not exceeded
             model.put("exceed", 0);
             // check the gifts already bought
-            if (rec != null) {
+            if (!StringUtils.isEmpty(loginedUser.getEmail()) && rec != null) {
                 if (alreadyGift == null) {
                     if (quantity > 0) {
                         // create the order
@@ -266,11 +266,11 @@ public class BuyGiftsAjaxController {
                     alreadyGift.setProductQuantity(quantity + alreadyGift.getProductQuantity());
                     this.lxogiftService.save(alreadyGift);
                 }
-            }
-            /* re-calculate recipient's total */
-            if(order != null && recId>0){
-                recInOrder = LiXiUtils.getRecipientInOrder(LiXiUtils.genMapRecGifts(this.lxorderService.findById(order.getId())), recId);
-            }
+                /* re-calculate recipient's total */
+                if(order != null){
+                    recInOrder = LiXiUtils.getRecipientInOrder(LiXiUtils.genMapRecGifts(this.lxorderService.findById(order.getId())), recId);
+                }
+            }// of (rec != null)
         }
 
         model.put(LiXiConstants.SELECTED_PRODUCT_ID, productId);

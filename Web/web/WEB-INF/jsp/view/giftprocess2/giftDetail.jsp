@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Client htmlTitle="Lixi Global - Select A Payment Method">
+<template:Client htmlTitle="Lixi Global - Select A Gift">
 
     <jsp:attribute name="extraHeadContent">
         <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select/css/bootstrap-select.min.css"/>">
@@ -28,7 +28,6 @@
                 if ($('.receiver-control-box').length > 0) {
                     $('.receiver-control-box .selectpicker').on('change', function () {
                         var obj = $(this);
-                        console.log(1);
                         var selected = $(this).find("option:selected").val();
                         var receiverObj = obj.closest('.receiver-control-box').find('.edit-receiver');
                         if (parseInt(selected) > 0) {
@@ -58,11 +57,50 @@
                     }
                     if($('#recId').val()==0){
                         alert(PLEASE_SELECT_REC);
+                        $('#recId').focus();
                         return false;
                     }
                     return true;
                 });
             });
+            function doEditRecipient(id) {
+                $.get(EDIT_REC_URL + id, function (data) {
+                    // check session expired
+                    try{
+                        if(jQuery.parseJSON(data).sessionExpired ==='1'){
+                            var nextUrl = "?nextUrl=" + getNextUrl();
+                            window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                            return;
+                        }
+                    }catch(err){}
+                    enableEditRecipientHtmlContent(data, recOnDetailGift);
+                    // focus on phone field
+                    $('#editRecipientModal').on('shown.bs.modal', function () {
+                        // TODO
+                    })
+
+                });
+            }
+            
+            function createNewRecipient() {
+                $.get(CREATE_REC_URL, function (data) {
+                    try{
+                        if(jQuery.parseJSON(data).sessionExpired ==='1'){
+                            var nextUrl = "?nextUrl=" + getNextUrl();
+                            window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                            return;
+                        }
+                    }catch(err){}
+
+                    enableEditRecipientHtmlContent(data, recOnDetailGift);
+                    // focus on phone field
+                    $('#editRecipientModal').on('shown.bs.modal', function () {
+                        // TODO
+                        $("#chooseRecipientForm #firstName").focus();
+                    })
+
+                });
+            }
         </script>
         <script src = "<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-select/js/bootstrap-select.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/gifts.js"/>"></script>
