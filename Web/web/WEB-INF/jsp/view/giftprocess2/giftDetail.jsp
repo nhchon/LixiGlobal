@@ -186,9 +186,9 @@
                                 <div class="receiver-break-line"></div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6 col-xs-5">
-                                        <button id="btnSubmit" type="submit" class="btn btn-primary text-uppercase receiver-buy-gift"><spring:message code="buy-gift" text="Buy Gift"/></button>
+                                        <button id="btnSubmit" type="submit" class="btn btn-primary text-uppercase receiver-buy-gift" style="line-height: 40px;"><spring:message code="buy-gift" text="Buy Gift"/></button>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 col-xs-7" style="margin-top: 15px;color: #0090d0;font-weight: 400;">
+                                    <div class="col-md-6 col-sm-6 col-xs-7" style="margin-top: 5px;color: #0090d0;font-weight: 400;">
 
                                         <span style="color: #696969;"><spring:message code="your-order-total" text="Your order total"/></span><br/>
                                         <span class="gift-total-box-right">

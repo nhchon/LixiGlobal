@@ -41,12 +41,15 @@
                         </div>
                         <c:set value="150" var="maximumValue"/>
                         <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * maximumValue}" pattern="###,###.##" var="maximumValueVnd"/>
-                        <h5 class="maximum-purchase">Maximum purchase is VND ${maximumValueVnd}  or USD ${maximumValue}</h5>
+                        <h5 class="maximum-purchase">
+                            <spring:message code="maximum-purchase" arguments="${maximumValueVnd};${maximumValue}" argumentSeparator=";"/>
+                            <%--Maximum purchase is VND ${maximumValueVnd}  or USD ${maximumValue}--%>
+                        </h5>
                     </div>
                 </div>
                 <div class="gift-filter gift-filter-wrapper">
                     <div class="gift-border-title">
-                        <h2 class="title text-center"><span>Select Price Range</span></h2>
+                        <h2 class="title text-center"><span style="color:#2E5A99"><spring:message code="select-price-range" text="Select Price Range"/></span></h2>
                     </div>
                     <div class="row">
                         <div class="col-md-1"></div>
