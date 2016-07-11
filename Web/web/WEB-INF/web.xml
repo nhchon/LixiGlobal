@@ -46,7 +46,11 @@
         </cookie-config>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
-
+    
+    <error-page>
+        <error-code>403</error-code>
+        <location>/403.html</location>
+    </error-page>
     <distributable />
 
 </web-app>
