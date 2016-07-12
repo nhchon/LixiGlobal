@@ -125,6 +125,8 @@ public class GlobalDefaultExceptionHandler {
 
     /**
      *
+     * @param  req 
+     * @param e
      * @return
      */
     @RequestMapping("/error")
