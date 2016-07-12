@@ -263,7 +263,7 @@ public class BuyGiftsAjaxController {
                     // alreadyGift == null
                 } else if (quantity > 0) {
                     // update quantity
-                    alreadyGift.setProductQuantity(quantity + alreadyGift.getProductQuantity());
+                    alreadyGift.setProductQuantity(quantity);
                     this.lxogiftService.save(alreadyGift);
                 }
                 /* re-calculate recipient's total */

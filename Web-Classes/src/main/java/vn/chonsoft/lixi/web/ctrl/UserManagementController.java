@@ -63,6 +63,7 @@ import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
@@ -184,9 +185,9 @@ public class UserManagementController {
             // exceptions will be thrown if there is no account
             User u = this.userService.findByEmail(email);
             
-            u.setFirstName(form.getFirstName());
-            u.setMiddleName(form.getMiddleName());
-            u.setLastName(form.getLastName());
+            u.setFirstName(LiXiGlobalUtils.html2text(form.getFirstName()));
+            u.setMiddleName(LiXiGlobalUtils.html2text(form.getMiddleName()));
+            u.setLastName(LiXiGlobalUtils.html2text(form.getLastName()));
             
             // save
             this.userService.save(u);
@@ -446,7 +447,7 @@ public class UserManagementController {
         
         User u = this.userService.findByEmail(loginedUser.getEmail());
         
-        String phone = request.getParameter("phone");
+        String phone = LiXiGlobalUtils.html2text(request.getParameter("phone"));
         
         // update
         this.userService.updatePhoneNumber(phone, u.getId());

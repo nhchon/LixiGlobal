@@ -39,6 +39,17 @@ public abstract class LiXiGlobalUtils {
     private static final Logger log = LogManager.getLogger(LiXiGlobalUtils.class);
     
     /**
+     * 
+     * @param html
+     * @return 
+     */
+    public static String html2text(String html) {
+        
+        if(StringUtils.isEmpty(html)) return html;
+        
+        return Jsoup.parse(html).text();
+    }
+    /**
      *
      * @param file
      * @return
