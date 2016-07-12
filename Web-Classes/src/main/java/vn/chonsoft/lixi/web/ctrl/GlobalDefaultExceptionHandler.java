@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -100,9 +101,13 @@ public class GlobalDefaultExceptionHandler {
                 message.setSentDate(Calendar.getInstance().getTime());
 
                 Map model = new HashMap();
+                String ipAddress = LiXiGlobalUtils.getClientIp(req);
+                InetAddress address = InetAddress.getByName(ipAddress);
+                String hostName = address.getHostName();
+                
                 model.put("url", LiXiUtils.replaceHttp8080(url) + " - " + LiXiUtils.replaceHttp8080(req.getRequestURL().toString()));
-                model.put("ipAddress", LiXiGlobalUtils.getClientIp(req));
-                model.put("hostName", req.getRemoteHost());
+                model.put("ipAddress", ipAddress);
+                model.put("hostName", hostName);
                 model.put("userAgent", req.getHeader("User-Agent"));
                 model.put("errMessage", errMessage);
                 model.put("errDetails", errDetails);

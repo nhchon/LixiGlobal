@@ -9,5 +9,5 @@
     "CURRENT_PAYMENT_VND": "<fmt:formatNumber value="${CURRENT_PAYMENT_VND}" pattern="###,###.##"/>",
     "SELECTED_PRODUCT_ID": "${SELECTED_PRODUCT_ID}",
     "SELECTED_PRODUCT_QUANTITY": "${SELECTED_PRODUCT_QUANTITY}",
-    "message":"<spring:message code="validate.exceeded"><spring:argument value="${EXCEEDED_VND}"/><spring:argument value="${EXCEEDED_USD}"/></spring:message>"
+    "message":"<spring:message code="validate.exceeded2"><spring:argument value="${EXCEEDED_VND}"/><spring:argument value="${EXCEEDED_USD}"/><spring:argument value="${MONEY_LEVEL}"/></spring:message>"
 }

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -283,7 +284,9 @@ public class BuyGiftsAjaxController {
         // store current payment
         model.put(LiXiConstants.CURRENT_PAYMENT_USD, currentPayment);
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, currPaymentVnd);
-
+        
+        model.put(LiXiGlobalConstants.MONEY_LEVEL, ml.getAmount());
+        
         return new ModelAndView("giftprocess2/exceed", model);
     }
 

@@ -74,14 +74,21 @@
                         topUpId = '0';
 
                     $.ajax({
-                        url: '<c:url value="/topUp/checkTopUpExceed"/>' + '/' + topUpId + '/' + amount,
-                                type: "get",
+                        url: '<c:url value="/topUp/ajax/checkTopUpExceed"/>' + '/' + topUpId + '/' + amount,
+                        type: "get",
                         dataType: 'json',
-                                success: function (data, textStatus, jqXHR)
-                                {
+                        success: function (data, textStatus, jqXHR)
+                        {
+                            try{
+                                if(data.sessionExpired ==='1'){
+                                    var nextUrl = "?nextUrl=" + getNextUrl();
+                                    window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                                    return;
+                                }
+                            }catch(err){}
                             if (data.exceed == '1') {
                                 $('#divError').remove();
-                                $('#topUpPanelBody').prepend('<div class="msg msg-error" id="divError">' + data.message + '</div>')
+                                $('#topUpPanelBody').prepend('<div class="alert alert-danger" role="alert" id="divError"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>' + data.message + '</div>')
                                 alert(data.message);
                                 // disable submit buttons
                                 disableTopUpSubmitButtons(true);

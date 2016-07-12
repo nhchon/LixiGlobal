@@ -16,5 +16,5 @@
     "LIXI_HANDLING_FEE" : "<fmt:formatNumber value="${LIXI_HANDLING_FEE}" pattern="###,###.##"/>",
     "LIXI_HANDLING_FEE_TOTAL" : "<fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/>",
     "CARD_PROCESSING_FEE_THIRD_PARTY" : "<fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/>",
-    "message":"<spring:message code="validate.top_up_exceeded"><spring:argument value="${TOP_UP_AMOUNT}"/><spring:argument value="${EXCEEDED_VND}"/><spring:argument value="${EXCEEDED_USD}"/></spring:message>"
+    "message":"<spring:message code="validate.top_up_exceeded2"><spring:argument value="${TOP_UP_AMOUNT}"/><spring:argument value="${EXCEEDED_VND}"/><spring:argument value="${EXCEEDED_USD}"/><spring:argument value="${MONEY_LEVEL}"/></spring:message>"
 }

@@ -511,13 +511,16 @@
                                                                     </label>
                                                                 </div>                                                            
                                                             </td>
-                                                            <td rowspan="2"  style="padding-left:50px;">
+                                                            <td style="padding-left:50px;">
                                                                 <!-- (c) 2005, 2016. Authorize.Net is a registered trademark of CyberSource Corporation --> 
                                                                 <div class="AuthorizeNetSeal"> 
                                                                     <script type="text/javascript" language="javascript">var ANS_customer_id = "8d3196bc-e4f9-4a2a-b283-292c0687257d";</script> 
                                                                     <script type="text/javascript" language="javascript" src="//verify.authorize.net/anetseal/seal.js" ></script> 
                                                                     <a href="http://www.authorize.net/" id="AuthorizeNetText" target="_blank">Internet Payment Gateway</a> 
                                                                 </div>
+                                                            </td>
+                                                            <td style="padding-left:50px;">
+                                                                <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=25ZSP0L5Lsd3uLmBTIB8PqsJWEv03qyZ8sJtMVacTWHVe1p60GLbLpEo2G4o"></script></span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -542,7 +545,7 @@
                             <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/choose"/>"><spring:message code="keep-shopping"/></button>
                             <c:if test="${LIXI_FINAL_TOTAL gt 0}">
                                 <%--<button id="btnSubmit" type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>--%>
-                                <button type="button" class="btn btn-primary" onclick="processingYourOrder()" style="color:#fff;"><spring:message code="place-order"/></button>    
+                                <button id="btnSubmit" type="button" class="btn btn-primary" onclick="processingYourOrder()" style="color:#fff;"><spring:message code="place-order"/></button>    
                                 <button id="btnLogOut" style="display:none;" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'"><spring:message code="log-out"/></button>
                             </c:if>
                             <c:if test="${LIXI_FINAL_TOTAL eq 0}">

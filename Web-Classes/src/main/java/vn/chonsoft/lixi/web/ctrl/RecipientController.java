@@ -30,6 +30,7 @@ import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -158,7 +159,7 @@ public class RecipientController {
             rec.setDialCode(form.getDialCode());
             rec.setPhone(form.getPhone());
             rec.setActivated(true);
-            rec.setNote((form.getNote()));// LiXiUtils.fixEncode
+            rec.setNote(LiXiGlobalUtils.html2text(form.getNote()));// LiXiUtils.fixEncode
             rec.setModifiedDate(Calendar.getInstance().getTime());
 
             rec = this.reciService.save(rec);

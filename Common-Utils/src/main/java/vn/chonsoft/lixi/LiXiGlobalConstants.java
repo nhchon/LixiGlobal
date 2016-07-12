@@ -10,6 +10,8 @@ package vn.chonsoft.lixi;
  */
 public abstract class LiXiGlobalConstants {
     
+    public static final String MONEY_LEVEL = "MONEY_LEVEL";
+    
     public static final String BAOKIM_GIFT_METHOD = "GIFT";
     public static final String BAOKIM_MONEY_METHOD = "MONEY";
     
