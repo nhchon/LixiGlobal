@@ -578,7 +578,7 @@ public class UserManagementController {
         
         // calculate fee
         LiXiUtils.calculateFee(model, order, feeService.findByCountry(
-                countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+                countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())));
         
         /* return */
         return new ModelAndView("user2/orderDetail");

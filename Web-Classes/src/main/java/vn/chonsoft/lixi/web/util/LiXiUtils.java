@@ -345,24 +345,21 @@ public class LiXiUtils {
      * 
      * @param model
      * @param order 
+     * @param fees
      */
     public static void calculateFee(Map<String, Object> model, LixiOrder order, List<LixiGlobalFee> fees){
         
         /* get billing address */
-        BillingAddress bl = null;
-        int paymentMethod = 0;
-        if(order.getCard() != null){
-            bl = order.getCard().getBillingAddress();
-        }
-        else{
-            bl = order.getBankAccount().getBillingAddress();
-            paymentMethod = 1;
+        //BillingAddress bl = null;
+        int paymentMethod = 0;// for Visa Card
+        if(order.getBankAccount()!=null){
+            paymentMethod = 1;// for Bank Account
         }
         
         double buy = order.getLxExchangeRate().getBuy();
         
         /* get lixi global fee */
-        //List<LixiGlobalFee> fees = this.feeService.findByCountry(this.countryService.findByName(bl.getCountry()));
+        //List<LixiGlobalFee> fees = this.feeService.findByCountry(this.countryService.findByCode(bl.getCountry()));
         
         //log.info("fees.length : " + fees.size());
         
@@ -385,22 +382,26 @@ public class LiXiUtils {
         /* calculate card fee */
         double cardFee = 0.0;
         double feePercent = 0;
-        if (order.getSetting() == EnumLixiOrderSetting.ALLOW_REFUND.getValue()) {
-            feePercent = fee.getAllowRefundFee();
+        if(fee != null){
+            if (order.getSetting() == EnumLixiOrderSetting.ALLOW_REFUND.getValue()) {
+                feePercent = fee.getAllowRefundFee();
+            }
+            else{
+                feePercent = fee.getGiftOnlyFee();
+            }
         }
-        else{
-            feePercent = fee.getGiftOnlyFee();
-        }
-
         //log.info("feePercent: " + feePercent);
         
         cardFee = LiXiGlobalUtils.round2Decimal((feePercent * giftPrice)/100.0);
-        if((fee.getMaxFee() > 0) && (cardFee > fee.getMaxFee())){
+        if((fee != null) && (fee.getMaxFee() > 0) && (cardFee > fee.getMaxFee())){
             cardFee = fee.getMaxFee();
         }
         
         /* lixi handling fee */
-        double lixiFee = (fee.getLixiFee() * (recGifts.isEmpty() ? 0 : recGifts.size()));
+        double lixiFee = 0.99;
+        if(fee != null){
+            lixiFee = fee.getLixiFee() * (recGifts.isEmpty() ? 0 : recGifts.size());
+        }
         // final total 
         finalTotal = giftPrice + cardFee + lixiFee;
 
@@ -408,7 +409,7 @@ public class LiXiUtils {
         model.put(LiXiConstants.LIXI_GIFT_PRICE_VND, giftPriceVnd);
         model.put(LiXiConstants.LIXI_FINAL_TOTAL, LiXiGlobalUtils.round2Decimal(finalTotal));
         model.put(LiXiConstants.LIXI_FINAL_TOTAL_VND, LiXiGlobalUtils.round2Decimal(buy * finalTotal));
-        model.put(LiXiConstants.LIXI_HANDLING_FEE, fee.getLixiFee());
+        model.put(LiXiConstants.LIXI_HANDLING_FEE, (fee!=null?fee.getLixiFee():0.99));
         model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, LiXiGlobalUtils.round2Decimal(lixiFee));
         model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFee);
         

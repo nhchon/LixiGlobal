@@ -367,8 +367,12 @@ public class TopUpMobileController {
         model.put(LiXiConstants.CURRENT_PAYMENT_VND, LiXiUtils.getNumberFormat().format(currentPayment * buy));
         
         // calculate fee
+        String countryCode = null;
+        if(LiXiUtils.getBillingAddress(order) != null){
+            countryCode = LiXiUtils.getBillingAddress(order).getCountry();
+        }
         LiXiUtils.calculateFee(model, this.lxorderService.findById(orderId), this.feeService.findByCountry(
-                this.countryService.findByName(LiXiUtils.getBillingAddress(order).getCountry())));
+                this.countryService.findByCode(countryCode)));
 
 
         return new ModelAndView("topup2/exceedTopUp", model);
