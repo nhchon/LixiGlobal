@@ -681,8 +681,8 @@ public class PaymentServiceImpl implements PaymentService{
         OrderType invoice = new OrderType();
         invoice.setInvoiceNumber(lxInvoice.getId().toString() );
         invoice.setDescription("["
-                + lxInvoice.getId() + ", "
-                + order.getId() + ", "
+                + "Lixi Invoice ID: " + lxInvoice.getId() + ", "
+                + "Lixi Order ID: " + order.getId() + ", "
                 + order.getSender().getId() + ", "
                 + order.getSender().getFullName() + ", "
                 + order.getSender().getEmail()
@@ -744,8 +744,8 @@ public class PaymentServiceImpl implements PaymentService{
         OrderType invoice = new OrderType();
         invoice.setInvoiceNumber(lxInvoice.getId().toString());
         invoice.setDescription("["
-                + lxInvoice.getId() + ", "
-                + order.getId() + ", "
+                + "Lixi Invoice ID: " + lxInvoice.getId() + ", "
+                + "Lixi Order ID: " + order.getId() + ", "
                 + order.getSender().getId() + ", "
                 + order.getSender().getFullName() + ", "
                 + order.getSender().getEmail()
