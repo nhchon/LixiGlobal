@@ -105,7 +105,7 @@ public class GlobalDefaultExceptionHandler {
                 InetAddress address = InetAddress.getByName(ipAddress);
                 String hostName = address.getHostName();
                 
-                model.put("url", LiXiUtils.replaceHttp8080(url) + " - " + LiXiUtils.replaceHttp8080(req.getRequestURL().toString()));
+                model.put("url", LiXiUtils.replaceHttp8080(url));
                 model.put("ipAddress", ipAddress);
                 model.put("hostName", hostName);
                 model.put("userAgent", req.getHeader("User-Agent"));
