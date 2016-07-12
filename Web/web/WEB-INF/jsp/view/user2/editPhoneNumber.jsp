@@ -28,7 +28,7 @@
                         <div class="form-group">
                             <div class="col-md-8" style="margin-bottom: 10px;">
                                 <label class="control-label"><spring:message code="message.mobile_number"/></label>
-                                <input type="text" class="form-control" name="phone" id="phone" value="${phone}"/>
+                                <input type="text" class="form-control" name="phone" id="phone" value="<c:out value="${phone}"/>"/>
                             </div>
                         </div>
                         <div class="form-group right">

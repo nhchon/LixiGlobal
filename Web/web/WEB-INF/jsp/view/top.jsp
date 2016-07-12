@@ -4,7 +4,7 @@
             <div class="navbar-collapse" id="navbar-collapse-top">
                 <ul class="nav navbar-nav navbar-right">
                     <c:if test="${not empty sessionScope['scopedTarget.loginedUser'].email}">
-                        <li><a href="javascript:void(0);">Hello ${sessionScope['scopedTarget.loginedUser'].email}</a></li>
+                        <li><a href="javascript:void(0);">Hello <c:out value="${sessionScope['scopedTarget.loginedUser'].email}"/></a></li>
                         <li>
                             <a class="hvr-underline-from-center" href="<c:url value="/user/signOut"/>"><spring:message code="log-out"/></a>
                         </li>
