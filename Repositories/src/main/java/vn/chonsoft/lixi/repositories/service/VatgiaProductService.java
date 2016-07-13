@@ -32,6 +32,8 @@ public interface VatgiaProductService {
     
     Page<VatgiaProduct> findByCategoryIdAndAliveAndPrice(int category, int alive, double price, Pageable page);
     
+    Page<VatgiaProduct> findByName(String name, Pageable page);
+    
     int updateAlive(Integer category, Integer alive);
     
     public void loadAllVatGiaProducts();

@@ -34,6 +34,19 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
     
     @Autowired
     private LiXiVatGiaUtils lxVatGiaUtils;
+    
+    /**
+     * 
+     * @param name
+     * @param page
+     * @return 
+     */
+    @Override
+    public Page<VatgiaProduct> findByName(String name, Pageable page){
+        
+        return this.vgpRepository.findByNameLike(name, page);
+        
+    }
     /**
      * 
      * @param product

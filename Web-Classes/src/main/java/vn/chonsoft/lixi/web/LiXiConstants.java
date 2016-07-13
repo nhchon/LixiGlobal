@@ -132,6 +132,7 @@ public abstract class LiXiConstants {
     public static final String PRODUCTS = "PRODUCTS";
     public static final String BEST_SELLING_PRODUCTS = "BEST_SELLING_PRODUCTS";
     public static final String PAGES = "PAGES";
+    public static final String KEYWORD = "KEYWORD";
     public static final Integer NUM_PRODUCTS_PER_PAGE = 10;
     public static final String LIXI_TOTAL_AMOUNT = "LIXI_TOTAL_AMOUNT";
     

@@ -30,4 +30,6 @@ public interface VatgiaProductRepository extends JpaRepository<VatgiaProduct, In
     List<VatgiaProduct>  findByCategoryIdAndAliveAndPriceIsGreaterThanEqual(int category, int alive, double price);
 
     Page<VatgiaProduct> findByCategoryIdAndAliveAndPriceIsGreaterThanEqual(int category, int alive, double price, Pageable page);
+    
+    Page<VatgiaProduct> findByNameLike(String name, Pageable page);
 }
