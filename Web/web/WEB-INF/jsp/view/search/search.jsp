@@ -9,9 +9,8 @@
             jQuery(document).ready(function () {
                 loadTotalCurrentOrder();
             });
-            function jump(page, size){
+            function jump(page) {
                 $('#sPage').val(page);
-                $('#sSize').val(size);
                 $('#searchForm').submit();
             }
         </script>
@@ -50,11 +49,28 @@
                                 <div class="pagination-wrapper">
                                     <nav>
                                         <ul class="pagination pull-right">
+                                            <%--
                                             <c:set var="numPage" value="${PAGES.totalPages}"/>
                                             <c:if test="${PAGES.totalPages < 5}">
                                                 <c:set var="numPage" value="${PAGES.totalPages}"/>
                                             </c:if>
-                                            <c:forEach begin="1" end="${numPage}" var="i">
+                                            --%>
+                                            <c:set value="" var="previousCss"/>
+                                            <c:set value="" var="previousFunc"/>
+                                            <c:if test="${PAGES.number eq 0}">
+                                                <c:set value="disabled" var="previousCss"/>
+                                                <c:set value="void(0)" var="previousFunc"/>
+                                            </c:if>
+                                            <c:if test="${PAGES.number > 0}">
+                                                <c:set value="jump(${PAGES.number})" var="previousFunc"/>
+                                            </c:if>
+                                            
+                                            <li class="${previousCss}">
+                                                <a href="javascript:${previousFunc};" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <c:forEach begin="1" end="${PAGES.totalPages}" var="i">
                                                 <c:choose>
                                                     <c:when test="${(i - 1) == PAGES.number}">
                                                         <li class="active">
@@ -63,11 +79,25 @@
                                                     </c:when>
                                                     <c:otherwise>
                                                         <li>
-                                                            <a href="javascript:jump(${i}, 10)">${i}</a>
+                                                            <a href="javascript:jump(${i})">${i}</a>
                                                         </li>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </c:forEach>
+                                            <c:set value="" var="nextCss"/>
+                                            <c:set value="" var="nextFunc"/>
+                                            <c:if test="${(PAGES.number+1) eq PAGES.totalPages}">
+                                                <c:set value="disabled" var="nextCss"/>
+                                                <c:set value="void(0)" var="nextFunc"/>
+                                            </c:if>
+                                            <c:if test="${(PAGES.number+1) < PAGES.totalPages}">
+                                                <c:set value="jump(${PAGES.number + 2})" var="nextFunc"/>
+                                            </c:if>
+                                            <li class="${nextCss}">
+                                                <a href="javascript:${nextFunc};" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </nav>
                                 </div>
