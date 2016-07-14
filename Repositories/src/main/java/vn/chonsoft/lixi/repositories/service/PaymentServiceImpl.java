@@ -728,7 +728,7 @@ public class PaymentServiceImpl implements PaymentService{
         txnRequest.setAmount(new BigDecimal(String.valueOf(LiXiGlobalUtils.getTestTotalAmount(lxInvoice.getTotalAmount()))));
         
         //
-        log.info("invoice: " + lxInvoice.getId() + " - " + String.valueOf(lxInvoice.getTotalAmount()));
+        //log.info("invoice: " + lxInvoice.getId() + " - " + String.valueOf(lxInvoice.getTotalAmount()));
         //
         
         PaymentProfile paymentProfile = new PaymentProfile();
@@ -815,8 +815,8 @@ public class PaymentServiceImpl implements PaymentService{
         LixiInvoicePayment payment = new LixiInvoicePayment();
         payment.setInvoice(lxInvoice.getId());
         //
-        log.info("###############################################");
-        log.info("Invoice ID: " + lxInvoice.getId());
+        //log.info("###############################################");
+        //log.info("Invoice ID: " + lxInvoice.getId());
         if (response != null) {
             // If API Response is ok, go ahead and check the transaction response
             TransactionResponse result = response.getTransactionResponse();
@@ -824,20 +824,20 @@ public class PaymentServiceImpl implements PaymentService{
 
                 // log
                 if (EnumTransactionResponseCode.APPROVED.getValue().equals(result.getResponseCode()) || EnumTransactionResponseCode.HELD_FOR_REVIEW.getValue().equals(result.getResponseCode())) {
-                    log.info(result.getResponseCode());
-                    log.info("Successful Credit Card Transaction");
-                    log.info(result.getAuthCode());
-                    log.info(result.getTransId());
+                    //log.info(result.getResponseCode());
+                    //log.info("Successful Credit Card Transaction");
+                    //log.info(result.getAuthCode());
+                    //log.info(result.getTransId());
                     //
 
                     returned = true;
                 } else {
-                    log.info("Failed TransactionResponse: " + result.getResponseCode());
+                    //log.info("Failed TransactionResponse: " + result.getResponseCode());
                 }
-                log.info("###############################################");
+                //log.info("###############################################");
             } else {
-                log.info("Failed Transaction:  " + response.getMessages().getResultCode());
-                log.info("Failed Transaction:  " + response.getMessages().getMessage().get(0).getText());
+                //log.info("Failed Transaction:  " + response.getMessages().getResultCode());
+                //log.info("Failed Transaction:  " + response.getMessages().getMessage().get(0).getText());
             }
             
             payment.setResponseCode(result.getResponseCode());

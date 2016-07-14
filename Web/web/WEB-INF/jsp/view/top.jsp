@@ -104,9 +104,12 @@
 
                     <li class="nav-search">
                         <c:url value="/Search/search" var="searchUrl"/>
-                        <form class="search-form" method="get" action="${searchUrl}">
-                            <input class="form-control" name="keyword" placeholder="Keyword..."/>
+                        <form  id="searchForm" class="search-form" method="get" action="${searchUrl}" onsubmit="return onSubmitSearchForm();">
+                            <input class="form-control" id="keyword" name="keyword" value="<c:out value="${KEYWORD}"/>" placeholder="Nhập từ khóa..."/>
                             <input type="hidden" name="search" value="true"/>
+                            <input type="hidden" name="paging.sort" value="price"/>
+                            <input type="hidden" name="paging.page" id="sPage" value="1"/>
+                            <input type="hidden" name="paging.size" id="sSize" value="10"/>
                             <button type="submit"><i class="fa fa-search"></i></button>
                         </form>
                     </li>

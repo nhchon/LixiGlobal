@@ -25,6 +25,7 @@ import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.VatgiaProductService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 
@@ -85,6 +86,9 @@ public class SearchController {
             
             lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
         }
+        
+        // remove html tag
+        keyword = LiXiGlobalUtils.html2text(keyword);
         
         /* list product */
         List<VatgiaProduct> products = null;

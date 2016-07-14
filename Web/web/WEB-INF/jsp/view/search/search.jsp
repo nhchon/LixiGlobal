@@ -9,8 +9,12 @@
             jQuery(document).ready(function () {
                 loadTotalCurrentOrder();
             });
+            
             function jump(page) {
-                $('#sPage').val(page);
+                $('#searchForm #sPage').val(page);
+                
+                $('#searchForm #keyword').val(encodeURI($('#keyword').val));
+                
                 $('#searchForm').submit();
             }
         </script>
@@ -70,7 +74,34 @@
                                                     <span aria-hidden="true">&laquo;</span>
                                                 </a>
                                             </li>
-                                            <c:forEach begin="1" end="${PAGES.totalPages}" var="i">
+                                            <c:set var="maxShow" value="10"/>
+                                            <c:if test="${PAGES.totalPages < 10}"><c:set var="maxShow" value="${PAGES.totalPages}"/></c:if>
+                                            
+                                            <c:set var="startPage" value="1"/>
+                                            <c:if test="${(PAGES.number + 1) > maxShow}">
+                                                <c:set var="tempDiv" value="${(PAGES.number + 1) / maxShow}"/>
+                                                <fmt:formatNumber var="tempDiv" value="${tempDiv - ( tempDiv % 1 ) }" pattern="#" maxFractionDigits="0" />
+                                                <fmt:formatNumber var="tempMod" value="${(PAGES.number + 1) % 10}" pattern="#" />
+                                                <c:set var="startPage" value="${tempDiv * maxShow}"/>
+                                                <c:if test="${tempMod eq 0}">
+                                                    <c:set var="startPage" value="${PAGES.number + 1}"/>
+                                                </c:if>
+                                            </c:if>
+                                            
+                                            <c:set var="endPage" value="${startPage + maxShow - 1}"/>
+                                            <c:if test="${(startPage + maxShow - 1) > PAGES.totalPages}">
+                                                <c:set var="endPage" value="${PAGES.totalPages}"/>
+                                            </c:if>
+                                            
+                                            <c:if test="${startPage > maxShow}">
+                                                <li>
+                                                    <a href="javascript:jump(1)">1</a>
+                                                </li>
+                                                <li class="disabled">
+                                                    <a href="javascript:void(0);">...</a>
+                                                </li>
+                                            </c:if>
+                                            <c:forEach begin="${startPage}" end="${endPage}" var="i">
                                                 <c:choose>
                                                     <c:when test="${(i - 1) == PAGES.number}">
                                                         <li class="active">
@@ -112,12 +143,6 @@
                     </div>
                 </div>
             </div>
-            <form role="form" id="searchForm" action="<c:url value="/Search/search"/>" method="get">
-                <input type="hidden" name="search" value="true" />
-                <input type="hidden" name="keyword" value="${KEYWORD}" />
-                <input type="hidden" name="paging.page" id="sPage" value="1"/>
-                <input type="hidden" name="paging.size" id="sSize" value="10"/>
-            </form>
         </section>
 
     </jsp:body>

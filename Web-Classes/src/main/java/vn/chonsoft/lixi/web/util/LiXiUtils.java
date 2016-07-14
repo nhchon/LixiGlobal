@@ -552,9 +552,9 @@ public class LiXiUtils {
 
     public static LixiGlobalFee getLixiGlobalFee(List<LixiGlobalFee> fees, int method, double totalCost){
        
-        log.info("fees: " + fees.size());
-        log.info("method: " + method);
-        log.info("totalCost: " + totalCost);
+        //log.info("fees: " + fees.size());
+        //log.info("method: " + method);
+        //log.info("totalCost: " + totalCost);
         
         for(LixiGlobalFee fee : fees){
             if((fee.getPaymentMethod() == method) && (totalCost <= fee.getAmount())) return fee;

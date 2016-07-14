@@ -1,3 +1,8 @@
+function onSubmitSearchForm(){
+    //$('#searchForm #keyword').val(encodeURI($('#searchForm #keyword').val()));
+    //alert(encodeURI($('#searchForm #keyword').val()))
+    return true;
+}
 /**
  * 
  */

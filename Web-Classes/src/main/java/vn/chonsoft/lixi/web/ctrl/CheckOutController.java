@@ -648,7 +648,7 @@ public class CheckOutController {
                 t.append(";");
                 t.append(rec.getRecipient().getNote());
                 
-                log.info(t.toString());
+                //log.info(t.toString());
                 
                 receivers.add(new BasicNameValuePair("RECEIVER_DETAILS[]", t.toString()));
             }
@@ -657,9 +657,9 @@ public class CheckOutController {
         String countryCode = order.getCard().getBillingAddress().getCountry();
         String clientIpAddress = LiXiGlobalUtils.getClientIp(request);
         
-        log.info("Connect CashRun from Client Ip: " + clientIpAddress);
-        log.info("ORDER_ID (order.getId().toString()): " + order.getId().toString());
-        log.info("CASHRUN_PRODUCTION_PAGE: " + env.getProperty("cashrun.production-page"));
+        //log.info("Connect CashRun from Client Ip: " + clientIpAddress);
+        //log.info("ORDER_ID (order.getId().toString()): " + order.getId().toString());
+        //log.info("CASHRUN_PRODUCTION_PAGE: " + env.getProperty("cashrun.production-page"));
         
         Connection conn = Jsoup.connect(env.getProperty("cashrun.production-page")).timeout(0).maxBodySize(0);
 
@@ -801,19 +801,31 @@ public class CheckOutController {
             this.invoiceService.save(invoice);
             
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
+            log.info("Begin Authorize Visa Card at: " + Calendar.getInstance().getTime());
+            long startTime = System.currentTimeMillis();
             boolean chargeResult = paymentService.chargeByCustomerProfile(invoice);
+            log.info("It takes " + (System.currentTimeMillis() - startTime)/1000 + " seconds.");
+            log.info("End Authorize Visa Card at: " + Calendar.getInstance().getTime());
             if (chargeResult == false) {
                 
                 return failedAuthorizeNet(model, invoice);
             }
             else {
                 // CashRun
+                log.info("Begin Connect Card Run at: " + Calendar.getInstance().getTime());
+                startTime = System.currentTimeMillis();
                 CashRun cashRunResult = connectCashRun(invoice, order, request);;
+                log.info("It takes " + (System.currentTimeMillis() - startTime)/1000 + " seconds.");
+                log.info("End Connect Card Run at: " + Calendar.getInstance().getTime());
                 
                 if(cashRunResult!=null && "001".equals(cashRunResult.getCode())){
                     
                     /* Capture a Previously Authorized Transaction */
+                    log.info("Begin Charged Visa Card at: " + Calendar.getInstance().getTime());
+                    startTime = System.currentTimeMillis();
                     boolean capture = paymentService.capturePreviouslyAuthorizedAmount(invoice);
+                    log.info("It takes " + (System.currentTimeMillis() - startTime)/1000 + " seconds.");
+                    log.info("End Charged Visa Card at: " + Calendar.getInstance().getTime());
                     if(capture == false){
                         
                         return failedAuthorizeNet(model, invoice);
@@ -879,8 +891,8 @@ public class CheckOutController {
                     taskScheduler.execute(() -> mailSender.send(preparator));
 
                     ////////////////////////////////////////////////////////////////////
-                    log.info("Call Async methods");
-                    log.info("VTC_AUTO: " + loginedUser.getConfig(LiXiConstants.VTC_AUTO));
+                    //log.info("Call Async methods");
+                    //log.info("VTC_AUTO: " + loginedUser.getConfig(LiXiConstants.VTC_AUTO));
                     if(LiXiConstants.YES.equals(loginedUser.getConfig(LiXiConstants.VTC_AUTO))){
                         // The order is paid, top up mobile
                         lxAsyncMethods.processTopUpItems(order);
@@ -892,13 +904,13 @@ public class CheckOutController {
                     lxAsyncMethods.cashRunTransactionStatusUpdate(request.getHeader("User-Agent"), invoice.getId(), orderId, LiXiUtils.getNumberFormat().format(invoice.getTotalAmount()), "USD");
                     
                     //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
-                    log.info("submitOrdersToBaoKim");
+                    //log.info("submitOrdersToBaoKim");
 
                     lxAsyncMethods.submitOrdersToBaoKim(order);
 
-                    log.info(" // END of submitOrdersToBaoKim");
+                    //log.info(" // END of submitOrdersToBaoKim");
                     ////////////////////////////////////////////////////////////////////
-                    log.info("END OF Call Async methods");
+                    //log.info("END OF Call Async methods");
 
                     setReturnValue(model, "0", "/checkout/thank-you", "error.payment-method");
                     return new ModelAndView("ajax/place-order-message", model);
