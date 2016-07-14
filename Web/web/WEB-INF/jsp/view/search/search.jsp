@@ -13,8 +13,6 @@
             function jump(page) {
                 $('#searchForm #sPage').val(page);
                 
-                $('#searchForm #keyword').val(encodeURI($('#keyword').val));
-                
                 $('#searchForm').submit();
             }
         </script>
