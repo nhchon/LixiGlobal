@@ -542,7 +542,7 @@
                     </div>
                     <div class="button-control gift-total-wrapper text-center text-uppercase" style="padding-bottom: 20px;">
                         <div class="button-control-page" id="btnDiv">
-                            <button class="btn btn-default btn-has-link-event" type="button" data-link="<c:url value="/gifts/choose"/>"><spring:message code="keep-shopping"/></button>
+                            <button class="btn btn-warning btn-has-link-event"  style="color: white;" type="button" data-link="<c:url value="/gifts/choose"/>"><spring:message code="keep-shopping"/></button>
                             <c:if test="${LIXI_FINAL_TOTAL gt 0}">
                                 <%--<button id="btnSubmit" type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>--%>
                                 <button id="btnSubmit" type="button" class="btn btn-primary" onclick="processingYourOrder()" style="color:#fff;"><spring:message code="place-order"/></button>    
