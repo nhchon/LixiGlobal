@@ -9,6 +9,7 @@
     </jsp:attribute>
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
         <script type="text/javascript">
             jQuery(document).ready(function () {
                 $(function(){
@@ -122,6 +123,12 @@
                         {
                             //data: return data from server
                             if (data.error === '0') {
+                                var recId = $("#chooseRecipientForm #recId").val();
+                                var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+                                if(recId > 0){
+                                    $('#rec'+recId).html(name);
+                                }
+                                
                                 // hide popup
                                 $('#editRecipientModal').modal('hide');
                             }
@@ -209,7 +216,7 @@
                                             <td style="text-align: center;">
                                                 <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
                                                     <c:if test="${not empty rio.gifts}">
-                                                    ${rio.recipient.fullName}<br/><a href="javascript:viewRecipient(${rio.recipient.id});">${rio.recipient.beautyId}</a><br/>
+                                                        <span id="rec${rio.recipient.id}">${rio.recipient.fullName}</span><br/><a href="javascript:viewRecipient(${rio.recipient.id});">${rio.recipient.beautyId}</a><br/>
                                                     </c:if>
                                                 </c:forEach>
                                             </td>

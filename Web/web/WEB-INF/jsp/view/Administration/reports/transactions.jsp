@@ -10,6 +10,7 @@
     </jsp:attribute>
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
+        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
         <script type="text/javascript">
             var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
             
@@ -123,6 +124,11 @@
                         {
                             //data: return data from server
                             if (data.error === '0') {
+                                var recId = $("#chooseRecipientForm #recId").val();
+                                var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+                                if(recId > 0){
+                                    $('#rec'+recId).html(name);
+                                }
                                 // hide popup
                                 $('#editRecipientModal').modal('hide');
                             }
@@ -154,7 +160,7 @@
             }
             
         </script>
-        <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.maskedinput.min.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/bootstrap-datepicker.min.js"/>"></script>
     </jsp:attribute>
     <jsp:body>
@@ -299,7 +305,7 @@
                                             <td style="text-align: center;">
                                                 <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
                                                     <c:if test="${not empty rio.gifts}">
-                                                    ${rio.recipient.fullName}<br/><a href="javascript:viewRecipient(${rio.recipient.id});">${rio.recipient.beautyId}</a><br/>
+                                                    <span id="rec${rio.recipient.id}">${rio.recipient.fullName}</span><br/><a href="javascript:viewRecipient(${rio.recipient.id});">${rio.recipient.beautyId}</a><br/>
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
