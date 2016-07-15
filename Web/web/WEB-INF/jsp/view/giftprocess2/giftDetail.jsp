@@ -77,6 +77,7 @@
                     // focus on phone field
                     $('#editRecipientModal').on('shown.bs.modal', function () {
                         // TODO
+                        $("#chooseRecipientForm #phone").mask("(999) 999-999?9");
                     })
 
                 });
@@ -97,6 +98,7 @@
                     $('#editRecipientModal').on('shown.bs.modal', function () {
                         // TODO
                         $("#chooseRecipientForm #firstName").focus();
+                        $("#chooseRecipientForm #phone").mask("(999) 999-999?9");
                     })
 
                 });

@@ -9,7 +9,7 @@
                 <label class="control-label"><spring:message code="gift.name_of_recipient"/><span class="errors">*</span></label>
             </div>
             <div class="col-lg-7 col-md-7">
-                ${rec.fullName}
+                <c:out value="${rec.fullName}"/>
             </div>
         </div>
         <div class="form-group">
@@ -25,7 +25,7 @@
                 <label class="control-label"><spring:message code="gift.phone_of_recipient"/><span class="errors">*</span></label>
             </div>
             <div class="col-lg-7 col-md-7">
-                ${rec.phone}
+                <c:out value="${rec.phone}"/>
             </div>
         </div>
         <div class="form-group">
@@ -33,7 +33,7 @@
                 <label class="control-label"><spring:message code="gift.note"/></label>
             </div>
             <div class="col-lg-7 col-md-7">
-                ${rec.note}
+                <c:out value="${rec.note}"/>
             </div>
         </div>
     </form>

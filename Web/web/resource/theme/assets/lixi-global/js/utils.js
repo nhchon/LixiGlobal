@@ -1,3 +1,10 @@
+function strip(html)
+{
+   var tmp = document.createElement("DIV");
+   tmp.innerHTML = html;
+   return tmp.textContent || tmp.innerText || "";
+}
+
 function onSubmitSearchForm(){
     //$('#searchForm #keyword').val(encodeURI($('#searchForm #keyword').val()));
     //alert(encodeURI($('#searchForm #keyword').val()))

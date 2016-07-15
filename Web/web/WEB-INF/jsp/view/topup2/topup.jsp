@@ -58,6 +58,7 @@
                     $('#editRecipientModal').on('shown.bs.modal', function () {
                         // TODO
                         $("#chooseRecipientForm #firstName").focus();
+                        $("#chooseRecipientForm #phone").mask("(999) 999-999?9");
                     })
 
                 });
@@ -128,7 +129,8 @@
                         enableEditRecipientHtmlContent(data);
                         // focus on phone field
                         $('#editRecipientModal').on('shown.bs.modal', function () {
-                            $('#' + focusId).focus()
+                            $('#' + focusId).focus();
+                            $("#chooseRecipientForm #phone").mask("(999) 999-999?9");
                         })
 
                     });
@@ -175,7 +177,7 @@
                                         // hide popup
                                         $('#editRecipientModal').modal('hide');
                                         // get new phone number
-                                        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+                                        var name = strip($("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val());
                                         var phone = $("#chooseRecipientForm #phone").val();
                                         /* new recipient */
                                         if (parseInt(data.recId) > 0) {

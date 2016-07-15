@@ -43,11 +43,11 @@ import vn.chonsoft.lixi.web.beans.LoginedUser;
 @WebController
 @RequestMapping("recipient")
 public class RecipientController {
-    
+
     /* session bean - Login user */
     @Autowired
     private LoginedUser loginedUser;
-    
+
     @Autowired
     private RecipientService reciService;
 
@@ -56,35 +56,36 @@ public class RecipientController {
 
     @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
-    
+
     @Autowired
     private VelocityEngine velocityEngine;
-    
+
     @Autowired
     private JavaMailSender mailSender;
-    
+
     /**
-     * 
+     *
      * @param model
      * @param id
      * @param request
-     * @return 
+     * @return
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "deactivated/{id}", method = RequestMethod.GET)
     public ModelAndView deactivated(Map<String, Object> model, @PathVariable Long id) {
-        
+
         Recipient rec = this.reciService.findById(id);
-        if(rec != null){
+        if (rec != null) {
             rec.setActivated(false);
             this.reciService.save(rec);
         }
-        
+
         model.put("error", 0);
         model.put("recId", id);
-        
+
         return new ModelAndView("recipient/message");
     }
+
     /**
      *
      * @param model
@@ -100,7 +101,7 @@ public class RecipientController {
         if (id > 0) {
             /* get recipient */
             Recipient rec = this.reciService.findById(id);
-            if(rec != null){
+            if (rec != null) {
                 form.setRecId(rec.getId());
                 form.setFirstName(rec.getFirstName());
                 form.setMiddleName(rec.getMiddleName());
@@ -112,8 +113,7 @@ public class RecipientController {
                 form.setNote(rec.getNote());
                 form.setAction("edit");
             }
-        }
-        else{
+        } else {
             form.setNote("Happy Birthday");
             form.setAction("create");
         }
@@ -122,7 +122,7 @@ public class RecipientController {
 
         return new ModelAndView("recipient/editRecipientModal");
     }
-    
+
     /**
      *
      * @param model
@@ -137,43 +137,50 @@ public class RecipientController {
             @Valid ChooseRecipientForm form, Errors errors, HttpServletRequest request) {
 
         User u = this.userService.findByEmail(loginedUser.getEmail());
-        
+
         // for error
         model.put("error", 1);
         model.put("action", form.getAction());
-        
+
         if (errors.hasErrors()) {
 
             return new ModelAndView("recipient/message");
         }
 
         try {
-            // save or update the recipient
-            Recipient rec = new Recipient();
-            rec.setId(form.getRecId());
-            rec.setSender(u);
-            rec.setFirstName(form.getFirstName());
-            rec.setMiddleName(form.getMiddleName());
-            rec.setLastName(form.getLastName());
-            rec.setEmail(form.getEmail());
-            rec.setDialCode(form.getDialCode());
-            rec.setPhone(form.getPhone());
-            rec.setActivated(true);
-            rec.setNote(LiXiGlobalUtils.html2text(form.getNote()));// LiXiUtils.fixEncode
-            rec.setModifiedDate(Calendar.getInstance().getTime());
+            String f = LiXiGlobalUtils.html2text(form.getFirstName());
+            String m = LiXiGlobalUtils.html2text(form.getMiddleName());
+            String l = LiXiGlobalUtils.html2text(form.getLastName());
+            if (StringUtils.isBlank(f) || StringUtils.isBlank(l)) {
+                
+            } else {
+                // save or update the recipient
+                Recipient rec = new Recipient();
+                rec.setId(form.getRecId());
+                rec.setSender(u);
+                rec.setFirstName(f);
+                rec.setMiddleName(m);
+                rec.setLastName(l);
+                rec.setEmail(form.getEmail());
+                rec.setDialCode(form.getDialCode());
+                rec.setPhone(form.getPhone());
+                rec.setActivated(true);
+                rec.setNote(LiXiGlobalUtils.html2text(form.getNote()));// LiXiUtils.fixEncode
+                rec.setModifiedDate(Calendar.getInstance().getTime());
 
-            rec = this.reciService.save(rec);
+                rec = this.reciService.save(rec);
 
-            // store selected recipient into session
-            request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_ID, rec.getId());
-            request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, form.getFirstName() + " " + StringUtils.defaultIfEmpty(form.getMiddleName(), "") + " " + form.getLastName());
+                // store selected recipient into session
+                request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_ID, rec.getId());
+                request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, form.getFirstName() + " " + StringUtils.defaultIfEmpty(form.getMiddleName(), "") + " " + form.getLastName());
 
-            //email
-            emailNewRecipient(u, rec);
-            
-            // return
-            model.put("error", 0);
-            model.put("recId", rec.getId());
+                //email
+                emailNewRecipient(u, rec);
+
+                // return
+                model.put("error", 0);
+                model.put("recId", rec.getId());
+            }
             
             return new ModelAndView("recipient/message");
 
@@ -186,15 +193,15 @@ public class RecipientController {
     }
 
     /**
-     * 
+     *
      * @param u
-     * @param r 
+     * @param r
      */
-    private void emailNewRecipient(User u, Recipient r){
+    private void emailNewRecipient(User u, Recipient r) {
         // send Email
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @SuppressWarnings({"rawtypes", "unchecked"})
             @Override
             public void prepare(MimeMessage mimeMessage) throws Exception {
 
@@ -205,15 +212,15 @@ public class RecipientController {
                 message.setSubject("LiXi.Global - Receiver Info Alert");
                 message.setSentDate(Calendar.getInstance().getTime());
 
-                Map model = new HashMap();	             
+                Map model = new HashMap();
                 model.put("user", u);
                 model.put("r", r);
 
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
-                   velocityEngine, "emails/new-receiver.vm", "UTF-8", model);
+                        velocityEngine, "emails/new-receiver.vm", "UTF-8", model);
                 message.setText(text, true);
-              }
-        };        
+            }
+        };
 
         // send oldEmail
         taskScheduler.execute(() -> mailSender.send(preparator));

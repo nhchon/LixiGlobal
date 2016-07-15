@@ -115,7 +115,7 @@ var recOnDetailGift = function handleRecipientHtmlOnDetailGift(data){
     if (data.error === '0') {
         // hide popup
         $('#editRecipientModal').modal('hide');
-        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+        var name = strip($("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val());
         var phone = $("#chooseRecipientForm #email").val();
         var email = $("#chooseRecipientForm #phone").val();
         var firstName = $("#chooseRecipientForm #firstName").val();
@@ -130,6 +130,8 @@ var recOnDetailGift = function handleRecipientHtmlOnDetailGift(data){
                                 .text(name + " - " + phone + " - " + email));
 
                 $('#recId').val(data.recId);
+                $('button.edit-receiver').each(function(){$(this).attr('data-receiver-id', data.recId);});
+                
             } else {
                 // save successfully
                 $("#recId option:selected").attr("firstname", $("#chooseRecipientForm #firstName").val());
@@ -146,7 +148,7 @@ function enableEditRecipientHtmlContent(data, handleFunction) {
     $('#editRecipientContent').html(data);
     $('#editRecipientModal').modal({show: true});
 
-    $("#chooseRecipientForm #phone").mask("999999999?9");
+    $("#chooseRecipientForm #phone").mask("(999) 999-999?9");
     // handler submit form
     //callback handler for form submit
     $("#chooseRecipientForm").submit(function (e)
