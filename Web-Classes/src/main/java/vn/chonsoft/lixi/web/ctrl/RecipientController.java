@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
@@ -140,6 +139,7 @@ public class RecipientController {
 
         // for error
         model.put("error", 1);
+        model.put("name", "");
         model.put("action", form.getAction());
 
         if (errors.hasErrors()) {
@@ -171,8 +171,9 @@ public class RecipientController {
                 rec = this.reciService.save(rec);
 
                 // store selected recipient into session
+                String recName = f + (StringUtils.isEmpty(m)?" ": " "+m+" ") + l;
                 request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_ID, rec.getId());
-                request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, form.getFirstName() + " " + StringUtils.defaultIfEmpty(form.getMiddleName(), "") + " " + form.getLastName());
+                request.getSession().setAttribute(LiXiConstants.SELECTED_RECIPIENT_NAME, recName);
 
                 //email
                 emailNewRecipient(u, rec);
@@ -180,6 +181,7 @@ public class RecipientController {
                 // return
                 model.put("error", 0);
                 model.put("recId", rec.getId());
+                model.put("name", recName);
             }
             
             return new ModelAndView("recipient/message");

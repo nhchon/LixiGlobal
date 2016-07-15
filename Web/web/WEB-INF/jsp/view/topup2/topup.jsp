@@ -177,7 +177,7 @@
                                         // hide popup
                                         $('#editRecipientModal').modal('hide');
                                         // get new phone number
-                                        var name = strip($("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val());
+                                        var name = data.name;
                                         var phone = $("#chooseRecipientForm #phone").val();
                                         /* new recipient */
                                         if (parseInt(data.recId) > 0) {

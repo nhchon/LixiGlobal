@@ -101,7 +101,7 @@ var recOnPlaceOrder = function handleRecipientHtmlOnPlaceOrder(data){
         $('#editRecipientModal').modal('hide');
         // get new phone number
         var recId = $("#chooseRecipientForm #recId").val();
-        var name = $("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val();
+        var name = data.name;
         $('#recName' + recId).html(name);
         $('#recPhone' + recId).html($("#chooseRecipientForm #phone").val());
         $('#recEmail' + recId).html($("#chooseRecipientForm #email").val());
@@ -115,7 +115,7 @@ var recOnDetailGift = function handleRecipientHtmlOnDetailGift(data){
     if (data.error === '0') {
         // hide popup
         $('#editRecipientModal').modal('hide');
-        var name = strip($("#chooseRecipientForm #firstName").val() + " " + $("#chooseRecipientForm #middleName").val() + " " + $("#chooseRecipientForm #lastName").val());
+        var name = data.name;
         var phone = $("#chooseRecipientForm #email").val();
         var email = $("#chooseRecipientForm #phone").val();
         var firstName = $("#chooseRecipientForm #firstName").val();
