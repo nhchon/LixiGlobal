@@ -241,7 +241,7 @@
     <jsp:body>
         <!-- Page Content -->
         <c:import url="/categories"/>
-        <section class="section-gift bg-default main-section">
+        <section class="section-gift main-section">
             <div class="container">
                 <c:set var="localStep" value="4"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
