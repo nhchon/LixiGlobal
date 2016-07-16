@@ -47,7 +47,15 @@ public abstract class LiXiGlobalUtils {
         
         if(StringUtils.isEmpty(html)) return html;
         
-        return Jsoup.parse(html).text();
+        String t = Jsoup.parse(html).text();
+        
+        if(!StringUtils.isBlank(t)){
+            // remove double spaces
+            return t.replaceAll("\\s+", " ");
+        }
+        else{
+            return t;
+        }
     }
     /**
      *
@@ -260,7 +268,10 @@ public abstract class LiXiGlobalUtils {
      */
     public static String checkZeroAtBeginOfPhoneNumber(String phone){
         
-        if(phone == null) return phone;
+        if(StringUtils.isBlank(phone)) return phone;
+        
+        // remove blank
+        phone = phone.replace("(", "").replace(")", "");
         
         if(!phone.startsWith("0")){
             

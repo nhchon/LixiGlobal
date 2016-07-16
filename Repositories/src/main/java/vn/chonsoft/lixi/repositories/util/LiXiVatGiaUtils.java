@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.repositories.util;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -566,20 +567,22 @@ public class LiXiVatGiaUtils {
     /**
      *
      * @param order
+     * @return 
      */
-    public void cancelOrderOnBaoKim(LixiOrder order) {
+    public boolean cancelOrderOnBaoKim(LixiOrder order) {
 
         // check properties is null
         if (baokimProp == null) {
-            return;
+            return false;
         }
         if (order == null) {
-            return;
+            return true;
         }
         if (order.getGifts() == null || order.getGifts().isEmpty()) {
-            return;
+            return true;
         }
         //
+        boolean updateOrderStatus = true;
         try {
 
             final AuthHttpComponentsClientHttpRequestFactory requestFactory
@@ -589,7 +592,7 @@ public class LiXiVatGiaUtils {
             final RestTemplate restTemplate = new RestTemplate(requestFactory);
 
             String submitUrl = baokimProp.getProperty("baokim.cancel_order");
-            boolean updateOrderStatus = true;
+            SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             for (LixiOrderGift gift : order.getGifts()) {
 
                 try {
@@ -609,9 +612,12 @@ public class LiXiVatGiaUtils {
 
                     LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
 
+                    Date dt = Calendar.getInstance().getTime();
+                    
                     gift.setBkStatus(EnumLixiOrderStatus.CANCELED.getValue());
                     gift.setBkMessage(result.getData().getMessage());
-                    gift.setModifiedDate(Calendar.getInstance().getTime());
+                    gift.setBkUpdated(dFormat.format(dt));
+                    gift.setModifiedDate(dt);
                     
                     log.info("bk message:" + result.getData().getMessage());
                     log.info("order id:" + result.getData().getOrder_id());
@@ -645,7 +651,8 @@ public class LiXiVatGiaUtils {
             //log.debug(e.getMessage(), e);
             emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
-
+        
+        return updateOrderStatus;
     }
 
     /**

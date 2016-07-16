@@ -801,31 +801,31 @@ public class CheckOutController {
             this.invoiceService.save(invoice);
             
             //////////////////////// CHARGE CREDIT CARD ////////////////////////
-            log.info("Begin Authorize Visa Card at: " + Calendar.getInstance().getTime());
-            long startTime = System.currentTimeMillis();
+            //log.info("Begin Authorize Visa Card at: " + Calendar.getInstance().getTime());
+            //long startTime = System.currentTimeMillis();
             boolean chargeResult = paymentService.chargeByCustomerProfile(invoice);
-            log.info("It takes " + (System.currentTimeMillis() - startTime)/1000 + " seconds.");
-            log.info("End Authorize Visa Card at: " + Calendar.getInstance().getTime());
+            //log.info("It takes " + (System.currentTimeMillis() - startTime)/1000 + " seconds.");
+            //log.info("End Authorize Visa Card at: " + Calendar.getInstance().getTime());
             if (chargeResult == false) {
                 
                 return failedAuthorizeNet(model, invoice);
             }
             else {
                 // CashRun
-                log.info("Begin Connect Card Run at: " + Calendar.getInstance().getTime());
-                startTime = System.currentTimeMillis();
+                //log.info("Begin Connect Card Run at: " + Calendar.getInstance().getTime());
+                //startTime = System.currentTimeMillis();
                 CashRun cashRunResult = connectCashRun(invoice, order, request);;
-                log.info("It takes " + (System.currentTimeMillis() - startTime)/1000 + " seconds.");
-                log.info("End Connect Card Run at: " + Calendar.getInstance().getTime());
+                //log.info("It takes " + (System.currentTimeMillis() - startTime)/1000 + " seconds.");
+                //log.info("End Connect Card Run at: " + Calendar.getInstance().getTime());
                 
                 if(cashRunResult!=null && "001".equals(cashRunResult.getCode())){
                     
                     /* Capture a Previously Authorized Transaction */
-                    log.info("Begin Charged Visa Card at: " + Calendar.getInstance().getTime());
-                    startTime = System.currentTimeMillis();
+                    //log.info("Begin Charged Visa Card at: " + Calendar.getInstance().getTime());
+                    //startTime = System.currentTimeMillis();
                     boolean capture = paymentService.capturePreviouslyAuthorizedAmount(invoice);
-                    log.info("It takes " + (System.currentTimeMillis() - startTime)/1000 + " seconds.");
-                    log.info("End Charged Visa Card at: " + Calendar.getInstance().getTime());
+                    //log.info("It takes " + (System.currentTimeMillis() - startTime)/1000 + " seconds.");
+                    //log.info("End Charged Visa Card at: " + Calendar.getInstance().getTime());
                     if(capture == false){
                         
                         return failedAuthorizeNet(model, invoice);

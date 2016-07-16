@@ -185,9 +185,9 @@ public class UserManagementController {
             // exceptions will be thrown if there is no account
             User u = this.userService.findByEmail(email);
             
-            u.setFirstName(LiXiGlobalUtils.html2text(form.getFirstName()));
-            u.setMiddleName(LiXiGlobalUtils.html2text(form.getMiddleName()));
-            u.setLastName(LiXiGlobalUtils.html2text(form.getLastName()));
+            u.setFirstName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getFirstName()), null));
+            u.setMiddleName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getMiddleName()), null));
+            u.setLastName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getLastName()), null));
             
             // save
             this.userService.save(u);
@@ -428,10 +428,10 @@ public class UserManagementController {
     @RequestMapping(value = "editPhoneNumber", method = RequestMethod.GET)
     public ModelAndView editPhoneNumber(Map<String, Object> model, HttpServletRequest request) {
         
-        String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
         // get user
-        User u = this.userService.findByEmail(email);
+        User u = this.userService.findByEmail(loginedUser.getEmail());
         // get current phone number
+        model.put("dialCode", u.getDialCode());
         model.put("phone", u.getPhone());
         return new ModelAndView("user2/editPhoneNumber", model);
     }
@@ -447,10 +447,13 @@ public class UserManagementController {
         
         User u = this.userService.findByEmail(loginedUser.getEmail());
         
+        String dialCode = request.getParameter("dialCode");
         String phone = LiXiGlobalUtils.html2text(request.getParameter("phone"));
         
         // update
-        this.userService.updatePhoneNumber(phone, u.getId());
+        u.setDialCode(dialCode);
+        u.setPhone(phone);
+        this.userService.save(u);
         
         // return your account page
         Map<String, Object> model = new HashMap<>();

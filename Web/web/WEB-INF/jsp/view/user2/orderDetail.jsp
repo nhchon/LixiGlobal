@@ -1,5 +1,5 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
-<template:Client htmlTitle="Lixi Global - Select A Payment Method">
+<template:Client htmlTitle="Lixi Global - Order Detail">
 
     <jsp:attribute name="extraHeadContent">
     </jsp:attribute>
@@ -41,6 +41,7 @@
     </jsp:attribute>
 
     <jsp:body>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <section class="section-gift bg-default main-section">
             <div class="container post-wrapper" style="padding-top:30px;">
                 <div class="section-receiver">
@@ -89,6 +90,8 @@
                                             </c:when>
                                         </c:choose>                                                    
                                         <span><sup>***</sup>${fn:substring(LIXI_ORDER.card.cardNumber, lengthCard-4, lengthCard)}</span>
+                                        <br/>
+                                        <p style="margin-top: 10px;"><span>USD <strong>1</strong> = <strong><fmt:formatNumber value="${LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/></strong> VND</span></p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -98,28 +101,28 @@
                                             <tr>
                                                 <td><spring:message code="mess.gift-price"/></td>
                                                 <td style="text-align: right;">
-                                                    USD <fmt:formatNumber value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/>
+                                                    USD <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><spring:message code="mess.card-process-fee"/></td>
-                                                <td style="text-align: right;"><fmt:formatNumber value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></td>
+                                                <td style="text-align: right;"><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></td>
                                             </tr>
                                             <tr>
                                                 <td><spring:message code="mess.lixi-handle-fee"/></td>
-                                                <td style="text-align: right;"><fmt:formatNumber value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></td>
+                                                <td style="text-align: right;"><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${LIXI_HANDLING_FEE_TOTAL}" pattern="###,###.##"/></td>
                                             </tr>
                                             <tr>
                                                 <td style="padding-top: 10px;"><spring:message code="mess.total-before-tax"/></td>
-                                                <td style="padding-top: 10px;text-align: right;"><fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></td>
+                                                <td style="padding-top: 10px;text-align: right;"><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></td>
                                             </tr>
                                             <tr>
                                                 <td><spring:message code="mess.sale-tax"/></td>
-                                                <td style="text-align: right;">0.0</td>
+                                                <td style="text-align: right;">0.00</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding-top: 10px;"><b><spring:message code="mess.grand-tax"/></b></td>
-                                                <td style="padding-top: 10px;text-align: right;">USD <fmt:formatNumber value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/>
+                                                <td style="padding-top: 10px;text-align: right;">USD <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/>
                                                 </td>
                                             </tr>
                                         </table>
@@ -216,12 +219,28 @@
                                 </c:forEach>
                                 <c:forEach items="${rio.topUpMobilePhones}" var="t">
                                     <div class="row" style="margin-bottom: 5px;margin-top: 20px;">
-                                        <div class="col-md-2" style="padding-left:50px;">
+                                        <div class="col-md-2" style="padding-left:50px;white-space: nowrap;">
                                             <spring:message code="mess.top-up"/>
                                         </div>
                                         <div class="col-md-1" style="text-align: center;">1</div>
-                                        <div class="col-md-6">
-                                            <spring:message code="mess.top-up-for"/> ${t.phone}
+                                        <div class="col-md-5">
+                                            <spring:message code="mess.top-up-for"/>&nbsp;${t.phone}
+                                        </div>
+                                        <div class="col-md-1" style="text-align: center;">
+                                            <c:choose>
+                                                <c:when test="${t.status eq UN_SUBMITTED}">
+                                                    <span class="alert-danger">Not Sent</span>
+                                                </c:when>
+                                                <c:when test="${t.status eq COMPLETED}">
+                                                    <span class="alert-success">Completed</span>
+                                                    <span style="font-size: 12px;"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${t.modifiedDate}"/></span>
+                                                </c:when>
+                                                <c:when test="${t.status eq CANCELED}">
+                                                    <span class="alert-warning">Canceled</span>
+                                                    <span style="font-size: 12px;"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${t.modifiedDate}"/></span>
+                                                </c:when>
+                                            </c:choose>
+                                            
                                         </div>
                                         <div class="col-md-3" style="text-align: right;">
                                             USD <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>

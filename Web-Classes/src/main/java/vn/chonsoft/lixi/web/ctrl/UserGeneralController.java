@@ -58,6 +58,7 @@ import vn.chonsoft.lixi.repositories.service.UserMoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserSecretCodeService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.UserSessionService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
@@ -159,11 +160,12 @@ public class UserGeneralController {
         }
 
         User u = new User();
-        u.setFirstName(form.getFirstName());
-        u.setMiddleName(form.getMiddleName());
-        u.setLastName(form.getLastName());
+        u.setFirstName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getFirstName()), null));
+        u.setMiddleName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getMiddleName()), null));
+        u.setLastName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getLastName()), null));
         u.setEmail(form.getEmail());
         u.setPassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()));
+        u.setDialCode(form.getDialCode());
         u.setPhone(form.getPhone());
         u.setAccountNonExpired(true);
         u.setAccountNonLocked(true);

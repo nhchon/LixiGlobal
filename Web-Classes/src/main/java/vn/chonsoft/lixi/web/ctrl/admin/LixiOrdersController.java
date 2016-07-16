@@ -32,9 +32,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.EnumTransactionResponseCode;
+import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiBatch;
 import vn.chonsoft.lixi.model.LixiBatchOrder;
+import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.SecurityAdminUser;
 import vn.chonsoft.lixi.model.form.LixiOrderSearchForm;
@@ -45,9 +48,11 @@ import vn.chonsoft.lixi.repositories.search.SearchCriteria;
 import vn.chonsoft.lixi.repositories.service.LixiBatchOrderService;
 import vn.chonsoft.lixi.repositories.service.LixiBatchService;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
+import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderSearchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
+import vn.chonsoft.lixi.repositories.service.PaymentService;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
@@ -60,124 +65,125 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
 @RequestMapping(value = "/Administration/Orders")
 @PreAuthorize("hasAuthority('SYSTEM_ORDERS_CONTROLLER')")
 public class LixiOrdersController {
-    
+
     private static final Logger log = LogManager.getLogger(LixiOrdersController.class);
-    
+
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    
+
     @Autowired
     private LixiOrderService lxOrderService;
-    
+
     @Autowired
     private LixiOrderSearchService lxOrderSearchService;
-    
+
     @Autowired
     private LixiOrderGiftService lxogiftService;
-    
+
     @Autowired
     private LixiAsyncMethods lxAsyncMethods;
-    
+
     @Autowired
     private LixiBatchService batchService;
-    
+
     @Autowired
     private LixiBatchOrderService batchOrderService;
-    
+
     @Autowired
     private LixiConfigService configService;
-    
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
+    private LixiInvoiceService invoiceService;
+
     /**
-     * 
+     *
      * @param model
      * @param id
-     * @return 
+     * @return
      */
     @RequestMapping(value = "reSendOrder/{id}", method = RequestMethod.GET)
-    public ModelAndView reSendOrder(Map<String, Object> model, @PathVariable Long id){
-        
+    public ModelAndView reSendOrder(Map<String, Object> model, @PathVariable Long id) {
+
         model.put("error", "0");
-        
+
         LixiOrder order = this.lxOrderService.findById(id);
-        
+
         boolean rs = true;
-        if(order != null){
+        if (order != null) {
             rs = lxAsyncMethods.reSubmitOrdersToBaoKimNoAsync(order);
         }
-        
-        model.put("error", rs?"0":"1");
-        
+
+        model.put("error", rs ? "0" : "1");
+
         return new ModelAndView("Administration/ajax/simple-message");
     }
+
     /**
-     * 
+     *
      * @param model
-     * @return 
+     * @return
      */
     @RequestMapping(value = "checkBaoKimStatus", method = RequestMethod.GET)
-    public ModelAndView checkBaoKimStatus(Map<String, Object> model){
-        
+    public ModelAndView checkBaoKimStatus(Map<String, Object> model) {
+
         model.put("error", "1");
-        if(lxAsyncMethods.checkBaoKimSystem()){
+        if (lxAsyncMethods.checkBaoKimSystem()) {
             model.put("error", "0");
         }
-        
+
         return new ModelAndView("Administration/ajax/simple-message");
     }
+
     /**
-     * 
+     *
      * @param model
-     * @return 
+     * @return
      */
     @RequestMapping(value = "report", method = RequestMethod.GET)
-    public ModelAndView report(Map<String, Object> model){
+    public ModelAndView report(Map<String, Object> model) {
 
         //model.put("mOs", null);
-        
         //LixiOrderSearchForm searchForm = new LixiOrderSearchForm();
-        
         /* default value for search form */
         //searchForm.setStatus("All");
-        
         Date currDate = DateUtils.addDays(Calendar.getInstance().getTime(), 1);
         Date fromDate = DateUtils.addDays(currDate, -2);
 
         //searchForm.setFromDate(formatter.format(fromDate));
         //searchForm.setToDate(formatter.format(currDate));
-        
         //model.put("searchForm", searchForm);
         //model.put("results", null);
-        
-        String url = "search=true&paging.page=1&paging.size=50&status=All&fromDate=" + formatter.format(fromDate)+ "&toDate="+formatter.format(currDate);
+        String url = "search=true&paging.page=1&paging.size=50&status=All&fromDate=" + formatter.format(fromDate) + "&toDate=" + formatter.format(currDate);
         return new ModelAndView(new RedirectView("/Administration/Orders/report?" + url, true, true));
     }
-    
+
     /**
-     * 
+     *
      * @param model
      * @param form
      * @param pageable
      * @throws ParseException
-     * @return 
+     * @return
      */
     @RequestMapping(value = "report", params = "search=true",
-            method = { RequestMethod.GET, RequestMethod.POST })
-    public ModelAndView report(Map<String, Object> model, LixiOrderSearchForm form, Pageable pageable) throws ParseException
-    {
+            method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView report(Map<String, Object> model, LixiOrderSearchForm form, Pageable pageable) throws ParseException {
         Page<LixiOrder> pOrder = null;
-        
-        if(form.getOrderId()!=null){
-            
+
+        if (form.getOrderId() != null) {
+
             pOrder = this.lxOrderService.findById(form.getOrderId(), pageable);
-        }
-        else{
-            
+        } else {
+
             SearchCriteria criteria = SearchCriteria.Builder.create();
 
             /* do not get orders that in creation */
             criteria.add(new Criterion("lixiStatus", Criterion.Operator.NEQ, EnumLixiOrderStatus.UN_FINISHED.getValue()));
 
             /* check status */
-            if(!LiXiGlobalConstants.TRANS_REPORT_STATUS_ALL.equals(form.getStatus())){
+            if (!LiXiGlobalConstants.TRANS_REPORT_STATUS_ALL.equals(form.getStatus())) {
 
                 log.info("LixiOrdersController.report(): " + form.getStatus());
 
@@ -185,261 +191,262 @@ public class LixiOrdersController {
             }
 
             /* created Date */
-            if(StringUtils.isNotEmpty(form.getFromDate())){
+            if (StringUtils.isNotEmpty(form.getFromDate())) {
                 criteria.add(new Criterion("createdDate", Criterion.Operator.GTE, new Date(
                         this.formatter.parse(form.getFromDate()).getTime()
                 )));
             }
 
-
-            if(StringUtils.isNotEmpty(form.getToDate())){
+            if (StringUtils.isNotEmpty(form.getToDate())) {
                 criteria.add(new Criterion("createdDate", Criterion.Operator.LTE, new Date(
                         DateUtils.addDays(this.formatter.parse(form.getToDate()), 1).getTime()
                 )));
             }
 
             //if(!StringUtils.isEmpty(form.getFirstName())){
-                //criteria.add(new Criterion("sender.firstName", Criterion.Operator.LIKE, form.getFirstName()));
+            //criteria.add(new Criterion("sender.firstName", Criterion.Operator.LIKE, form.getFirstName()));
             //}
-
             pOrder = this.lxOrderSearchService.search(criteria, pageable);
         }
         model.put("searchForm", form);
         model.put("results", pOrder);
-        
+
         List<LixiOrder> orders = null;
-        if(pOrder.getContent() != null){
+        if (pOrder.getContent() != null) {
             // new list
             orders = new ArrayList<>(pOrder.getContent());
-            
+
             Iterator<LixiOrder> iterator = orders.iterator();
-            
-            while(iterator.hasNext()){
+
+            while (iterator.hasNext()) {
                 LixiOrder o = iterator.next();
-                if(o.getGifts() == null || o.getGifts().isEmpty()){
+                if (o.getGifts() == null || o.getGifts().isEmpty()) {
                     /* remove the order has no gift. We don't need sent to baokim */
                     iterator.remove();
                 }
             }
         }
-        
+
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
-        
-        if(orders != null){
-            
+
+        if (orders != null) {
+
             orders.forEach(o -> {
                 mOs.put(o, LiXiUtils.genMapRecGifts(o));
             });
         }
-        
+
         model.put("mOs", mOs);
         //model.put("pOrder", pOrder);
-        
+
         return new ModelAndView("Administration/reports/transactions");
-    }    
+    }
+
     /**
-     * 
+     *
      * @param model
      * @param id
-     * @return 
+     * @return
      */
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    public ModelAndView listNewOrders(Map<String, Object> model, @PathVariable Long id){
-        
+    public ModelAndView listNewOrders(Map<String, Object> model, @PathVariable Long id) {
+
         LixiOrder order = this.lxOrderService.findById(id);
         /* back to list */
-        if(order == null){
+        if (order == null) {
             return new ModelAndView(new RedirectView("/Administration/Orders/newOrders/" + EnumLixiOrderStatus.PROCESSED.getValue(), true, true));
         }
-        
+
         List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
-        
+
         model.put("order", order);
         model.put("recGifts", recGifts);
-        
+
         return new ModelAndView("Administration/orders/orderDetail");
     }
-    
+
     /**
-     * 
+     *
      * @param model
      * @param oStatus
      * @param page
-     * @return 
+     * @return
      */
     @RequestMapping(value = "newOrders", method = RequestMethod.GET)
-    public ModelAndView listNewOrders(Map<String, Object> model, @RequestParam String oStatus, @PageableDefault(value = 50, sort = {"lixiStatus", "id"}, direction = Sort.Direction.DESC) Pageable page){
-        
+    public ModelAndView listNewOrders(Map<String, Object> model, @RequestParam String oStatus, @PageableDefault(value = 50, sort = {"lixiStatus", "id"}, direction = Sort.Direction.DESC) Pageable page) {
+
         Page<LixiOrder> pOrder = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), oStatus, page);
-        
+
         List<LixiOrder> orders = null;
-        if(pOrder.getContent() != null){
+        if (pOrder.getContent() != null) {
             // new list
             orders = new ArrayList<>(pOrder.getContent());
-            
+
             Iterator<LixiOrder> iterator = orders.iterator();
-            
-            while(iterator.hasNext()){
+
+            while (iterator.hasNext()) {
                 LixiOrder o = iterator.next();
-                if(o.getGifts() == null || o.getGifts().isEmpty()){
+                if (o.getGifts() == null || o.getGifts().isEmpty()) {
                     /* remove the order has no gift. We don't need sent to baokim */
                     iterator.remove();
                 }
             }
         }
-        
+
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
-        
-        if(orders != null){
-            
+
+        if (orders != null) {
+
             orders.forEach(o -> {
                 mOs.put(o, LiXiUtils.genMapRecGifts(o));
             });
         }
-        
+
         model.put("oStatus", oStatus);
         model.put("mOs", mOs);
         model.put("pOrder", pOrder);
-        
+
         return new ModelAndView("Administration/orders/newOrderInfo");
     }
-    
+
     /**
-     * 
+     *
      * @param model
      * @param oStatus
-     * @return 
+     * @return
      */
     @RequestMapping(value = "newOrders/ajax/{oStatus}", method = RequestMethod.GET)
-    public ModelAndView getListNewOrders(Map<String, Object> model, @PathVariable String oStatus){
-        
+    public ModelAndView getListNewOrders(Map<String, Object> model, @PathVariable String oStatus) {
+
         List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), oStatus);
-        
-        if(orders != null){
+
+        if (orders != null) {
             Iterator<LixiOrder> iterator = orders.iterator();
-            
-            while(iterator.hasNext()){
+
+            while (iterator.hasNext()) {
                 LixiOrder o = iterator.next();
-                if( o.getGifts() == null || o.getGifts().isEmpty()){
+                if (o.getGifts() == null || o.getGifts().isEmpty()) {
                     /* remove the order has no gift. We don't need sent to baokim */
                     iterator.remove();
                 }
             }
         }
-        
+
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
-        
-        if(orders != null){
-            
+
+        if (orders != null) {
+
             orders.forEach(o -> {
                 mOs.put(o, LiXiUtils.genMapRecGifts(o));
             });
         }
-        
+
         model.put("mOs", mOs);
-        
+
         return new ModelAndView("Administration/orders/newOrderInfoAjax");
     }
-    
+
     /**
-     * 
+     *
      * @param model
-     * @return 
+     * @return
      */
     @RequestMapping(value = "sendMoneyInfo", method = RequestMethod.GET)
-    public ModelAndView sendMoneyInfo(Map<String, Object> model){
-        
+    public ModelAndView sendMoneyInfo(Map<String, Object> model) {
+
         List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
-        
-        if(orders != null){
+
+        if (orders != null) {
             Iterator<LixiOrder> iterator = orders.iterator();
-            
-            while(iterator.hasNext()){
+
+            while (iterator.hasNext()) {
                 LixiOrder o = iterator.next();
-                if(o.getGifts() == null || o.getGifts().isEmpty()){
+                if (o.getGifts() == null || o.getGifts().isEmpty()) {
                     /* remove the order has no gift. We don't need sent to baokim */
                     iterator.remove();
                 }
             }
         }
-        
+
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         double baoKimTransferPercent = LiXiUtils.getBaoKimPercent(this.configService.findByName("LIXI_BAOKIM_TRANFER_PERCENT").getValue());
-        if(orders != null){
-            
+        if (orders != null) {
+
             orders.forEach(o -> {
                 mOs.put(o, LiXiUtils.genMapRecGifts(o, baoKimTransferPercent));
             });
         }
-        
+
         model.put("mOs", mOs);
-        
+
         return new ModelAndView("Administration/orders/sendMoneyInfo");
     }
-    
-    private LixiBatch createBatch(){
-        
+
+    private LixiBatch createBatch() {
+
         // current date
         Date currDate = Calendar.getInstance().getTime();
         SimpleDateFormat format = new SimpleDateFormat("MMddyyyy HH:mm a");
-        
+
         LixiBatch batch = new LixiBatch();
         batch.setName(format.format(currDate));
         batch.setCreatedDate(currDate);
         batch.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-        
+
         batch = this.batchService.save(batch);
-        
+
         log.info("batch id: " + batch.getId());
-        
+
         return batch;
     }
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
-    private double getBaoKimPercent(){
-        
+    private double getBaoKimPercent() {
+
         double percent = LiXiGlobalConstants.LIXI_BAOKIM_DEFAULT_PERCENT;
         try {
             percent = Double.parseDouble(this.configService.findByName("LIXI_BAOKIM_TRANFER_PERCENT").getValue());
-        } catch (Exception e) {}
-        
+        } catch (Exception e) {
+        }
+
         return percent;
     }
+
     /**
-     * 
+     *
      * @param model
      * @param id
-     * @return 
+     * @return
      */
     @RequestMapping(value = "sendMoneyInfo/{id}", method = RequestMethod.GET)
-    public ModelAndView sendMoneyInfo(Map<String, Object> model, @PathVariable Long id){
-        
+    public ModelAndView sendMoneyInfo(Map<String, Object> model, @PathVariable Long id) {
+
         return sendMoneyInfos(model, new Long[]{id});
     }
-    
+
     /**
-     * 
+     *
      * @param model
      * @param orderIds
-     * @return 
+     * @return
      */
     @RequestMapping(value = "sendMoneyInfo", method = RequestMethod.POST)
-    public ModelAndView sendMoneyInfos(Map<String, Object> model, @RequestParam(value="oIds") Long[] orderIds){
-        
-        if(orderIds != null && orderIds.length > 0){
-            
+    public ModelAndView sendMoneyInfos(Map<String, Object> model, @RequestParam(value = "oIds") Long[] orderIds) {
+
+        if (orderIds != null && orderIds.length > 0) {
+
             List<LixiOrder> orders = this.lxOrderService.findAll(Arrays.asList(orderIds));
             LixiBatch batch = createBatch();
-            
+
             double percent = getBaoKimPercent();
-        
-            for(LixiOrder order : orders){
+
+            for (LixiOrder order : orders) {
                 // send to bao kim
                 boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
-                if(rs){
+                if (rs) {
                     /* lưu id */
                     LixiBatchOrder bo = new LixiBatchOrder();
                     bo.setBatch(batch);
@@ -449,58 +456,83 @@ public class LixiOrdersController {
 
                     bo.setVndOnlyGift(sum.getVnd());
                     bo.setUsdOnlyGift(sum.getUsd());
-                
+
                     this.batchOrderService.save(bo);
                 }
             }
         }
         //
         return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
-        
+
     }
-    
+
     /**
-     * 
+     *
      * @param model
      * @param id
-     * @return 
+     * @return
      */
     @RequestMapping(value = "submit2BK/{id}", method = RequestMethod.GET)
-    public ModelAndView submitOrdersToBaoKim(Map<String, Object> model, @PathVariable Long id){
-        
+    public ModelAndView submitOrdersToBaoKim(Map<String, Object> model, @PathVariable Long id) {
+
         LixiOrder order = this.lxOrderService.findById(id);
-        
-        if(order != null){
+
+        if (order != null) {
             lxAsyncMethods.submitOrdersToBaoKimNoAsync(order);
         }
-        
+
         /* re-select */
         order = this.lxOrderService.findById(id);
-        
+
         List<RecipientInOrder> rio = LiXiUtils.genMapRecGifts(order);
-        
+
         model.put("rios", rio);
-        
+
         return new ModelAndView("Administration/orders/bkSubmitMessage");
     }
-    
+
     /**
-     * 
+     *
      * @param model
      * @param id
      * @param back
-     * @return 
+     * @return
      */
     @RequestMapping(value = "cancel/{id}/{back}", method = RequestMethod.GET)
-    public ModelAndView cancelOrdersOnBaoKim(Map<String, Object> model, @PathVariable Long id, @PathVariable String back){
-        
+    public ModelAndView cancelOrdersOnBaoKim(Map<String, Object> model, @PathVariable Long id, @PathVariable String back) {
+
         LixiOrder order = this.lxOrderService.findById(id);
-        
-        if(order != null){
-            lxAsyncMethods.cancelOrdersOnBaoKimNoAsync(order);
+
+        if (order != null) {
+            boolean c = lxAsyncMethods.cancelOrdersOnBaoKimNoAsync(order);
+            if (c) {
+                LixiInvoice invoice = order.getInvoice();
+
+                log.info("status before update: " + invoice.getNetTransStatus() + " - " + invoice.getTranslatedStatus());
+
+                this.paymentService.updateInvoiceStatus(invoice);
+
+                log.info("status after update: " + invoice.getNetTransStatus() + " - " + invoice.getTranslatedStatus());
+
+                if (LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS.equals(invoice.getTranslatedStatus())) {
+
+                    String rs = this.paymentService.voidTransaction(invoice);
+                    if (EnumTransactionResponseCode.APPROVED.getValue().equals(rs)) {
+
+                        /* update order status */
+                        order.setLixiStatus(EnumLixiOrderStatus.CANCELED.getValue());
+                        order.setLixiMessage("Cancelled by Admin");
+                        this.lxOrderService.save(order);
+
+                        /* invoice status */
+                        invoice.setNetTransStatus(EnumTransactionStatus.voidedByUser.getValue());
+                        this.invoiceService.save(invoice);
+                    }
+                }
+            }
         }
-        
-        switch(back){
+
+        switch (back) {
             case "info":
                 return new ModelAndView(new RedirectView("/Administration/Orders/newOrders?oStatus=" + EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue(), true, true));
             case "report":
@@ -511,6 +543,5 @@ public class LixiOrdersController {
                 return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
         }
     }
-    
-    
+
 }

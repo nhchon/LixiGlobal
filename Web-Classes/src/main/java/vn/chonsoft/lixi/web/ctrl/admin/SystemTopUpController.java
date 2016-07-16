@@ -196,6 +196,7 @@ public class SystemTopUpController {
         LixiInvoice invoice = t.getOrder().getInvoice();
         
         t.setStatus(EnumLixiOrderStatus.CANCELED.getValue()); // cancel by admin
+        t.setModifiedDate(Calendar.getInstance().getTime());
         this.topUpService.save(t);
         
         model.put("status", invoice.getTranslatedStatus());

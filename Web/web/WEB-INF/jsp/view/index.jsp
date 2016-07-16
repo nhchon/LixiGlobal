@@ -59,8 +59,10 @@
                                 </span>
                                 <div class="clearfix"></div>
                                 <h3><spring:message code="choose-the-gift-you-want"/></h3>
-                                <small><sup>*</sup><b style="color: #000;"><spring:message code="index-4"/></b></small><br/>
-                                <small><sup></sup><b style="color: #000;"><spring:message code="index-4-1" text=""/></b></small>
+                                
+                                <span style="text-align: center; margin: auto;"><small><sup>*</sup><b style="color: #000;white-space: nowrap;"><spring:message code="index-4"/></b></small></span><br/>
+                                <small><sup></sup><b style="color: #000;white-space: nowrap;"><spring:message code="index-4-1" text=""/></b></small>
+                                
                             </div>
                         </div>
                         <div class="col-md-1 col-sm-1 col-xs-1 col-has-gift-arrow">
