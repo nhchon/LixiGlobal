@@ -50,21 +50,21 @@
                                         <spring:message code="signin.not_enabled"/>
                                     </div>
                                 </c:if>
-                                <c:if test="${signInFailed eq 1 || param.signInFailed eq 1}">
+                                <c:if test="${signInFailed eq '1' || param.signInFailed eq '1'}">
                                     <div class="alert alert-danger" role="alert">
                                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                                         <span class="sr-only">Error:</span>
                                         <spring:message code="signin.failed"/>
                                     </div>
                                 </c:if>
-                                <c:if test="${param.signInFailed eq 2}">
+                                <c:if test="${param.signInFailed eq '2'}">
                                     <div class="alert alert-danger" role="alert">
                                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                                         <span class="sr-only">Error:</span>
                                         <spring:message code="sess-expired"/>
                                     </div>
                                 </c:if>
-                                <c:if test="${param.signInFailed eq 3}">
+                                <c:if test="${param.signInFailed eq '3'}">
                                     <div class="alert alert-danger" role="alert">
                                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                                         <span class="sr-only">Error:</span>

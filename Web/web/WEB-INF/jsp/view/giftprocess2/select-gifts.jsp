@@ -1,7 +1,6 @@
 <template:Client htmlTitle="Lixi Global - Select Gifts">
     <jsp:attribute name="extraHeadContent">
         <script language="javascript" src="https://d1cr9zxt7u0sgu.cloudfront.net/crfp.js?SITE_ID=2b57448f3013fc513dcc7a4ab933e6928ab74672&SESSION_ID=${pageContext.session.id}&TYPE=JS" type="text/javascript" charset="UTF-8"></script>
-        <link rel="stylesheet" href="<c:url value="/resource/theme/assets/lixi-global/js/vendor/tipso/tipso.css"/>">
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
@@ -11,11 +10,7 @@
             $(document).ready(function () {
             });
         </script>
-        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.twbsPagination.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/gifts.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/lixi-global/js/recipient.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.elevatezoom.js"/>"></script>
-        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/tipso/tipso.js"/>"></script>
     </jsp:attribute>
 
     <jsp:body>
@@ -60,7 +55,8 @@
                                     <c:if test="${not empty SELECTED_AMOUNT_IN_USD}">
                                         <c:set value="${SELECTED_AMOUNT_IN_USD}" var="startPrice"/>
                                     </c:if>
-                                    <input type="text" class="gift-filter-slider-input" value="" data-slider-min="10" data-slider-max="150" data-slider-step="5" data-slider-value="10"/>
+                                    <input type="text" class="gift-filter-slider-input" value="" data-slider-min="10" data-slider-max="150" data-slider-step="5" data-slider-value="${SLIDE_START_PRICE}"/>
+                                    <input type="hidden" id="catId" value="${SELECTED_LIXI_CATEGORY_ID}"/>
                                 </div>
                                 <div class="gift-filter-label">
                                     <span class="gift-filter-label-min">

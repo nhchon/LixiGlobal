@@ -77,7 +77,9 @@ public abstract class LiXiConstants {
     public static final String USD = "USD";
     public static final double VND_100K = 100000;
     public static final double VND_200K = 200000;
-    public static final double MINIMUM_PRICE_USD = 10.0;
+    public static final int MINIMUM_PRICE_USD = 10;
+    public static final int MAXIMUM_PRICE_USD = 150;
+    public static final String SLIDE_START_PRICE = "SLIDE_START_PRICE";
     public static final String EXCEEDED_VND = "EXCEEDED_VND";
     public static final String EXCEEDED_USD = "EXCEEDED_USD";
     //public static final String CURRENT_PAYMENT = "CURRENT_PAYMENT";

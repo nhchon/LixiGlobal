@@ -31,10 +31,10 @@ function showTooltip(){
     //    });
     //});                
 }
-function loadPage(pageNum) {
+function loadPage(catId, pageNum) {
     overlayOn($('.gift-filter-items'));
     $.ajax({
-        url: AJAX_LOAD_PRODUCTS_PATH + '/' + pageNum,
+        url: AJAX_LOAD_PRODUCTS_PATH + '/' + catId + '/' + pageNum,
         type: "get",
         dataType: 'html',
         success: function (data, textStatus, jqXHR)
@@ -54,8 +54,12 @@ function loadNewPrice(price, sliderFilter) {
     overlayOn($('.gift-filter-items'));
     sliderFilter.disable();
     
+    /* get catId value */
+    var catId = $('#catId').val();
+    if(!isInteger(catId)){ catId = 0;}
+    
     $.ajax({
-        url: CONTEXT_PATH + '/gifts/ajax/loadProductsByNewPrice/1/' + price,
+        url: CONTEXT_PATH + '/gifts/ajax/loadProductsByNewPrice/' + catId + '/1/' + price,
         type: "get",
         dataType: 'html',
         success: function (data, textStatus, jqXHR)

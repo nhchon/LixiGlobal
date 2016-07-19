@@ -478,6 +478,23 @@ public class BuyGiftsController {
             products = vgps.getContent();
         }
         
+        /* get start slide price */
+        double firstPrice = 0;
+        final int slideStep = 5;
+        if(products!=null && !products.isEmpty()){
+            firstPrice = products.get(0).getPriceInUSD(lxExch.getBuy());
+        }
+        
+        int startSlidePrice = ((int)firstPrice/slideStep)*slideStep;
+        log.info("startSlidePrice:" + startSlidePrice);
+        if(startSlidePrice < LiXiConstants.MINIMUM_PRICE_USD){
+            startSlidePrice = LiXiConstants.MINIMUM_PRICE_USD;
+        }else
+            if(startSlidePrice > LiXiConstants.MAXIMUM_PRICE_USD){
+                startSlidePrice = LiXiConstants.MAXIMUM_PRICE_USD;
+            }
+        
+        model.put(LiXiConstants.SLIDE_START_PRICE, startSlidePrice);
         model.put(LiXiConstants.PRODUCTS, products);
         model.put(LiXiConstants.PAGES, vgps);
         model.put(LiXiConstants.LIXI_EXCHANGE_RATE, lxExch);

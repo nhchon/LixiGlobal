@@ -13,7 +13,7 @@
                 </c:when>
                 <c:otherwise>
                     <li>
-                        <a href="javascript:void(0);" onclick="loadPage(${i})">${i}</a>
+                        <a href="javascript:void(0);" onclick="loadPage(${SELECTED_LIXI_CATEGORY_ID}, ${i})">${i}</a>
                     </li>
                 </c:otherwise>
             </c:choose>
