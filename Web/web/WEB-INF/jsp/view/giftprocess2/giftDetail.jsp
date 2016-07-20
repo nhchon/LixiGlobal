@@ -51,16 +51,23 @@
                     });
                 }
                 $('#btnSubmit').click(function(){
-                    if(!isInteger($('#quantity').val())){
-                        alert(CORRECT_QUANTITY);
+                    <c:if test="${empty sessionScope['scopedTarget.loginedUser'].email}">
+                        var nextUrl = "?signInFailed=4&nextUrl=" + getNextUrl();
+                        window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
                         return false;
-                    }
-                    if($('#recId').val()==0){
-                        alert(PLEASE_SELECT_REC);
-                        $('#recId').focus();
-                        return false;
-                    }
-                    return true;
+                    </c:if>
+                    <c:if test="${not empty sessionScope['scopedTarget.loginedUser'].email}">
+                        if(!isInteger($('#quantity').val())){
+                            alert(CORRECT_QUANTITY);
+                            return false;
+                        }
+                        if($('#recId').val()==0){
+                            alert(PLEASE_SELECT_REC);
+                            $('#recId').focus();
+                            return false;
+                        }
+                        return true;
+                    </c:if>
                 });
             });
             function doEditRecipient(id) {

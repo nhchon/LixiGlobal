@@ -456,7 +456,7 @@ public class BuyGiftsAjaxController {
             price = (double) request.getSession().getAttribute(LiXiConstants.SELECTED_AMOUNT_IN_VND);
         }
 
-        log.info("Price: " + price);
+        //log.info("Price: " + price);
 
         List<VatgiaProduct> products = null;
         /* zero-based page index */

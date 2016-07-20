@@ -163,6 +163,15 @@ function enableEditRecipientHtmlContent(data, handleFunction) {
                     dataType: 'json',
                     success: function (data, textStatus, jqXHR)
                     {
+                        /* check if session time out */
+                        try{
+                            if(data.sessionExpired ==='1'){
+                                var nextUrl = "?nextUrl=" + getNextUrl();
+                                window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                                return;
+                            }
+                        }catch(err){}
+                        /* */
                         handleFunction(data);
                     },
                     error: function (jqXHR, textStatus, errorThrown)

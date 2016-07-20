@@ -71,6 +71,13 @@
                                         <spring:message code="please-sign-in"/>
                                     </div>
                                 </c:if>
+                                <c:if test="${param.signInFailed eq '4'}">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        <spring:message code="log-in-make-purchase"/>
+                                    </div>
+                                </c:if>
 
                                 <h3 class="title"><spring:message code="mess.login"/></h3>
                                 <c:url value="/user/signIn" var="signInFormUrl"/>

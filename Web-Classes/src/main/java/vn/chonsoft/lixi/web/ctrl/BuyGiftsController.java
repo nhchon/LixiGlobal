@@ -486,7 +486,7 @@ public class BuyGiftsController {
         }
         
         int startSlidePrice = ((int)firstPrice/slideStep)*slideStep;
-        log.info("startSlidePrice:" + startSlidePrice);
+        //log.info("startSlidePrice:" + startSlidePrice);
         if(startSlidePrice < LiXiConstants.MINIMUM_PRICE_USD){
             startSlidePrice = LiXiConstants.MINIMUM_PRICE_USD;
         }else
