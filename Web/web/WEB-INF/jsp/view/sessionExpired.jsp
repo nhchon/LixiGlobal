@@ -1,3 +1,3 @@
 {
-    "sessionExpired":"1"
+    "sessionExpired":"${sessionExpired}"
 }

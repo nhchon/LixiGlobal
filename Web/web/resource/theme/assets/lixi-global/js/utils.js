@@ -231,3 +231,35 @@ function loadTotalCurrentOrder() {
         }
     });
 }
+
+function checkSessionTimeOut() {
+
+    $.ajax({
+        url: CONTEXT_PATH + '/sessionExpired',
+        type: "get",
+        dataType: 'json',
+        success: function (data, textStatus, jqXHR)
+        {
+            if(data.sessionExpired == '1'){
+                var nextUrl = "?signInFailed=2&nextUrl=" + getNextUrl();
+                window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                return;
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+        
+        },
+        statusCode: {
+            403: function (response) {
+                var nextUrl = "?signInFailed=2&nextUrl=" + getNextUrl();
+                window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                return;
+            }
+        }
+        
+    });
+}
+//jQuery(document).ready(function () {
+    
+//})

@@ -287,7 +287,6 @@ public class UserManagementController {
                 // send oldEmail
                 taskScheduler.execute(() -> mailSender.send(preparator));
                     
-                
                 // return your account page
                 model.put("editSuccess", 1);
                 return new ModelAndView(new RedirectView("/user/yourAccount", true, true), model);
@@ -804,11 +803,11 @@ public class UserManagementController {
             
             LixiInvoice invoice = order.getInvoice();
             
-            log.info("status before update: " + invoice.getNetTransStatus() + " - " + invoice.getTranslatedStatus());
+            //log.info("status before update: " + invoice.getNetTransStatus() + " - " + invoice.getTranslatedStatus());
             
             this.paymentService.updateInvoiceStatus(invoice);
             
-            log.info("status after update: " + invoice.getNetTransStatus() + " - " + invoice.getTranslatedStatus());
+            //log.info("status after update: " + invoice.getNetTransStatus() + " - " + invoice.getTranslatedStatus());
             
             if(LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS.equals(invoice.getTranslatedStatus())){
                 
@@ -826,6 +825,35 @@ public class UserManagementController {
                     
                     /* cancel order */
                     lxAsyncMethods.cancelOrdersOnBaoKimNoAsync(order);
+                    
+                    /* send email */
+                // send Email
+                MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+                    @SuppressWarnings({ "rawtypes", "unchecked" })
+                    @Override
+                    public void prepare(MimeMessage mimeMessage) throws Exception {
+
+                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                        message.setTo(u.getEmail());
+                        message.setFrom("support@lixi.global");
+                        message.setSubject("LiXi.Global - Cancel Order");
+                        message.setSentDate(Calendar.getInstance().getTime());
+
+                        Map model = new HashMap();
+                        model.put("user", u);
+                        model.put("time", (new SimpleDateFormat("hh:mm a MM/dd/yyy")).format(Calendar.getInstance().getTime()));
+                        model.put("orderId", invoice.getInvoiceCode());
+                        String text = VelocityEngineUtils.mergeTemplateIntoString(
+                           velocityEngine, "emails/sender-cancel-order.vm", "UTF-8", model);
+                        message.setText(text, true);
+                      }
+                };        
+
+                // send oldEmail
+                taskScheduler.execute(() -> mailSender.send(preparator));
+                    
+                    
                 }
 
                 return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek?voidRs="+rs, true, true));

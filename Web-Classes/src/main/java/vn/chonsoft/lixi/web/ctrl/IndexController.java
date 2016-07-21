@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.CategoriesBean;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
 
 /**
  *
@@ -39,14 +41,30 @@ public class IndexController {
 
     private static final Logger log = LogManager.getLogger(IndexController.class);
     
+    /* session bean - Login user */
+    @Autowired
+    private LoginedUser loginedUser;
+    
     @Autowired
     private CategoriesBean categories;
     
     @Autowired
     private LixiExchangeRateService xrService;
     
+    /**
+     * 
+     * @param model
+     * @return 
+     */
     @RequestMapping(value = "/sessionExpired", method = {RequestMethod.GET, RequestMethod.POST})
     public String sessionExpired(Map<String, Object> model) {
+        
+        if(!StringUtils.isEmpty(loginedUser.getEmail())){
+            model.put("sessionExpired", "0");
+        }
+        else{
+            model.put("sessionExpired", "1");
+        }
         
         return "sessionExpired";
     }

@@ -1,0 +1,16 @@
+<html>
+    <body>
+        <h5>Hi ${user.firstName},</h5>
+        
+        <p>Thank you for your business. We understand that you have decided to cancel your order.</p>
+        
+        <p>Your order <b>${orderId}</b> has been cancelled on ${time}.</p>
+
+        <p>Please use us again for your gifting service.</p>
+
+        <div>
+            Thank you<br/>
+            <h5>Lixi.Global Support Team</h5>
+        </div>
+    </body>
+</html>
