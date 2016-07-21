@@ -230,19 +230,6 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
         
     }
 
-    /**
-     * 
-     * @param order
-     * @return 
-     */
-    @Override
-    @Async
-    public boolean cancelOrdersOnBaoKim(LixiOrder order) {
-        
-        return lxVatGiaUtils.cancelOrderOnBaoKim(order);
-        
-    }
-    
     
     /**
      * 

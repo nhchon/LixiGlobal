@@ -22,9 +22,6 @@ public interface LixiAsyncMethods {
             
     boolean cancelOrdersOnBaoKimNoAsync(LixiOrder order);
             
-    @Async
-    boolean cancelOrdersOnBaoKim(LixiOrder order);
-    
     boolean sendPaymentInfoToBaoKim(LixiOrder order);
     
     boolean checkBaoKimSystem();

@@ -825,7 +825,7 @@ public class UserManagementController {
                     this.invoiceService.save(invoice);
                     
                     /* cancel order */
-                    lxAsyncMethods.cancelOrdersOnBaoKim(order);
+                    lxAsyncMethods.cancelOrdersOnBaoKimNoAsync(order);
                 }
 
                 return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek?voidRs="+rs, true, true));

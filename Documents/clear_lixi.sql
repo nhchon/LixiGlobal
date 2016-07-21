@@ -1,7 +1,7 @@
 delete FROM `lixi_order_gifts`;
-delete FROM `lixi_invoice_payment`;
-delete FROM `lixi_invoices`;
-delete FROM `lixi_cashrun`;
+delete FROM `lixi_invoice_payment` where invoice_id=144;
+delete FROM `lixi_invoices` where id=144;
+delete FROM `lixi_cashrun` where order_id=168;
 delete FROM `top_up_result`;
 delete FROM `top_up_mobile_phone`;
 delete FROM `buy_card_result`;
