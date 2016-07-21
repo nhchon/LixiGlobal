@@ -658,7 +658,7 @@ public class PaymentServiceImpl implements PaymentService{
             // Create the payment transaction request
             txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
             txnRequest.setPayment(paymentType);
-            txnRequest.setAmount(new BigDecimal(String.valueOf(LiXiGlobalUtils.getTestTotalAmount(lxInvoice.getTotalAmount()))));
+            txnRequest.setAmount(new BigDecimal(String.valueOf(lxInvoice.getTotalAmount())));
         } else // paid by banking account
         if (order.getBankAccount() != null) {
 
@@ -725,7 +725,7 @@ public class PaymentServiceImpl implements PaymentService{
         /* Create the payment transaction request */
         TransactionRequestType txnRequest = new TransactionRequestType();
         txnRequest.setTransactionType(TransactionTypeEnum.AUTH_ONLY_TRANSACTION.value());//AUTH_CAPTURE_TRANSACTION
-        txnRequest.setAmount(new BigDecimal(String.valueOf(LiXiGlobalUtils.getTestTotalAmount(lxInvoice.getTotalAmount()))));
+        txnRequest.setAmount(new BigDecimal(String.valueOf(lxInvoice.getTotalAmount())));
         
         //
         //log.info("invoice: " + lxInvoice.getId() + " - " + String.valueOf(lxInvoice.getTotalAmount()));
