@@ -443,8 +443,10 @@ public class BuyGiftsController {
         // load list products
         LixiCategory lxcategory = categories.getById(selectedCatId);
         
+        if(lxcategory == null) lxcategory = categories.getCandies();
+        
         // store category id into session
-        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, selectedCatId);
+        request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_ID, lxcategory.getId());
         request.getSession().setAttribute(LiXiConstants.SELECTED_LIXI_CATEGORY_NAME, lxcategory.getName(LocaleContextHolder.getLocale()));
         
         // get order
