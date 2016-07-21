@@ -66,6 +66,7 @@ import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -119,6 +120,8 @@ public class UserManagementController {
     @Autowired
     private LixiInvoiceService invoiceService;
     
+    @Autowired
+    private LixiAsyncMethods lxAsyncMethods;
 
     /**
      * 
@@ -820,6 +823,9 @@ public class UserManagementController {
                     /* invoice status */
                     invoice.setNetTransStatus(EnumTransactionStatus.voidedByUser.getValue());
                     this.invoiceService.save(invoice);
+                    
+                    /* cancel order */
+                    lxAsyncMethods.cancelOrdersOnBaoKim(order);
                 }
 
                 return new ModelAndView(new RedirectView("/user/orderHistory/lastWeek?voidRs="+rs, true, true));
