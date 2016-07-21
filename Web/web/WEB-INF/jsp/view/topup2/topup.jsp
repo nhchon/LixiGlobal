@@ -163,55 +163,62 @@
                     var postData = $(this).serializeArray();
                     var formURL = $(this).attr("action");
                     $.ajax(
-                            {
-                                url: formURL,
-                                type: "POST",
-                                data: postData,
-                                //contentType: "application/x-www-form-urlencoded;charset=ISO-8859-1",
-                                dataType: 'json',
-                                success: function (data, textStatus, jqXHR)
-                                {
-                                    try{
-                                        if(data.sessionExpired ==='1'){
-                                            var nextUrl = "?nextUrl=" + getNextUrl();
-                                            window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
-                                            return;
-                                        }
-                                    }catch(err){}
-                                    //data: return data from server
-                                    if (data.error === '0') {
-                                        // save successfully
-                                        // hide popup
-                                        $('#editRecipientModal').modal('hide');
-                                        // get new phone number
-                                        var name = data.name;
-                                        var phone = $("#chooseRecipientForm #phone").val();
-                                        /* new recipient */
-                                        if (parseInt(data.recId) > 0) {
-                                            if (data.action === 'create') {
-                                                $('#recId')
-                                                        .append($("<option></option>")
-                                                                .attr("value", data.recId)
-                                                                .text(name + ' - ' + phone));
+                    {
+                        url: formURL,
+                        type: "POST",
+                        data: postData,
+                        //contentType: "application/x-www-form-urlencoded;charset=ISO-8859-1",
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR)
+                        {
+                            try{
+                                if(data.sessionExpired ==='1'){
+                                    var nextUrl = "?nextUrl=" + getNextUrl();
+                                    window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                                    return;
+                                }
+                            }catch(err){}
+                            //data: return data from server
+                            if (data.error === '0') {
+                                // save successfully
+                                // hide popup
+                                $('#editRecipientModal').modal('hide');
+                                // get new phone number
+                                var name = data.name;
+                                var phone = $("#chooseRecipientForm #phone").val();
+                                /* new recipient */
+                                if (parseInt(data.recId) > 0) {
+                                    if (data.action === 'create') {
+                                        $('#recId')
+                                                .append($("<option></option>")
+                                                        .attr("value", data.recId)
+                                                        .text(name + ' - ' + phone));
 
-                                                $('#recId').val(data.recId);
-                                            }
-                                            else {
-                                                $("#recId option:selected").html(name + ' - ' + phone);
-                                            }
-                                        }
-                                        else {
-                                        }
+                                        $('#recId').val(data.recId);
                                     }
                                     else {
-                                        alert(SOMETHING_WRONG_ERROR);
+                                        $("#recId option:selected").html(name + ' - ' + phone);
                                     }
-                                },
-                                error: function (jqXHR, textStatus, errorThrown)
-                                {
-                                    //if fails      
                                 }
-                            });
+                                else {
+                                }
+                            }
+                            else {
+                                alert(SOMETHING_WRONG_ERROR);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown)
+                        {
+                            //if fails      
+                        },
+                        statusCode: {
+                            403: function (response) {
+                                var nextUrl = "?nextUrl=" + getNextUrl();
+                                window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                                return;
+                            }
+                        }
+                    });
                     if (typeof e !== 'undefined') {
                         e.preventDefault(); //STOP default action
                         //e.unbind(); //unbind. to stop multiple form submit.

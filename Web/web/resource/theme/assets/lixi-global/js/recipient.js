@@ -177,6 +177,13 @@ function enableEditRecipientHtmlContent(data, handleFunction) {
                     error: function (jqXHR, textStatus, errorThrown)
                     {
                         //if fails      
+                    },
+                    statusCode: {
+                        403: function (response) {
+                            var nextUrl = "?nextUrl=" + getNextUrl();
+                            window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                            return;
+                        }
                     }
                 });
         if (typeof e !== 'undefined') {
