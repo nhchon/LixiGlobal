@@ -403,7 +403,16 @@ public class BuyGiftsAjaxController {
         if (vgps.hasContent()) {
             products = vgps.getContent();
         }
-
+        
+        // check first price
+        if(products != null && !products.isEmpty()){
+            double f = products.get(0).getPriceInUSD(lxExch.getBuy());
+            if(startPrice + 10 < f){
+                // don't display products
+                products = null;
+            }
+        }
+        
         SumVndUsd[] currentPayment = LiXiUtils.calculateCurrentPayment(order);
 
         model.put(LiXiConstants.PRODUCTS, products);

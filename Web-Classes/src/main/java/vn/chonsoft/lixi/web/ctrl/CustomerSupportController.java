@@ -35,7 +35,9 @@ import vn.chonsoft.lixi.repositories.service.CustomerProblemStatusService;
 import vn.chonsoft.lixi.repositories.service.CustomerSubjectService;
 import vn.chonsoft.lixi.repositories.service.LixiContactService;
 import vn.chonsoft.lixi.web.LiXiConstants;
+import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
+import vn.chonsoft.lixi.web.beans.LoginedUser;
 
 /**
  *
@@ -45,6 +47,10 @@ import vn.chonsoft.lixi.web.annotation.WebController;
 @RequestMapping("support")
 public class CustomerSupportController {
 
+    /* session bean - Login user */
+    @Autowired
+    private LoginedUser loginedUser;
+    
     @Autowired
     private CustomerSubjectService subjectService;
 
@@ -72,6 +78,7 @@ public class CustomerSupportController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "post", method = RequestMethod.GET)
     public ModelAndView post(Map<String, Object> model, HttpServletRequest request) {
 
@@ -94,6 +101,7 @@ public class CustomerSupportController {
      * @param request
      * @return
      */
+    @UserSecurityAnnotation
     @RequestMapping(value = "post", method = RequestMethod.POST)
     public ModelAndView post(Map<String, Object> model,
             @Valid CustomerProblemForm form, Errors errors, HttpServletRequest request) {
@@ -104,7 +112,7 @@ public class CustomerSupportController {
 
         try {
             /* Login user */
-            String loginedEmail = (String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+            String loginedEmail = loginedUser.getEmail();//(String) request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
 
             CustomerSubject cus;
             if (form.getSubject() == -1) {

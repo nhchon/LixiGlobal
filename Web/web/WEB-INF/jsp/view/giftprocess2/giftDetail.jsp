@@ -69,6 +69,13 @@
                         return true;
                     </c:if>
                 });
+                
+                $('#recId').change(function(){
+                    if($('#recId').val() > 0){
+                        doEditRecipient($('#recId').val());
+                    }
+                });
+                
             });
             function doEditRecipient(id) {
                 $.get(EDIT_REC_URL + id, function (data) {
