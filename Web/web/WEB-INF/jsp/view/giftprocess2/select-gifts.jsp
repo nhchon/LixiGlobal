@@ -38,6 +38,8 @@
                         <fmt:formatNumber value="${LIXI_EXCHANGE_RATE.buy * maximumValue}" pattern="###,###.##" var="maximumValueVnd"/>
                         <h5 class="maximum-purchase">
                             <spring:message code="maximum-purchase" arguments="${maximumValueVnd};${maximumValue}" argumentSeparator=";"/>
+                            <br/>
+                            <spring:message code="index-4-1"/>
                             <%--Maximum purchase is VND ${maximumValueVnd}  or USD ${maximumValue}--%>
                         </h5>
                     </div>

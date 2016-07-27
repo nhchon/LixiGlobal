@@ -26,6 +26,7 @@
             var CONFIRM_DELETE_MESSAGE = '<spring:message code="message.want_to_delete"/>';
             var SOMETHING_WRONG_ERROR = '<spring:message code="validate.there_is_something_wrong"/>';
             var DELETE_RECEIVER_MESSAGE = '<spring:message code="message.delete_receiver"/>';
+            var ALLOW_RECEIVER = '<spring:message code="allow-th-recei"/>'
             var CALCULATE_FEE_PATH = '<c:url value="/checkout/place-order/calculateFee"/>';
             var PLACE_ORDER_DELETE_RECEIVER_PATH = '<c:url value="/checkout/delete/receiver/"/>';
             var PLACE_ORDER_DELETE_TOPUP_PATH = '<c:url value="/checkout/delete/topUp/"/>';
@@ -35,7 +36,18 @@
             var arrQ = [];
 
             function processingYourOrder(){
-                $('#processingYourOrder').modal({backdrop: 'static', keyboard: false});
+                var allowRefund = $("input[name=setting]:checked").val();
+                var processOrder = true;
+                if(allowRefund == 1){
+                    if(confirm(ALLOW_RECEIVER)){
+                        
+                    }
+                    else{
+                        processOrder = false;
+                    }
+                }
+                if(processOrder){
+                    $('#processingYourOrder').modal({backdrop: 'static', keyboard: false});
                     var postData = $('#placeOrderForm').serializeArray();
                     var formURL = $('#placeOrderForm').attr("action");
                     $.ajax(
@@ -60,7 +72,7 @@
                         }
                     });
                 }
-            
+            }
             function closeModelProcessingYourOrder(){
                 $('#processingYourOrder').modal('hide');
             }
