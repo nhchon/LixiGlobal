@@ -408,7 +408,13 @@ public class BuyGiftsController {
         /* get selling products */
         List<Integer> sellId = scalarService.getBestSellingProducts();
         List<VatgiaProduct> bestSelling = this.vgpService.findById(sellId);
+        if(bestSelling!=null){
+            // add number of purchases
+            bestSelling.forEach(b -> {b.setPurchases(scalarService.countPurchases(b.getId()));});
+        }
+        
         model.put(LiXiConstants.BEST_SELLING_PRODUCTS, bestSelling);
+        model.put(LiXiConstants.TOPUP_PURCHASES, scalarService.countTopUp());
         
         // store category id into session
         LixiCategory lxcategory = this.lxCategoryService.findByVatgiaCategory(this.vgcService.findOne(p.getCategoryId()));

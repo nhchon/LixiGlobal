@@ -34,49 +34,69 @@
             var PLACE_ORDER_UPDATE_GIFT_PATH = '<c:url value="/checkout/ajax/update/gift/"/>';
             var EDIT_REC_URL = '<c:url value="/recipient/ajax/edit/"/>';
             var arrQ = [];
-
-            function processingYourOrder(){
+            
+            function noAllowRefund(){
+                $("#rGiftOnly").prop("checked", true).change();
+            }
+            
+            function yesAllowRefund(){
+                $('#confirmAllowRefundModal').modal("hide");
+                processingYourOrder();
+            }
+            
+            function preProcessTheOrder(){
                 var allowRefund = $("input[name=setting]:checked").val();
                 var processOrder = true;
-                if(allowRefund == 1){
-                    if(confirm(ALLOW_RECEIVER)){
-                        
-                    }
-                    else{
-                        processOrder = false;
-                    }
+                if (allowRefund == 1) {
+                    $('#confirmAllowRefundModal').modal('show');
                 }
-                if(processOrder){
+                else{
+                    $('#confirmAllowRefundModal').modal("hide");
+                    processingYourOrder();
+                }
+            }
+            
+            function processingYourOrder() {
+                //var allowRefund = $("input[name=setting]:checked").val();
+                var processOrder = true;
+                //if (allowRefund == 1) {
+                //    if (confirm(ALLOW_RECEIVER)) {
+                //
+                //    } else {
+                //        processOrder = false;
+                //    }
+                //}
+                if (processOrder) {
                     $('#processingYourOrder').modal({backdrop: 'static', keyboard: false});
                     var postData = $('#placeOrderForm').serializeArray();
                     var formURL = $('#placeOrderForm').attr("action");
                     $.ajax(
-                    {
-                        url: formURL,
-                        type: "POST",
-                        data: postData,
-                        dataType: 'json',
-                        success: function (data, textStatus, jqXHR)
-                        {
-                            //data: return data from server
-                            if (data.error === '0') {
-                            } else {
-                                alert(data.message);
-                            }
-                            window.location.href = data.returnPage;
-                        },
-                        error: function (jqXHR, textStatus, errorThrown)
-                        {
-                            //if fails
-                            alert(SOMETHING_WRONG_ERROR + " : " + errorThrown);
-                        }
-                    });
+                            {
+                                url: formURL,
+                                type: "POST",
+                                data: postData,
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR)
+                                {
+                                    //data: return data from server
+                                    if (data.error === '0') {
+                                    } else {
+                                        alert(data.message);
+                                    }
+                                    window.location.href = data.returnPage;
+                                },
+                                error: function (jqXHR, textStatus, errorThrown)
+                                {
+                                    //if fails
+                                    alert(SOMETHING_WRONG_ERROR + " : " + errorThrown);
+                                }
+                            });
                 }
             }
-            function closeModelProcessingYourOrder(){
+            function closeModelProcessingYourOrder() {
                 $('#processingYourOrder').modal('hide');
             }
-            
+
             function showPageBillAdd(page) {
                 $.get('<c:url value="/checkout/choose-billing-address-modal?paging.page"/>=' + page, function (data) {
                     $('#billingAddressListContent').html(data);
@@ -87,9 +107,9 @@
             function doEditRecipient(id) {
                 $.get('<c:url value="/recipient/edit/"/>' + id, function (data) {
                     enableEditRecipientHtmlContent(data, recOnPlaceOrder);
-                    <%-- Did not show delete button on place-order page --%>
+            <%-- Did not show delete button on place-order page --%>
                     $('#btnDeleteRec').hide();
-                    
+
                     // focus on phone field
                     $('#editRecipientModal').on('shown.bs.modal', function () {
                         // TODO
@@ -198,16 +218,17 @@
                             url: PLACE_ORDER_UPDATE_GIFT_PATH + id + '/' + combo.val(),
                             type: "get",
                             dataType: 'json',
-                            success: function (data, textStatus, jqXHR)
-                            {
-                                try{
-                                    if(data.sessionExpired ==='1'){
+                                    success: function (data, textStatus, jqXHR)
+                                    {
+                                try {
+                                    if (data.sessionExpired === '1') {
                                         var nextUrl = "?nextUrl=" + getNextUrl();
                                         window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
                                         return;
                                     }
-                                }catch(err){}
-                                
+                                } catch (err) {
+                                }
+
                                 if (data.exceed == "0") {
 
                                     removeEditQuantity(id);
@@ -250,16 +271,17 @@
                         url: PLACE_ORDER_DELETE_GIFT_PATH + id,
                         type: "get",
                         dataType: 'json',
-                        success: function (data, textStatus, jqXHR)
-                        {
-                            try{
-                                if(data.sessionExpired ==='1'){
+                                success: function (data, textStatus, jqXHR)
+                                {
+                            try {
+                                if (data.sessionExpired === '1') {
                                     var nextUrl = "?nextUrl=" + getNextUrl();
                                     window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
                                     return;
                                 }
-                            }catch(err){}
-                            
+                            } catch (err) {
+                            }
+
                             if (data.error == "0") {
 
                                 var tBody = $('#trGift' + id).closest('tbody');
@@ -481,7 +503,7 @@
                                                     <strong class="receiver-order-gift-price-left text-bold" style="color: #000">Total</strong><strong class="receiver-order-gift-price-right text-bold" style="color: #000">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber  minFractionDigits="2" value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
                                                 </div>
                                             </div>
-                                                <h4 class="text-color-link"><spring:message code="mess.payment-method"/> <a href="<c:url value="/checkout/paymentMethods"/>" class="edit-info-event"></a></h4>
+                                            <h4 class="text-color-link"><spring:message code="mess.payment-method"/> <a href="<c:url value="/checkout/paymentMethods"/>" class="edit-info-event"></a></h4>
                                                 <c:if test="${not empty LIXI_ORDER.card}">
                                                     <c:set var="lengthCard" value="${fn:length(LIXI_ORDER.card.cardNumber)}"/>
                                                 <div>
@@ -511,39 +533,39 @@
                                                     <tr>
                                                         <td style="padding-left:15px;">
                                                             <div class="checkbox">
-                                                                <label style="padding-left: 0px;"><input name="setting" value="0" type="radio" <c:if test="${LIXI_ORDER.setting eq 0}"> checked="checked"</c:if>  class="custom-checkbox-input" style="margin-top: 6px;"/>
+                                                                <label style="padding-left: 0px;"><input id="rGiftOnly" name="setting" value="0" type="radio" <c:if test="${LIXI_ORDER.setting eq 0}"> checked="checked"</c:if>  class="custom-checkbox-input" style="margin-top: 6px;"/>
                                                                     <spring:message code="gift-only"/>
-                                                                    </label>
-                                                                </div>
+                                                                </label>
+                                                            </div>
 
-                                                            </td>
-                                                            <td style="padding-left:15px;">
-                                                                <div class="checkbox">
-                                                                    <label><input name="setting" value="1" type="radio" <c:if test="${LIXI_ORDER.setting eq 1}">checked="checked"</c:if> class="custom-checkbox-input" style="margin-top: 6px;"/>
-                                                                        <spring:message code="allow-refund"/>
-                                                                    </label>
-                                                                </div>                                                            
-                                                            </td>
-                                                            <td style="padding-left:50px;">
-                                                                <!-- (c) 2005, 2016. Authorize.Net is a registered trademark of CyberSource Corporation --> 
-                                                                <div class="AuthorizeNetSeal"> 
-                                                                    <script type="text/javascript" language="javascript">var ANS_customer_id = "8d3196bc-e4f9-4a2a-b283-292c0687257d";</script> 
-                                                                    <script type="text/javascript" language="javascript" src="//verify.authorize.net/anetseal/seal.js" ></script> 
-                                                                    <a href="http://www.authorize.net/" id="AuthorizeNetText" target="_blank">Internet Payment Gateway</a> 
-                                                                </div>
-                                                            </td>
-                                                            <td style="padding-left:50px;">
-                                                                <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=25ZSP0L5Lsd3uLmBTIB8PqsJWEv03qyZ8sJtMVacTWHVe1p60GLbLpEo2G4o"></script></span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2" style="padding-left:15px;">
-                                                                <p>(<spring:message code="place-desc-1"/>)</p>
-                                                                <p> 
-                                                                    <c:url value="/support/terms" var="termUrl"/>
-                                                                    <c:url value="/support/privacy" var="privacyUrl"/>
-                                                                    <spring:message code="place-desc-2" argumentSeparator=";" arguments="${termUrl};${privacyUrl}"/>.
-                                                                </p>
+                                                        </td>
+                                                        <td style="padding-left:15px;">
+                                                            <div class="checkbox">
+                                                                <label><input id="rAllowRefund" name="setting" value="1" type="radio" <c:if test="${LIXI_ORDER.setting eq 1}">checked="checked"</c:if> class="custom-checkbox-input" style="margin-top: 6px;"/>
+                                                                    <spring:message code="allow-refund"/>
+                                                                </label>
+                                                            </div>                                                            
+                                                        </td>
+                                                        <td style="padding-left:50px;">
+                                                            <!-- (c) 2005, 2016. Authorize.Net is a registered trademark of CyberSource Corporation --> 
+                                                            <div class="AuthorizeNetSeal"> 
+                                                                <script type="text/javascript" language="javascript">var ANS_customer_id = "8d3196bc-e4f9-4a2a-b283-292c0687257d";</script> 
+                                                                <script type="text/javascript" language="javascript" src="//verify.authorize.net/anetseal/seal.js" ></script> 
+                                                                <a href="http://www.authorize.net/" id="AuthorizeNetText" target="_blank">Internet Payment Gateway</a> 
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding-left:50px;">
+                                                            <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=25ZSP0L5Lsd3uLmBTIB8PqsJWEv03qyZ8sJtMVacTWHVe1p60GLbLpEo2G4o"></script></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" style="padding-left:15px;">
+                                                            <p>(<spring:message code="place-desc-1"/>)</p>
+                                                            <p> 
+                                                                <c:url value="/support/terms" var="termUrl"/>
+                                                                <c:url value="/support/privacy" var="privacyUrl"/>
+                                                                <spring:message code="place-desc-2" argumentSeparator=";" arguments="${termUrl};${privacyUrl}"/>.
+                                                            </p>
                                                         </td>
                                                 </table>
                                             </div>
@@ -558,7 +580,7 @@
                             <button class="btn btn-warning btn-has-link-event"  style="color: white;" type="button" data-link="<c:url value="/gifts/choose"/>"><spring:message code="keep-shopping"/></button>
                             <c:if test="${LIXI_FINAL_TOTAL gt 0}">
                                 <%--<button id="btnSubmit" type="submit" class="btn btn-primary btn-has-link-event">Place Order</button>--%>
-                                <button id="btnSubmit" type="button" class="btn btn-primary" onclick="processingYourOrder()" style="color:#fff;"><spring:message code="place-order"/></button>    
+                                <button id="btnSubmit" type="button" class="btn btn-primary" onclick="preProcessTheOrder()" style="color:#fff;"><spring:message code="place-order"/></button>    
                                 <button id="btnLogOut" style="display:none;" class="btn btn-primary" type="button" onclick="location.href = '<c:url value="/user/signOut"/>'"><spring:message code="log-out"/></button>
                             </c:if>
                             <c:if test="${LIXI_FINAL_TOTAL eq 0}">
@@ -591,7 +613,7 @@
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
-                                
+
                                 <div class="progress">
                                     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                                     </div>
@@ -603,6 +625,25 @@
                 </div>
 
             </div>
-        </div>                
-    </jsp:body>
+        </div>
+        <div id="confirmAllowRefundModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><spring:message code="confirm"/></h4>
+                    </div>
+                    <div class="modal-body">
+                        <p><spring:message code="allow-th-recei"/> ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="noAllowRefund()" type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="message.no"/></button>
+                        <button onclick="yesAllowRefund()" type="button" class="btn btn-primary"><spring:message code="message.yes"/></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>    </jsp:body>
 </template:Client>

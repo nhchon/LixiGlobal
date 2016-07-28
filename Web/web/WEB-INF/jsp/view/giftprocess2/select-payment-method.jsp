@@ -20,16 +20,17 @@
             <div class="container">
                 <c:set var="localStep" value="6"/>
                 <%@include file="/WEB-INF/jsp/view/giftprocess2/inc-steps.jsp" %>
-                <c:if test="${wrong eq 1 || param.wrong eq 1}">
-                <div class="alert alert-warning alert-dismissible bg-white" role="alert">
-                    <div class="alert-message">
+                <c:if test="${wrong eq '1' || param.wrong eq '1'}">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
                         <spring:message code="error.payment-method"/>
                     </div>
-                </div>
                 </c:if>
-                <c:if test="${overNumOfCard eq 1 || param.overNumOfCard eq 1}">
-                <div class="alert alert-warning alert-dismissible bg-white" role="alert">
-                    <div class="alert-message">
+                <c:if test="${overNumOfCard eq '1' || param.overNumOfCard eq '1'}">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
                         <spring:message code="error.over-num-of-card" text="Your maximum number of card is 5. Please delete on of them before add new card"/>
                     </div>
                 </div>

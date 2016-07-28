@@ -245,6 +245,16 @@
                                             <p class="product_name">${p.name}</p>
                                             <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
                                             <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
+                                            <h4 class="title price" style="font-size: 0.8em;text-transform: capitalize;">
+                                                <c:choose>
+                                                    <c:when test="${p.purchases eq 1}">
+                                                        1&nbsp;<spring:message code="purchase"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${p.purchases}&nbsp;<spring:message code="purchases"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </h4>
                                         </div>
                                         <a href="<c:url value="/gifts/detail/${p.id}"/>"><span></span></a>
                                     </li>
@@ -258,6 +268,16 @@
                                     <div style="height: 109px;" class="copy js-height">
                                         <p class="product_name">Mobile Top up</p>
                                         <h4 style="font-size: 0.8em;" class="title price">USD <fmt:formatNumber value="${100000.0/LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> ~ VND 100,000</h4>
+                                            <h4 class="title price" style="font-size: 0.8em;text-transform: capitalize;">
+                                                <c:choose>
+                                                    <c:when test="${TOPUP_PURCHASES eq 1}">
+                                                        1&nbsp;<spring:message code="purchase"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${TOPUP_PURCHASES}&nbsp;<spring:message code="purchases"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </h4>
                                     </div>
                                     <a href="<c:url value="/topUp"/>"><span></span></a>
                                 </li>

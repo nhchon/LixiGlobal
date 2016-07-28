@@ -12,6 +12,10 @@ import java.util.List;
  */
 public interface ScalarFunctionService {
     
+    long countTopUp();
+    
+    long countPurchases(int id);
+    
     List<Integer> getBestSellingProducts();
     
     List<Long> getOrdersOfRecipient(String status, Long id);

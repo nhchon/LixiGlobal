@@ -32,6 +32,40 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
      * @return 
      */
     @Override
+    public long countTopUp(){
+        String sql = "SELECT count(*) FROM top_up_mobile_phone";
+        
+        BigInteger rs = scalarDaoL.singleResult(sql);
+        
+        if(rs == null) return 1;
+        
+        long l = rs.longValue();
+        if(l == 0) l =1;
+        
+        return l;
+        
+    }
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public long countPurchases(int id){
+        String sql = "SELECT count(*) FROM lixi_order_gifts where product_id=?";
+        
+        BigInteger rs = scalarDaoL.singleResult(sql, id);
+        
+        if(rs == null) return 0;
+        
+        return rs.longValue();
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
     public List<Integer> getBestSellingProducts(){
         
         String sql = "SELECT product_id FROM lixi_order_gifts group by product_id order by COUNT(*) DESC Limit 4";

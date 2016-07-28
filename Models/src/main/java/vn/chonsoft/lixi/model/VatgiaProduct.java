@@ -78,6 +78,9 @@ public class VatgiaProduct implements Serializable {
     @Transient
     private Integer quantity;
     
+    @Transient
+    private Long purchases;
+    
     public VatgiaProduct() {
     }
 
@@ -220,6 +223,14 @@ public class VatgiaProduct implements Serializable {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Long getPurchases() {
+        return purchases;
+    }
+
+    public void setPurchases(Long purchases) {
+        this.purchases = purchases;
     }
 
     @Override
