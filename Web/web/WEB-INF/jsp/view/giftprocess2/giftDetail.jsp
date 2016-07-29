@@ -245,7 +245,7 @@
                                             <p class="product_name">${p.name}</p>
                                             <c:set var="priceInUSD" value="${p.getPriceInUSD(LIXI_EXCHANGE_RATE.buy)}"/>
                                             <h4 class="title price" style="font-size: 0.8em;">USD <fmt:formatNumber value="${priceInUSD}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${p.price}" pattern="###,###.##"/></h4>
-                                            <h4 class="title price" style="font-size: 0.8em;text-transform: capitalize;">
+                                            <h4 class="title price" style="font-size: 1em;text-transform: capitalize;color: #0961b6;font-weight: bold;">
                                                 <c:choose>
                                                     <c:when test="${p.purchases eq 1}">
                                                         1&nbsp;<spring:message code="purchase"/>
@@ -268,7 +268,7 @@
                                     <div style="height: 109px;" class="copy js-height">
                                         <p class="product_name">Mobile Top up</p>
                                         <h4 style="font-size: 0.8em;" class="title price">USD <fmt:formatNumber value="${100000.0/LIXI_EXCHANGE_RATE.buy}" pattern="###,###.##"/> ~ VND 100,000</h4>
-                                            <h4 class="title price" style="font-size: 0.8em;text-transform: capitalize;">
+                                            <h4 class="title price" style="font-size: 1em;text-transform: capitalize;color: #0961b6;font-weight: bold;">
                                                 <c:choose>
                                                     <c:when test="${TOPUP_PURCHASES eq 1}">
                                                         1&nbsp;<spring:message code="purchase"/>

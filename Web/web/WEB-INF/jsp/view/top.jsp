@@ -92,7 +92,7 @@
                                 <ul class="nav-level-2">
                                     <li><a href="<c:url value="/support/post?method=Email"/>"><spring:message code="message.email"/></a></li>
                                     <li><a href="<c:url value="/support/post?method=Phone"/>"><spring:message code="message.phone"/></a></li>
-                                    <li><a href="<c:url value="/support/post?method=Chat"/>"><spring:message code="message.chat"/></a></li>
+                                    <%--<li><a href="<c:url value="/support/post?method=Chat"/>"><spring:message code="message.chat"/></a></li>--%>
                                 </ul>
                             </li>
                         </ul>
