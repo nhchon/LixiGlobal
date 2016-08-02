@@ -10,9 +10,6 @@
             /** Page Script **/
             var GET_BL_PATH = '<c:url value="/checkout/billing-address/"/>';
             var GET_BLS_PATH = '<c:url value="/checkout/choose-billing-address-modal?paging.page"/>';
-            jQuery(document).ready(function () {
-                loadTotalCurrentOrder();
-            });
         </script>
         <script type="text/javascript" src="<c:url value="/resource/theme/assets/lixi-global/js/billing-address.js"/>"></script>
     </jsp:attribute>

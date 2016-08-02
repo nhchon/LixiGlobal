@@ -8,9 +8,6 @@
         <script type="text/javascript">
             /** Page Script **/
             var SELECT_PAYMENT_METHOD = '<spring:message code="validate.checkout.select_a_card"/>';
-            jQuery(document).ready(function () {
-                loadTotalCurrentOrder();
-            });
         </script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/payment-methods.js"/>"></script>
     </jsp:attribute>

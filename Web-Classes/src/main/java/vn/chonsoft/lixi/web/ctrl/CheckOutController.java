@@ -363,7 +363,7 @@ public class CheckOutController {
                 /* Don't store full card information */
                 String secretCardNumber= StringUtils.leftPad(StringUtils.right(form.getCardNumber(), 4), form.getCardNumber().length(), "X");
                 uc.setCardNumber(secretCardNumber);
-                uc.setCardCvv(null);
+                //uc.setCardCvv(null); // comment on 2016/08/02, Mr Yuric asked
                 uc = this.ucService.save(uc);
                 
                 // update order, add card

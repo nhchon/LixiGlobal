@@ -738,7 +738,7 @@ public class UserManagementController {
                 //String secretCardNumber= "XXXX"+StringUtils.right(form.getCardNumber(), 4);
                 String secretCardNumber= StringUtils.leftPad(StringUtils.right(form.getCardNumber(), 4), form.getCardNumber().length(), "X");
                 uc.setCardNumber(secretCardNumber);
-                uc.setCardCvv("000");
+                //uc.setCardCvv("000");// comment on 2016/08/02, Mr Yuric asked
                 
                 this.cardService.save(uc);
                 

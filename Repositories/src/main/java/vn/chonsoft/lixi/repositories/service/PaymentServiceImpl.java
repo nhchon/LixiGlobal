@@ -733,6 +733,7 @@ public class PaymentServiceImpl implements PaymentService{
         
         PaymentProfile paymentProfile = new PaymentProfile();
         paymentProfile.setPaymentProfileId(order.getCard().getAuthorizePaymentId());
+        paymentProfile.setCardCode(order.getCard().getCardCvv());
 
         CustomerProfilePaymentType pay = new CustomerProfilePaymentType();
         pay.setPaymentProfile(paymentProfile);

@@ -6,10 +6,6 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
-            jQuery(document).ready(function () {
-                loadTotalCurrentOrder();
-            });
-            
             function jump(page) {
                 $('#searchForm #sPage').val(page);
                 

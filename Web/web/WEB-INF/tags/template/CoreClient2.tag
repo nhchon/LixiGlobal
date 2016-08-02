@@ -102,7 +102,12 @@
 
           ga('create', 'UA-73630322-1', 'auto');
           ga('send', 'pageview');
-          <c:if test="${not empty sessionScope['scopedTarget.loginedUser'].email}">setInterval(function(){ checkSessionTimeOut();}, 5*60*1000);</c:if>
+        <c:if test="${not empty sessionScope['scopedTarget.loginedUser'].email}">
+            jQuery(document).ready(function () {
+                loadTotalCurrentOrder();
+                setInterval(function(){ checkSessionTimeOut();}, 5*60*1000);
+            });
+        </c:if>
         </script>    
     </body>
 </html>
