@@ -20,7 +20,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li id="m01" <c:if test="${m01 eq true}">class="active"</c:if>><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-                <li><a href="javascript:void(0);">Financial</a></li>
+                <%--<li><a href="javascript:void(0);">Financial</a></li>--%>
                 <li id="m07" class="dropdown<c:if test="${m07 eq true}"> active</c:if>">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customer<span class="caret"></span></a>
                     <ul class="dropdown-menu">

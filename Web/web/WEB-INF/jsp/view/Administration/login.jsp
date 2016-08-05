@@ -5,7 +5,7 @@
     <!--<![endif]-->
 
     <head>
-        <title>Login | KingAdmin - Admin Dashboard</title>
+        <title>Login | Lixi.Global - Admin Dashboard</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <meta name="description" content="KingAdmin Dashboard">
@@ -31,18 +31,15 @@
     </head>
 
     <body>
-        <div class="wrapper full-page-wrapper page-auth page-login text-center">
+        <div class="container">
             <div class="inner-page">
                 <div class="logo">
-                    <a href="index.html"><img src="<c:url value="/resource/theme/assets/img/kingadmin-logo.png"/>" alt="" /></a>
+                    <a href="index.html"><img src="<c:url value="/resource/theme/assets/lixi-global/images/logo.png"/>" alt="" /></a>
                 </div>
-                <button type="button" class="btn btn-auth-facebook"><span>Login via Facebook</span></button>
 
-                <div class="separator"><span>OR</span></div>
-
-                <div class="login-box center-block">
+                <div class="login-box center-block" style="padding-top: 50px;">
                     <form:form class="form-horizontal" role="form" autocomplete="off" method="post" modelAttribute="adminUserLoginForm">
-                        <p class="title">Use your username</p>
+                        <p class="title"><b>Use your ID</b></p>
                         <div class="form-group">
                             <label for="username" class="control-label sr-only">Username</label>
                             <div class="col-sm-12">
@@ -71,14 +68,13 @@
                     </form:form>
 
                     <div class="links">
-                        <p><a href="#">Forgot Username or Password?</a></p>
-                        <p><a href="#">Create New Account</a></p>
+                        <p><a href="#" onclick="alert('Please contact support@lixi.global')">Forgot Username or Password?</a></p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <footer class="footer">&copy; 2014-2015 The Develovers</footer>
+        <footer class="footer text-center">&copy; 2015-2016 Lixi.Global</footer>
 
         <!-- Javascript -->
         <script src="<c:url value="/resource/theme/assets/js/jquery/jquery-2.1.0.min.js"/>"></script>

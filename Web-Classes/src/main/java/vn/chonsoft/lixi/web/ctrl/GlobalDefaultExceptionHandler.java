@@ -97,7 +97,7 @@ public class GlobalDefaultExceptionHandler {
                 message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                 message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
-                message.setSubject("LiXi.Global Error - " + errorDate + ": " + StringUtils.defaultIfBlank(errMessage, ""));
+                message.setSubject("Lixi.Global Error - " + errorDate + ": " + StringUtils.defaultIfBlank(errMessage, ""));
                 message.setSentDate(Calendar.getInstance().getTime());
 
                 Map model = new HashMap();
