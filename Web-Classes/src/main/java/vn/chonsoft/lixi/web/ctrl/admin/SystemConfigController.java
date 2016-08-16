@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -40,6 +39,7 @@ import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
+import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.VatgiaCategory;
 import vn.chonsoft.lixi.model.form.LiXiExchangeRateForm;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
@@ -48,9 +48,9 @@ import vn.chonsoft.lixi.model.trader.ExchangeRate;
 import vn.chonsoft.lixi.model.trader.Trader;
 import vn.chonsoft.lixi.repositories.service.CurrencyTypeService;
 import vn.chonsoft.lixi.repositories.service.ExchangeRateService;
-import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
+import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.repositories.service.TraderService;
 import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -75,23 +75,26 @@ public class SystemConfigController {
     @Autowired
     private LoginedUser loginedUser;
 
-    @Inject
+    @Autowired
+    private ShippingChargedService shipService;
+    
+    @Autowired
     private CurrencyTypeService currencyService;
     
-    @Inject
+    @Autowired
     private TraderService traderService;
     
-    @Inject
+    @Autowired
     private ExchangeRateService exrService;
     
-    @Inject
+    @Autowired
     private LixiExchangeRateService lxrService;
     
-    @Inject
+    @Autowired
     private VatgiaCategoryService vgcService;
     
-    @Inject
-    private LixiCategoryService lxcService;
+    //@Autowired
+    //private LixiCategoryService lxcService;
     
     @Autowired
     private LixiConfigService configService;
@@ -107,6 +110,48 @@ public class SystemConfigController {
     
     @Autowired
     private JavaMailSender mailSender;
+    
+    /**
+     * 
+     * @param model
+     * @param fromTotal
+     * @param chargeAmount
+     * @param toTotal
+     * @return 
+     */
+    @RequestMapping(value = "shippingCharged/save", method = RequestMethod.POST)
+    public ModelAndView shippingCharged(Map<String, Object> model, @RequestParam double fromTotal, @RequestParam double chargeAmount, @RequestParam double toTotal){
+        
+        ShippingCharged ship = new ShippingCharged();
+        ship.setOrderFrom(fromTotal);
+        ship.setChargedAmount(chargeAmount);
+        ship.setOrderToEnd(toTotal);
+        
+        ship.setCreatedDate(Calendar.getInstance().getTime());
+        ship.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        
+        this.shipService.save(ship);
+        
+        RedirectView r = new RedirectView("/Administration/SystemConfig/shippingCharged", true, true);
+        r.setExposeModelAttributes(false);
+        
+        return new ModelAndView(r);
+    }    
+    /**
+     * 
+     * 
+     * @param model 
+     * @return 
+     */
+    @RequestMapping(value = "shippingCharged", method = RequestMethod.GET)
+    public ModelAndView shippingCharged(Map<String, Object> model){
+        
+        List<ShippingCharged> shippingCharged = this.shipService.findAll();
+        
+        model.put("ships", shippingCharged);
+        
+        return new ModelAndView("Administration/config/shippingCharged");
+    }
     
     /**
      *

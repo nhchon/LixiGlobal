@@ -61,6 +61,7 @@
                         <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">Lixi Exchange Rate</a></li>
                         <li><a href="<c:url value="/Administration/SystemFee/list"/>">Lixi Global Fee</a></li>
                         <li><a href="<c:url value="/Administration/SystemConfig/configs"/>">Lixi Configuration Parameters</a></li>
+                        <li><a href="<c:url value="/Administration/SystemConfig/shippingCharged"/>">Lixi Shipping Charged</a></li>
                     </ul>
                 </li>
                 <li id="m05" class="dropdown <c:if test="${m05 eq true}">active</c:if> ">
