@@ -480,6 +480,15 @@
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12" style="padding-left:40px">
+                                                                            <b>*<spring:message code="shipping-charge" text="Shipping charge"/>:</b> USD <span><fmt:formatNumber minFractionDigits="2" value="0" pattern="###,###.##"/></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
                                                     </tbody></table> 
                                             </div>
                                         </div>
@@ -489,6 +498,9 @@
                                             <div class="receiver-order-gift-price">
                                                 <div>
                                                     <strong class="receiver-order-gift-price-left text-bold"><spring:message code="mess.gift-price"/></strong><span class="receiver-order-gift-price-right">USD <span id="giftPriceUsd"><fmt:formatNumber minFractionDigits="2" value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/></span> ~ VND <span id="giftPriceVnd"><fmt:formatNumber minFractionDigits="2" value="${LIXI_GIFT_PRICE_VND}" pattern="###,###.##"/></span></span> (FX 1 USD = <fmt:formatNumber value="${LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> VND)
+                                                </div>
+                                                <div>
+                                                    <strong class="receiver-order-gift-price-left"><spring:message code="total-shipping-charge" text="Total shipping charge"/></strong><span class="receiver-order-gift-price-right">USD <span><fmt:formatNumber minFractionDigits="2" value="0" pattern="###,###.##"/></span> ~ VND <span><fmt:formatNumber minFractionDigits="2" value="0" pattern="###,###.##"/></span></span>
                                                 </div>
                                                 <div>
                                                     <strong class="receiver-order-gift-price-left"><spring:message code="mess.card-process-fee"/></strong><span class="receiver-order-gift-price-right">USD <span id="CARD_PROCESSING_FEE_THIRD_PARTY"><fmt:formatNumber minFractionDigits="2"  value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></span></span>
@@ -637,6 +649,7 @@
                     </div>
                     <div class="modal-body">
                         <p><spring:message code="allow-th-recei"/> ?</p>
+                        (<spring:message code="also-refund-shipping-charge" text="We will also refund shipping charge"/>)
                     </div>
                     <div class="modal-footer">
                         <button onclick="noAllowRefund()" type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="message.no"/></button>
@@ -645,5 +658,6 @@
                 </div>
 
             </div>
-        </div>    </jsp:body>
+        </div>
+    </jsp:body>
 </template:Client>

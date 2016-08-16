@@ -27,7 +27,7 @@
                     <br /><br /><br />
                     <div class="btns" style="text-align:center;">
                         <a href="<c:url value="/gifts/choose"/>" class="btn btn-primary"><spring:message code="continue-giving"/></a>
-                        <a href="<c:url value="/user/signOut"/>" class="btn btn-primary"><spring:message code="log-out"/></a>
+                        <a href="<c:url value="/user/signOut"/>" class="btn btn-warning"><spring:message code="log-out"/></a>
                     </div>
                     <p>&nbsp;</p>
                     <p>&nbsp;</p>

@@ -37,22 +37,28 @@ import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiBatch;
 import vn.chonsoft.lixi.model.LixiBatchOrder;
+import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.SecurityAdminUser;
 import vn.chonsoft.lixi.model.form.LixiOrderSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
+import vn.chonsoft.lixi.pojo.BankExchangeRate;
+import vn.chonsoft.lixi.pojo.Exrate;
 import vn.chonsoft.lixi.repositories.search.Criterion;
 import vn.chonsoft.lixi.repositories.search.SearchCriteria;
 import vn.chonsoft.lixi.repositories.service.LixiBatchOrderService;
 import vn.chonsoft.lixi.repositories.service.LixiBatchService;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
+import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderSearchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
+import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LixiAsyncMethods;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
@@ -96,6 +102,9 @@ public class LixiOrdersController {
 
     @Autowired
     private LixiInvoiceService invoiceService;
+
+    @Autowired
+    private LixiExchangeRateService lxexrateService;
 
     /**
      *
@@ -382,8 +391,41 @@ public class LixiOrdersController {
         return new ModelAndView("Administration/orders/sendMoneyInfo");
     }
 
+    /**
+     * 
+     * @return 
+     */
     private LixiBatch createBatch() {
-
+        
+        // get current VCB exchange rate
+        double vcbCurrentBuyUsd = 0;
+        SimpleDateFormat aFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String vcbTime = "";
+        BankExchangeRate vcbEx = LiXiGlobalUtils.getVCBExchangeRates();
+        Exrate usdEx = null;
+        if(vcbEx != null){
+            // get usd
+            if(vcbEx.getExrates() != null && !vcbEx.getExrates().isEmpty()){
+            
+                for(Exrate ex : vcbEx.getExrates()){
+                    if(LiXiGlobalConstants.USD.equalsIgnoreCase(ex.getCode())){
+                        usdEx = ex;
+                        break;
+                    }
+                }
+            }
+        }
+        /**/
+        if(usdEx != null){
+            vcbCurrentBuyUsd = usdEx.getBuy();
+            vcbTime = vcbEx.getTime();
+        }
+        else{
+            LixiExchangeRate lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
+            vcbCurrentBuyUsd = lxExch.getBuy();
+            vcbTime = aFormatter.format(lxExch.getCreatedDate());
+        }
+        
         // current date
         Date currDate = Calendar.getInstance().getTime();
         SimpleDateFormat format = new SimpleDateFormat("MMddyyyy HH:mm a");
@@ -391,6 +433,8 @@ public class LixiOrdersController {
         LixiBatch batch = new LixiBatch();
         batch.setName(format.format(currDate));
         batch.setCreatedDate(currDate);
+        batch.setVcbBuyUsd(vcbCurrentBuyUsd);
+        batch.setVcbTime(vcbTime);
         batch.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
 
         batch = this.batchService.save(batch);

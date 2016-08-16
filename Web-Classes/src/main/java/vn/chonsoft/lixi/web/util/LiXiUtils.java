@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.web.util;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.StringWriter;
+import java.net.URI;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -63,6 +64,39 @@ public class LiXiUtils {
         df.applyPattern("###,###.##");
     }
     
+    /**
+     * 
+     * Prevent urls as https://www.google.com/gifts/detail/1517
+     * 
+     * @param uri
+     * @return 
+     */
+    public static String getPathOfNextUrl(String uri){
+        
+        if(StringUtils.isBlank(uri)){
+            return "/";
+        }
+        
+        try {
+            
+            URI url = new URI(uri);
+            
+            String path = url.getPath();
+            
+            if(StringUtils.isBlank(path))
+                return "/";
+            
+            String query = url.getQuery();
+            
+            if(StringUtils.isBlank(query))
+                return path;
+            else
+                return path + "?" + query;
+            
+        } catch (Exception e) {
+            return "/";
+        }
+    }
     /**
      * 
      * @param value

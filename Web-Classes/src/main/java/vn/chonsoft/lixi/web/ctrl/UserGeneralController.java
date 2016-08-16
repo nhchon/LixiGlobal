@@ -792,12 +792,7 @@ public class UserGeneralController {
         }
 
         // goto next page
-        String nextUrl = request.getParameter("nextUrl");
-        if(StringUtils.isBlank(nextUrl)){
-            nextUrl = "/gifts/choose";
-        }
-        
-        RedirectView r = new RedirectView(nextUrl, true, true);
+        RedirectView r = new RedirectView(LiXiUtils.getPathOfNextUrl(request.getParameter("nextUrl")), true, true);
         r.setExposeModelAttributes(false);
         return new ModelAndView(r);        
     }

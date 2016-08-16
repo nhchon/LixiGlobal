@@ -48,6 +48,14 @@ public class LixiBatch implements Serializable {
     private Date createdDate;
     
     @Basic(optional = false)
+    @Column(name = "vcb_buy_usd")
+    private double vcbBuyUsd;
+    
+    @Basic(optional = false)
+    @Column(name = "vcb_time")
+    private String vcbTime;
+    
+    @Basic(optional = false)
     @Column(name = "created_by")
     private String createdBy;
 
@@ -97,6 +105,22 @@ public class LixiBatch implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public double getVcbBuyUsd() {
+        return vcbBuyUsd;
+    }
+
+    public void setVcbBuyUsd(double vcbBuyUsd) {
+        this.vcbBuyUsd = vcbBuyUsd;
+    }
+
+    public String getVcbTime() {
+        return vcbTime;
+    }
+
+    public void setVcbTime(String vcbTime) {
+        this.vcbTime = vcbTime;
     }
 
     public String getCreatedBy() {

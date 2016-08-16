@@ -21,3 +21,6 @@ ALTER TABLE `vatgia_products` ADD `description` TEXT NULL AFTER `name`;
 ALTER TABLE `recipients` ADD `activated` TINYINT NOT NULL DEFAULT '1' AFTER `note`;
 
 ALTER TABLE `lixi_order_gifts` ADD `lixi_margined` TINYINT NULL DEFAULT '0' AFTER `bk_updated`;
+
+## 2016-08-09
+ALTER TABLE `lixi_batch` ADD `vcb_buy_usd` DOUBLE NOT NULL AFTER `created_date`, ADD `vcb_time` VARCHAR(255) NOT NULL AFTER `vcb_buy_usd`;
