@@ -60,6 +60,7 @@ import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
+import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.repositories.service.UserBankAccountService;
 import vn.chonsoft.lixi.repositories.service.UserCardService;
 import vn.chonsoft.lixi.repositories.service.UserService;
@@ -83,6 +84,9 @@ public class UserManagementController {
     /* session bean - Login user */
     @Autowired
     private LoginedUser loginedUser;
+    
+    @Autowired
+    private ShippingChargedService shipService;
     
     @Autowired
     private JavaMailSender mailSender;
@@ -584,7 +588,7 @@ public class UserManagementController {
         
         // calculate fee
         LiXiUtils.calculateFee(model, order, feeService.findByCountry(
-                countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())));
+                countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())), this.shipService.findAll());
         
         /* return */
         return new ModelAndView("user2/orderDetail");

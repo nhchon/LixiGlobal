@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
     <head>
         <title>Lixi.Global - 403 - Your session has expired</title>

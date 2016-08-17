@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +37,7 @@ import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
+import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VtcServiceCodeService;
@@ -60,28 +60,31 @@ public class TopUpMobileController {
     @Autowired
     private LoginedUser loginedUser;
     
-    @Inject
+    @Autowired
     private UserService userService;
 
-    @Inject
+    @Autowired
+    private ShippingChargedService shipService;
+    
+    @Autowired
     private RecipientService reciService;
 
-    @Inject
+    @Autowired
     private LixiOrderService lxorderService;
 
-    @Inject
+    @Autowired
     private LixiExchangeRateService lxexrateService;
 
-    @Inject
+    @Autowired
     private LixiCategoryService lxcService;
 
-    @Inject
+    @Autowired
     private VtcServiceCodeService vtcServiceCodeService;
 
-    @Inject
+    @Autowired
     private TopUpMobilePhoneService topUpService;
 
-    @Inject
+    @Autowired
     private BuyCardService buyPhoneCardService;
 
     @Autowired
@@ -373,7 +376,7 @@ public class TopUpMobileController {
             countryCode = LiXiUtils.getBillingAddress(order).getCountry();
         }
         LiXiUtils.calculateFee(model, this.lxorderService.findById(orderId), this.feeService.findByCountry(
-                this.countryService.findByCode(countryCode)));
+                this.countryService.findByCode(countryCode)), this.shipService.findAll());
 
         model.put(LiXiGlobalConstants.MONEY_LEVEL, u.getUserMoneyLevel().getMoneyLevel().getAmount());
         return new ModelAndView("topup2/exceedTopUp", model);

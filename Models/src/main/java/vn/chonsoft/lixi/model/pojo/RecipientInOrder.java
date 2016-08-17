@@ -13,6 +13,7 @@ import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
@@ -35,16 +36,14 @@ public class RecipientInOrder {
     private Recipient recipient;
     
     private List<LixiOrderGift> gifts;
-    
-    //private List<BuyCard> buyPhoneCards;
-    
     private List<TopUpMobilePhone> topUpMobilePhones;
 
     private SumVndUsd giftTotal = null;
-    //private SumVndUsd phoneCardTotal = null;
-    
     private SumVndUsd topUpTotal = null;
     private SumVndUsd allTotal = null;
+
+    private List<ShippingCharged> charged;
+    private double shippingChargeAmount;
     
     public Long getOrderId() {
         return orderId;
@@ -136,16 +135,16 @@ public class RecipientInOrder {
      * 
      * @return 
      */
-    private SumVndUsd calculateGiftTotal(){
+    private SumVndUsd calculateGiftTotal(boolean excludeMargin){
         
         // gift type
         double sumGiftVND = 0;
         double sumGiftUSD = 0;
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
-                if(orderSetting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
+                if(excludeMargin && (orderSetting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
                     (orderSetting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
-                    gift.isLixiMargined())){
+                    gift.isLixiMargined()))){
                     // baoKimTransferPercent
                     sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * baoKimTransferPercent)/100.0;
                 }
@@ -171,7 +170,7 @@ public class RecipientInOrder {
      */
     public SumVndUsd getGiftTotal(){
         
-        giftTotal = calculateGiftTotal();
+        giftTotal = calculateGiftTotal(true);
         
         return giftTotal;
     }
@@ -205,7 +204,27 @@ public class RecipientInOrder {
         
         return new SumVndUsd(LiXiGlobalConstants.LIXI_TOTAL_ALL_TYPE, gift.getVnd() + topUp.getVnd(), gift.getUsd() + topUp.getUsd());
     }
-    
+
+    public void setCharged(List<ShippingCharged> charged) {
+        this.charged = charged;
+    }
+
+    public double getShippingChargeAmount() {
+        
+        if(this.charged == null) return 0;
+        
+        SumVndUsd giftTotal = calculateGiftTotal(false);
+        for(ShippingCharged c : charged){
+            
+            if(giftTotal.getUsd() <= c.getOrderToEnd()){
+                shippingChargeAmount = c.getChargedAmount();
+                break;
+            }
+        }
+        
+        return shippingChargeAmount;
+    }
+
     /**
      * 
      * @return 

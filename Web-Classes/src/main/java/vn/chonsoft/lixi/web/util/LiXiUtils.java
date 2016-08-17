@@ -42,6 +42,7 @@ import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.pojo.CashRun;
@@ -381,7 +382,7 @@ public class LiXiUtils {
      * @param order 
      * @param fees
      */
-    public static void calculateFee(Map<String, Object> model, LixiOrder order, List<LixiGlobalFee> fees){
+    public static void calculateFee(Map<String, Object> model, LixiOrder order, List<LixiGlobalFee> fees, List<ShippingCharged> charged){
         
         /* get billing address */
         //BillingAddress bl = null;
@@ -398,6 +399,8 @@ public class LiXiUtils {
         //log.info("fees.length : " + fees.size());
         
         List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
+        recGifts.forEach(r -> {r.setCharged(charged);});
+        
         model.put(LiXiConstants.LIXI_ORDER, order);
         model.put(LiXiConstants.REC_GIFTS, recGifts);
 

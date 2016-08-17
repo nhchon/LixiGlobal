@@ -56,6 +56,17 @@ public class IndexController {
      * @param model
      * @return 
      */
+    @RequestMapping(value = "/403.html", method = RequestMethod.GET)
+    public String status403(Map<String, Object> model) {
+        
+        return "403";
+    }
+
+    /**
+     * 
+     * @param model
+     * @return 
+     */
     @RequestMapping(value = "/sessionExpired", method = {RequestMethod.GET, RequestMethod.POST})
     public String sessionExpired(Map<String, Object> model) {
         
