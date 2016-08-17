@@ -15,5 +15,7 @@ public interface ShippingChargedService {
     
     ShippingCharged save(ShippingCharged sc);
     
+    void delete(Long id);
+    
     List<ShippingCharged> findAll();
 }

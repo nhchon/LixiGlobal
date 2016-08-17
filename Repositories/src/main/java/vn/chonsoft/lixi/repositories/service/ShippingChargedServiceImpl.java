@@ -20,6 +20,18 @@ public class ShippingChargedServiceImpl implements ShippingChargedService{
     
     @Autowired
     private ShippingChargedRepository shipRepo;
+
+    /**
+     * 
+     * @param id 
+     */
+    @Override
+    public void delete(Long id) {
+        
+        this.shipRepo.delete(id);
+        
+    }
+    
     
     /**
      * 

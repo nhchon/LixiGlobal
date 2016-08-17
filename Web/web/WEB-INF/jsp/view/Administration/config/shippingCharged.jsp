@@ -3,14 +3,11 @@
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
-            function deleteConfig(id){
+            function deleteShippingCharged(id){
                 if(confirm('Are you sure want to delete this config ???')){
-                    document.location.href = '<c:url value="/Administration/SystemConfig/configs/delete/"/>' + id;
+                    postInvisibleForm('<c:url value="/Administration/SystemConfig/shippingCharged/delete"/>', {"id":id});
                 }
             }
-            <c:if test="${param.save eq 'OK'}">
-                alert('The param is saved');
-            </c:if>
         </script>    
     </jsp:attribute>
     <jsp:body>
@@ -59,7 +56,16 @@
                                     </td>
                                 </tr>
                             </form>
-                            <c:forEach items="${configs}" var="c" varStatus="theCount">
+                            <c:forEach items="${ships}" var="s" varStatus="theCount">
+                                <tr>
+                                    <td style="vertical-align: middle;"><b># ${s.id}</b></td>
+                                    <td style="vertical-align: middle;"><fmt:formatNumber value="${s.orderFrom}" pattern="###,###.##"/></td>
+                                    <td style="vertical-align: middle;"></td>
+                                    <td style="vertical-align: middle;"><fmt:formatNumber value="${s.orderToEnd}" pattern="###,###.##"/></td>
+                                    <td style="vertical-align: middle;"></td>
+                                    <td style="vertical-align: middle;"><fmt:formatNumber value="${s.chargedAmount}" pattern="###,###.##"/></td>
+                                    <td style="vertical-align: middle;"><button type="button" class="btn btn-warning" onclick="deleteShippingCharged(${s.id})">Delete</button></td>
+                                </tr>
                             </c:forEach>
                         </tbody>
                     </table>

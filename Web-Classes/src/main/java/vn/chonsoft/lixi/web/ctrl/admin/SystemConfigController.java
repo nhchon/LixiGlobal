@@ -111,6 +111,18 @@ public class SystemConfigController {
     @Autowired
     private JavaMailSender mailSender;
     
+    @RequestMapping(value = "shippingCharged/delete", method = RequestMethod.POST)
+    public ModelAndView shippingCharged(Map<String, Object> model, @RequestParam long id){
+        
+        this.shipService.delete(id);
+        
+        RedirectView r = new RedirectView("/Administration/SystemConfig/shippingCharged", true, true);
+        r.setExposeModelAttributes(false);
+        
+        return new ModelAndView(r);
+    
+    }
+    
     /**
      * 
      * @param model
