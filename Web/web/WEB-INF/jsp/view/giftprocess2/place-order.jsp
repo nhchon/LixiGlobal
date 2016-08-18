@@ -465,7 +465,7 @@
                                                                     <div class="row">
                                                                         <div class="col-md-6" style="padding-left:40px">${g.productName}</div>
                                                                         <div class="col-md-3" id="gift${g.id}"><span id="q${g.id}">${g.productQuantity}</span> <a href="javascript:editQuantity(${g.id});" class="edit-info-event"></a></div>
-                                                                        <div class="col-md-3">USD <span id="itemTotalUsd${g.id}"><fmt:formatNumber value="${g.usdPrice * g.productQuantity}" pattern="###,###.##"/></span> ~ VND <span id="itemTotalVnd${g.id}"><fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></span></div>
+                                                                        <div class="col-md-3">USD <span id="itemTotalUsd${g.id}"><fmt:formatNumber minFractionDigits="2" value="${g.usdPrice * g.productQuantity}" pattern="###,###.##"/></span> ~ VND <span id="itemTotalVnd${g.id}"><fmt:formatNumber value="${g.productPrice * g.productQuantity}" pattern="###,###.##"/></span></div>
                                                                     </div>    
                                                                 </td>
                                                             </tr>
@@ -484,8 +484,19 @@
                                                             <tr>
                                                                 <td>
                                                                     <div class="row">
-                                                                        <div class="col-md-12" style="padding-left:40px">
+                                                                        <div class="col-md-6" style="padding-left:40px">
                                                                             <b>*<spring:message code="shipping-charge" text="Shipping charge"/>:</b> USD <span><fmt:formatNumber minFractionDigits="2" value="${entry.shippingChargeAmount}" pattern="###,###.##"/></span>
+                                                                        </div>
+                                                                        <div class="col-md-3" style="text-align: right;">
+                                                                            <spring:message code="total-inc-shipping-charge" text="Total"/>:
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            USD <fmt:formatNumber minFractionDigits="2" value="${entry.allTotal.usd + entry.shippingChargeAmount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${entry.allTotal.vnd + (entry.shippingChargeAmount * LIXI_ORDER.lxExchangeRate.buy)}" pattern="###,###.##"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12" style="padding-left:40px">
+                                                                            <span style="font-size:12px;">(<spring:message code="if-we-also-refund-shipping-charge" text="if-we-also-refund-shipping-charge"/>)</span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -514,7 +525,7 @@
                                                     <strong class="receiver-order-gift-price-left"><spring:message code="mess.sale-tax"/></strong><span class="receiver-order-gift-price-right">USD <span id="saleTax"><fmt:formatNumber  minFractionDigits="2" value="0.00" pattern="###,###.##"/></span></span>
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left text-bold" style="color: #000">Total</strong><strong class="receiver-order-gift-price-right text-bold" style="color: #000">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber  minFractionDigits="2" value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
+                                                    <strong class="receiver-order-gift-price-left text-bold" style="color: #000">Total</strong><strong class="receiver-order-gift-price-right text-bold" style="color: #000">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber  minFractionDigits="2" value="${LIXI_FINAL_TOTAL + totalShipping}" pattern="###,###.##"/></span></strong>
                                                 </div>
                                             </div>
                                             <h4 class="text-color-link"><spring:message code="mess.payment-method"/> <a href="<c:url value="/checkout/paymentMethods"/>" class="edit-info-event"></a></h4>

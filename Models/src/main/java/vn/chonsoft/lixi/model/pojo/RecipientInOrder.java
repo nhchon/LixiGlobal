@@ -135,23 +135,23 @@ public class RecipientInOrder {
      * 
      * @return 
      */
-    private SumVndUsd calculateGiftTotal(boolean excludeMargin){
+    private SumVndUsd calculateGiftTotal(){
         
         // gift type
         double sumGiftVND = 0;
         double sumGiftUSD = 0;
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
-                if(excludeMargin && (orderSetting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
-                    (orderSetting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
-                    gift.isLixiMargined()))){
+                //if(excludeMargin && (orderSetting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
+                //    (orderSetting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
+                //    gift.isLixiMargined()))){
                     // baoKimTransferPercent
-                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * baoKimTransferPercent)/100.0;
-                }
-                else{
+                //    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * baoKimTransferPercent)/100.0;
+                //}
+                //else{
                     
                     sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
-                }
+                //}
                 sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
                 
             }
@@ -170,7 +170,7 @@ public class RecipientInOrder {
      */
     public SumVndUsd getGiftTotal(){
         
-        giftTotal = calculateGiftTotal(true);
+        giftTotal = calculateGiftTotal();
         
         return giftTotal;
     }
@@ -213,7 +213,7 @@ public class RecipientInOrder {
         
         if(this.charged == null) return 0;
         
-        SumVndUsd giftTotal = calculateGiftTotal(false);
+        SumVndUsd giftTotal = calculateGiftTotal();
         for(ShippingCharged c : charged){
             
             if(giftTotal.getUsd() <= c.getOrderToEnd()){

@@ -37,7 +37,7 @@
                                 <form:select path="subject" cssClass="form-control">
                                     <form:option value="0" label="--- Select ---"/>
                                     <form:options items="${subjects}" itemLabel="subject" itemValue="id"/>
-                                    <form:option value="-1" label="Other"/>
+                                    <form:option value="-1" label="Other (Please comment below)"/>
                                 </form:select>
                             </div>
                         </div>
@@ -68,7 +68,6 @@
                                 <form:select path="contactMethod" cssClass="form-control">
                                     <option value="1" <c:if test="${empty method}"> selected=""</c:if> label="Email">Email</option>
                                     <option value="2" <c:if test="${method eq 'Phone'}"> selected=""</c:if> label="Phone Call">Phone</option>
-                                    <option value="3" <c:if test="${method eq 'Chat'}"> selected=""</c:if> label="Chat">Chat</option>
                                 </form:select>
                             </div>
                         </div>

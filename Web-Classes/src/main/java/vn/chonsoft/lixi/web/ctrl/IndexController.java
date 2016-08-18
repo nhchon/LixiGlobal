@@ -26,6 +26,8 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -60,6 +62,20 @@ public class IndexController {
     public String status403(Map<String, Object> model) {
         
         return "403";
+    }
+
+    /**
+     * 
+     * @param model
+     * @return 
+     */
+    @RequestMapping(value = "/403.html", method = RequestMethod.POST)
+    public View status403Post(Map<String, Object> model) {
+        
+        RedirectView redirect = new RedirectView("/403.html");
+        redirect.setExposeModelAttributes(false);
+        
+        return redirect;
     }
 
     /**
