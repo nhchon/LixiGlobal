@@ -403,7 +403,19 @@ public class LiXiUtils {
         
         model.put(LiXiConstants.LIXI_ORDER, order);
         model.put(LiXiConstants.REC_GIFTS, recGifts);
-
+        Long recId = (Long)model.get(LiXiConstants.SELECTED_RECIPIENT_ID);
+        double totalShippingCharge = 0;
+        for(RecipientInOrder r : recGifts){
+            if(recId != null && recId.longValue() == r.getRecipient().getId()){
+                SumVndUsd rTotal = r.getAllTotal();
+                model.put(LiXiConstants.RECIPIENT_TOTAL_INC_SHIPPING_USD, rTotal.getUsd() + r.getShippingChargeAmount());
+                model.put(LiXiConstants.RECIPIENT_TOTAL_INC_SHIPPING_VND, rTotal.getVnd() + (r.getShippingChargeAmount() * buy));
+                model.put(LiXiConstants.RECIPIENT_SHIPPING_CHARGED, r.getShippingChargeAmount());
+            }
+            totalShippingCharge += r.getShippingChargeAmount();
+        }
+        model.put(LiXiConstants.TOTAL_SHIPPING_CHARGED, totalShippingCharge);
+        
         // calculate the total
         double finalTotal = 0;
         SumVndUsd[] totals = LiXiUtils.calculateCurrentPayment(order);
@@ -444,8 +456,8 @@ public class LiXiUtils {
 
         model.put(LiXiConstants.LIXI_GIFT_PRICE, LiXiGlobalUtils.round2Decimal(giftPrice));
         model.put(LiXiConstants.LIXI_GIFT_PRICE_VND, giftPriceVnd);
-        model.put(LiXiConstants.LIXI_FINAL_TOTAL, LiXiGlobalUtils.round2Decimal(finalTotal));
-        model.put(LiXiConstants.LIXI_FINAL_TOTAL_VND, LiXiGlobalUtils.round2Decimal(buy * finalTotal));
+        model.put(LiXiConstants.LIXI_FINAL_TOTAL, LiXiGlobalUtils.round2Decimal(finalTotal + totalShippingCharge));
+        model.put(LiXiConstants.LIXI_FINAL_TOTAL_VND, LiXiGlobalUtils.round2Decimal(buy * (finalTotal+totalShippingCharge)));
         model.put(LiXiConstants.LIXI_HANDLING_FEE, (fee!=null?fee.getLixiFee():0.99));
         model.put(LiXiConstants.LIXI_HANDLING_FEE_TOTAL, LiXiGlobalUtils.round2Decimal(lixiFee));
         model.put(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY, cardFee);

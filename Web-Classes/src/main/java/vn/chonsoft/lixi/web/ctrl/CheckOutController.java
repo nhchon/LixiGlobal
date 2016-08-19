@@ -990,6 +990,7 @@ public class CheckOutController {
         //Recipient rec = this.reciService.findById(recId);
         LixiOrderGift alreadyGift = this.lxogiftService.findById(giftId);
         
+        model.put(LiXiConstants.SELECTED_RECIPIENT_ID, alreadyGift.getRecipient().getId());
         
         // get price
         VatgiaProduct vgp = this.vgpService.findById(alreadyGift.getProductId());
@@ -1088,9 +1089,10 @@ public class CheckOutController {
             
             //LixiOrder order = this.lxorderService.findById(orderId);
             LixiOrderGift gift = this.lxogiftService.findById(giftId);
-            Long recId = gift.getRecipient().getId();
-            Integer catId = gift.getCategory().getId();
             if(gift.getOrder().getId().equals(orderId)){
+                
+                // get back RECIPIENT id
+                model.put(LiXiConstants.SELECTED_RECIPIENT_ID, gift.getRecipient().getId());
                 
                 this.lxogiftService.delete(giftId);
                 
@@ -1101,8 +1103,9 @@ public class CheckOutController {
         
         LixiOrder order = this.lxorderService.findById(orderId);
         // calculate fee
-        LiXiUtils.calculateFee(model, order, this.feeService.findByCountry(
-                this.countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry())), this.shipService.findAll());
+        List<LixiGlobalFee> fees = this.feeService.findByCountry(
+                this.countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry()));
+        LiXiUtils.calculateFee(model, order, fees, this.shipService.findAll());
         
         return new ModelAndView("ajax/exceed");
     }

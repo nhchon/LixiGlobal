@@ -232,6 +232,13 @@
                                 if (data.exceed == "0") {
 
                                     removeEditQuantity(id);
+                                    if(data.SELECTED_RECIPIENT_ID !== ''){
+                                        $('#recTotalIncShipUsd'+data.SELECTED_RECIPIENT_ID).html(data.RECIPIENT_TOTAL_INC_SHIPPING_USD);
+                                        $('#recTotalIncShipVnd'+data.SELECTED_RECIPIENT_ID).html(data.RECIPIENT_TOTAL_INC_SHIPPING_VND);
+                                        $('#recShippingCharged'+data.SELECTED_RECIPIENT_ID).html(data.RECIPIENT_SHIPPING_CHARGED);
+                                        $('#totalShippingCharged').html(data.TOTAL_SHIPPING_CHARGED);
+                                    }
+                                    
                                     $('#q' + id).html(data.NEW_QUANTITY);
                                     $('#itemTotalUsd' + id).html(data.NEW_TOTAL_ITEM_USD);
                                     $('#itemTotalVnd' + id).html(data.NEW_TOTAL_ITEM_VND);
@@ -285,7 +292,7 @@
                             if (data.error == "0") {
 
                                 var tBody = $('#trGift' + id).closest('tbody');
-                                if (tBody.children("tr").length === 1) {
+                                if (tBody.children("tr").length === 2) {
                                     if ($('.receiver-info-item').length === 2) {
 
                                         $('.receiver-info-item').remove();
@@ -306,6 +313,12 @@
                                     $('#trGift' + id).remove();
                                 }
                                 //
+                                if(data.SELECTED_RECIPIENT_ID !== ''){
+                                    $('#recTotalIncShipUsd'+data.SELECTED_RECIPIENT_ID).html(data.RECIPIENT_TOTAL_INC_SHIPPING_USD);
+                                    $('#recTotalIncShipVnd'+data.SELECTED_RECIPIENT_ID).html(data.RECIPIENT_TOTAL_INC_SHIPPING_VND);
+                                    $('#recShippingCharged'+data.SELECTED_RECIPIENT_ID).html(data.RECIPIENT_SHIPPING_CHARGED);
+                                    $('#totalShippingCharged').html(data.TOTAL_SHIPPING_CHARGED);
+                                }
                                 $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);
                                 $('#giftPriceVnd').html(data.LIXI_GIFT_PRICE_VND);
                                 $('#CARD_PROCESSING_FEE_THIRD_PARTY').html(data.CARD_PROCESSING_FEE_THIRD_PARTY);
@@ -485,13 +498,13 @@
                                                                 <td>
                                                                     <div class="row">
                                                                         <div class="col-md-6" style="padding-left:40px">
-                                                                            <b>*<spring:message code="shipping-charge" text="Shipping charge"/>:</b> USD <span><fmt:formatNumber minFractionDigits="2" value="${entry.shippingChargeAmount}" pattern="###,###.##"/></span>
+                                                                            <b>*<spring:message code="shipping-charge" text="Shipping charge"/>:</b> USD <span id="recShippingCharged${entry.recipient.id}"><fmt:formatNumber minFractionDigits="2" value="${entry.shippingChargeAmount}" pattern="###,###.##"/></span>
                                                                         </div>
                                                                         <div class="col-md-3" style="text-align: right;">
                                                                             <spring:message code="total-inc-shipping-charge" text="Total"/>:
                                                                         </div>
                                                                         <div class="col-md-3">
-                                                                            USD <fmt:formatNumber minFractionDigits="2" value="${entry.allTotal.usd + entry.shippingChargeAmount}" pattern="###,###.##"/> ~ VND <fmt:formatNumber value="${entry.allTotal.vnd + (entry.shippingChargeAmount * LIXI_ORDER.lxExchangeRate.buy)}" pattern="###,###.##"/>
+                                                                            USD <span id="recTotalIncShipUsd${entry.recipient.id}"><fmt:formatNumber minFractionDigits="2" value="${entry.allTotal.usd + entry.shippingChargeAmount}" pattern="###,###.##"/></span> ~ VND <span id="recTotalIncShipVnd${entry.recipient.id}"><fmt:formatNumber value="${entry.allTotal.vnd + (entry.shippingChargeAmount * LIXI_ORDER.lxExchangeRate.buy)}" pattern="###,###.##"/></span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
@@ -513,7 +526,7 @@
                                                     <strong class="receiver-order-gift-price-left text-bold"><spring:message code="mess.gift-price"/></strong><span class="receiver-order-gift-price-right">USD <span id="giftPriceUsd"><fmt:formatNumber minFractionDigits="2" value="${LIXI_GIFT_PRICE}" pattern="###,###.##"/></span> ~ VND <span id="giftPriceVnd"><fmt:formatNumber minFractionDigits="2" value="${LIXI_GIFT_PRICE_VND}" pattern="###,###.##"/></span></span> (FX 1 USD = <fmt:formatNumber value="${LIXI_ORDER.lxExchangeRate.buy}" pattern="###,###.##"/> VND)
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left"><spring:message code="total-shipping-charge" text="Total shipping charge"/></strong><span class="receiver-order-gift-price-right">USD <span><fmt:formatNumber minFractionDigits="2" value="${totalShipping}" pattern="###,###.##"/></span><%-- ~ VND <span><fmt:formatNumber minFractionDigits="2" value="totalShipping" pattern="###,###.##"/></span>--%></span>
+                                                    <strong class="receiver-order-gift-price-left"><spring:message code="total-shipping-charge" text="Total shipping charge"/></strong><span class="receiver-order-gift-price-right">USD <span id="totalShippingCharged"><fmt:formatNumber minFractionDigits="2" value="${totalShipping}" pattern="###,###.##"/></span><%-- ~ VND <span><fmt:formatNumber minFractionDigits="2" value="totalShipping" pattern="###,###.##"/></span>--%></span>
                                                 </div>
                                                 <div>
                                                     <strong class="receiver-order-gift-price-left"><spring:message code="mess.card-process-fee"/></strong><span class="receiver-order-gift-price-right">USD <span id="CARD_PROCESSING_FEE_THIRD_PARTY"><fmt:formatNumber minFractionDigits="2"  value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></span></span>
