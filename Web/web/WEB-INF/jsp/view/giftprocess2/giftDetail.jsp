@@ -76,6 +76,9 @@
                     }
                 });
                 
+            <c:if test="${param.exceed eq '1'}">
+                alert('<spring:message code="validate.exceeded"><spring:argument value="${param.EXCEEDED_VND}"/><spring:argument value="${param.EXCEEDED_USD}"/></spring:message>')
+            </c:if>
             });
             function doEditRecipient(id) {
                 $.get(EDIT_REC_URL + id, function (data) {

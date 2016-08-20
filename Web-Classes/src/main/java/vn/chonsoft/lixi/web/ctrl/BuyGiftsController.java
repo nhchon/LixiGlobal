@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderSetting;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiCategory;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -48,6 +49,7 @@ import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
 import vn.chonsoft.lixi.repositories.service.VatgiaProductService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -266,9 +268,11 @@ public class BuyGiftsController {
             double exceededPaymentVND = (currentPayment - ml.getAmount()) * buy;
             double exceededPaymentUSD = currentPayment - ml.getAmount();
             
-            model.put(LiXiConstants.EXCEEDED_VND, exceededPaymentVND);
+            model.put(LiXiConstants.EXCEEDED_VND, LiXiGlobalUtils.round2Decimal(exceededPaymentVND));
             
-            model.put(LiXiConstants.EXCEEDED_USD, exceededPaymentUSD);
+            model.put(LiXiConstants.EXCEEDED_USD, LiXiGlobalUtils.round2Decimal(exceededPaymentUSD));
+            
+            model.put(LiXiGlobalConstants.MONEY_LEVEL, ml.getAmount());
             
             return new ModelAndView(new RedirectView("/gifts/detail/" + productId, true, true));
         }
