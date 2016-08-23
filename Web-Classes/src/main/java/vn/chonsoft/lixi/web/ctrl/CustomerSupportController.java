@@ -12,6 +12,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -128,7 +129,17 @@ public class CustomerSupportController {
             CustomerProblem prob = new CustomerProblem();
             prob.setSubject(cus);
             /* order id*/
-            prob.setOrderId(form.getOrderId());
+            String orderIdStr = form.getOrderId();
+            long orderId = 0;
+            if(orderIdStr != null){
+                orderIdStr = orderIdStr.replace("-", "").replace(" ", "");
+                try {
+                    orderId = Long.parseLong(orderIdStr);
+                } catch (Exception e) {
+                }
+            }
+            
+            prob.setOrderId(orderId);
             prob.setContent(form.getContent());
             prob.setContactMethod(form.getContactMethod());
             prob.setContactData(form.getContactData());

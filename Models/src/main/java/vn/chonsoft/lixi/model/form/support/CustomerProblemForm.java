@@ -19,7 +19,7 @@ public class CustomerProblemForm {
     @NotBlank(message = "{validate.support.content_require}")
     private String content;
     
-    private Long orderId;
+    private String orderId;
     
     @NotBlank(message = "{validate.not_null}")
     private String contactMethod;
@@ -51,11 +51,11 @@ public class CustomerProblemForm {
         this.content = content;
     }
 
-    public Long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
