@@ -415,6 +415,7 @@ public class LiXiUtils {
             totalShippingCharge += r.getShippingChargeAmount();
         }
         model.put(LiXiConstants.TOTAL_SHIPPING_CHARGED, totalShippingCharge);
+        model.put(LiXiConstants.TOTAL_SHIPPING_CHARGED_VND, LiXiGlobalUtils.round2Decimal(totalShippingCharge * buy));
         
         // calculate the total
         double finalTotal = 0;
@@ -441,7 +442,7 @@ public class LiXiUtils {
         }
         //log.info("feePercent: " + feePercent);
         
-        cardFee = LiXiGlobalUtils.round2Decimal((feePercent * giftPrice)/100.0);
+        cardFee = LiXiGlobalUtils.round2Decimal((feePercent * (giftPrice + totalShippingCharge))/100.0);
         if((fee != null) && (fee.getMaxFee() > 0) && (cardFee > fee.getMaxFee())){
             cardFee = fee.getMaxFee();
         }

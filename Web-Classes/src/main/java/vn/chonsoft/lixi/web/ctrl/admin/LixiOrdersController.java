@@ -41,6 +41,7 @@ import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.SecurityAdminUser;
+import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.form.LixiOrderSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
@@ -57,6 +58,7 @@ import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderSearchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
+import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -106,6 +108,9 @@ public class LixiOrdersController {
     @Autowired
     private LixiExchangeRateService lxexrateService;
 
+    @Autowired
+    private ShippingChargedService shipService;
+    
     /**
      *
      * @param model
@@ -303,11 +308,16 @@ public class LixiOrdersController {
         }
 
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
-
+        List<ShippingCharged> charged = this.shipService.findAll();
+        
         if (orders != null) {
 
             orders.forEach(o -> {
-                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+                
+                List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
+                recInOrder.forEach(r -> {r.setCharged(charged);});
+                
+                mOs.put(o, recInOrder);
             });
         }
 
@@ -378,11 +388,16 @@ public class LixiOrdersController {
         }
 
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        List<ShippingCharged> charged = this.shipService.findAll();
         double baoKimTransferPercent = LiXiUtils.getBaoKimPercent(this.configService.findByName("LIXI_BAOKIM_TRANFER_PERCENT").getValue());
         if (orders != null) {
 
             orders.forEach(o -> {
-                mOs.put(o, LiXiUtils.genMapRecGifts(o, baoKimTransferPercent));
+                
+                List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o, baoKimTransferPercent);
+                recInOrder.forEach(r -> {r.setCharged(charged);});
+                
+                mOs.put(o, recInOrder);
             });
         }
 
@@ -486,7 +501,10 @@ public class LixiOrdersController {
             LixiBatch batch = createBatch();
 
             double percent = getBaoKimPercent();
-
+            double batchMargin = 0;
+            double batchVndShip = 0;
+            double batchUsdShip = 0;
+            
             for (LixiOrder order : orders) {
                 // send to bao kim
                 boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
@@ -497,13 +515,24 @@ public class LixiOrdersController {
                     bo.setOrderId(order.getId());
 
                     SumVndUsd sum = order.getSumOfGiftVnd(percent);
-
+                    
+                    batchMargin += order.getGiftMargin(percent);
+                    batchVndShip += order.getInvoice().getVndShip();
+                    batchUsdShip += order.getInvoice().getUsdShip();
+                    
                     bo.setVndOnlyGift(sum.getVnd());
                     bo.setUsdOnlyGift(sum.getUsd());
 
                     this.batchOrderService.save(bo);
                 }
             }
+            
+            /* save batch */
+            batch.setVndMargin(batchMargin);
+            batch.setVndShip(batchVndShip);
+            batch.setUsdShip(batchUsdShip);
+            
+            this.batchService.save(batch);
         }
         //
         return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));

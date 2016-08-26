@@ -211,11 +211,15 @@ public class RecipientInOrder {
 
     public double getShippingChargeAmount() {
         
+        log.info("this.charged == null: " + (this.charged == null));
+        
         if(this.charged == null) return 0;
         
         SumVndUsd giftTotal = calculateGiftTotal();
         for(ShippingCharged c : charged){
             
+            log.info(giftTotal.getUsd() + " " + c.getOrderToEnd());
+                    
             if(giftTotal.getUsd() <= c.getOrderToEnd()){
                 shippingChargeAmount = c.getChargedAmount();
                 break;

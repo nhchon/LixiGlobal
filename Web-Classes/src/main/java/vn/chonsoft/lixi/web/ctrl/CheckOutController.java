@@ -800,6 +800,8 @@ public class CheckOutController {
             invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
             invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
             invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
+            invoice.setVndShip((Double)model.get(LiXiConstants.TOTAL_SHIPPING_CHARGED_VND));
+            invoice.setUsdShip((Double)model.get(LiXiConstants.TOTAL_SHIPPING_CHARGED));
             invoice.setTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL));//
             invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
             invoice.setNetTransStatus(EnumTransactionStatus.beforePayment.getValue());

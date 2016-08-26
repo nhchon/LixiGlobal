@@ -144,7 +144,7 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
      */
     @Override
     @Transactional
-    @Scheduled(cron = "0 1 1 * * ?")
+    //@Scheduled(cron = "0 1 1 * * ?")
     //@Scheduled(fixedDelay=24*60*60*1000, initialDelay=60*1000)
     public void loadAllVatGiaProducts(){
         

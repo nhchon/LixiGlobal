@@ -182,8 +182,9 @@
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
                                         <th style="text-align: right;">Amount</th><%-- 7 --%>
-                                        <th nowrap style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Total Gift Margin(*)</th>
-                                        <th style="text-align: center;">Status</th><%-- 8 --%>
+                                        <th nowrap style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">G. Margin(*)</th>
+                                        <th style="text-align: right;">Ship. Charged</th><%-- 9 --%>
+                                        <th style="text-align: center;">Status</th><%-- 10 --%>
                                         <th style="text-align: right;">#</th>
                                     </tr>
                                 </thead>
@@ -232,6 +233,13 @@
                                                 </c:forEach>
                                             </td>
                                             <td id="giftMargin${m.key.id}" style="text-align:right;"></td>
+                                            <td style="text-align: right;">
+                                                <c:forEach items="${m.value}" var="rio">
+                                                    <c:if test="${not empty rio.gifts}">
+                                                        <fmt:formatNumber minFractionDigits="2" value="${rio.shippingChargeAmount}" pattern="###,###.##"/> USD<br/><br/>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </td>
                                             <td style="text-align: center;">
                                                 <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
                                                     <c:choose>
@@ -264,7 +272,7 @@
                                         </tr>
                                         <c:if test="${not empty m.key.invoice.monitored}">
                                             <tr class="danger">
-                                                <td colspan="10">
+                                                <td colspan="11">
                                                     <c:if test="${m.key.invoice.monitored eq OVER_100_USD}">
                                                         *** Giao dịch trên 100$
                                                     </c:if>
@@ -282,7 +290,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="10">
+                                        <td colspan="11">
                                             <%-- Paging --%>
                                             <nav>
                                             <ul class="pagination pull-right">

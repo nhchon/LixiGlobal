@@ -95,6 +95,7 @@ public abstract class LiXiConstants {
     public static final String RECIPIENT_TOTAL_INC_SHIPPING_VND = "RECIPIENT_TOTAL_INC_SHIPPING_VND";
     public static final String RECIPIENT_SHIPPING_CHARGED = "RECIPIENT_SHIPPING_CHARGED";
     public static final String TOTAL_SHIPPING_CHARGED = "TOTAL_SHIPPING_CHARGED";
+    public static final String TOTAL_SHIPPING_CHARGED_VND = "TOTAL_SHIPPING_CHARGED_VND";
     public static final String SELECTED_RECIPIENT_NAME = "SELECTED_RECIPIENT_NAME";
     public static final String SELECTED_RECIPIENT_FIRST_NAME = "SELECTED_RECIPIENT_FIRST_NAME";
     public static final String SELECTED_AMOUNT = "SELECTED_AMOUNT";

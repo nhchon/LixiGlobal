@@ -42,6 +42,22 @@ public class LixiBatch implements Serializable {
     @Column(name = "name")
     private String name;
     
+    @Basic
+    @Column(name = "vnd_margin")
+    private double vndMargin;
+    
+    @Basic
+    @Column(name = "usd_margin")
+    private double usdMargin;
+    
+    @Basic
+    @Column(name = "vnd_ship")
+    private double vndShip;
+    
+    @Basic
+    @Column(name = "usd_ship")
+    private double usdShip;
+    
     @Basic(optional = false)
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -97,6 +113,38 @@ public class LixiBatch implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public double getVndMargin() {
+        return vndMargin;
+    }
+
+    public void setVndMargin(double vndMargin) {
+        this.vndMargin = vndMargin;
+    }
+
+    public double getUsdMargin() {
+        return usdMargin;
+    }
+
+    public void setUsdMargin(double usdMargin) {
+        this.usdMargin = usdMargin;
+    }
+
+    public double getVndShip() {
+        return vndShip;
+    }
+
+    public void setVndShip(double vndShip) {
+        this.vndShip = vndShip;
+    }
+
+    public double getUsdShip() {
+        return usdShip;
+    }
+
+    public void setUsdShip(double usdShip) {
+        this.usdShip = usdShip;
     }
 
     public Date getCreatedDate() {

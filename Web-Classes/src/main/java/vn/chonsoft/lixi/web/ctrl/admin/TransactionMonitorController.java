@@ -22,11 +22,13 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.LixiMonitor;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
 import vn.chonsoft.lixi.repositories.service.LixiMonitorService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
+import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -49,9 +51,12 @@ public class TransactionMonitorController {
     @Autowired
     private LixiConfigService configService;
     
+    @Autowired
+    private ShippingChargedService shipService;
     /**
      * 
      * @param model
+     * @param pageable
      * @return 
      */
     @RequestMapping(value = "report", method = RequestMethod.GET)
@@ -61,12 +66,18 @@ public class TransactionMonitorController {
         Page<LixiOrder> pOrders = this.orderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSING.getValue(), pageable);
         
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        List<ShippingCharged> charged = this.shipService.findAll();
         
         if(pOrders != null){
             
             pOrders.getContent().forEach(o -> {
                 if(o.getGifts()!=null && !o.getGifts().isEmpty())
-                    mOs.put(o, LiXiUtils.genMapRecGifts(o, baoKimTransferPercent));
+                {
+                    List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o, baoKimTransferPercent);
+                    recInOrder.forEach(r -> {r.setCharged(charged);});
+                
+                    mOs.put(o, recInOrder);
+                }
             });
             
         }

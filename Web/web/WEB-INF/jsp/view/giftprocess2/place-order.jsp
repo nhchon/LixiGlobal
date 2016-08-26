@@ -538,7 +538,7 @@
                                                     <strong class="receiver-order-gift-price-left"><spring:message code="mess.sale-tax"/></strong><span class="receiver-order-gift-price-right">USD <span id="saleTax"><fmt:formatNumber  minFractionDigits="2" value="0.00" pattern="###,###.##"/></span></span>
                                                 </div>
                                                 <div>
-                                                    <strong class="receiver-order-gift-price-left text-bold" style="color: #000">Total</strong><strong class="receiver-order-gift-price-right text-bold" style="color: #000">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber  minFractionDigits="2" value="${LIXI_FINAL_TOTAL + totalShipping}" pattern="###,###.##"/></span></strong>
+                                                    <strong class="receiver-order-gift-price-left text-bold" style="color: #000">Total</strong><strong class="receiver-order-gift-price-right text-bold" style="color: #000">USD <span id="LIXI_FINAL_TOTAL"><fmt:formatNumber  minFractionDigits="2" value="${LIXI_FINAL_TOTAL}" pattern="###,###.##"/></span></strong>
                                                 </div>
                                             </div>
                                             <h4 class="text-color-link"><spring:message code="mess.payment-method"/> <a href="<c:url value="/checkout/paymentMethods"/>" class="edit-info-event"></a></h4>

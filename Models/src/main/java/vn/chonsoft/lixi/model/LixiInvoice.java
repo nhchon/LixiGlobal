@@ -57,6 +57,14 @@ public class LixiInvoice implements Serializable {
     @Column(name = "lixi_fee")
     private Double lixiFee;
     
+    @Basic
+    @Column(name = "vnd_ship")
+    private double vndShip;
+    
+    @Basic
+    @Column(name = "usd_ship")
+    private double usdShip;
+    
     @Column(name = "total_amount")
     private Double totalAmount;
     
@@ -151,6 +159,22 @@ public class LixiInvoice implements Serializable {
 
     public void setLixiFee(Double lixiFee) {
         this.lixiFee = lixiFee;
+    }
+    
+    public double getVndShip() {
+        return vndShip;
+    }
+
+    public void setVndShip(double vndShip) {
+        this.vndShip = vndShip;
+    }
+
+    public double getUsdShip() {
+        return usdShip;
+    }
+
+    public void setUsdShip(double usdShip) {
+        this.usdShip = usdShip;
     }
 
     public Double getTotalAmount() {

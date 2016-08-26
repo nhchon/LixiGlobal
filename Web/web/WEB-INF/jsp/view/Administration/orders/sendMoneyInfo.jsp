@@ -142,6 +142,7 @@
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
                                         <th style="text-align: right;">Amount</th><%-- 7 --%>
+                                        <th style="text-align: right;">Ship. Charged</th><%-- 9 --%>
                                         <th style="text-align: right;">Action</th><%-- 8 --%>
                                     </tr>
                                 </thead>
@@ -195,6 +196,13 @@
                                                     <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
                                                     <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
                                                     <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </td>
+                                            <td style="text-align: right;" nowrap>
+                                                <c:forEach items="${m.value}" var="rio">
+                                                    <c:if test="${not empty rio.gifts}">
+                                                        <fmt:formatNumber minFractionDigits="2" value="${rio.shippingChargeAmount}" pattern="###,###.##"/> USD<br/><br/>
                                                     </c:if>
                                                 </c:forEach>
                                             </td>

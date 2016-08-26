@@ -4,7 +4,6 @@
  */
 package vn.chonsoft.lixi.web.ctrl.admin;
 
-import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +50,6 @@ public class LixiOrdersRestEndpoint {
      */
     @RequestMapping(value = "bkUpdateStatus", method = RequestMethod.POST)
     public ResponseEntity<LixiSimpleMessage> bkUpdateStatus(@RequestBody BaoKimStatusForm form){
-        
-        //System.out.println("vn.chonsoft.lixi.web.ctrl.admin.LixiOrdersRestEndpoint.bkUpdateStatus()");
         
         LixiSimpleMessage message = new LixiSimpleMessage();
         
