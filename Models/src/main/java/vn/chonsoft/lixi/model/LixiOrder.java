@@ -291,13 +291,37 @@ public class LixiOrder implements Serializable {
         double sumGiftUSD = 0;
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
-                //if(setting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
-                //    (setting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
-                //    !gift.isLixiMargined())){
+                
+                sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
+                sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
+                
+            }
+        }
+        /* round up */
+        sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+        sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
+        
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
+    }
+    
+    /**
+     * 
+     * @param percent
+     * @return 
+     */
+    public SumVndUsd getSentToBaoKim(double percent){
+        
+        // gift type
+        double sumGiftVND = 0;
+        double sumGiftUSD = 0;
+        if (getGifts() != null) {
+            for (LixiOrderGift gift : getGifts()) {
+                if(setting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
+                    (setting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()))){
                     // baoKimTransferPercent
-                //    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * percent)/100.0;
-                //}
-                //else
+                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * percent)/100.0;
+                }
+                else
                 {
                     
                     sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());

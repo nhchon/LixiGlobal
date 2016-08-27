@@ -495,7 +495,7 @@ public class LiXiUtils {
                 if (LiXiConstants.LIXI_GIFT_TYPE.equals(type) && gift.getId() == excludeId) {
                     // Nothing
                 } else {
-                    sumGiftVND += gift.getProductPrice();
+                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
                     sumGiftUSD += (gift.getUsdPrice() * gift.getProductQuantity());
                     /* round up */
                     sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;

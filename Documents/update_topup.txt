@@ -26,6 +26,8 @@ ALTER TABLE `lixi_order_gifts` ADD `lixi_margined` TINYINT NULL DEFAULT '0' AFTE
 ALTER TABLE `lixi_batch` ADD `vcb_buy_usd` DOUBLE NOT NULL AFTER `created_date`, ADD `vcb_time` VARCHAR(255) NOT NULL AFTER `vcb_buy_usd`;
 
 ## 2016-08-27
-ALTER TABLE `lixi_batch` ADD `vnd_margin` DOUBLE NULL AFTER `name`, ADD `usd_margin` DOUBLE NULL AFTER `vnd_margin`, ADD `vnd_ship` DOUBLE NULL AFTER `usd_margin`, ADD `usd_ship` DOUBLE NULL AFTER `vnd_ship`;
+ALTER TABLE `lixi_batch` ADD `vnd_margin` DOUBLE NOT NULL AFTER `name`, ADD `usd_margin` DOUBLE NOT NULL AFTER `vnd_margin`, ADD `vnd_ship` DOUBLE NOT NULL AFTER `usd_margin`, ADD `usd_ship` DOUBLE NOT NULL AFTER `vnd_ship`;
+
+ALTER TABLE `lixi_batch` ADD `num_of_order` INT NOT NULL AFTER `name`, ADD `sender_paid` DOUBLE NOT NULL AFTER `num_of_order`, ADD `cost_of_good` DOUBLE NOT NULL AFTER `sender_paid`; 
 
 ALTER TABLE `lixi_invoices` ADD `vnd_ship` DOUBLE NOT NULL AFTER `lixi_fee`, ADD `usd_ship` DOUBLE NOT NULL AFTER `vnd_ship`;

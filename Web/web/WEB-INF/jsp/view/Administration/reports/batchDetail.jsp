@@ -91,6 +91,7 @@
 
         <!-- main -->
         <h2 class="sub-header">Batch Detail #${batch.id}</h2>
+        <p class="help-block">Gift Margin(*): For ONLY Allow Refund Orders, but Gifted by each user</p>
         <div class="row">
             <div class="col-sm-8">
                 <table class="table table-hover table-responsive table-striped">
@@ -98,10 +99,10 @@
                         <tr>
                             <th nowrap class="success">#</th><%-- 1 --%>
                             <th nowrap class="success">File Name</th><%-- 2 --%>
-                            <th nowrap class="success">Date</th><%-- 3 --%>
-                            <th nowrap class="success">Time</th><%-- 4 --%>
-                            <th nowrap style="text-align:right;" class="success">Total</th><%-- 5 --%>
-                            <th nowrap class="success" style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Total Gift Margin(*)</th>
+                            <th nowrap class="success"  style="text-align: center;">Time</th><%-- 4 --%>
+                            <th nowrap style="text-align:right;" class="success">Total To BaoKim</th><%-- 5 --%>
+                            <th nowrap class="success" style="text-align:right;">Margined</th>
+                            <th nowrap class="success" style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Cur. Margin(*)</th>
                             <th nowrap style="text-align:right;" class="success">Owner</th>
                         </tr>
                     </thead>
@@ -109,26 +110,89 @@
                         <tr id="rowO${batch.id}">
                             <td>${batch.id}</td>
                             <td><a href="<c:url value="/Administration/SystemBatch/view/${batch.id}"/>">${batch.name}</a></td>
-                            <td><fmt:formatDate pattern="MM/dd/yyyy" value="${batch.createdDate}"/></td>
-                            <td><fmt:formatDate pattern="HH:mm:ss" value="${batch.createdDate}"/>
+                            <td style="text-align: center;"><fmt:formatDate pattern="MM/dd/yyyy HH:mm:ss" value="${batch.createdDate}"/>
+                                <br/>
+                                1 USD = <fmt:formatNumber value="${batch.vcbBuyUsd}" pattern="###,###.##"/> VND
                             </td>
                             <td style="text-align:right;">
                                 <fmt:formatNumber value="${batch.sumVnd}" pattern="###,###.##"/> VND<br/>
                                 <fmt:formatNumber value="${batch.sumUsd}" pattern="###,###.##"/> USD
+                            </td>
+                            <td  style="text-align:right;">
+                                <fmt:formatNumber value="${batch.vndMargin}" pattern="###,###.##"/> VND
                             </td>
                             <td id="giftMargin" style="text-align:right;"></td>
                             <td nowrap style="text-align:right;">${batch.createdBy}</td>
                         </tr>
                     </tbody>
                 </table>
-                        <p class="help-block">Gift Margin(*): For ONLY Allow Refund Orders, but Gifted by each user</p>
+                        
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <table class="table table-hover table-responsive table-striped">
+                    <thead>
+                        <tr class="success">
+                            <th colspan="2">Summary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Number of orders</strong>
+                            </td>
+                            <td>$<fmt:formatNumber value="${batch.numOfOrder}" pattern="###,###.##"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Sender of paid</strong>
+                            </td>
+                            <td>$<fmt:formatNumber value="${batch.senderPaid}" pattern="###,###.##"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Cost of goods</strong>
+                            </td>
+                            <td>$<fmt:formatNumber value="${batch.costOfGood}" pattern="###,###.##"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Commission</strong>
+                            </td>
+                            <td>
+                                <c:set var="commission" value="${batch.senderPaid - batch.costOfGood}"/>
+                                $<fmt:formatNumber value="${commission}" pattern="###,###.##"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Credit card fee(~2.5%)</strong>
+                            </td>
+                            <td>
+                                <c:set var="creditFee" value="${batch.senderPaid * 0.025}"/>
+                                $<fmt:formatNumber value="${creditFee}" pattern="###,###.##"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Profit</strong>
+                            </td>
+                            <td>
+                                <c:set var="profit" value="${commission - creditFee}"/>
+                                $<fmt:formatNumber value="${profit}" pattern="###,###.##"/> &nbsp;
+                                <fmt:formatNumber value="${profit/batch.costOfGood}" pattern="###,###.##"/>%
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <security:authentication property="principal.configs['LIXI_BAOKIM_TRANFER_PERCENT']" var="transferPercent" />
         <c:if test="${empty transferPercent}">
             <c:set var="transferPercent" value="95"/>
         </c:if>
-        
+        <h4 class="sub-header">List of Orders</h4>
         <div class="row">
             <div class="col-sm-12">
                 <!-- Tab panes -->

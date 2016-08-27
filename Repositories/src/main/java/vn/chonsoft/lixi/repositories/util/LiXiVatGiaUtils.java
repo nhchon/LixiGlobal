@@ -695,7 +695,6 @@ public class LiXiVatGiaUtils {
             for (LixiOrderGift gift : order.getGifts()) {
 
                 try {
-                    /* 2018-08-27: LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equalsIgnoreCase(gift.getBkReceiveMethod()) ? */
                     if (EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue().equals(gift.getBkSubStatus())) {
                         String id = gift.getId().toString();
                         String amount = (gift.getProductPrice()*gift.getProductQuantity()) + "";

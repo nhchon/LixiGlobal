@@ -410,7 +410,7 @@ public class LixiOrdersController {
      * 
      * @return 
      */
-    private LixiBatch createBatch() {
+    private LixiBatch createBatch(int numOfOrder) {
         
         // get current VCB exchange rate
         double vcbCurrentBuyUsd = 0;
@@ -447,6 +447,7 @@ public class LixiOrdersController {
 
         LixiBatch batch = new LixiBatch();
         batch.setName(format.format(currDate));
+        batch.setNumOfOrder(numOfOrder);
         batch.setCreatedDate(currDate);
         batch.setVcbBuyUsd(vcbCurrentBuyUsd);
         batch.setVcbTime(vcbTime);
@@ -498,12 +499,14 @@ public class LixiOrdersController {
         if (orderIds != null && orderIds.length > 0) {
 
             List<LixiOrder> orders = this.lxOrderService.findAll(Arrays.asList(orderIds));
-            LixiBatch batch = createBatch();
+            LixiBatch batch = createBatch(orders.size());
 
             double percent = getBaoKimPercent();
             double batchMargin = 0;
             double batchVndShip = 0;
             double batchUsdShip = 0;
+            double senderPaid = 0;
+            double costOfGood = 0;
             
             for (LixiOrder order : orders) {
                 // send to bao kim
@@ -514,11 +517,15 @@ public class LixiOrdersController {
                     bo.setBatch(batch);
                     bo.setOrderId(order.getId());
 
-                    SumVndUsd sum = order.getSumOfGiftVnd(percent);
+                    SumVndUsd sum = order.getSentToBaoKim(percent);
                     
                     batchMargin += order.getGiftMargin(percent);
-                    batchVndShip += order.getInvoice().getVndShip();
-                    batchUsdShip += order.getInvoice().getUsdShip();
+                    
+                    LixiInvoice inv = order.getInvoice();
+                    batchVndShip += inv.getVndShip(); // USD
+                    batchUsdShip += inv.getUsdShip(); // USD
+                    senderPaid += inv.getTotalAmount(); // USD
+                    costOfGood += inv.getGiftPrice();
                     
                     bo.setVndOnlyGift(sum.getVnd());
                     bo.setUsdOnlyGift(sum.getUsd());
@@ -527,10 +534,12 @@ public class LixiOrdersController {
                 }
             }
             
-            /* save batch */
+            /* update batch */
             batch.setVndMargin(batchMargin);
             batch.setVndShip(batchVndShip);
             batch.setUsdShip(batchUsdShip);
+            batch.setSenderPaid(senderPaid);
+            batch.setCostOfGood(costOfGood);
             
             this.batchService.save(batch);
         }

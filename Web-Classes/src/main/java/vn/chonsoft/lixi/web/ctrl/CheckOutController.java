@@ -508,40 +508,6 @@ public class CheckOutController {
     
     /**
      * 
-     * @param model
-     * @param order
-     * @param fees 
-     */
-    /**
-    private void updateInvoiceBeforePayment(Map<String, Object> model, LixiOrder order, List<LixiGlobalFee> fees){
-        
-        LiXiUtils.calculateFee(model, order, fees, this.shipService.findAll());
-        
-        LixiInvoice invoice = order.getInvoice();
-        if(invoice == null){
-            invoice = new LixiInvoice();
-        }
-            
-        invoice.setOrder(order);
-        invoice.setInvoiceCode(LiXiUtils.getBeautyOrderId(order.getId()));
-        invoice.setCardFee((Double)model.get(LiXiConstants.CARD_PROCESSING_FEE_THIRD_PARTY));
-        invoice.setGiftPrice((Double)model.get(LiXiConstants.LIXI_GIFT_PRICE));
-        invoice.setLixiFee(LiXiGlobalUtils.round2Decimal((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL)));
-        invoice.setTotalAmount(LiXiGlobalUtils.getTestTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)));//
-        invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
-        invoice.setNetTransStatus(EnumTransactionStatus.beforePayment.getValue());
-        
-        Date currDate = Calendar.getInstance().getTime();
-        invoice.setInvoiceDate(currDate);
-        invoice.setCreatedDate(currDate);
-
-        this.invoiceService.save(invoice);
-        
-    }
-    */
-    
-    /**
-     * 
      * 
      * @param model
      * @param request
@@ -567,14 +533,6 @@ public class CheckOutController {
             // chua co thong tin thanh toan, hoac card da bi removed
             return new ModelAndView(new RedirectView("/checkout/addCard", true, true));
         }
-        
-        /* no need anymore ? */
-        // check payment
-        //BillingAddress bl = LiXiUtils.getBillingAddress(order);
-        //if(bl == null){
-            // chua co thong tin thanh toan
-            //return new ModelAndView(new RedirectView("/checkout/addCard", true, true));
-        //}
         
         // calculate fee
         List<LixiGlobalFee> fees = this.feeService.findByCountry(this.countryService.findByCode(LiXiUtils.getBillingAddress(order).getCountry()));

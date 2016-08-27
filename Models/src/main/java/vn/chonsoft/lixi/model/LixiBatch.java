@@ -43,6 +43,18 @@ public class LixiBatch implements Serializable {
     private String name;
     
     @Basic
+    @Column(name = "num_of_order")
+    private int numOfOrder;
+    
+    @Basic
+    @Column(name = "sender_paid")
+    private double senderPaid;
+    
+    @Basic
+    @Column(name = "cost_of_good")
+    private double costOfGood;
+    
+    @Basic
     @Column(name = "vnd_margin")
     private double vndMargin;
     
@@ -113,6 +125,30 @@ public class LixiBatch implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getNumOfOrder() {
+        return numOfOrder;
+    }
+
+    public void setNumOfOrder(int numOfOrder) {
+        this.numOfOrder = numOfOrder;
+    }
+
+    public double getSenderPaid() {
+        return senderPaid;
+    }
+
+    public void setSenderPaid(double senderPaid) {
+        this.senderPaid = senderPaid;
+    }
+
+    public double getCostOfGood() {
+        return costOfGood;
+    }
+
+    public void setCostOfGood(double costOfGood) {
+        this.costOfGood = costOfGood;
     }
 
     public double getVndMargin() {
