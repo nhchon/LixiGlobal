@@ -87,6 +87,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <c:set value="0" var="totalShipping"/>
                                     <c:forEach items="${recGifts}" var="rio" varStatus="theCount">
                                         <tr id="rowR${rio.recipient.id}">
                                             <td>${rio.recipient.fullName}</td>
@@ -98,9 +99,9 @@
                                                 <td>${g.productQuantity}</td>
                                                 <td>${g.productName}</td>
                                                 <td style="text-align: right;">
-                                                    <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
+                                                    <fmt:formatNumber minFractionDigits="2" value="${g.usdPrice}" pattern="###,###.##"/> USD
                                                     <br/>
-                                                    <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> USD
+                                                    <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/> VND
                                                 </td>
                                                 <td style="text-align:center;">
                                                     <c:choose>
@@ -149,9 +150,9 @@
                                                 <td>1</td>
                                                 <td>Top Up Mobile Minutes ${t.phone}</td>
                                                 <td style="text-align: right;">
-                                                    <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> VND
+                                                    <fmt:formatNumber minFractionDigits="2" value="${t.amountUsd}" pattern="###,###.##"/> USD
                                                     <br/>
-                                                    <fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/> USD
+                                                    <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/> VND
                                                 </td>
                                                 <td style="text-align:right;" colspan="2">
                                                         <c:choose>
@@ -170,16 +171,17 @@
                                         </tr>
                                         </c:forEach>
                                         <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td style="text-align: right;">Total</td>
+                                            <td><b>Shipping charge:</b></td>
+                                            <td><fmt:formatNumber value="${rio.shippingChargeAmount}" pattern="###,###.##"/> USD</td>
+                                            <td style="text-align: right;"><b>Total (include shipping charge):</b></td>
                                             <td style="text-align: right;">
-                                                <fmt:formatNumber value="${rio.allTotal.vnd}" pattern="###,###.##"/> VND
+                                                <fmt:formatNumber minFractionDigits="2" value="${rio.allTotal.usd + rio.shippingChargeAmount}" pattern="###,###.##"/> USD
                                                 <br/>
-                                                <fmt:formatNumber value="${rio.allTotal.usd}" pattern="###,###.##"/> USD
+                                                <fmt:formatNumber value="${rio.allTotal.vnd + (rio.shippingChargeAmount * order.lxExchangeRate.buy)}" pattern="###,###.##"/> VND
                                             </td>
                                             <td colspan="3"></td>
                                         </tr>
+                                        <c:set value="${totalShipping + rio.shippingChargeAmount}" var="totalShipping"/>
                                     </c:forEach>
                                         <%-- GRAND TOTAL --%>
                                         <tr style="border-top: 2px solid #0090d0;">
@@ -187,7 +189,16 @@
                                             <td></td>
                                             <td style="text-align: right;">Gift price</td>
                                             <td style="text-align: right;">
-                                                <fmt:formatNumber value="${order.invoice.giftPrice}" pattern="###,###.##"/> USD
+                                                <fmt:formatNumber minFractionDigits="2" value="${order.invoice.giftPrice}" pattern="###,###.##"/> USD
+                                            </td>
+                                            <td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">Total shipping charge</td>
+                                            <td style="text-align: right;">
+                                                <fmt:formatNumber minFractionDigits="2" value="${totalShipping}" pattern="###,###.##"/> USD
                                             </td>
                                             <td></td><td></td>
                                         </tr>
@@ -196,7 +207,7 @@
                                             <td></td>
                                             <td style="text-align: right;">Card processing fee</td>
                                             <td style="text-align: right;">
-                                                <fmt:formatNumber value="${order.invoice.cardFee}" pattern="###,###.##"/> USD
+                                                <fmt:formatNumber minFractionDigits="2" value="${order.invoice.cardFee}" pattern="###,###.##"/> USD
                                             </td>
                                             <td></td><td></td>
                                         </tr>
@@ -205,7 +216,7 @@
                                             <td></td>
                                             <td style="text-align: right;">Lixi handing fee</td>
                                             <td style="text-align: right;">
-                                                <fmt:formatNumber value="${order.invoice.lixiFee}" pattern="###,###.##"/> USD
+                                                <fmt:formatNumber minFractionDigits="2" value="${order.invoice.lixiFee}" pattern="###,###.##"/> USD
                                             </td>
                                             <td></td><td></td>
                                         </tr>
@@ -214,7 +225,7 @@
                                             <td></td>
                                             <td style="text-align: right;">Total befor tax</td>
                                             <td style="text-align: right;">
-                                                <fmt:formatNumber value="${order.invoice.totalAmount}" pattern="###,###.##"/> USD
+                                                <fmt:formatNumber minFractionDigits="2" value="${order.invoice.totalAmount}" pattern="###,###.##"/> USD
                                             </td>
                                             <td></td><td></td>
                                         </tr>
@@ -223,7 +234,7 @@
                                             <td></td>
                                             <td style="text-align: right;">Sale tax</td>
                                             <td style="text-align: right;">
-                                                <fmt:formatNumber value="0" pattern="###,###.##"/> USD
+                                                <fmt:formatNumber minFractionDigits="2" value="0" pattern="###,###.##"/> USD
                                             </td>
                                             <td></td><td></td>
                                         </tr>
@@ -232,9 +243,9 @@
                                             <td></td>
                                             <td style="text-align: right;"><b>Grand Total</b></td>
                                             <td style="text-align: right;">
-                                                <fmt:formatNumber value="${order.invoice.totalAmountVnd}" pattern="###,###.##"/> VND
+                                                <b><fmt:formatNumber minFractionDigits="2" value="${order.invoice.totalAmount}" pattern="###,###.##"/></b> USD
                                                 <br/>
-                                                <fmt:formatNumber value="${order.invoice.totalAmount}" pattern="###,###.##"/> USD
+                                                <b><fmt:formatNumber value="${order.invoice.totalAmountVnd}" pattern="###,###.##"/></b> VND
                                             </td>
                                             <td></td><td></td>
                                         </tr>

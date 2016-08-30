@@ -268,7 +268,7 @@
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
                                         <th style="text-align: right;">Amount</th><%-- 7 --%>
-                                        <th nowrap style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Total Gift Margin(*)</th>
+                                        <th nowrap style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">G. Margin(*)</th>
                                         <th style="text-align: center;">Status</th><%-- 8 --%>
                                         <th style="text-align: center;">Last Modified Date</th><%-- 9 --%>
                                         <c:if test="${searchForm.status eq 'All' or searchForm.status eq PROCESSED}">
@@ -302,7 +302,7 @@
                                                 </c:if>
                                             </td>
                                             <td>${m.key.sender.fullName}<br/><a href='<c:url value="/Administration/SystemSender/detail/${m.key.sender.id}"/>'>${m.key.sender.beautyId}</a></td>
-                                            <td style="text-align: center;">
+                                            <td style="text-align: center;" nowrap>
                                                 <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
                                                     <c:if test="${not empty rio.gifts}">
                                                     <span id="rec${rio.recipient.id}">${rio.recipient.fullName}</span><br/><a href="javascript:viewRecipient(${rio.recipient.id});">${rio.recipient.beautyId}</a><br/>

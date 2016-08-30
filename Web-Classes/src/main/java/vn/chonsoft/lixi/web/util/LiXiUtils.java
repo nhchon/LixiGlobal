@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.Jsoup;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiConfig;
@@ -79,6 +80,8 @@ public class LiXiUtils {
         }
         
         try {
+            // remove html
+            uri = Jsoup.parse(uri).text();
             
             URI url = new URI(uri);
             
