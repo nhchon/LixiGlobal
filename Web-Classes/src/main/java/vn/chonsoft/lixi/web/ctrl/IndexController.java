@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -57,11 +56,23 @@ public class IndexController {
     /**
      * 
      * @param model
+     * @param request 
      * @return 
      */
     @RequestMapping(value = "/403.html", method = RequestMethod.GET)
-    public String status403(Map<String, Object> model) {
+    public String status403(Map<String, Object> model, HttpServletRequest request) {
         
+        String referer = request.getHeader("referer");
+        log.info("referer: " + referer);
+        
+        // jump to /Administration/login
+        if(!StringUtils.isEmpty(referer)){
+            if(referer.endsWith("/Administration/login")){
+                return "403_admin";
+            }
+        }
+        
+        // user login page
         return "403";
     }
 

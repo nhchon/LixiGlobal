@@ -12,7 +12,6 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -35,7 +34,6 @@ import vn.chonsoft.lixi.repositories.service.CustomerProblemService;
 import vn.chonsoft.lixi.repositories.service.CustomerProblemStatusService;
 import vn.chonsoft.lixi.repositories.service.CustomerSubjectService;
 import vn.chonsoft.lixi.repositories.service.LixiContactService;
-import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
@@ -226,19 +224,23 @@ public class CustomerSupportController {
         }
 
         try {
-            
-            LixiContact c = new LixiContact();
-            c.setName(form.getName());
-            c.setPhone(form.getPhone());
-            c.setEmail(form.getEmail());
-            c.setMessage(form.getMessage());
-            c.setCreatedDate(Calendar.getInstance().getTime());
-            
-            this.lcService.save(c);
-            
-            // send mail
-            sendEmail(c);
-            
+            if (form.getSecCode() != null && form.getSecCode().equals((String) request.getSession().getAttribute("captcha"))) {
+                LixiContact c = new LixiContact();
+                c.setName(form.getName());
+                c.setPhone(form.getPhone());
+                c.setEmail(form.getEmail());
+                c.setMessage(form.getMessage());
+                c.setCreatedDate(Calendar.getInstance().getTime());
+
+                this.lcService.save(c);
+
+                // send mail
+                sendEmail(c);
+            }
+            else{
+                model.put("secCodeWrong", "1");
+                return new ModelAndView("customer/contact");
+            }
         } catch (ConstraintViolationException e) {
 
             model.put("validationErrors", e.getConstraintViolations());

@@ -417,7 +417,6 @@ public class UserGeneralController {
 
         String captcha = request.getParameter("captcha");
         // captcha is correct
-        log.info(captcha + " - " + request.getSession().getAttribute("captcha"));
         if (captcha != null && captcha.equals((String) request.getSession().getAttribute("captcha"))) {
 
             String email = request.getParameter("email");

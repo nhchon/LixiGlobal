@@ -31,3 +31,6 @@ ALTER TABLE `lixi_batch` ADD `vnd_margin` DOUBLE NOT NULL AFTER `name`, ADD `usd
 ALTER TABLE `lixi_batch` ADD `num_of_order` INT NOT NULL AFTER `name`, ADD `sender_paid` DOUBLE NOT NULL AFTER `num_of_order`, ADD `cost_of_good` DOUBLE NOT NULL AFTER `sender_paid`; 
 
 ALTER TABLE `lixi_invoices` ADD `vnd_ship` DOUBLE NOT NULL AFTER `lixi_fee`, ADD `usd_ship` DOUBLE NOT NULL AFTER `vnd_ship`;
+
+## 2016-08-30
+ALTER TABLE `authorities` ADD `parent_id` BIGINT NOT NULL AFTER `authority`; 

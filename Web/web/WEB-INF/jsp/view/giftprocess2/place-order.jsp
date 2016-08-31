@@ -377,7 +377,7 @@
                             if (data.error == "0") {
 
                                 var tBody = $('#trTopUp' + id).closest('tbody');
-                                if (tBody.children("tr").length === 1) {
+                                if (tBody.children("tr").length === 2) {
                                     if ($('.receiver-info-item').length === 2) {
 
                                         $('.receiver-info-item').remove();
@@ -487,7 +487,7 @@
                                                             <tr id="trTopUp${t.id}">
                                                                 <td>
                                                                     <div class="row">
-                                                                        <div class="col-md-6" style="padding-left:40px">Top up mobile phone (${t.phone})</div>
+                                                                        <div class="col-md-6" style="padding-left:40px">Top up mobile phone ${t.phone}</div>
                                                                         <div class="col-md-3" id="topUpDiv${t.id}" amount="<fmt:formatNumber value="${t.amount}" pattern="###,###.##"/>"><span id="topUp${t.id}">VND <fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span> <a href="javascript:editTopUp(${t.id});" class="edit-info-event"></a></div>
                                                                         <div class="col-md-3">USD <span id="topUpUsd${t.id}"><fmt:formatNumber value="${t.amountUsd}" pattern="###,###.##"/></span> ~ VND <span id="topUpVnd${t.id}"><fmt:formatNumber value="${t.amount}" pattern="###,###.##"/></span></div>
                                                                     </div>

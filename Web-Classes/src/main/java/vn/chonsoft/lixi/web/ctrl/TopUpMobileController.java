@@ -41,6 +41,7 @@ import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VtcServiceCodeService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
@@ -225,10 +226,8 @@ public class TopUpMobileController {
             }
             /* get recipient */
             Recipient rec = this.reciService.findById(Long.parseLong(request.getParameter("recId")));
-            String recPhone = rec.getPhone();
-            if(!recPhone.startsWith("0")){
-                recPhone = ("0" + recPhone);
-            }
+            String recPhone = LiXiGlobalUtils.checkZeroAtBeginOfPhoneNumber(rec.getPhone());
+            
             TopUpMobilePhone topUp = new TopUpMobilePhone();
             topUp.setId(topUpId);
             topUp.setAmount(amountTopUp);

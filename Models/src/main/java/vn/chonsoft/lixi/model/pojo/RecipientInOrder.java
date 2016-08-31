@@ -211,18 +211,20 @@ public class RecipientInOrder {
 
     public double getShippingChargeAmount() {
         
-        log.info("this.charged == null: " + (this.charged == null));
-        
         if(this.charged == null) return 0;
         
-        SumVndUsd giftTotal = calculateGiftTotal();
-        for(ShippingCharged c : charged){
+        shippingChargeAmount = 0;
+        
+        if(getGifts()!=null && !getGifts().isEmpty()){
             
-            log.info(giftTotal.getUsd() + " " + c.getOrderToEnd());
-                    
-            if(giftTotal.getUsd() <= c.getOrderToEnd()){
-                shippingChargeAmount = c.getChargedAmount();
-                break;
+            SumVndUsd tempGiftTotal = calculateGiftTotal();
+
+            for(ShippingCharged c : charged){
+
+                if(tempGiftTotal.getUsd() <= c.getOrderToEnd()){
+                    shippingChargeAmount = c.getChargedAmount();
+                    break;
+                }
             }
         }
         

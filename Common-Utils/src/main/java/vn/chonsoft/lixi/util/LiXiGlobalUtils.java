@@ -271,7 +271,7 @@ public abstract class LiXiGlobalUtils {
         if(StringUtils.isBlank(phone)) return phone;
         
         // remove blank
-        phone = phone.replace("(", "").replace(")", "");
+        phone = phone.replace("-", "").replace(" ", "").replace("(", "").replace(")", "");
         
         if(!phone.startsWith("0")){
             

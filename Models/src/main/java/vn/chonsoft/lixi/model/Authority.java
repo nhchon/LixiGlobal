@@ -34,6 +34,10 @@ public class Authority implements Serializable {
     @Column(name = "authority")
     private String authority;
 
+    @Basic(optional = false)
+    @Column(name = "parent_id")
+    private Long parentId;
+    
     @Basic
     @Column(name = "description")
     private String description;
@@ -68,6 +72,14 @@ public class Authority implements Serializable {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public String getDescription() {

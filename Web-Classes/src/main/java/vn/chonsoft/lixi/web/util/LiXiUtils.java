@@ -384,6 +384,7 @@ public class LiXiUtils {
      * @param model
      * @param order 
      * @param fees
+     * @param charged 
      */
     public static void calculateFee(Map<String, Object> model, LixiOrder order, List<LixiGlobalFee> fees, List<ShippingCharged> charged){
         
@@ -678,6 +679,7 @@ public class LiXiUtils {
         // top up
         for (TopUpMobilePhone topUp : order.getTopUpMobilePhones()) {
 
+            log.info("getPhone: " + topUp.getPhone());
             if (recTopUps.containsKey(topUp.getRecipient())) {
 
                 recTopUps.get(topUp.getRecipient()).add(topUp);

@@ -6,6 +6,13 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            $(document).ready(function () {
+                $('#captchaImg').on({
+                    'click': function () {
+                        $('#captchaImg').attr('src', CONTEXT_PATH + '/captcha?time=' + (new Date()).getTime());
+                    }
+                });
+            });
         </script>
     </jsp:attribute>
 
@@ -56,6 +63,13 @@
                             </ul>
                             </div></c:if>
                             <form:form method="post" class="contact-form" modelAttribute="lixiContactForm">
+                                <c:if test="${secCodeWrong eq '1'}">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        <spring:message code="sec-code-wrong"/>
+                                    </div>
+                                </c:if>
                                 <div class="form-group">
                                     <label><spring:message code="message.name"/></label>
                                     <form:input path="name" placeholder="Name" class="form-control"/>
@@ -75,6 +89,12 @@
                                     <label><spring:message code="mess.mess"/></label>
                                     <form:textarea path="message" placeholder="Message" class="form-control"></form:textarea>
                                     <div class="has-error"><form:errors path="message" cssClass="help-block" element="div"/></div>
+                                </div>
+                                <div class="form-group">
+                                    <label><spring:message code="sec-code" text="Security code"/>:&nbsp;</label>
+                                    <img style="cursor: pointer;" title="Click to Reload Image" id="captchaImg" alt="Captcha" src="<c:url value="/captcha"/>" />
+                                    <form:input path="secCode" placeholder="Security code" class="form-control"/>
+                                    <div class="has-error"><form:errors path="secCode" cssClass="help-block" element="div"/></div>
                                 </div>
                                 <div class="button-control">
                                     <button type="submit" class="btn btn-primary text-uppercase">SEND</button>

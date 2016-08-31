@@ -59,6 +59,12 @@ function checkExceedTopUpOnPlaceOrder(id, amount) {
                     $('#topUpDiv'+id).attr("amount", data.TOP_UP_IN_VND);
                     cancelEditTopUp(id);
                     
+                    if(data.SELECTED_RECIPIENT_ID !== ''){
+                        $('#recTotalIncShipUsd'+data.SELECTED_RECIPIENT_ID).html(data.RECIPIENT_TOTAL_INC_SHIPPING_USD);
+                        $('#recTotalIncShipVnd'+data.SELECTED_RECIPIENT_ID).html(data.RECIPIENT_TOTAL_INC_SHIPPING_VND);
+                        $('#recShippingCharged'+data.SELECTED_RECIPIENT_ID).html(data.RECIPIENT_SHIPPING_CHARGED);
+                        $('#totalShippingCharged').html(data.TOTAL_SHIPPING_CHARGED);
+                    }
                     $('#giftPriceUsd').html(data.LIXI_GIFT_PRICE);
                     $('#giftPriceVnd').html(data.LIXI_GIFT_PRICE_VND);
                     $('#CARD_PROCESSING_FEE_THIRD_PARTY').html(data.CARD_PROCESSING_FEE_THIRD_PARTY);

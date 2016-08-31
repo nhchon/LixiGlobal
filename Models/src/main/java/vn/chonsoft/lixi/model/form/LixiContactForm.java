@@ -8,8 +8,6 @@ import javax.validation.constraints.NotNull;
 import vn.chonsoft.lixi.validations.Email;
 import vn.chonsoft.lixi.validations.FieldMatch;
 import vn.chonsoft.lixi.validations.NotBlank;
-import vn.chonsoft.lixi.validations.NotBlankButNullable;
-import vn.chonsoft.lixi.validations.Password;
 
 /**
  *
@@ -31,6 +29,9 @@ public class LixiContactForm{
 
     @NotBlank(message ="{validate.not_null}")
     private String message;
+    
+    @NotBlank(message ="{validate.not_null}")
+    private String secCode;
     
     public String getEmail() {
         return email;
@@ -61,6 +62,14 @@ public class LixiContactForm{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getSecCode() {
+        return secCode;
+    }
+
+    public void setSecCode(String secCode) {
+        this.secCode = secCode;
     }
 
 }
