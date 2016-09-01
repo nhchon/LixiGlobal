@@ -15,6 +15,8 @@ import vn.chonsoft.lixi.model.Authority;
 @Validated
 public interface AuthorityService {
     
+    List<Authority> findByParentId(Long parentId);
+    
     List<Authority> findAll();
     
 }

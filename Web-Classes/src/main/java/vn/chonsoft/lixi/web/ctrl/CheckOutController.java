@@ -907,7 +907,8 @@ public class CheckOutController {
     /**
      *
      * Submit the order
-     *
+     * 
+     * @param model
      * @param request
      * @return
      */
@@ -915,13 +916,19 @@ public class CheckOutController {
     @RequestMapping(value = "thank-you", method = RequestMethod.GET)
     public ModelAndView thankYou(Map<String, Object> model, HttpServletRequest request) {
 
-        model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID)));
-        
-        // remove Lixi order id
-        request.getSession().removeAttribute(LiXiConstants.LIXI_ORDER_ID);
+        if(request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID) == null){
+            return new ModelAndView(new RedirectView("/gifts/choose", true, true));
+        }
+        else{
+            
+            model.put("LIXI_ORDER_ID", LiXiUtils.getBeautyOrderId((Long) request.getSession().getAttribute(LiXiConstants.LIXI_ORDER_ID)));
 
-        //
-        return new ModelAndView("giftprocess2/thank-you");
+            // remove Lixi order id
+            request.getSession().removeAttribute(LiXiConstants.LIXI_ORDER_ID);
+
+            //
+            return new ModelAndView("giftprocess2/thank-you");
+        }
     }
     
     /**

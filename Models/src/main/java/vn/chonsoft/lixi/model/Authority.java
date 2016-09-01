@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.model;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,6 +46,9 @@ public class Authority implements Serializable {
     /* virtual property. Means current edit user has this authority*/
     @Transient
     private Boolean checked;
+    
+    @Transient
+    private List<Authority> children;
     
     public Authority() {
     }
@@ -96,6 +100,14 @@ public class Authority implements Serializable {
 
     public void setChecked(Boolean checked) {
         this.checked = checked;
+    }
+
+    public List<Authority> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Authority> children) {
+        this.children = children;
     }
 
     @Override
