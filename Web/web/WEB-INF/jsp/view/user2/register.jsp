@@ -85,13 +85,13 @@
                                     <p><spring:message code="mess.if-already-registered"/></p>
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <form:input path="email" cssErrorClass="form-control input-error" cssClass="form-control" required="true" placeholder="User Name"/>
+                                            <form:input path="email" autocomplete="off" cssErrorClass="form-control input-error" cssClass="form-control" required="true" placeholder="User Name"/>
                                             <div class="has-error"><form:errors path="email" cssClass="error-message" element="div"/></div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <form:password path="password" cssErrorClass="form-control input-error" cssClass="form-control" required="true" placeholder="Password"/>
+                                            <form:password path="password" autocomplete="off" cssErrorClass="form-control input-error" cssClass="form-control" required="true" placeholder="Password"/>
                                             <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
                                         </div>
                                     </div>
@@ -124,27 +124,27 @@
                                     <c:url value="/user/signUp" var="signUpFormUrl"/>
                                     <form:form class="form-horizontal" action="${signUpFormUrl}" modelAttribute="userSignUpForm" cssClass="register-form">
                                         <div class="form-group">
-                                            <form:input class="form-control" path="firstName" placeholder="${firstNameMessage}"/>
+                                            <form:input autocomplete="off" class="form-control" path="firstName" placeholder="${firstNameMessage}"/>
                                             <div class="has-error"><form:errors path="firstName" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input path="middleName" class="form-control" placeholder="${middleMessage}"/>
+                                            <form:input autocomplete="off" path="middleName" class="form-control" placeholder="${middleMessage}"/>
                                             <div class="has-error"><form:errors path="middleName" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input path="lastName" class="form-control" placeholder="${lastNameMessage}"/>
+                                            <form:input autocomplete="off" path="lastName" class="form-control" placeholder="${lastNameMessage}"/>
                                             <div class="has-error"><form:errors path="lastName" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input type="email" class="form-control" path="email" placeholder="${emailMessage}"/>
+                                            <form:input autocomplete="off" type="email" class="form-control" path="email" placeholder="${emailMessage}"/>
                                             <div class="has-error"><form:errors path="email" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input type="password" id="passwordSignUp" class="form-control" path="password" placeholder="${passwordMessage}"/>
+                                            <form:input autocomplete="off" type="password" id="passwordSignUp" class="form-control" path="password" placeholder="${passwordMessage}"/>
                                             <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
-                                            <form:input type="password" class="form-control" path="confPassword" placeholder="${reTypePass}"/>
+                                            <form:input autocomplete="off" type="password" class="form-control" path="confPassword" placeholder="${reTypePass}"/>
                                             <div class="has-error"><form:errors path="confPassword" cssClass="help-block" element="div"/></div>
                                         </div>
                                         <div class="form-group">
@@ -156,7 +156,7 @@
                                                     </form:select>
                                                     </div>
                                                 <div class="col-md-10" style="padding-left: 0px;">
-                                                    <form:input path="phone" class="form-control" placeholder="${phoneMessage}"/>
+                                                    <form:input autocomplete="off" path="phone" class="form-control" placeholder="${phoneMessage}"/>
                                                     <div class="has-error"><form:errors path="phone" cssClass="help-block" element="div"/></div>
                                                 </div>
                                             </div>

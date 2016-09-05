@@ -30,9 +30,7 @@ import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
-import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.CountryService;
-import vn.chonsoft.lixi.repositories.service.LixiCategoryService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiGlobalFeeService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
@@ -40,7 +38,6 @@ import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.repositories.service.UserService;
-import vn.chonsoft.lixi.repositories.service.VtcServiceCodeService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -77,16 +74,7 @@ public class TopUpMobileController {
     private LixiExchangeRateService lxexrateService;
 
     @Autowired
-    private LixiCategoryService lxcService;
-
-    @Autowired
-    private VtcServiceCodeService vtcServiceCodeService;
-
-    @Autowired
     private TopUpMobilePhoneService topUpService;
-
-    @Autowired
-    private BuyCardService buyPhoneCardService;
 
     @Autowired
     private LixiGlobalFeeService feeService;

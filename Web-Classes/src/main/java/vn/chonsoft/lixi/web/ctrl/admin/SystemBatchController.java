@@ -27,12 +27,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.model.LixiBatch;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.form.BatchSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.LixiBatchService;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.ScalarFunctionService;
+import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
 
@@ -65,6 +67,9 @@ public class SystemBatchController {
     @Autowired
     private LixiConfigService configService;
     
+    @Autowired
+    private ShippingChargedService shipService;
+    
     /**
      * 
      * @param model
@@ -88,11 +93,14 @@ public class SystemBatchController {
         
         List<LixiOrder> orders = this.lxOrderService.findAll(ids);
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
-        
+        List<ShippingCharged> charged = this.shipService.findAll();
         if(orders != null){
             
             orders.forEach(o -> {
-                mOs.put(o, LiXiUtils.genMapRecGifts(o, baoKimTransferPercent));
+                List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o, baoKimTransferPercent);
+                recInOrder.forEach(r -> {r.setCharged(charged);});
+                
+                mOs.put(o, recInOrder);
             });
         }
         

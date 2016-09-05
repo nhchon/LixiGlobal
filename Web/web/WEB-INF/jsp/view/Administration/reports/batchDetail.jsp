@@ -93,7 +93,7 @@
         <h2 class="sub-header">Batch Detail #${batch.id}</h2>
         <p class="help-block">Gift Margin(*): For ONLY Allow Refund Orders, but Gifted by each user</p>
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-9">
                 <table class="table table-hover table-responsive table-striped">
                     <thead>
                         <tr>
@@ -103,13 +103,14 @@
                             <th nowrap style="text-align:right;" class="success">Total To BaoKim</th><%-- 5 --%>
                             <th nowrap class="success" style="text-align:right;">Margined</th>
                             <th nowrap class="success" style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Cur. Margin(*)</th>
+                            <th nowrap class="success" style="text-align: right;">Ship. Charged</th>
                             <th nowrap style="text-align:right;" class="success">Owner</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr id="rowO${batch.id}">
                             <td>${batch.id}</td>
-                            <td><a href="<c:url value="/Administration/SystemBatch/view/${batch.id}"/>">${batch.name}</a></td>
+                            <td nowrap><a href="<c:url value="/Administration/SystemBatch/view/${batch.id}"/>">${batch.name}</a></td>
                             <td style="text-align: center;"><fmt:formatDate pattern="MM/dd/yyyy HH:mm:ss" value="${batch.createdDate}"/>
                                 <br/>
                                 1 USD = <fmt:formatNumber value="${batch.vcbBuyUsd}" pattern="###,###.##"/> VND
@@ -122,6 +123,7 @@
                                 <fmt:formatNumber value="${batch.vndMargin}" pattern="###,###.##"/> VND
                             </td>
                             <td id="giftMargin" style="text-align:right;"></td>
+                            <td nowrap style="text-align:right;"><fmt:formatNumber value="${batch.usdShip}" pattern="###,###.##"/> USD</td>
                             <td nowrap style="text-align:right;">${batch.createdBy}</td>
                         </tr>
                     </tbody>
@@ -210,6 +212,7 @@
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
                                         <th style="text-align: right;">Amount</th><%-- 7 --%>
                                         <th nowrap style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Gift Margin(*)</th>
+                                        <th style="text-align: right;">Ship. Charged</th>
                                         <th style="text-align: center;">Status</th><%-- 8 --%>
                                         <th style="text-align: center;">Last Modified Date</th><%-- 9 --%>
                                         <c:if test="${searchForm.status eq 'All' or searchForm.status eq PROCESSED}">
@@ -269,7 +272,15 @@
                                                 </c:forEach>
                                             </td>
                                             <td id="giftMargin${m.key.id}" style="text-align: right;">
-                                                <fmt:formatNumber value="${giftMargin}" pattern="###,###.##"/> VND</td>
+                                                <fmt:formatNumber value="${giftMargin}" pattern="###,###.##"/> VND
+                                            </td>
+                                            <td style="text-align: right;" nowrap>
+                                                <c:forEach items="${m.value}" var="rio">
+                                                    <c:if test="${not empty rio.gifts}">
+                                                        <fmt:formatNumber minFractionDigits="2" value="${rio.shippingChargeAmount}" pattern="###,###.##"/> USD<br/><br/>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </td>
                                             <td style="text-align: center;">
                                                 <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
                                                 <c:if test="${m.key.lixiStatus eq PROCESSED}">

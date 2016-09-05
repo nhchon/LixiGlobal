@@ -81,7 +81,9 @@
                                         <c:if test="${c.expMonth < 10}">0${c.expMonth}</c:if><c:if test="${c.expMonth > 9}">${c.expMonth}</c:if>/${c.expYear}
                                     </div>
                                     <div class="col-md-4" style="text-align: right;">
-                                            <a href="javascript:toogleDetail(${c.id})"><i id="iconDetail${c.id}" class="fa fa-caret-down"></i></a>
+                                        <button class="btn btn-default btn-sm" onclick="deleteCard(${c.id})"><spring:message code="message.delete"/></button>
+                                        <button class="btn btn-primary btn-sm" onclick="toogleDetail(${c.id})"><spring:message code="mess.card-details"/>&nbsp;<i id="iconDetail${c.id}" class="fa fa-caret-down"></i></button>
+                                    <%--<a title="More information" href="javascript:toogleDetail(${c.id})"><i id="iconDetail${c.id}" class="fa fa-caret-down"></i></a>--%>
                                     </div>
                                 </div>
                             </div>

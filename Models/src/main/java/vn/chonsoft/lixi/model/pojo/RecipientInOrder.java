@@ -135,6 +135,39 @@ public class RecipientInOrder {
      * 
      * @return 
      */
+    public SumVndUsd getSentToBaoKim(){
+        
+        // gift type
+        double sumGiftVND = 0;
+        double sumGiftUSD = 0;
+        if (getGifts() != null) {
+            for (LixiOrderGift gift : getGifts()) {
+                if(orderSetting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
+                    (orderSetting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()))){
+                    // baoKimTransferPercent
+                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * baoKimTransferPercent)/100.0;
+                }
+                else
+                {
+                    
+                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
+                }
+                sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
+                
+            }
+        }
+        /* round up */
+        sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+        sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
+        
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
+    }
+    
+    
+    /**
+     * 
+     * @return 
+     */
     private SumVndUsd calculateGiftTotal(){
         
         // gift type
@@ -142,16 +175,8 @@ public class RecipientInOrder {
         double sumGiftUSD = 0;
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
-                //if(excludeMargin && (orderSetting == EnumLixiOrderSetting.GIFT_ONLY.getValue() || 
-                //    (orderSetting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
-                //    gift.isLixiMargined()))){
-                    // baoKimTransferPercent
-                //    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * baoKimTransferPercent)/100.0;
-                //}
-                //else{
                     
-                    sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
-                //}
+                sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
                 sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
                 
             }

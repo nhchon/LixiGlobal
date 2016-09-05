@@ -40,7 +40,6 @@ import vn.chonsoft.lixi.model.LixiBatchOrder;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
-import vn.chonsoft.lixi.model.SecurityAdminUser;
 import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.form.LixiOrderSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
@@ -370,6 +369,7 @@ public class LixiOrdersController {
      * @param model
      * @return
      */
+    @PreAuthorize("hasAuthority('NEW_ORDER_INFO/SEND_MONEY')")
     @RequestMapping(value = "sendMoneyInfo", method = RequestMethod.GET)
     public ModelAndView sendMoneyInfo(Map<String, Object> model) {
 

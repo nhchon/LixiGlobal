@@ -67,7 +67,7 @@ public class IndexController {
         
         // jump to /Administration/login
         if(!StringUtils.isEmpty(referer)){
-            if(referer.endsWith("/Administration/login")){
+            if(referer.contains("/Administration/")){
                 return "403_admin";
             }
         }

@@ -42,6 +42,7 @@
                             <spring:message code="validate.checkout.exp_date"/>
                         </div>
                     </c:if>
+                <spring:message code="cvv-exp" var="cvvMessage"/>    
                 <form:form modelAttribute="addCardForm" cssClass="form-add-a-payment">
                     <h2 class="title"><spring:message code="message.add-payment-method"/></h2>
                     <div class="form-content">
@@ -130,7 +131,7 @@
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label for="cvv"><spring:message code="mess.cvv"/>:</label>
-                                    <form:input path="cvv" class="form-control" required="true" placeholder="CCV number"/>
+                                    <form:input path="cvv" class="form-control" required="true" placeholder="${cvvMessage}"/>
                                     <div class="has-error"><form:errors path="cvv" cssClass="help-block" element="div"/></div>
                                 </div>
                             </div>
