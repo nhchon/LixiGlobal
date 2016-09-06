@@ -66,7 +66,7 @@ LixiGlobal.RegisterPage = {
             messages: {
                 password: {
                     required: PASS_MESSAGE,
-                    minlength: PASS_MESSAGE
+                    minlength: PASS_MIN_LENGTH
                 },
                 email: "Please enter a valid email address"
             }
@@ -103,7 +103,8 @@ LixiGlobal.RegisterPage = {
                 phone:PHONE_REQUIRED,
                 password: {
                     required: PASS_MESSAGE,
-                    minlength: PASS_MESSAGE
+                    minlength: PASS_MIN_LENGTH,
+                    lixiPasswordFormat:PASS_CONTAIN
                 },
                 confPassword: {
                     required: "Please provide a password",

@@ -666,7 +666,6 @@
         </div>
         <div id="confirmAllowRefundModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
-
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -682,7 +681,6 @@
                         <button onclick="yesAllowRefund()" type="button" class="btn btn-primary"><spring:message code="message.yes"/></button>
                     </div>
                 </div>
-
             </div>
         </div>
     </jsp:body>

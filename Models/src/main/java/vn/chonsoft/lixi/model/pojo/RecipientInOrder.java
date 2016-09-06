@@ -111,6 +111,8 @@ public class RecipientInOrder {
     
     /**
      * 
+     * BaoKim returns for lixi.global
+     * 
      * @return 
      */
     public double getGiftMargin(){

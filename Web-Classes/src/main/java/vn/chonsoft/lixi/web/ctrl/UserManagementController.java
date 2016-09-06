@@ -566,7 +566,7 @@ public class UserManagementController {
      */
     @UserSecurityAnnotation
     @RequestMapping(value = "orderDetail/{id}", method = RequestMethod.GET)
-    public ModelAndView orderHistory(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
+    public ModelAndView orderDetail(Map<String, Object> model, @PathVariable Long id, HttpServletRequest request) {
         
         /* */
         User sender = this.userService.findByEmail(loginedUser.getEmail());

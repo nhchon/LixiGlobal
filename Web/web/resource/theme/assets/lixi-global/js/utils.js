@@ -200,6 +200,32 @@ function isValidPassword(password){
     return (isAtLeast8 && hasUppercase && hasNumber && !normalChars);;
 }
 
+/**
+ * 
+ * check text (password) has number digit
+ * 
+ * @param {type} text
+ * @returns {Boolean}
+ */
+function hasNumber(text){
+    // has number
+    var regex = /\d/g;
+    return regex.test(text);
+}
+
+/**
+ * 
+ * @param {type} text
+ * @returns {undefined}
+ */
+function hasSpecialChars(text){
+    // only normal chars
+    // http://stackoverflow.com/questions/13840143/jquery-check-if-special-characters-exists-in-string
+    var normalChars = /^[a-zA-Z0-9- ]*$/.test(text);
+    
+    return !normalChars;
+}
+
 function isValidPhone13(phone13){
     
     if(phone13 === '')

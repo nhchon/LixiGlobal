@@ -9,6 +9,8 @@
             var LAST_NAME_MESSAGE = '<spring:message code="validate.user.lastName"/>';
             var EMAIL_MESSAGE = '<spring:message code="validate.email_required"/>';
             var PASS_MESSAGE = '<spring:message code="validate.password_required"/>';
+            var PASS_MIN_LENGTH = '<spring:message code="validate.pass-min" text="The password is at least 8 characters"/>';
+            var PASS_CONTAIN='<spring:message code="validate-pass-contain" text="The password must contain Number, Capital Letter and Special Characters #, $, %, and &"/>';
             var PHONE_REQUIRED = '<spring:message code="validate.phone_required" text="The phone number is required."/>';
             var PASSWORD_ASSISTANCE_PATH = '<c:url value="/user/passwordAssistance"/>';
             

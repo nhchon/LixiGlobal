@@ -39,7 +39,9 @@
                 }
             }
             
-            
+            function showTopUpAlreadySentModal(){
+                $('#topUpSentModal').modal('show');
+            }
         </script>
     </jsp:attribute>
 
@@ -83,7 +85,15 @@
                                             <div style="font-size:14px;padding-top: 8px;">
                                                 <a href="<c:url value="/user/orderDetail/${m.key.id}"/>"><spring:message code="mess.order-detail"/></a>
                                                 <c:if test="${m.key.invoice.translatedStatus eq 'In Progress'}">
-                                                    | <a href="javascript:cancelOrder(${m.key.id});"><spring:message code="mess.cancel-order"/></a>
+                                                    <%-- empty gift means just topup --%>
+                                                    <c:if test="${not empty m.key.gifts}">
+                                                        <c:if test="${not empty m.key.topUpMobilePhones}">
+                                                        | <a href="javascript:showTopUpAlreadySentModal();"><spring:message code="mess.cancel-order"/></a>
+                                                        </c:if>
+                                                        <c:if test="${empty m.key.topUpMobilePhones}">
+                                                        | <a href="javascript:cancelOrder(${m.key.id});"><spring:message code="mess.cancel-order"/></a>
+                                                        </c:if>
+                                                    </c:if>
                                                 </c:if>
                                                 <c:if test="${m.key.invoice.translatedStatus eq 'Complete'}">
                                                     | <a href="javascript:void(0);" ><spring:message code="mess.order-again"/></a>
@@ -230,7 +240,24 @@
                     </div>
                 </div>
             </div>
+            <div id="topUpSentModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><spring:message code="message.alert"/></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p><spring:message code="topup-already-sent-1"/></p>
+                            (<spring:message code="topup-already-sent-2"/>)
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="message.ok"/></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
-
     </jsp:body>
 </template:Client>

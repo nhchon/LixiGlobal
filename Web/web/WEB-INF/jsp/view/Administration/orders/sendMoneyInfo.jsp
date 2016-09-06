@@ -145,7 +145,7 @@
                                         <th nowrap>Option</th><%-- 4 --%>
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
-                                        <th style="text-align: right;">Amount To BaoKim</th><%-- 7 --%>
+                                        <th style="text-align: right;">Gift Price</th><%-- 7 --%>
                                         <th style="text-align: right;">Ship. Charged</th><%-- 9 --%>
                                         <th style="text-align: right;">Action</th><%-- 8 --%>
                                     </tr>
@@ -228,37 +228,33 @@
             <div class="col-md-4">
                 <table class="table table-responsive" style="font-size: 14px;">
                     <thead>
-                    <th colspan="3">On-Select Summary:</th>
+                    <th colspan="5">On-Select Summary:</th>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Total:</td>
+                            <td>Num of Record:</td>
                             <td style="text-align: right;" id="tdOnSelectCount"></td>
                             <td>Record(s)</td>
+                            <td></td><td></td>
                         </tr>
                         <tr>
-                            <td>Total Amount:</td>
+                            <td>Gift Total:</td>
                             <td style="text-align: right;" id="tdOnSelectUsd"></td>
-                            <input type="hidden" id="onSelectUsd" name="onSelectUsd" value="0"/>
-                            <td>USD</td>
-                        </tr>
-                        <tr>
-                            <td></td>
+                            <td>USD<input type="hidden" id="onSelectUsd" name="onSelectUsd" value="0"/></td>
                             <td style="text-align: right;" id="tdOnSelectVnd"></td>
-                            <input type="hidden" id="onSelectVnd" name="onSelectVnd" value="0"/>
-                            <td>VND</td>
+                            <td>VND<input type="hidden" id="onSelectVnd" name="onSelectVnd" value="0"/></td>
                         </tr>
                         <tr>
-                            <td>Total Shipping Charged</td>
+                            <td>Shipping Total</td>
                             <td style="text-align: right;" id="tdOnSelectShipCharged"></td>
-                            <input type="hidden" id="onSelectShipCharged" name="onSelectShipCharged" value="0"/>
-                            <td>USD</td>
+                            <td>USD<input type="hidden" id="onSelectShipCharged" name="onSelectShipCharged" value="0"/></td>
+                            <td></td><td></td>
                         </tr>
                         <tr>
-                            <td>Total Gift Margin Amount:</td>
+                            <td>Margin Total</td>
                             <td style="text-align: right;" id="tdGiftMarginOnSelect"></td>
-                            <input type="hidden" id="onSelectMargin" name="onSelectMargin" value="0"/>
-                            <td>VND</td>
+                            <td>VND<input type="hidden" id="onSelectMargin" name="onSelectMargin" value="0"/></td>
+                            <td></td><td></td>
                         </tr>
                     </tbody>
                 </table>

@@ -284,7 +284,7 @@ public class LixiOrder implements Serializable {
      * @param percent // remove
      * @return 
      */
-    public SumVndUsd getSumOfGiftVnd(double percent){
+    public SumVndUsd getSumOfGiftVnd_beremove(double percent){
         
         // gift type
         double sumGiftVND = 0;
@@ -304,6 +304,26 @@ public class LixiOrder implements Serializable {
         return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
     }
     
+    public SumVndUsd getGiftTotal(){
+        
+        // gift type
+        double sumGiftVND = 0;
+        double sumGiftUSD = 0;
+        if (getGifts() != null) {
+            for (LixiOrderGift gift : getGifts()) {
+                    
+                sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
+                sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
+                
+            }
+        }
+        /* round up */
+        sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+        sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
+        
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
+        
+    }
     /**
      * 
      * @param percent
