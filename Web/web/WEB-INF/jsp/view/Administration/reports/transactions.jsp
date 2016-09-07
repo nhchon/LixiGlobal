@@ -267,7 +267,7 @@
                                         <th nowrap>Option</th><%-- 4 --%>
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
-                                        <th style="text-align: right;">Amount</th><%-- 7 --%>
+                                        <th style="text-align: right;" nowrap>Amount<br/>(incl. shipping)</th><%-- 7 --%>
                                         <th nowrap style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">G. Margin(*)</th>
                                         <th style="text-align: center;">Status</th><%-- 8 --%>
                                         <th style="text-align: center;">Last Modified Date</th><%-- 9 --%>
@@ -313,8 +313,8 @@
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
                                                         <c:set var="totalGiftMargin" value="${totalGiftMargin + rio.giftMargin}"/>
-                                                        <fmt:formatNumber value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                        <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                        <fmt:formatNumber value="${rio.giftTotal.usd + rio.shippingChargeAmount}" pattern="###,###.##"/> USD<br/>
+                                                        <fmt:formatNumber value="${rio.giftTotal.vnd + (rio.shippingChargeAmount * m.key.lxExchangeRate.buy)}" pattern="###,###.##"/> VND<br/>
                                                         <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
                                                         <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
                                                     </c:if>

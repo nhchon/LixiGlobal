@@ -73,8 +73,8 @@ function checkRecipientFormOnModal() {
         return false;
     }
 
-    // phone
-    if ($.trim($('#phone').val()) === '' || $('#phone').val().match('^0')) {
+    // phone  || $('#phone').val().match('^0')
+    if ($.trim($('#phone').val()) === '') {
 
         alert(PHONE_ERROR);
         $('#phone').focus();

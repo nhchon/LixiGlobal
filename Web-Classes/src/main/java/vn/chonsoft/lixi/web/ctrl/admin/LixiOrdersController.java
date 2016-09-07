@@ -84,9 +84,6 @@ public class LixiOrdersController {
     private LixiOrderSearchService lxOrderSearchService;
 
     @Autowired
-    private LixiOrderGiftService lxogiftService;
-
-    @Autowired
     private LixiAsyncMethods lxAsyncMethods;
 
     @Autowired
@@ -241,11 +238,15 @@ public class LixiOrdersController {
         }
 
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
-
+        List<ShippingCharged> charged = this.shipService.findAll();
+        
         if (orders != null) {
-
             orders.forEach(o -> {
-                mOs.put(o, LiXiUtils.genMapRecGifts(o));
+                
+                List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
+                recInOrder.forEach(r -> {r.setCharged(charged);});
+                
+                mOs.put(o, recInOrder);
             });
         }
 
@@ -271,7 +272,12 @@ public class LixiOrdersController {
         }
 
         List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
-
+        List<ShippingCharged> charged = this.shipService.findAll();
+        
+        recGifts.forEach(r -> {
+            r.setCharged(charged);
+        });
+        
         model.put("order", order);
         model.put("recGifts", recGifts);
 
@@ -334,7 +340,7 @@ public class LixiOrdersController {
      * @return
      */
     @RequestMapping(value = "newOrders/ajax/{oStatus}", method = RequestMethod.GET)
-    public ModelAndView getListNewOrders(Map<String, Object> model, @PathVariable String oStatus) {
+    public ModelAndView getListNewOrders_beremoved(Map<String, Object> model, @PathVariable String oStatus) {
 
         List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), oStatus);
 
@@ -510,7 +516,7 @@ public class LixiOrdersController {
             
             for (LixiOrder order : orders) {
                 // send to bao kim
-                boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
+                boolean rs = true;//lxAsyncMethods.sendPaymentInfoToBaoKim(order);
                 if (rs) {
                     /* lưu id */
                     LixiBatchOrder bo = new LixiBatchOrder();

@@ -15,6 +15,7 @@
                     var totalUsd = 0;
                     var totalGiftMargin = 0;
                     var totalShipCharged = 0;
+                    var totalSend = 0;
                     $('input[name=oIds]').each(function(){
                        
                        if($(this).prop( "checked" )){
@@ -24,6 +25,8 @@
                            totalUsd = totalUsd + parseFloat($(this).attr('totalAmountUsd'));
                            totalGiftMargin = totalGiftMargin + parseFloat($(this).attr('totalGiftMargin'));
                            totalShipCharged = totalShipCharged + parseFloat($(this).attr('totalShipCharged'));
+                           
+                           totalSend = totalVnd - totalGiftMargin;
                        }
                     });
                     $('#tdOnSelectCount').html(count + '');
@@ -31,11 +34,13 @@
                     $('#tdOnSelectUsd').html(totalUsd.toFixed(2) + '');
                     $('#tdGiftMarginOnSelect').html(totalGiftMargin + '');
                     $('#tdOnSelectShipCharged').html(totalShipCharged + '')
+                    $('#tdTotalSendOnSelect').html(totalSend + '');
                     // input hidden
                     $('#onSelectVnd').val(totalVnd + '');
                     $('#onSelectUsd').val(totalUsd.toFixed(2) + '');
                     $('#onSelectMargin').val(totalGiftMargin + '');
-                    $('#onSelectShipCharged').val(totalShipCharged + '')
+                    $('#onSelectShipCharged').val(totalShipCharged + '');
+                    $('#onSelectTotalSend').val(totalSend + '');
                 });
                 
             });
@@ -53,6 +58,11 @@
                 
                 if(rs === false){
                     alert('Please check atleast one order');
+                }
+                
+                if(rs){
+                    
+                    disableSubmitBtn();
                 }
                 
                 return rs;
@@ -94,6 +104,12 @@
                         // TODO
                     })
                 });
+            }
+            
+            function disableSubmitBtn(){
+                $('#btnSubmit').attr('disabled', true);
+                $('#btnSubmit').addClass("disabled");
+                $("#btnSubmit").html('... Please wait !');
             }
         </script>    
     </jsp:attribute>
@@ -200,8 +216,8 @@
                                                     <c:if test="${not empty rio.gifts}">
                                                     <fmt:formatNumber minFractionDigits="2" value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
                                                     <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
-                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.sentToBaoKim.vnd}"/>
-                                                    <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.sentToBaoKim.usd}"/>
+                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
+                                                    <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
@@ -256,6 +272,12 @@
                             <td>VND<input type="hidden" id="onSelectMargin" name="onSelectMargin" value="0"/></td>
                             <td></td><td></td>
                         </tr>
+                        <tr>
+                            <td>Total Send</td>
+                            <td style="text-align: right;" id="tdTotalSendOnSelect"></td>
+                            <td>VND<input type="hidden" id="onSelectTotalSend" name="onSelectTotalSend" value="0"/></td>
+                            <td></td><td></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -301,7 +323,7 @@
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4" style="text-align: center;">
-                <button class="btn btn-primary" type="submit">Sent Selected Orders</button>
+                <button id="btnSubmit" class="btn btn-primary" type="submit">Sent Selected Orders</button>
             </div>
             <div class="col-md-4"></div>
         </div>
