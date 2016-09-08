@@ -74,6 +74,7 @@
                                         <th nowrap>Receiver</th>
                                         <th>Email/Phone</th>
                                         <th style="text-align: right;">Amount</th>
+                                        <th nowrap style="text-align: right;">No. of Transac</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -91,12 +92,13 @@
                                             </td>
                                             <td>${r.email}<br/>${r.phone}</td>
                                             <td nowrap style="text-align: right;"><fmt:formatNumber value="${r.sumAll}" pattern="###,###.##"/> VND</td>
+                                            <td style="text-align: right;"></td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="6">
+                                        <td colspan="7">
                                             <%-- Paging --%>
                                             <nav>
                                                 <ul class="pagination pull-right">

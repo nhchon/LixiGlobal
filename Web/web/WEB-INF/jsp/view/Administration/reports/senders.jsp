@@ -138,6 +138,7 @@
                                         <th nowrap>Name</th>
                                         <th nowrap>User Name/Phone</th>
                                         <th nowrap>Amount</th>
+                                        <th nowrap>No. of Transac</th>
                                         <th nowrap>Status</th>
                                         <th nowrap style="text-align: right;">Action</th>
                                     </tr>
@@ -156,6 +157,7 @@
                                                 ${s.email}<br/>${s.phone}
                                             </td>
                                             <td><fmt:formatNumber value="${s.sumInvoice}" pattern="###,###.##"/> USD</td>
+                                            <td></td>
                                             <td id="tdStatus${s.id}" nowrap>
                                                 <c:if test="${s.activated eq true}">
                                                     Active
@@ -181,7 +183,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="7">
+                                        <td colspan="8">
                                             <%-- Paging --%>
                                             <nav>
                                                 <ul class="pagination pull-right">

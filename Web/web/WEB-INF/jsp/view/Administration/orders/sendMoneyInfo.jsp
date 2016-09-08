@@ -15,7 +15,9 @@
                     var totalUsd = 0;
                     var totalGiftMargin = 0;
                     var totalShipCharged = 0;
+                    var totalShipChargedVnd = 0;
                     var totalSend = 0;
+                    
                     $('input[name=oIds]').each(function(){
                        
                        if($(this).prop( "checked" )){
@@ -25,7 +27,7 @@
                            totalUsd = totalUsd + parseFloat($(this).attr('totalAmountUsd'));
                            totalGiftMargin = totalGiftMargin + parseFloat($(this).attr('totalGiftMargin'));
                            totalShipCharged = totalShipCharged + parseFloat($(this).attr('totalShipCharged'));
-                           
+                           totalShipChargedVnd = totalShipChargedVnd + parseFloat($(this).attr('totalShipChargedVnd'));
                            totalSend = totalVnd - totalGiftMargin;
                        }
                     });
@@ -35,6 +37,7 @@
                     $('#tdGiftMarginOnSelect').html(totalGiftMargin + '');
                     $('#tdOnSelectShipCharged').html(totalShipCharged + '')
                     $('#tdTotalSendOnSelect').html(totalSend + '');
+                    $('#tdOnSelectShipChargedVnd').html();
                     // input hidden
                     $('#onSelectVnd').val(totalVnd + '');
                     $('#onSelectUsd').val(totalUsd.toFixed(2) + '');
@@ -176,16 +179,18 @@
                                         <c:set var="totalAmountUsdOfThisOrder" value="0"/>
                                         <c:set var="totalGiftMarginOfThisOrder" value="0"/>
                                         <c:set var="totalShipCharged" value="0"/>
+                                        <c:set var="totalShipChargedVnd" value="0"/>
                                         <c:forEach items="${m.value}" var="rio">
                                             <c:if test="${not empty rio.gifts}">
                                                 <c:set var="totalAmountVndOfThisOrder" value="${totalAmountVndOfThisOrder + rio.giftTotal.vnd}"/>
                                                 <c:set var="totalAmountUsdOfThisOrder" value="${totalAmountUsdOfThisOrder + rio.giftTotal.usd}"/>
                                                 <c:set var="totalGiftMarginOfThisOrder" value="${totalGiftMarginOfThisOrder + rio.giftMargin}"/>
                                                 <c:set var="totalShipCharged" value="${totalShipCharged + rio.shippingChargeAmount}"/>
+                                                <c:set var="totalShipChargedVnd" value="${totalShipChargedVnd + (rio.shippingChargeAmount * m.key.lxExchangeRate.buy)}"/>
                                             </c:if>
                                         </c:forEach>
                                         <tr id="rowO${m.key.id}">
-                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalShipCharged="${totalShipCharged}" totalGiftMargin="${totalGiftMarginOfThisOrder}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
+                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalShipChargedVnd="${totalShipChargedVnd}" totalShipCharged="${totalShipCharged}" totalGiftMargin="${totalGiftMarginOfThisOrder}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
@@ -264,7 +269,8 @@
                             <td>Shipping Total</td>
                             <td style="text-align: right;" id="tdOnSelectShipCharged"></td>
                             <td>USD<input type="hidden" id="onSelectShipCharged" name="onSelectShipCharged" value="0"/></td>
-                            <td></td><td></td>
+                            <td style="text-align: right;" id="tdOnSelectShipChargedVnd"></td>
+                            <td>VND<input type="hidden" id="onSelectShipChargedVnd" name="onSelectShipChargedVnd" value="0"/></td>
                         </tr>
                         <tr>
                             <td>Margin Total</td>
