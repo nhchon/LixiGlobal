@@ -61,12 +61,25 @@ LixiGlobal.RegisterPage = {
                 email: {
                     required: true,
                     email: true
+                },
+                secCode: { 
+                    required:{
+                        depends: function(element) {
+                            return $('#secCode').length !== 0;
+                        }
+                    },
+                    minlength:4
                 }
             },
             messages: {
                 password: {
-                    required: PASS_MESSAGE,
-                    minlength: PASS_MIN_LENGTH
+                    required: REQUIRE_MESSAGE,
+                    minlength: PASS_MIN_LENGTH,
+                    lixiPasswordFormat: PASS_CONTAIN
+                },
+                secCode:{
+                    required: REQUIRE_MESSAGE,
+                    minlength: SEC_CODE_MIN_MESSAGE
                 },
                 email: "Please enter a valid email address"
             }

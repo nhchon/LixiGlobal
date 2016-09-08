@@ -195,7 +195,7 @@ public class IndexController {
         ServletOutputStream out = response.getOutputStream();
 
         int width = 150;
-        int height = 41;
+        int height = 35;
 
         BufferedImage bufferedImage = new BufferedImage(width, height,
                 BufferedImage.TYPE_INT_RGB);
@@ -205,7 +205,7 @@ public class IndexController {
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, width, height);
 
-        Font font = new Font("Comic Sans MS", Font.BOLD, 30);
+        Font font = new Font("Comic Sans MS", Font.BOLD, 28);
         g2d.setFont(font);
 
         GradientPaint gp = new GradientPaint(0, 0,

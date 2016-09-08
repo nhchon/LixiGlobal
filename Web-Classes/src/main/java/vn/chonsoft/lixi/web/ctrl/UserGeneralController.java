@@ -668,6 +668,25 @@ public class UserGeneralController {
     }
 
     /**
+     * 
+     * count num of sign in failed for showing security code image
+     * 
+     * @param session 
+     */
+    private void countSigninFailed(HttpSession session){
+        
+        Integer numOfSiginFailed = (Integer)session.getAttribute("numOfSiginFailed");
+        
+        if(numOfSiginFailed == null){
+            session.setAttribute("numOfSiginFailed", 1);
+        }
+        else{
+            // increase sign in failed counter
+            session.setAttribute("numOfSiginFailed", numOfSiginFailed + 1);
+        }
+        
+    }
+    /**
      *
      * @param model
      * @param form
@@ -706,7 +725,10 @@ public class UserGeneralController {
 
             // email is not exist
             if (u == null) {
-
+                
+                // count
+                countSigninFailed(session);
+                
                 model.put("signInFailed", 1);
                 return new ModelAndView("user2/register");
 
@@ -714,6 +736,9 @@ public class UserGeneralController {
 
             // check activation
             if (!u.getActivated()) {
+                
+                // count
+                countSigninFailed(session);
 
                 model.put("notActivated", 1);
                 return new ModelAndView("user2/register");
@@ -722,7 +747,10 @@ public class UserGeneralController {
 
             // check enabled
             if (!u.getEnabled()) {
-
+                
+                // count
+                countSigninFailed(session);
+                
                 model.put("notEnabled", 1);
                 return new ModelAndView("user2/register");
 
@@ -775,6 +803,7 @@ public class UserGeneralController {
                             this.lxogiftService.save(gift);
                         }
                     }
+                    
                     /* update top up */
                     if(order.getTopUpMobilePhones()!=null){
                         for(TopUpMobilePhone t : order.getTopUpMobilePhones()){
@@ -791,13 +820,7 @@ public class UserGeneralController {
                 }
             } else {
                 // wrong password
-                if(numOfSiginFailed == null){
-                    session.setAttribute("numOfSiginFailed", 1);
-                }
-                else{
-                    // increase sign in failed counter
-                    session.setAttribute("numOfSiginFailed", numOfSiginFailed + 1);
-                }
+                countSigninFailed(session);
                 
                 model.put("signInFailed", 1);
                 return new ModelAndView("user2/register");

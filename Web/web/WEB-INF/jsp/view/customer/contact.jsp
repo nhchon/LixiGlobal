@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label><spring:message code="sec-code" text="Security code"/>:&nbsp;</label>
-                                    <img style="cursor: pointer;" title="Click to Reload Image" id="captchaImg" alt="Captcha" src="<c:url value="/captcha"/>" />
+                                    <img style="cursor: pointer;margin-bottom: 5px;" title="Click to Reload Image" id="captchaImg" alt="Captcha" src="<c:url value="/captcha"/>" />
                                     <form:input path="secCode" placeholder="Security code" class="form-control"/>
                                     <div class="has-error"><form:errors path="secCode" cssClass="help-block" element="div"/></div>
                                 </div>

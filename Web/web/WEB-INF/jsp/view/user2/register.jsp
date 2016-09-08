@@ -13,6 +13,8 @@
             var PASS_CONTAIN='<spring:message code="validate-pass-contain" text="The password must contain Number, Capital Letter and Special Characters #, $, %, and &"/>';
             var PHONE_REQUIRED = '<spring:message code="validate.phone_required" text="The phone number is required."/>';
             var PASSWORD_ASSISTANCE_PATH = '<c:url value="/user/passwordAssistance"/>';
+            var SEC_CODE_MIN_MESSAGE = '<spring:message code="validate.sec-code-min" text="The security code must have 4 characters"/>';
+            var REQUIRE_MESSAGE = '<spring:message code="validate.not_null"/>';
             
             jQuery(document).ready(function () {
                 LixiGlobal.RegisterPage.init();
@@ -114,17 +116,17 @@
                                             <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
                                         </div>
                                     </div>
-                                            <c:if test="${sessionScope.numOfSiginFailed ge '4'}">
-                                    <div class="form-group">
-                                        <div class="col-md-8">
-                                            <input id="secCode" name="secCode" placeholder="<spring:message code="enter-chars-you-see" text="Please enter the characters you see"/>" class="form-control" value="" type="text">
+                                    <c:if test="${sessionScope.numOfSiginFailed ge '4'}">
+                                        <div class="form-group">
+                                            <div class="col-md-8">
+                                                <input id="secCode" name="secCode" placeholder="<spring:message code="enter-chars-you-see" text="Please enter the characters you see"/>" class="form-control" value="" type="text">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <img style="cursor: pointer;" title="Click to Reload Image" id="captchaImg" alt="Captcha" src="<c:url value="/captcha"/>" />
+                                                <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
+                                            </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <img style="cursor: pointer;" title="Click to Reload Image" id="captchaImg" alt="Captcha" src="<c:url value="/captcha"/>" />
-                                            <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
-                                        </div>
-                                    </div>
-                                        </c:if>
+                                    </c:if>
                                     <p>
                                         <a href="#"  data-toggle="modal" data-target="#myModal"><spring:message code="mess.forgot-pass"/>?</a>
                                     </p>
