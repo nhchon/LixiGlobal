@@ -60,6 +60,7 @@ public abstract class LiXiGlobalConstants {
     public static final String TRANS_STATUS_IN_PROGRESS = "In Progress";
     
     public static final String TRANS_STATUS_DECLINED = "Declined";
+    public static final String TRANS_STATUS_USER_CANCELLED = "User Cancelled";
     
     public static final String TRANS_STATUS_REFUNED = "Refunded";
     

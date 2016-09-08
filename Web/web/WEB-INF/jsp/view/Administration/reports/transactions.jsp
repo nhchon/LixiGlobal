@@ -292,7 +292,8 @@
                                                 <br/>
                                                 1 USD = ${m.key.lxExchangeRate.buy} VND
                                             </td>
-                                            <td style="text-align:center;">${m.key.invoice.netTransId}<br/>(${m.key.invoice.translatedStatus})</td>
+                                            <td style="text-align:center;">
+                                                ${m.key.invoice.netTransId}<br/>(${m.key.invoice.translatedStatus})</td>
                                             <td nowrap>
                                                 <c:if test="${m.key.setting eq 0}">
                                                     Gift Only

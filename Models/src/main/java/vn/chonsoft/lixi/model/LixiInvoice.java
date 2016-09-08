@@ -240,10 +240,16 @@ public class LixiInvoice implements Serializable {
            EnumTransactionStatus.failedReview.getValue().equals(netTransStatus) ||
            EnumTransactionStatus.settlementError.getValue().equals(netTransStatus) ||
            EnumTransactionStatus.returnedItem.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.voidedByUser.getValue().equals(netTransStatus) ||
+           
            EnumTransactionStatus.voided.getValue().equals(netTransStatus)){
             
             return LiXiGlobalConstants.TRANS_STATUS_DECLINED;
+            
+        }
+        
+        if(EnumTransactionStatus.voidedByUser.getValue().equals(netTransStatus)){
+            
+            return LiXiGlobalConstants.TRANS_STATUS_USER_CANCELLED;
             
         }
         
