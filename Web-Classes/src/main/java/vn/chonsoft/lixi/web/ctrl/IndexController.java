@@ -218,7 +218,7 @@ public class IndexController {
         // add spaces to enough width
         String captchaDraw = captcha.replace("", " ").trim();
 
-        request.getSession().setAttribute("captcha", captcha.toLowerCase());
+        request.getSession().setAttribute("captcha", captcha);
 
         g2d.drawString(captchaDraw, 5, 30);
 

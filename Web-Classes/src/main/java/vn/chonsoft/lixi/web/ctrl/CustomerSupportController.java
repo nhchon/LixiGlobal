@@ -224,7 +224,7 @@ public class CustomerSupportController {
         }
 
         try {
-            if (form.getSecCode() != null && form.getSecCode().equals((String) request.getSession().getAttribute("captcha"))) {
+            if (form.getSecCode() != null && form.getSecCode().equalsIgnoreCase((String) request.getSession().getAttribute("captcha"))) {
                 LixiContact c = new LixiContact();
                 c.setName(form.getName());
                 c.setPhone(form.getPhone());

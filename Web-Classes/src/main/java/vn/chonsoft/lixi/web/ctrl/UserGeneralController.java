@@ -417,7 +417,7 @@ public class UserGeneralController {
 
         String captcha = request.getParameter("captcha");
         // captcha is correct
-        if (captcha != null && captcha.equals((String) request.getSession().getAttribute("captcha"))) {
+        if (captcha != null && captcha.equalsIgnoreCase((String) request.getSession().getAttribute("captcha"))) {
 
             String email = request.getParameter("email");
             try {
@@ -678,11 +678,23 @@ public class UserGeneralController {
     @RequestMapping(value = "signIn", method = RequestMethod.POST)
     public ModelAndView signIn(Map<String, Object> model,
             @Valid UserSignInForm form, Errors errors, HttpServletRequest request) {
-
+        
         // prepare for signUp form 
         model.put("action", "login");
         model.put("userSignUpForm", new UserSignUpForm());
 
+        // get session, check security code
+        HttpSession session = request.getSession();
+        Integer numOfSiginFailed = (Integer)session.getAttribute("numOfSiginFailed");
+        // sign in failed 4 times
+        if((numOfSiginFailed != null) && numOfSiginFailed >= 4){
+            String secCode = request.getParameter("secCode");
+            if(StringUtils.isBlank(secCode) || !secCode.equalsIgnoreCase((String)session.getAttribute("captcha"))){
+                model.put("signInFailed", 5);
+                return new ModelAndView("user2/register");
+            }
+        }
+        
         /* */
         if (errors.hasErrors()) {
             return new ModelAndView("user2/register");
@@ -719,7 +731,7 @@ public class UserGeneralController {
             // check password
             if (BCrypt.checkpw(form.getPassword(), u.getPassword())) {
 
-                HttpSession session = request.getSession();
+                
                 session.setAttribute(LiXiConstants.USER_LOGIN_EMAIL, u.getEmail());
                 session.setAttribute(LiXiConstants.USER_LOGIN_FIRST_NAME, u.getFirstName());
 
@@ -778,7 +790,15 @@ public class UserGeneralController {
                     log.info("User " + u.getEmail() + " has no UN_FINISHED order");
                 }
             } else {
-
+                // wrong password
+                if(numOfSiginFailed == null){
+                    session.setAttribute("numOfSiginFailed", 1);
+                }
+                else{
+                    // increase sign in failed counter
+                    session.setAttribute("numOfSiginFailed", numOfSiginFailed + 1);
+                }
+                
                 model.put("signInFailed", 1);
                 return new ModelAndView("user2/register");
 
@@ -848,7 +868,7 @@ public class UserGeneralController {
 
         String inUseEmail = (String) request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
 
-        if (captcha != null && captcha.equals((String) request.getSession().getAttribute("captcha"))) {
+        if (captcha != null && captcha.equalsIgnoreCase((String) request.getSession().getAttribute("captcha"))) {
 
             // captcha is correct
             User u = this.userService.findByEmail(inUseEmail, Boolean.TRUE);

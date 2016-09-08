@@ -17,6 +17,16 @@
             jQuery(document).ready(function () {
                 LixiGlobal.RegisterPage.init();
                 $("#phone").mask("(999) 999-999?9");
+                
+                // security code
+                if ($('#captchaImg').length) {
+                    // do your stuff
+                    $('#captchaImg').on({
+                        'click': function () {
+                            $('#captchaImg').attr('src', CONTEXT_PATH + '/captcha?time=' + (new Date()).getTime());
+                        }
+                    });
+                }
             })
         </script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/register.js"/>"></script>
@@ -80,6 +90,13 @@
                                         <spring:message code="log-in-make-purchase"/>
                                     </div>
                                 </c:if>
+                                <c:if test="${signInFailed eq '5' or param.signInFailed eq '5'}">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        <spring:message code="sec-code-wrong"/>
+                                    </div>
+                                </c:if>
 
                                 <h3 class="title"><spring:message code="mess.login"/></h3>
                                 <c:url value="/user/signIn" var="signInFormUrl"/>
@@ -97,6 +114,17 @@
                                             <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
                                         </div>
                                     </div>
+                                            <c:if test="${sessionScope.numOfSiginFailed ge '4'}">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <input id="secCode" name="secCode" placeholder="<spring:message code="enter-chars-you-see" text="Please enter the characters you see"/>" class="form-control" value="" type="text">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <img style="cursor: pointer;" title="Click to Reload Image" id="captchaImg" alt="Captcha" src="<c:url value="/captcha"/>" />
+                                            <div class="has-error"><form:errors path="password" cssClass="help-block" element="div"/></div>
+                                        </div>
+                                    </div>
+                                        </c:if>
                                     <p>
                                         <a href="#"  data-toggle="modal" data-target="#myModal"><spring:message code="mess.forgot-pass"/>?</a>
                                     </p>
