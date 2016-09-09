@@ -37,7 +37,7 @@
                     $('#tdGiftMarginOnSelect').html(totalGiftMargin + '');
                     $('#tdOnSelectShipCharged').html(totalShipCharged + '')
                     $('#tdTotalSendOnSelect').html(totalSend + '');
-                    $('#tdOnSelectShipChargedVnd').html();
+                    $('#tdOnSelectShipChargedVnd').html(totalShipChargedVnd + '');
                     // input hidden
                     $('#onSelectVnd').val(totalVnd + '');
                     $('#onSelectUsd').val(totalUsd.toFixed(2) + '');
@@ -190,7 +190,7 @@
                                             </c:if>
                                         </c:forEach>
                                         <tr id="rowO${m.key.id}">
-                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalShipChargedVnd="${totalShipChargedVnd}" totalShipCharged="${totalShipCharged}" totalGiftMargin="${totalGiftMarginOfThisOrder}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
+                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalShipChargedVnd="<fmt:formatNumber value="${totalShipChargedVnd}" pattern="######.##"/>" totalShipCharged="${totalShipCharged}" totalGiftMargin="${totalGiftMarginOfThisOrder}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
@@ -253,7 +253,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Num of Record:</td>
+                            <td nowrap>No. of Record:</td>
                             <td style="text-align: right;" id="tdOnSelectCount"></td>
                             <td>Record(s)</td>
                             <td></td><td></td>
