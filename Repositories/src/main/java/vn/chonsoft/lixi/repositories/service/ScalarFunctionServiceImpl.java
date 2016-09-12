@@ -206,6 +206,24 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
     
     /**
      * 
+     * @param invoiceStatus
+     * @param sender
+     * @return 
+     */
+    @Override
+    public long countInvoiceOfSender(String invoiceStatus, Long sender){
+        String sql = "SELECT count(*) FROM lixi_invoices i WHERE i.invoice_status = ? and i.payer = ?";
+        
+        BigInteger rs = scalarDaoL.singleResult(sql, invoiceStatus, sender);
+        if(rs != null){
+            return rs.longValue();
+        }
+        else{
+            return 0;
+        }
+    }
+    /**
+     * 
      * @param invoiceStatus 
      * @param sender
      * @return 

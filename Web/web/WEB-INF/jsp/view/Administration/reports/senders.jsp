@@ -157,7 +157,7 @@
                                                 ${s.email}<br/>${s.phone}
                                             </td>
                                             <td><fmt:formatNumber value="${s.sumInvoice}" pattern="###,###.##"/> USD</td>
-                                            <td></td>
+                                            <td>${s.graders}</td>
                                             <td id="tdStatus${s.id}" nowrap>
                                                 <c:if test="${s.activated eq true}">
                                                     Active

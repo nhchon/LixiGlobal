@@ -207,9 +207,11 @@ public class SystemSenderController {
                    EnumLixiOrderStatus.CANCELED.getValue().equals(oStatus)){
                     
                     s.setSumInvoice(sfService.sumInvoiceByOrderStatus(oStatus, s.getId()));
+                    s.setGraders(sfService.countOrdersOfSender(oStatus, s.getId()));
                 }
                 else{
                     s.setSumInvoice(sfService.sumInvoiceOfSender(oStatus, s.getId()));
+                    s.setGraders(sfService.countInvoiceOfSender(oStatus, s.getId()));
                 }
             });
             

@@ -34,6 +34,7 @@ public interface ScalarFunctionService {
     
     /* sender's functions */
     long countOrdersOfSender(String oStatus, Long sender);
+    long countInvoiceOfSender(String invoiceStatus, Long sender);
     
     double sumInvoiceOfSender(String invoiceStatus, Long sender);
     

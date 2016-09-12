@@ -293,31 +293,25 @@ public class User implements Serializable {
 
     //@Transient
     //public double getSumGift() {
-        //return sumGift;
+    //return sumGift;
     //}
-
     //public void setSumGift(double sumGift) {
-        //this.sumGift = sumGift;
+    //this.sumGift = sumGift;
     //}
-
     //@Transient
     //public double getSumTopUp() {
-        //return sumTopUp;
+    //return sumTopUp;
     //}
-
     //public void setSumTopUp(double sumTopUp) {
-        //this.sumTopUp = sumTopUp;
+    //this.sumTopUp = sumTopUp;
     //}
-
     //@Transient
     //public Double getSumAll(){
-        
-        //return new Double(this.getSumGift() + this.getSumTopUp());
+    //return new Double(this.getSumGift() + this.getSumTopUp());
     //}
-    
+
     @Transient
-    public String getBeautyId(){
-        
+    public String getBeautyId() {
         return LiXiGlobalUtils.getBeautySId(id);
     }
     
