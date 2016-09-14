@@ -15,11 +15,12 @@ public class CheckStatusResult {
     private String status;
     private String receive_method;
     private String updated_on;
-
+    private String notes;
+    
     @Override
     public String toString(){
         
-        return "[" + order_id+", " + status + ", " + receive_method + ", " + message + ", " + updated_on + "]";
+        return "[" + order_id+", " + status + ", " + receive_method + ", " + message + ", " + updated_on + ", " + notes +"]";
     }
     
     public String getMessage() {
@@ -61,7 +62,13 @@ public class CheckStatusResult {
     public void setUpdated_on(String updated_on) {
         this.updated_on = updated_on;
     }
-    
-    
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
     
 }

@@ -409,7 +409,7 @@ public class LiXiUtils {
         model.put(LiXiConstants.REC_GIFTS, recGifts);
         Long recId = (Long)model.get(LiXiConstants.SELECTED_RECIPIENT_ID);
         double totalShippingCharge = 0;
-        long totalShippingChargeVnd = 0;
+        double totalShippingChargeVnd = 0;
         for(RecipientInOrder r : recGifts){
             if(recId != null && recId.longValue() == r.getRecipient().getId()){
                 SumVndUsd rTotal = r.getAllTotal();
