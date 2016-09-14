@@ -39,6 +39,19 @@ public abstract class LiXiGlobalUtils {
     private static final Logger log = LogManager.getLogger(LiXiGlobalUtils.class);
     
     /**
+     * round to hundred
+     * @param a
+     * @return 
+     */
+    public static long floor2Hundred(double a){
+        
+        double temp = Math.floor(a / 100.0) * 100.0;
+        
+        return (long)temp;
+    }
+    
+    
+    /**
      * 
      * @param html
      * @return 

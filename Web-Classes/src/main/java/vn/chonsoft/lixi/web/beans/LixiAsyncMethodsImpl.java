@@ -36,11 +36,13 @@ import vn.chonsoft.lixi.model.VtcResponseCode;
 import vn.chonsoft.lixi.model.VtcServiceCode;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiCashrun;
+import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.repositories.service.BuyCardResultService;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.DauSoService;
 import vn.chonsoft.lixi.repositories.service.LixiCashrunService;
+import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
@@ -105,6 +107,24 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
 
     @Autowired
     private LiXiVatGiaUtils lxVatGiaUtils;
+    
+    @Autowired
+    private LixiConfigService configService;
+    
+    /**
+     * 
+     * @return 
+     */
+    private double getBaoKimPercent(){
+        
+        LixiConfig baoKimPercentConfig = configService.findByName(LiXiGlobalConstants.LIXI_BAOKIM_TRANFER_PERCENT);
+        double baoKimPercent = 100.0;
+        try {
+            baoKimPercent = Double.parseDouble(baoKimPercentConfig.getValue());
+        } catch (Exception e) {}
+        
+        return baoKimPercent;
+    }
     
     @Override
     @Async
@@ -237,6 +257,12 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
      */
     @Override
     public boolean sendPaymentInfoToBaoKim(LixiOrder order){
+        
+        boolean rs = lxVatGiaUtils.sendPaymentInfoToBaoKim(order);
+        
+        if(rs){
+            lxVatGiaUtils.sendShippingFee(LiXiUtils.genMapRecGifts(order, getBaoKimPercent()));
+        }
         
         return lxVatGiaUtils.sendPaymentInfoToBaoKim(order);
     }

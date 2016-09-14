@@ -177,7 +177,7 @@
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber minFractionDigits="2" value="${rio.allTotal.usd + rio.shippingChargeAmount}" pattern="###,###.##"/> USD
                                                 <br/>
-                                                <fmt:formatNumber value="${rio.allTotal.vnd + (rio.shippingChargeAmount * order.lxExchangeRate.buy)}" pattern="###,###.##"/> VND
+                                                <fmt:formatNumber value="${rio.allTotal.vnd + (rio.shippingChargeAmountVnd)}" pattern="###,###.##"/> VND
                                             </td>
                                             <td colspan="3"></td>
                                         </tr>

@@ -34,6 +34,7 @@ import vn.chonsoft.lixi.repositories.service.CustomerProblemService;
 import vn.chonsoft.lixi.repositories.service.CustomerProblemStatusService;
 import vn.chonsoft.lixi.repositories.service.CustomerSubjectService;
 import vn.chonsoft.lixi.repositories.service.LixiContactService;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
@@ -229,7 +230,7 @@ public class CustomerSupportController {
                 c.setName(form.getName());
                 c.setPhone(form.getPhone());
                 c.setEmail(form.getEmail());
-                c.setMessage(form.getMessage());
+                c.setMessage(LiXiGlobalUtils.html2text(form.getMessage()));
                 c.setCreatedDate(Calendar.getInstance().getTime());
 
                 this.lcService.save(c);

@@ -315,7 +315,7 @@
                                                     <c:if test="${not empty rio.gifts}">
                                                         <c:set var="totalGiftMargin" value="${totalGiftMargin + rio.giftMargin}"/>
                                                         <fmt:formatNumber value="${rio.giftTotal.usd + rio.shippingChargeAmount}" pattern="###,###.##"/> USD<br/>
-                                                        <fmt:formatNumber value="${rio.giftTotal.vnd + (rio.shippingChargeAmount * m.key.lxExchangeRate.buy)}" pattern="###,###.##"/> VND<br/>
+                                                        <fmt:formatNumber value="${rio.giftTotal.vnd + (rio.shippingChargeAmountVnd)}" pattern="###,###.##"/> VND<br/>
                                                         <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
                                                         <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
                                                     </c:if>

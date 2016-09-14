@@ -186,7 +186,7 @@
                                                 <c:set var="totalAmountUsdOfThisOrder" value="${totalAmountUsdOfThisOrder + rio.giftTotal.usd}"/>
                                                 <c:set var="totalGiftMarginOfThisOrder" value="${totalGiftMarginOfThisOrder + rio.giftMargin}"/>
                                                 <c:set var="totalShipCharged" value="${totalShipCharged + rio.shippingChargeAmount}"/>
-                                                <c:set var="totalShipChargedVnd" value="${totalShipChargedVnd + (rio.shippingChargeAmount * m.key.lxExchangeRate.buy)}"/>
+                                                <c:set var="totalShipChargedVnd" value="${totalShipChargedVnd + rio.shippingChargeAmountVnd}"/>
                                             </c:if>
                                         </c:forEach>
                                         <tr id="rowO${m.key.id}">

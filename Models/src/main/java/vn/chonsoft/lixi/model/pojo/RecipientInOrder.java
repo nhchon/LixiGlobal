@@ -260,6 +260,17 @@ public class RecipientInOrder {
 
     /**
      * 
+     * floor to hundred
+     * 
+     * @return 
+     */
+    public long getShippingChargeAmountVnd() {
+        
+        return LiXiGlobalUtils.floor2Hundred(getShippingChargeAmount() * lxExchangeRate.getBuy());
+    }
+    
+    /**
+     * 
      * @return 
      */
     public String getBkStatus(){

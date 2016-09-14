@@ -20,7 +20,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
-import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -46,7 +45,9 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaCategory;
 import vn.chonsoft.lixi.model.pojo.ListVatGiaProduct;
 import vn.chonsoft.lixi.model.pojo.LixiCheckStatusResult;
+import vn.chonsoft.lixi.model.pojo.LixiSendShippingFeeResult;
 import vn.chonsoft.lixi.model.pojo.LixiSubmitOrderResult;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.VatGiaCategoryPj;
 import vn.chonsoft.lixi.model.pojo.VatGiaProductPj;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
@@ -63,6 +64,8 @@ import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 @Service
 public class LiXiVatGiaUtils {
 
+    public static final String SUBJECT = "Bao Kim System Error";
+    
     private static final Logger log = LogManager.getLogger(LiXiVatGiaUtils.class);
 
     private Properties baokimProp = null;
@@ -202,7 +205,7 @@ public class LiXiVatGiaUtils {
         }
     }
     
-    private void emailBaoKimSystemError(String error){
+    private void emailBaoKimSystemError(String subject, String error){
         
         String[] administratorEmails = checkAndAssignDefaultEmail();
         
@@ -218,7 +221,7 @@ public class LiXiVatGiaUtils {
                 message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
                 message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
                 message.setFrom("support@lixi.global");
-                message.setSubject("LiXi.Global - Bao Kim System Error");
+                message.setSubject("LiXi.Global - " + subject); // Bao Kim System Error
                 message.setSentDate(Calendar.getInstance().getTime());
 
                 Map model = new HashMap();
@@ -260,7 +263,7 @@ public class LiXiVatGiaUtils {
 
             log.info(e.getMessage(), e);
             
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+            emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
 
         return null;
@@ -297,7 +300,7 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+            emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
 
         }
 
@@ -338,7 +341,73 @@ public class LiXiVatGiaUtils {
 
         return setting;
     }
+    
+    /**
+     * 
+     * @param recs 
+     */
+    public void sendShippingFee(List<RecipientInOrder> recs){
+        
+        // check properties is null
+        if (baokimProp == null) {
+            return;
+        }
+        if (recs == null) {
+            return;
+        }
+        
+        try {
 
+            final AuthHttpComponentsClientHttpRequestFactory requestFactory
+                    = new AuthHttpComponentsClientHttpRequestFactory(
+                            HttpClients.createDefault(), HttpHost.create(baokimProp.getProperty("baokim.host")), baokimProp.getProperty("baokim.username"), baokimProp.getProperty("baokim.password"));
+
+            final RestTemplate restTemplate = new RestTemplate(requestFactory);
+
+            String baoKimShippingFeeUrl = baokimProp.getProperty("baokim.send_shipping_fee");
+            for (RecipientInOrder r : recs) {
+
+                try {
+                    
+                    if(r.getGifts() != null && !r.getGifts().isEmpty()){
+                        /**
+                         *
+                         * Setting up data to be sent to REST service
+                         *
+                         */
+                        MultiValueMap<String, String> vars = new LinkedMultiValueMap<>();
+                        vars.add("lixi_order_id", r.getOrderId().toString());
+                        vars.add("receiver_email", r.getRecipient().getEmail());
+                        vars.add("shipping_fee", r.getShippingChargeAmountVnd()+"");
+                        //
+                        log.info("///////////////////////////////////////////////////");
+                        log.info("lixi_order_id: " + r.getOrderId().toString());
+                        log.info("receiver_email:" + r.getRecipient().getEmail());
+                        log.info("shipping_fee:" + r.getShippingChargeAmountVnd()+"");
+                        log.info("///////////////////////////////////////////////////");
+
+                        LixiSendShippingFeeResult result = restTemplate.postForObject(baoKimShippingFeeUrl, vars, LixiSendShippingFeeResult.class);
+
+                        log.info("////////////////////////////////////////////////////");
+                        log.info("//// SEND SHIPPING FEE RESULT ");
+                        log.info("error_code:" + result.getData().getError_code());
+                        log.info("bk message:" + result.getData().getMessage());
+                        log.info("lixi order id:" + result.getData().getLixi_order_id());
+                        log.info("///////////////////////////////////////////////////");
+                    }
+                } catch (Exception e) {
+                    // log error
+                    log.info(e.getMessage(), e);
+                    emailBaoKimSystemError("SUBMIT SHIPPING FEE FAILED", ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+                }
+            }
+        } catch (Exception e) {
+
+            log.info(e.getMessage(), e);
+            emailBaoKimSystemError("SUBMIT SHIPPING FEE FAILED", ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+        }
+    }
+    
     /**
      *
      * @param order
@@ -355,6 +424,7 @@ public class LiXiVatGiaUtils {
         if (order.getGifts() == null || order.getGifts().isEmpty()) {
             return;
         }
+        
         //
         try {
 
@@ -412,6 +482,7 @@ public class LiXiVatGiaUtils {
                         log.info("receiver_adress: INPUT_BY_BAOKIM");
                         log.info("message:" + gift.getRecipient().getNote());
                         log.info("method_receive:" + methodReceive);
+                        //log.info("shipping_fee" + vndShip+"");
                         log.info("///////////////////////////////////////////////////");
 
                         LixiSubmitOrderResult result = restTemplate.postForObject(submitUrl, vars, LixiSubmitOrderResult.class);
@@ -438,7 +509,7 @@ public class LiXiVatGiaUtils {
 
                     // log error
                     log.info(e.getMessage(), e);
-                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+                    emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
                 }
             }
 
@@ -458,7 +529,7 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+            emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
 
     }
@@ -552,14 +623,14 @@ public class LiXiVatGiaUtils {
 
                     // log error
                     log.info(e.getMessage(), e);
-                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+                    emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
                 }
             }
 
         } catch (Exception e) {
             updateOrderStatus = false;
             log.info(e.getMessage(), e);
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+            emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
         
         return updateOrderStatus;
@@ -631,7 +702,7 @@ public class LiXiVatGiaUtils {
                     // log error
                     log.info(e.getMessage(), e);
                     //log.debug(e.getMessage(), e);
-                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+                    emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
                 }
             }
 
@@ -649,7 +720,7 @@ public class LiXiVatGiaUtils {
 
             log.info(e.getMessage(), e);
             //log.debug(e.getMessage(), e);
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+            emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
         
         return updateOrderStatus;
@@ -682,16 +753,10 @@ public class LiXiVatGiaUtils {
             final RestTemplate restTemplate = new RestTemplate(requestFactory);
 
             String submitUrl = baokimProp.getProperty("baokim.single_payment_notification");
+            int setting = order.getSetting();
             SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            LixiConfig baoKimPercentConfig = configService.findByName(LiXiGlobalConstants.LIXI_BAOKIM_TRANFER_PERCENT);
-            int setting = order.getSetting();
-            double baoKimPercent = 100.0;
-            try {
-                baoKimPercent = Double.parseDouble(baoKimPercentConfig.getValue());
-            } catch (Exception e) {}
-            
-            
+            double baoKimPercent = getBaoKimPercent();
             for (LixiOrderGift gift : order.getGifts()) {
 
                 try {
@@ -756,7 +821,7 @@ public class LiXiVatGiaUtils {
 
                     // log error
                     log.info(e.getMessage(), e);
-                    emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+                    emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
                 }
             }
 
@@ -780,7 +845,7 @@ public class LiXiVatGiaUtils {
         } catch (Exception e) {
 
             log.info(e.getMessage(), e);
-            emailBaoKimSystemError(ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
+            emailBaoKimSystemError(SUBJECT, ExceptionUtils.getStackTrace(e).replaceAll("(\r\n|\n)", "<br />"));
         }
         
         return updateOrderStatus;
@@ -886,5 +951,20 @@ public class LiXiVatGiaUtils {
         }
         
         return true;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    private double getBaoKimPercent(){
+        
+        LixiConfig baoKimPercentConfig = configService.findByName(LiXiGlobalConstants.LIXI_BAOKIM_TRANFER_PERCENT);
+        double baoKimPercent = 100.0;
+        try {
+            baoKimPercent = Double.parseDouble(baoKimPercentConfig.getValue());
+        } catch (Exception e) {}
+        
+        return baoKimPercent;
     }
 }

@@ -516,7 +516,7 @@ public class LixiOrdersController {
             
             for (LixiOrder order : orders) {
                 // send to bao kim
-                boolean rs = true;//lxAsyncMethods.sendPaymentInfoToBaoKim(order);
+                boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
                 if (rs) {
                     /* lưu id */
                     LixiBatchOrder bo = new LixiBatchOrder();
