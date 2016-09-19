@@ -234,7 +234,7 @@
                                     <td id="status${m.key.id}"  style="text-align: center;">
                                         <c:if test="${m.key.lixiStatus eq PROCESSED}">
                                             Processed<br/>
-                                            <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                            <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
                                             <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
                                         </c:if>
                                         <c:if test="${m.key.lixiStatus eq COMPLETED}">

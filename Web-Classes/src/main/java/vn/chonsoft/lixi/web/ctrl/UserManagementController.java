@@ -701,13 +701,13 @@ public class UserManagementController {
             
             // billing address
             BillingAddress bl = new BillingAddress();
-            bl.setFirstName(form.getFirstName());
-            bl.setLastName(form.getLastName());
-            bl.setAddress(form.getAddress());
-            bl.setCity(form.getCity());
-            bl.setState(form.getState());
-            bl.setZipCode(form.getZipCode());
-            bl.setCountry(form.getCountry());
+            bl.setFirstName(LiXiGlobalUtils.html2text(form.getFirstName()));
+            bl.setLastName(LiXiGlobalUtils.html2text(form.getLastName()));
+            bl.setAddress(LiXiGlobalUtils.html2text(form.getAddress()));
+            bl.setCity(LiXiGlobalUtils.html2text(form.getCity()));
+            bl.setState(LiXiGlobalUtils.html2text(form.getState()));
+            bl.setZipCode(LiXiGlobalUtils.html2text(form.getZipCode()));
+            bl.setCountry(LiXiGlobalUtils.html2text(form.getCountry()));
             bl.setUser(u);
             
             bl = this.baService.save(bl);
@@ -716,12 +716,12 @@ public class UserManagementController {
             UserCard uc = new UserCard();
             uc.setUser(u);
             uc.setCardType(form.getCardType());
-            uc.setCardName(form.getCardName());
+            uc.setCardName(LiXiGlobalUtils.html2text(form.getCardName()));
             uc.setBillingAddress(bl);
             uc.setModifiedDate(Calendar.getInstance().getTime());
             uc.setCardBin(StringUtils.left(form.getCardNumber(), 6));
             // pass real information to authorize.net
-            uc.setCardNumber(form.getCardNumber());
+            uc.setCardNumber(LiXiGlobalUtils.html2text(form.getCardNumber()));
             uc.setExpMonth(form.getExpMonth());
             uc.setExpYear(form.getExpYear());
             uc.setCardCvv(form.getCvv());

@@ -165,8 +165,8 @@ public class UserGeneralController {
         u.setLastName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getLastName()), null));
         u.setEmail(form.getEmail());
         u.setPassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()));
-        u.setDialCode(form.getDialCode());
-        u.setPhone(form.getPhone());
+        u.setDialCode(LiXiGlobalUtils.html2text(form.getDialCode()));
+        u.setPhone(LiXiGlobalUtils.html2text(form.getPhone()));
         u.setAccountNonExpired(true);
         u.setAccountNonLocked(true);
         u.setCredentialsNonExpired(true);
@@ -1034,12 +1034,12 @@ public class UserGeneralController {
         String inUseEmail = (String) request.getSession().getAttribute(LiXiConstants.LIXI_IN_USE_EMAIL);
 
         User u = new User();
-        u.setFirstName(form.getFirstName());
-        u.setMiddleName(form.getMiddleName());
-        u.setLastName(form.getLastName());
+        u.setFirstName(LiXiGlobalUtils.html2text(form.getFirstName()));
+        u.setMiddleName(LiXiGlobalUtils.html2text(form.getMiddleName()));
+        u.setLastName(LiXiGlobalUtils.html2text(form.getLastName()));
         u.setEmail(inUseEmail);
         u.setPassword(BCrypt.hashpw(form.getPassword(), BCrypt.gensalt()));
-        u.setPhone(form.getPhone());
+        u.setPhone(LiXiGlobalUtils.html2text(form.getPhone()));
         u.setAccountNonExpired(true);
         u.setAccountNonLocked(true);
         u.setCredentialsNonExpired(true);

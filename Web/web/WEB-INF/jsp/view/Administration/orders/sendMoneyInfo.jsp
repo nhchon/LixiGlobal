@@ -5,7 +5,6 @@
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
-            
             jQuery(document).ready(function () {
                 
                 $('input[name=oIds]').change(function(){
@@ -24,26 +23,28 @@
                            //alert($(this).attr('totalAmountVnd'));
                            count++;
                            totalVnd = totalVnd + parseFloat($(this).attr('totalAmountVnd'));
+                           //alert(parseFloat($(this).attr('totalAmountUsd')))
                            totalUsd = totalUsd + parseFloat($(this).attr('totalAmountUsd'));
                            totalGiftMargin = totalGiftMargin + parseFloat($(this).attr('totalGiftMargin'));
                            totalShipCharged = totalShipCharged + parseFloat($(this).attr('totalShipCharged'));
                            totalShipChargedVnd = totalShipChargedVnd + parseFloat($(this).attr('totalShipChargedVnd'));
-                           totalSend = totalVnd - totalGiftMargin;
+                           totalSend = totalSend + parseFloat($(this).attr('totalSentToBaoKim')); //totalVnd - totalGiftMargin + totalShipChargedVnd;
                        }
                     });
-                    $('#tdOnSelectCount').html(count + '');
-                    $('#tdOnSelectVnd').html(totalVnd + '');
-                    $('#tdOnSelectUsd').html(totalUsd.toFixed(2) + '');
-                    $('#tdGiftMarginOnSelect').html(totalGiftMargin + '');
-                    $('#tdOnSelectShipCharged').html(totalShipCharged + '')
-                    $('#tdTotalSendOnSelect').html(totalSend + '');
-                    $('#tdOnSelectShipChargedVnd').html(totalShipChargedVnd + '');
+                    $('#tdOnSelectCount').html($.number(count) + '');
+                    $('#tdOnSelectVnd').html($.number(totalVnd) + '');
+                    //alert($.number(totalUsd))
+                    $('#tdOnSelectUsd').html($.number(totalUsd, 2) + '');
+                    $('#tdGiftMarginOnSelect').html($.number(totalGiftMargin) + '');
+                    $('#tdOnSelectShipCharged').html($.number(totalShipCharged) + '')
+                    $('#tdOnSelectShipChargedVnd').html($.number(totalShipChargedVnd) + '');
+                    $('#tdTotalSendOnSelect').html($.number(totalSend + totalShipChargedVnd) + '');
                     // input hidden
-                    $('#onSelectVnd').val(totalVnd + '');
-                    $('#onSelectUsd').val(totalUsd.toFixed(2) + '');
-                    $('#onSelectMargin').val(totalGiftMargin + '');
-                    $('#onSelectShipCharged').val(totalShipCharged + '');
-                    $('#onSelectTotalSend').val(totalSend + '');
+                    //$('#onSelectVnd').val(totalVnd + '');
+                    //$('#onSelectUsd').val(totalUsd + '');
+                    //$('#onSelectMargin').val(totalGiftMargin + '');
+                    //$('#onSelectShipCharged').val(totalShipCharged + '');
+                    //$('#onSelectTotalSend').val(totalSend + '');
                 });
                 
             });
@@ -115,6 +116,7 @@
                 $("#btnSubmit").html('... Please wait !');
             }
         </script>    
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.number.min.js"/>"></script>
     </jsp:attribute>
     <jsp:body>
         <%-- EnumLixiOrderStatus.java --%>
@@ -180,6 +182,7 @@
                                         <c:set var="totalGiftMarginOfThisOrder" value="0"/>
                                         <c:set var="totalShipCharged" value="0"/>
                                         <c:set var="totalShipChargedVnd" value="0"/>
+                                        <c:set var="totalSentToBaoKim" value="0"/>
                                         <c:forEach items="${m.value}" var="rio">
                                             <c:if test="${not empty rio.gifts}">
                                                 <c:set var="totalAmountVndOfThisOrder" value="${totalAmountVndOfThisOrder + rio.giftTotal.vnd}"/>
@@ -187,10 +190,11 @@
                                                 <c:set var="totalGiftMarginOfThisOrder" value="${totalGiftMarginOfThisOrder + rio.giftMargin}"/>
                                                 <c:set var="totalShipCharged" value="${totalShipCharged + rio.shippingChargeAmount}"/>
                                                 <c:set var="totalShipChargedVnd" value="${totalShipChargedVnd + rio.shippingChargeAmountVnd}"/>
+                                                <c:set var="totalSentToBaoKim" value="${totalSentToBaoKim + rio.sentToBaoKim.vnd}"/>
                                             </c:if>
                                         </c:forEach>
                                         <tr id="rowO${m.key.id}">
-                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalShipChargedVnd="<fmt:formatNumber value="${totalShipChargedVnd}" pattern="######.##"/>" totalShipCharged="${totalShipCharged}" totalGiftMargin="${totalGiftMarginOfThisOrder}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
+                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalSentToBaoKim="${totalSentToBaoKim}" totalShipChargedVnd="<fmt:formatNumber value="${totalShipChargedVnd}" pattern="######.##"/>" totalShipCharged="${totalShipCharged}" totalGiftMargin="${totalGiftMarginOfThisOrder}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
@@ -281,8 +285,9 @@
                         <tr>
                             <td>Total Send</td>
                             <td style="text-align: right;" id="tdTotalSendOnSelect"></td>
-                            <td>VND<input type="hidden" id="onSelectTotalSend" name="onSelectTotalSend" value="0"/></td>
-                            <td></td><td></td>
+                            <td>VND</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -329,7 +334,7 @@
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4" style="text-align: center;">
-                <button id="btnSubmit" class="btn btn-primary" type="submit">Sent Selected Orders</button>
+                <button id="btnSubmit" class="btn btn-primary" type="submit">Send Selected Orders</button>
             </div>
             <div class="col-md-4"></div>
         </div>

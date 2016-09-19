@@ -61,7 +61,7 @@
                                                         <td>
                                                             <c:if test="${pO.lixiStatus eq PROCESSED}">
                                                                 Processed<br/>
-                                                                <c:if test="${pO.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                                                <c:if test="${pO.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
                                                                 <c:if test="${pO.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
                                                             </c:if>
                                                             <c:if test="${pO.lixiStatus eq COMPLETED}">

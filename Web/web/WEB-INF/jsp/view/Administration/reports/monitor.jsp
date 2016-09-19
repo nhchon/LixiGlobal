@@ -245,7 +245,7 @@
                                                     <c:choose>
                                                         <c:when test="${m.key.lixiStatus eq PROCESSING}">
                                                             Processing<br/>
-                                                            <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                                            <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
                                                             <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
                                                         </c:when>
                                                         <c:when test="${m.key.lixiStatus eq COMPLETED}">

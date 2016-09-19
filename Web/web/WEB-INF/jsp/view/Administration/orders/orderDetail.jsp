@@ -52,7 +52,7 @@
                                 <td style="text-align: center;">
                                     <c:if test="${order.lixiStatus eq PROCESSING}">
                                         Processing<br/>
-                                        <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                        <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
                                         <c:if test="${order.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
                                     </c:if>
                                     <c:if test="${order.lixiStatus eq COMPLETED}">

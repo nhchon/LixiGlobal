@@ -116,7 +116,7 @@
                                 1 USD = <fmt:formatNumber value="${batch.vcbBuyUsd}" pattern="###,###.##"/> VND
                             </td>
                             <td style="text-align:right;">
-                                <fmt:formatNumber value="${batch.sumVnd}" pattern="###,###.##"/> VND<br/>
+                                <fmt:formatNumber value="${batch.sumVnd + batch.vndShip}" pattern="###,###.##"/> VND<br/>
                                 <fmt:formatNumber value="${batch.sumUsd}" pattern="###,###.##"/> USD
                             </td>
                             <td  style="text-align:right;">
@@ -144,11 +144,11 @@
                             <td>
                                 <strong>Number of orders</strong>
                             </td>
-                            <td>$<fmt:formatNumber value="${batch.numOfOrder}" pattern="###,###.##"/></td>
+                            <td><fmt:formatNumber value="${batch.numOfOrder}" pattern="###,###.##"/></td>
                         </tr>
                         <tr>
                             <td>
-                                <strong>Sender of paid</strong>
+                                <strong>Sender paid</strong>
                             </td>
                             <td>$<fmt:formatNumber value="${batch.senderPaid}" pattern="###,###.##"/></td>
                         </tr>
@@ -158,15 +158,17 @@
                             </td>
                             <td>$<fmt:formatNumber value="${batch.costOfGood}" pattern="###,###.##"/></td>
                         </tr>
+                        <c:set var="commission" value="${batch.senderPaid - batch.costOfGood}"/>
+                        <!--
                         <tr>
                             <td>
                                 <strong>Commission</strong>
                             </td>
                             <td>
-                                <c:set var="commission" value="${batch.senderPaid - batch.costOfGood}"/>
                                 $<fmt:formatNumber value="${commission}" pattern="###,###.##"/>
                             </td>
                         </tr>
+                        -->
                         <tr>
                             <td>
                                 <strong>Credit card fee(~2.5%)</strong>
@@ -285,7 +287,7 @@
                                                 <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
                                                 <c:if test="${m.key.lixiStatus eq PROCESSED}">
                                                     Processed<br/>
-                                                    <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money Info)</c:if>
+                                                    <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
                                                     <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
                                                 </c:if>
                                                 <c:if test="${m.key.lixiStatus eq COMPLETED}">
