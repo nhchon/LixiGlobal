@@ -130,6 +130,7 @@
                                         <div class="col-md-1" style="text-align:center;">
                                             <div style="font-size:16px;text-transform: uppercase;"><spring:message code="mess.order"/></div>
                                             <div style="font-size:14px;padding-top: 8px;">
+                                                <%--
                                                 <c:if test="${m.key.lixiStatus eq PROCESSING}">
                                                     Processing<br/>
                                                 </c:if>
@@ -139,6 +140,35 @@
                                                 <c:if test="${m.key.lixiStatus eq CANCELED}">
                                                     Cancelled
                                                 </c:if>
+                                                --%>
+                                                <c:choose>
+                                                    <c:when test="${m.key.lixiStatus eq PROCESSING}">
+                                                        Processing<br/>
+                                                        <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
+                                                        <c:if test="${order.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq COMPLETED}">
+                                                        Completed
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq CANCELED}">
+                                                        Cancelled
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq PURCHASED}">
+                                                        Purchased
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq DELIVERED}">
+                                                        Delivered
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq UNDELIVERABLE}">
+                                                        Undeliverable
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq REFUNDED}">
+                                                        Refunded
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${m.key.lixiStatus}
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </div>
                                         <div class="col-md-2" style="text-align:center;">

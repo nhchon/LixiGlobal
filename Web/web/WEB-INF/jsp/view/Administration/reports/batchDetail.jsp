@@ -285,6 +285,7 @@
                                             </td>
                                             <td style="text-align: center;">
                                                 <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
+                                                    <%--
                                                 <c:if test="${m.key.lixiStatus eq PROCESSED}">
                                                     Processed<br/>
                                                     <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
@@ -296,6 +297,36 @@
                                                 <c:if test="${m.key.lixiStatus eq CANCELED}">
                                                     Cancelled
                                                 </c:if>
+                                                    --%>
+                                                <c:choose>
+                                                    <c:when test="${m.key.lixiStatus eq PROCESSING}">
+                                                        Processing<br/>
+                                                        <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
+                                                        <c:if test="${order.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq COMPLETED}">
+                                                        Completed
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq CANCELED}">
+                                                        Cancelled
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq PURCHASED}">
+                                                        Purchased
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq DELIVERED}">
+                                                        Delivered
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq UNDELIVERABLE}">
+                                                        Undeliverable
+                                                    </c:when>
+                                                    <c:when test="${m.key.lixiStatus eq REFUNDED}">
+                                                        Refunded
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${m.key.lixiStatus}
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                    
                                                 </a>
                                                 <%@include  file="/WEB-INF/jsp/view/Administration/reports/detailStatusOrder.jsp" %>
                                             </td>

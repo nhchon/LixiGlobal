@@ -50,17 +50,34 @@
                                 </td>
                                 <td><a target="_blank" href='<c:url value="/Administration/SystemSender/detail/${order.sender.id}"/>'>${order.sender.fullName}</a></td>
                                 <td style="text-align: center;">
-                                    <c:if test="${order.lixiStatus eq PROCESSING}">
-                                        Processing<br/>
-                                        <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
-                                        <c:if test="${order.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
-                                    </c:if>
-                                    <c:if test="${order.lixiStatus eq COMPLETED}">
-                                        Completed
-                                    </c:if>
-                                    <c:if test="${order.lixiStatus eq CANCELED}">
-                                        Cancelled
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${order.lixiStatus eq PROCESSING}">
+                                            Processing<br/>
+                                            <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
+                                            <c:if test="${order.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
+                                        </c:when>
+                                        <c:when test="${order.lixiStatus eq COMPLETED}">
+                                            Completed
+                                        </c:when>
+                                        <c:when test="${order.lixiStatus eq CANCELED}">
+                                            Cancelled
+                                        </c:when>
+                                        <c:when test="${order.lixiStatus eq PURCHASED}">
+                                            Purchased
+                                        </c:when>
+                                        <c:when test="${order.lixiStatus eq DELIVERED}">
+                                            Delivered
+                                        </c:when>
+                                        <c:when test="${order.lixiStatus eq UNDELIVERABLE}">
+                                            Undeliverable
+                                        </c:when>
+                                        <c:when test="${order.lixiStatus eq REFUNDED}">
+                                            Refunded
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${order.lixiStatus}
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                             </tr>
                         </tbody>
