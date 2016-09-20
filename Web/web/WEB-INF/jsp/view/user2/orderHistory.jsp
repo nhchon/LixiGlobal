@@ -79,7 +79,7 @@
                                 <div class="panel-heading">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <div style="font-size:16px;">
+                                            <div style="font-size:15px;">
                                                 <b><spring:message code="mess.order-number"/>:</b> ${m.key.invoice.invoiceCode}
                                             </div>
                                             <div style="font-size:14px;padding-top: 8px;">
@@ -101,13 +101,13 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2" style="text-align:center;">
-                                            <div style="font-size:16px;"><spring:message code="mess.order-date"/></div>
+                                            <div style="font-size:15px;"><spring:message code="mess.order-date"/></div>
                                             <div style="font-size:14px;padding-top: 8px;">
                                                 <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>
                                             </div>
                                         </div>
                                         <div class="col-md-2" style="text-align:center;">
-                                            <div style="font-size:16px;"><spring:message code="mess.status"/></div>
+                                            <div style="font-size:15px;"><spring:message code="mess.status"/></div>
                                             <div style="font-size:14px;padding-top: 8px;">
                                                 ${m.key.invoice.translatedStatus}
                                                 <c:set var="lastCheck" value="Last check: "/>
@@ -128,42 +128,31 @@
                                             </div>
                                         </div>
                                         <div class="col-md-1" style="text-align:center;">
-                                            <div style="font-size:16px;text-transform: uppercase;"><spring:message code="mess.order"/></div>
+                                            <div style="font-size:15px;text-transform: uppercase;"><spring:message code="mess.o-d"/></div>
                                             <div style="font-size:14px;padding-top: 8px;">
-                                                <%--
-                                                <c:if test="${m.key.lixiStatus eq PROCESSING}">
-                                                    Processing<br/>
-                                                </c:if>
-                                                <c:if test="${m.key.lixiStatus eq COMPLETED}">
-                                                    Completed
-                                                </c:if>
-                                                <c:if test="${m.key.lixiStatus eq CANCELED}">
-                                                    Cancelled
-                                                </c:if>
-                                                --%>
                                                 <c:choose>
                                                     <c:when test="${m.key.lixiStatus eq PROCESSING}">
-                                                        Processing<br/>
+                                                        <spring:message code="o-processing" text="Processing"/><br/>
                                                         <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
                                                         <c:if test="${order.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
                                                     </c:when>
                                                     <c:when test="${m.key.lixiStatus eq COMPLETED}">
-                                                        Completed
+                                                        <spring:message code="o-completed" text="Completed"/>
                                                     </c:when>
                                                     <c:when test="${m.key.lixiStatus eq CANCELED}">
-                                                        Cancelled
+                                                        <spring:message code="o-cancelled" text="Cancelled"/>
                                                     </c:when>
                                                     <c:when test="${m.key.lixiStatus eq PURCHASED}">
-                                                        Purchased
+                                                        <spring:message code="o-purchased" text="Purchased"/>
                                                     </c:when>
                                                     <c:when test="${m.key.lixiStatus eq DELIVERED}">
-                                                        Delivered
+                                                        <spring:message code="o-delivered" text="Delivered"/>
                                                     </c:when>
                                                     <c:when test="${m.key.lixiStatus eq UNDELIVERABLE}">
-                                                        Undeliverable
+                                                        <spring:message code="o-undelivered" text="Undeliverable"/>
                                                     </c:when>
                                                     <c:when test="${m.key.lixiStatus eq REFUNDED}">
-                                                        Refunded
+                                                        <spring:message code="o-refuned" text="Refunded"/>
                                                     </c:when>
                                                     <c:otherwise>
                                                         ${m.key.lixiStatus}
@@ -172,7 +161,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2" style="text-align:center;">
-                                            <div style="font-size:16px;">TOTAL</div>
+                                            <div style="font-size:15px;text-transform: uppercase;"><spring:message code="total" text="Total"/></div>
                                             <div style="font-size:14px;padding-top: 8px;">
                                                 <c:if test="${empty m.key.invoice}">
                                                     --
@@ -184,7 +173,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2" style="text-align: center;">
-                                            <div style="font-size:16px;">SETTING <span class="pull-right"><a href="javascript:toogleDetail(${m.key.id})"><i id="iconDetail${m.key.id}" class="fa fa-caret-down"></i></a></span></div>
+                                            <div style="font-size:15px;text-transform: uppercase;"><spring:message code="setting" text="Setting"/> <span class="pull-right"><a href="javascript:toogleDetail(${m.key.id})"><i id="iconDetail${m.key.id}" class="fa fa-caret-down"></i></a></span></div>
                                             <div style="font-size:14px;padding-top: 8px;">
                                                 <c:if test="${m.key.setting eq 0}">
                                                     <spring:message code="gift.gift_only" text="Gift Only"/>

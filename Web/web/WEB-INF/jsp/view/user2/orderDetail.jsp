@@ -48,7 +48,7 @@
                     <h2 class="title"><spring:message code="mess.order-detail"/></h2>
                     <div class="row" style="font-size: 16px;margin-bottom: 10px;">
                         <div class="col-md-3" style="">
-                            <spring:message code="mess.ordered-on"/> &nbsp;<fmt:formatDate pattern="MMMM dd yyyy" value="${LIXI_ORDER.modifiedDate}"/>
+                            <spring:message code="mess.ordered-on"/>: &nbsp;<fmt:formatDate pattern="MMMM dd yyyy" value="${LIXI_ORDER.modifiedDate}"/>
                         </div>
                         <div class="col-md-3" style="">
                             <spring:message code="mess.order"/> # <c:if test="${not empty LIXI_ORDER.invoice}"><b>${LIXI_ORDER.invoice.invoiceCode}</b></c:if>
@@ -107,7 +107,7 @@
                                             <tr>
                                                 <td><spring:message code="shipping-charge"/></td>
                                                 <td style="text-align: right;">
-                                                    USD <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${TOTAL_SHIPPING_CHARGED}" pattern="###,###.##"/>
+                                                    <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${TOTAL_SHIPPING_CHARGED}" pattern="###,###.##"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -194,7 +194,34 @@
                                             </c:choose>
                                         </div>
                                         
-                                        <div class="col-md-1" style="padding-top:40px; text-align: center;">
+                                        <div class="col-md-2" style="padding-top:40px; text-align: center;">
+                                            <c:choose>
+                                                <c:when test="${g.bkStatus eq PROCESSING}">
+                                                    <span class="alert-danger"><spring:message code="o-processing" text="Processing"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq COMPLETED}">
+                                                    <span class="alert-success"><spring:message code="o-completed" text="Completed"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq CANCELED}">
+                                                    <span class="alert-warning"><spring:message code="o-cancelled" text="Cancelled"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq PURCHASED}">
+                                                    <span class="alert-warning"><spring:message code="o-purchased" text="Purchased"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq DELIVERED}">
+                                                    <span class="alert-warning"><spring:message code="o-delivered" text="Delivered"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq UNDELIVERABLE}">
+                                                    <span class="alert-warning"><spring:message code="o-undelivered" text="Undeliverable"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq REFUNDED}">
+                                                    <span class="alert-warning"><spring:message code="o-refuned" text="Refunded"/></span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="alert-warning">${g.bkStatus}</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                                        <%--
                                             <c:choose>
                                                 <c:when test="${g.bkStatus eq '0'}">
                                                     <span class="alert-danger">Processing</span>
@@ -209,6 +236,8 @@
                                                     ${g.bkStatus}
                                                 </c:otherwise>
                                             </c:choose>
+                                                        --%>
+                                                        <br/>
                                             <c:choose>
                                                 <c:when test="${fn:startsWith(g.bkUpdated, '0000')}">
                                                 </c:when>
@@ -218,7 +247,7 @@
                                             </c:choose>                                        
                                         </div>
                                         
-                                        <div class="col-md-3" style="padding-top:40px;text-align: right;">
+                                        <div class="col-md-2" style="padding-top:40px;text-align: right;font-size:14px;padding-left: 5px;">
                                             USD <fmt:formatNumber value="${g.usdPrice}" pattern="###,###.##"/> - VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/>
                                         </div>
                                     </div>

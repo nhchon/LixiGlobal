@@ -142,6 +142,33 @@
                                                     </c:choose>        
                                                 </td>
                                                 <td style="text-align:right;">
+                                            <c:choose>
+                                                <c:when test="${g.bkStatus eq PROCESSING}">
+                                                    <span class="alert-danger"><spring:message code="o-processing" text="Processing"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq COMPLETED}">
+                                                    <span class="alert-success"><spring:message code="o-completed" text="Completed"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq CANCELED}">
+                                                    <span class="alert-warning"><spring:message code="o-cancelled" text="Cancelled"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq PURCHASED}">
+                                                    <span class="alert-warning"><spring:message code="o-purchased" text="Purchased"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq DELIVERED}">
+                                                    <span class="alert-warning"><spring:message code="o-delivered" text="Delivered"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq UNDELIVERABLE}">
+                                                    <span class="alert-warning"><spring:message code="o-undelivered" text="Undeliverable"/></span>
+                                                </c:when>
+                                                <c:when test="${g.bkStatus eq REFUNDED}">
+                                                    <span class="alert-warning"><spring:message code="o-refuned" text="Refunded"/></span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="alert-warning">${g.bkStatus}</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                                    <%--
                                                     <c:choose>
                                                         <c:when test="${g.bkStatus eq '0'}">
                                                             <span class="alert-danger">Processing</span>
@@ -156,6 +183,7 @@
                                                             <span class="alert-danger">${g.bkStatus}</span>
                                                         </c:otherwise>
                                                     </c:choose>
+                                                    --%>
                                                     <br/>
                                                     <br/>
                                                 </td>
