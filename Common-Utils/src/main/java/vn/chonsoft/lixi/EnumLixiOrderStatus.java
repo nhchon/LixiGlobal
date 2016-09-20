@@ -16,7 +16,11 @@ public enum EnumLixiOrderStatus {
     /* BaoKim status */
     PROCESSING("0"), // send order info success
     COMPLETED("1"),
-    CANCELED("2")
+    CANCELED("2"),
+    PURCHASED("5"),
+    DELIVERED("7"),
+    UNDELIVERABLE("9"),
+    REFUNDED("11")
     ;
     
     /* gift status with baokim */

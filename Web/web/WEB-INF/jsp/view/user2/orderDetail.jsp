@@ -105,6 +105,12 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <td><spring:message code="shipping-charge"/></td>
+                                                <td style="text-align: right;">
+                                                    USD <fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${TOTAL_SHIPPING_CHARGED}" pattern="###,###.##"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td><spring:message code="mess.card-process-fee"/></td>
                                                 <td style="text-align: right;"><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${CARD_PROCESSING_FEE_THIRD_PARTY}" pattern="###,###.##"/></td>
                                             </tr>

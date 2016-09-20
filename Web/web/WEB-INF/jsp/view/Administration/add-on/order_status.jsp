@@ -5,6 +5,10 @@
 <c:set var="PROCESSING" value="0"/>
 <c:set var="COMPLETED" value="1"/>
 <c:set var="CANCELED" value="2"/>
+<c:set var="PURCHASED" value="5"/>
+<c:set var="DELIVERED" value="7"/>
+<c:set var="UNDELIVERABLE" value="9"/>
+<c:set var="REFUNDED" value="11"/>
 <%-- gift/topup status --%>
 <c:set var="UN_SUBMITTED" value="UnSubmitted"/>
 <c:set var="SENT_INFO" value="SentInfo"/>

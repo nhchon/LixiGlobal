@@ -11,6 +11,7 @@
             var PASS_MESSAGE = '<spring:message code="validate.password_required"/>';
             var PASS_MIN_LENGTH = '<spring:message code="validate.pass-min" text="The password is at least 8 characters"/>';
             var PASS_CONTAIN='<spring:message code="validate-pass-contain" text="The password must contain Number, Capital Letter and Special Characters #, $, %, and &"/>';
+            var PASS_RETYPE_EQUAL = '<spring:message code="validate.user.pass-equal-retype-pass" text="The retype password does not match the password"/>';
             var PHONE_REQUIRED = '<spring:message code="validate.phone_required" text="The phone number is required."/>';
             var PASSWORD_ASSISTANCE_PATH = '<c:url value="/user/passwordAssistance"/>';
             var SEC_CODE_MIN_MESSAGE = '<spring:message code="validate.sec-code-min" text="The security code must have 4 characters"/>';

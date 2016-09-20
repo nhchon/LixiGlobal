@@ -81,7 +81,7 @@ LixiGlobal.RegisterPage = {
                     required: REQUIRE_MESSAGE,
                     minlength: SEC_CODE_MIN_MESSAGE
                 },
-                email: "Please enter a valid email address"
+                email: EMAIL_MESSAGE
             }
         });
         /**/
@@ -120,11 +120,11 @@ LixiGlobal.RegisterPage = {
                     lixiPasswordFormat:PASS_CONTAIN
                 },
                 confPassword: {
-                    required: "Please provide a password",
-                    minlength: "Your password must be at least 8 characters long",
-                    equalTo: "Please enter the same password as above"
+                    required: PASS_MESSAGE,
+                    minlength: PASS_MIN_LENGTH,
+                    equalTo: PASS_RETYPE_EQUAL
                 },
-                email: "Please enter a valid email address"
+                email: EMAIL_MESSAGE
             }
         });
     }

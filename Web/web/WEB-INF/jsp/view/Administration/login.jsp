@@ -45,7 +45,7 @@
                             <div class="col-sm-12">
                                 <div class="input-group">
                                     <form:input path="username" autocomplete="off" placeholder="username" class="form-control" value="yhannart@gmail.com"/>
-                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                 </div>
                                 <span class="help-block with-errors errors"><form:errors path="username" /></span>
                             </div>
@@ -55,7 +55,7 @@
                             <div class="col-sm-12">
                                 <div class="input-group">
                                     <form:password path="password" autocomplete="off" placeholder="password" class="form-control" password="Qaz123wsx"/>
-                                    <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                 </div>
                                 <span class="help-block with-errors errors"><form:errors path="password" /></span>    
                             </div>

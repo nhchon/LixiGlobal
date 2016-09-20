@@ -91,6 +91,12 @@
                             </td>
                         </tr>
                     #end
+                    <tr>
+                        <td></td>
+                        <td><b>Shipping Charge:</b></td>
+                        <td>$<b>${entry.shippingChargeAmount}</b></td>
+                        <td></td>
+                    </tr>
                 #end
                 <tr>
                     <td></td>
