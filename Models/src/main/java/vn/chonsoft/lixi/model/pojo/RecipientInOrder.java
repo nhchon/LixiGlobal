@@ -130,7 +130,7 @@ public class RecipientInOrder {
             }
         }
         
-        return LiXiGlobalUtils.round2Decimal(giftMarginTotal);
+        return LiXiGlobalUtils.truncD(giftMarginTotal);
     }
     
     /**

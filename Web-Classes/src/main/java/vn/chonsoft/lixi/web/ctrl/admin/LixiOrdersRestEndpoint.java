@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.form.BaoKimStatusForm;
 import vn.chonsoft.lixi.model.pojo.LixiSimpleMessage;
@@ -62,6 +64,14 @@ public class LixiOrdersRestEndpoint {
             gift.setBkMessage(form.getMessage());
             gift.setBkReceiveMethod(form.getReceiveMethod());
             gift.setBkUpdated(form.getUpdatedOn());
+            
+            // set lixi_margined
+            if(EnumLixiOrderSetting.ALLOW_REFUND.getValue()==gift.getOrder().getSetting()
+                    // gifted for allow refund order
+                    && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod())){
+                /* for calculating gift margined */
+                gift.setLixiMargined(false);
+            }
             
             this.lxgiftService.save(gift);
             

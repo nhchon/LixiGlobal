@@ -102,7 +102,7 @@
                             <th nowrap class="success"  style="text-align: center;">Time</th><%-- 4 --%>
                             <th nowrap style="text-align:right;" class="success">Total To BaoKim</th><%-- 5 --%>
                             <th nowrap class="success" style="text-align:right;">Margined</th>
-                            <th nowrap class="success" style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Cur. Margin(*)</th>
+                            <%--<th nowrap class="success" style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Cur. Margin(*)</th>--%>
                             <th nowrap class="success" style="text-align: right;">Ship. Charged</th>
                             <th nowrap style="text-align:right;" class="success">Owner</th>
                         </tr>
@@ -122,7 +122,7 @@
                             <td  style="text-align:right;">
                                 <fmt:formatNumber value="${batch.vndMargin}" pattern="###,###.##"/> VND
                             </td>
-                            <td id="giftMargin" style="text-align:right;"></td>
+                            <%--<td id="giftMargin" style="text-align:right;"></td>--%>
                             <td nowrap style="text-align:right;"><fmt:formatNumber value="${batch.usdShip}" pattern="###,###.##"/> USD</td>
                             <td nowrap style="text-align:right;">${batch.createdBy}</td>
                         </tr>
@@ -154,11 +154,12 @@
                         </tr>
                         <tr>
                             <td>
-                                <strong>Cost of goods</strong>
+                                <strong>Cost of goods(incl. shipping)</strong>
                             </td>
-                            <td>$<fmt:formatNumber value="${batch.costOfGood}" pattern="###,###.##"/></td>
+                            <td>$<fmt:formatNumber value="${batch.costOfGood + batch.usdShip}" pattern="###,###.##"/></td>
                         </tr>
-                        <c:set var="commission" value="${batch.senderPaid - batch.costOfGood}"/>
+                        <c:set var="creditFee" value="${batch.senderPaid * 0.025}"/>
+                        <c:set var="commission" value="${batch.senderPaid - (batch.costOfGood + batch.usdShip)}"/>
                         <!--
                         <tr>
                             <td>
@@ -174,7 +175,6 @@
                                 <strong>Credit card fee(~2.5%)</strong>
                             </td>
                             <td>
-                                <c:set var="creditFee" value="${batch.senderPaid * 0.025}"/>
                                 $<fmt:formatNumber value="${creditFee}" pattern="###,###.##"/>
                             </td>
                         </tr>
@@ -185,7 +185,7 @@
                             <td>
                                 <c:set var="profit" value="${commission - creditFee}"/>
                                 $<fmt:formatNumber value="${profit}" pattern="###,###.##"/> &nbsp;
-                                <fmt:formatNumber value="${profit/batch.costOfGood}" pattern="###,###.##"/>%
+                                <fmt:formatNumber value="${(profit/(batch.senderPaid))*100}" pattern="###,###.##"/>%
                             </td>
                         </tr>
                     </tbody>
@@ -279,54 +279,14 @@
                                             <td style="text-align: right;" nowrap>
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
-                                                        <fmt:formatNumber minFractionDigits="2" value="${rio.shippingChargeAmount}" pattern="###,###.##"/> USD<br/><br/>
+                                                        <fmt:formatNumber minFractionDigits="2" value="${rio.shippingChargeAmount}" pattern="###,###.##"/> USD<br/>
+                                                        <fmt:formatNumber value="${rio.shippingChargeAmountVnd}" pattern="###,###.##"/> VND<br/>
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
                                             <td style="text-align: center;">
-                                                <a href="#" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
-                                                    <%--
-                                                <c:if test="${m.key.lixiStatus eq PROCESSED}">
-                                                    Processed<br/>
-                                                    <c:if test="${m.key.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
-                                                    <c:if test="${m.key.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
-                                                </c:if>
-                                                <c:if test="${m.key.lixiStatus eq COMPLETED}">
-                                                    Completed
-                                                </c:if>
-                                                <c:if test="${m.key.lixiStatus eq CANCELED}">
-                                                    Cancelled
-                                                </c:if>
-                                                    --%>
-                                                <c:choose>
-                                                    <c:when test="${m.key.lixiStatus eq PROCESSING}">
-                                                        Processing<br/>
-                                                        <c:if test="${order.lixiSubStatus eq SENT_MONEY}">(Sent Money)</c:if>
-                                                        <c:if test="${order.lixiSubStatus eq SENT_INFO}">(Sent Info)</c:if>
-                                                    </c:when>
-                                                    <c:when test="${m.key.lixiStatus eq COMPLETED}">
-                                                        Completed
-                                                    </c:when>
-                                                    <c:when test="${m.key.lixiStatus eq CANCELED}">
-                                                        Cancelled
-                                                    </c:when>
-                                                    <c:when test="${m.key.lixiStatus eq PURCHASED}">
-                                                        Purchased
-                                                    </c:when>
-                                                    <c:when test="${m.key.lixiStatus eq DELIVERED}">
-                                                        Delivered
-                                                    </c:when>
-                                                    <c:when test="${m.key.lixiStatus eq UNDELIVERABLE}">
-                                                        Undeliverable
-                                                    </c:when>
-                                                    <c:when test="${m.key.lixiStatus eq REFUNDED}">
-                                                        Refunded
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        ${m.key.lixiStatus}
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                    
+                                                <a href="javascript:void(0);" data-placement="left" rel="popover" data-popover-content="#detailStatusOrder${m.key.id}">
+                                                    <%@include  file="/WEB-INF/jsp/view/Administration/add-on/lixi_status.jsp" %>                                                    
                                                 </a>
                                                 <%@include  file="/WEB-INF/jsp/view/Administration/reports/detailStatusOrder.jsp" %>
                                             </td>
@@ -342,7 +302,7 @@
                                             </c:if>
                                         </tr>
                                     </c:forEach>
-                                    <script>document.getElementById('giftMargin').innerHTML='<fmt:formatNumber value="${totalGiftMargin}" pattern="###,###.##"/> VND';</script>
+                                    <%--<script>document.getElementById('giftMargin').innerHTML='<fmt:formatNumber value="${totalGiftMargin}" pattern="###,###.##"/> VND';</script>--%>
                                 </tbody>
                             </table>
                         </div>

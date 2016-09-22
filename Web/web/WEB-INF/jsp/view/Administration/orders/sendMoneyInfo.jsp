@@ -36,7 +36,7 @@
                     //alert($.number(totalUsd))
                     $('#tdOnSelectUsd').html($.number(totalUsd, 2) + '');
                     $('#tdGiftMarginOnSelect').html($.number(totalGiftMargin) + '');
-                    $('#tdOnSelectShipCharged').html($.number(totalShipCharged) + '')
+                    $('#tdOnSelectShipCharged').html($.number(totalShipCharged, 2) + '')
                     $('#tdOnSelectShipChargedVnd').html($.number(totalShipChargedVnd) + '');
                     $('#tdTotalSendOnSelect').html($.number(totalSend + totalShipChargedVnd) + '');
                     // input hidden
@@ -163,7 +163,7 @@
                                         <th nowrap>Date</th><%-- 1 --%>
                                         <th nowrap style="text-align:center;">Order</th><%-- 2 --%>
                                         <th nowrap style="text-align:center;">Transaction No</th><%-- 3 --%>
-                                        <th nowrap>Option</th><%-- 4 --%>
+                                        <th nowrap style="text-align:center;">Option</th><%-- 4 --%>
                                         <th>Sender</th><%-- 5 --%>
                                         <th style="text-align: center;">Receiver(s)</th><%-- 6 --%>
                                         <th style="text-align: right;">Gift Price</th><%-- 7 --%>
@@ -204,9 +204,9 @@
                                                 1 USD = ${m.key.lxExchangeRate.buy} VND
                                             </td>
                                             <td style="text-align:center;">${m.key.invoice.netTransId}<br/>(${m.key.invoice.translatedStatus})</td>
-                                            <td nowrap>
+                                            <td nowrap style="text-align:center;">
                                                 <c:if test="${m.key.setting eq 0}">
-                                                    Gift Only
+                                                    Gift Only<br/>${transferPercent}%
                                                 </c:if>
                                                 <c:if test="${m.key.setting eq 1}">
                                                     Allow Refund
@@ -233,7 +233,8 @@
                                             <td style="text-align: right;" nowrap>
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
-                                                        <fmt:formatNumber minFractionDigits="2" value="${rio.shippingChargeAmount}" pattern="###,###.##"/> USD<br/><br/>
+                                                        <fmt:formatNumber minFractionDigits="2" value="${rio.shippingChargeAmount}" pattern="###,###.##"/> USD<br/>
+                                                        <fmt:formatNumber value="${rio.shippingChargeAmountVnd}" pattern="###,###.##"/> VND<br/>
                                                     </c:if>
                                                 </c:forEach>
                                             </td>

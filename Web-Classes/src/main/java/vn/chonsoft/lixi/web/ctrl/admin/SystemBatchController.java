@@ -91,18 +91,22 @@ public class SystemBatchController {
             ids.add(o.getOrderId());
         });
         
+        double batchMargin = 0;
         List<LixiOrder> orders = this.lxOrderService.findAll(ids);
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         List<ShippingCharged> charged = this.shipService.findAll();
         if(orders != null){
             
-            orders.forEach(o -> {
+            for(LixiOrder o : orders) {
                 List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o, baoKimTransferPercent);
                 recInOrder.forEach(r -> {r.setCharged(charged);});
                 
                 mOs.put(o, recInOrder);
-            });
+                batchMargin += o.getGiftMargin(baoKimTransferPercent);
+            }
         }
+        
+        batch.setVndMargin(batchMargin);
         
         model.put("mOs", mOs);
         

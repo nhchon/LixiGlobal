@@ -313,7 +313,7 @@ public class LixiOrder implements Serializable {
             for (LixiOrderGift gift : getGifts()) {
                     
                 sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
-                sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
+                sumGiftUSD += (gift.getUsdPrice() * gift.getProductQuantity());
                 
             }
         }
@@ -340,19 +340,21 @@ public class LixiOrder implements Serializable {
                     (setting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()))){
                     // baoKimTransferPercent
                     sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity() * percent)/100.0;
+                    sumGiftUSD += (gift.getUsdPrice() * gift.getProductQuantity() * percent)/100.0;
+                    System.out.println("sumGiftUSD: " + sumGiftUSD);
                 }
                 else
                 {
                     
                     sumGiftVND += (gift.getProductPrice() * gift.getProductQuantity());
+                    sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
                 }
-                sumGiftUSD += gift.getUsdPrice() * gift.getProductQuantity();
                 
             }
         }
         /* round up */
-        sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
-        sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
+        sumGiftUSD = LiXiGlobalUtils.round2Decimal(sumGiftUSD);
+        sumGiftVND = LiXiGlobalUtils.floor2Hundred(sumGiftVND);
         
         return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
     }
@@ -368,8 +370,9 @@ public class LixiOrder implements Serializable {
         
         if (getGifts() != null) {
             for (LixiOrderGift gift : getGifts()) {
-                if(setting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
-                    !gift.isLixiMargined()){
+                if(setting == EnumLixiOrderSetting.ALLOW_REFUND.getValue() && 
+                        LiXiGlobalConstants.BAOKIM_GIFT_METHOD.equals(gift.getBkReceiveMethod()) &&
+                        !gift.isLixiMargined()){
                     
                     giftMarginTotal += (gift.getProductPrice()*gift.getProductQuantity() * marginPercent)/100.0;
                 }
@@ -377,6 +380,6 @@ public class LixiOrder implements Serializable {
         }
         
         /* we don't calculate gift margin in USD */
-        return LiXiGlobalUtils.round2Decimal(giftMarginTotal);
+        return LiXiGlobalUtils.truncD(giftMarginTotal);
     }
 }

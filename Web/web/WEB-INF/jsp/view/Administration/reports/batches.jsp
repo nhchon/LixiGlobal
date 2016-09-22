@@ -181,7 +181,7 @@
                                             <td><fmt:formatDate pattern="HH:mm:ss" value="${b.createdDate}"/>
                                             </td>
                                             <td style="text-align:right;">
-                                                <fmt:formatNumber value="${b.sumVnd}" pattern="###,###.##"/> VND<br/>
+                                                <fmt:formatNumber value="${b.sumVnd + b.vndShip}" pattern="###,###.##"/> VND<br/>
                                                 <fmt:formatNumber value="${b.sumUsd}" pattern="###,###.##"/> USD
                                             </td>
                                             <td style="text-align:right;">

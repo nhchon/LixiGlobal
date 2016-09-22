@@ -53,7 +53,6 @@ import vn.chonsoft.lixi.repositories.service.LixiBatchService;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
-import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderSearchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
@@ -516,9 +515,9 @@ public class LixiOrdersController {
             
             for (LixiOrder order : orders) {
                 // send to bao kim
-                boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
+                //boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
                 /* test local, debug process create Batch */
-                //boolean rs = true;
+                boolean rs = true;
                 if (rs) {
                     /* lưu id */
                     LixiBatchOrder bo = new LixiBatchOrder();
@@ -526,6 +525,10 @@ public class LixiOrdersController {
                     bo.setOrderId(order.getId());
 
                     SumVndUsd sum = order.getSentToBaoKim(percent);
+                    bo.setVndOnlyGift(sum.getVnd());
+                    bo.setUsdOnlyGift(sum.getUsd());
+
+                    this.batchOrderService.save(bo);
                     
                     batchMargin += order.getGiftMargin(percent);
                     
@@ -533,12 +536,8 @@ public class LixiOrdersController {
                     batchVndShip += inv.getVndShip(); // USD
                     batchUsdShip += inv.getUsdShip(); // USD
                     senderPaid += inv.getTotalAmount(); // USD
-                    costOfGood += inv.getGiftPrice();
+                    costOfGood += sum.getUsd();//inv.getGiftPrice();
                     
-                    bo.setVndOnlyGift(sum.getVnd());
-                    bo.setUsdOnlyGift(sum.getUsd());
-
-                    this.batchOrderService.save(bo);
                 }
             }
             

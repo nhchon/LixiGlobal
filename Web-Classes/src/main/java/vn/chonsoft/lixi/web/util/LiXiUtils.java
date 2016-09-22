@@ -430,11 +430,8 @@ public class LiXiUtils {
         double giftPrice = totals[0].getUsd();//usd
         double giftPriceVnd = totals[0].getVnd();
 
-        //log.info("gift price : " + giftPrice);
         /* get lixi fee */
         LixiGlobalFee fee = LiXiUtils.getLixiGlobalFee(fees, paymentMethod, LiXiGlobalUtils.round2Decimal(giftPrice));
-        
-        //log.info("LixiGlobalFee == null:" + (fee == null));
         
         /* calculate card fee */
         double cardFee = 0.0;

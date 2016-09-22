@@ -93,15 +93,35 @@
                     #end
                     <tr>
                         <td></td>
-                        <td><b>Shipping Charge:</b></td>
-                        <td>$<b>${entry.shippingChargeAmount}</b></td>
-                        <td></td>
+                        <td colspan="3">
+                            <table>
+                                <tr>
+                                    <td></td>
+                                    <td><b>Shipping Charge:</b></td>
+                                    <td>$<b>${entry.shippingChargeAmount}</b></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 #end
+                <tr>
+                    <td colspan="4"><p>&nbsp;</p></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><hr/></td>
+                </tr>
+  
                 <tr>
                     <td></td>
                     <td><b>Gift Price:</b></td>
                     <td><b>$${LIXI_GIFT_PRICE}</b></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><b>Total shipping charge:</b></td>
+                    <td><b>$${TOTAL_SHIPPING_CHARGED}</b></td>
                     <td></td>
                 </tr>
                 #if ($CARD_PROCESSING_FEE_THIRD_PARTY)
