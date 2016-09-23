@@ -44,4 +44,6 @@ public interface ScalarFunctionService {
     
     double sumTopUpOfSender(String invoiceStatus, Long sender);
     
+    /* */
+    double sumProductPrice(int catId, int alive);
 }

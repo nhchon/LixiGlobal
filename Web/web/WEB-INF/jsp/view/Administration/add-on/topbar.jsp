@@ -78,17 +78,18 @@
                     </security:authorize>
                     <security:authorize access="hasAuthority('ADMIN_CONTROL')">
                         <security:authorize access="hasAuthority('SYSTEM_CONFIG_CONTROLLER')">
-                    <li id="m03" class="dropdown <c:if test="${m03 eq true}">active</c:if>">
+                            <li id="m03" class="dropdown <c:if test="${m03 eq true}">active</c:if>">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Configs<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<c:url value="/Administration/SystemConfig/categories"/>">Categories</a></li>
-                            <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">Lixi Exchange Rate</a></li>
-                            <li><a href="<c:url value="/Administration/SystemFee/list"/>">Lixi Global Fee</a></li>
-                            <li><a href="<c:url value="/Administration/SystemConfig/configs"/>">Lixi Configuration Parameters</a></li>
-                            <li><a href="<c:url value="/Administration/SystemConfig/shippingCharged"/>">Lixi Shipping Charged</a></li>
-                        </ul>
-                    </li>
-                    </security:authorize>
+                                <li><a href="<c:url value="/Administration/SystemConfig/lixiExchangeRate"/>">Lixi Exchange Rate</a></li>
+                                <li><a href="<c:url value="/Administration/SystemFee/list"/>">Lixi Global Fee</a></li>
+                                <li><a href="<c:url value="/Administration/SystemConfig/configs"/>">Lixi Configuration Parameters</a></li>
+                                <li><a href="<c:url value="/Administration/SystemConfig/shippingCharged"/>">Lixi Shipping Charged</a></li>
+                                <li><a href="<c:url value="/Administration/SystemStatistic/product"/>">Product Statistic</a></li>
+                            </ul>
+                            </li>
+                        </security:authorize>
                     <security:authorize access="hasAuthority('SYSTEM_USER_CONTROLLER')">
                     <li id="m05" class="dropdown <c:if test="${m05 eq true}">active</c:if> ">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">System User <span class="caret"></span></a>

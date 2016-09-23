@@ -12,6 +12,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -202,8 +203,11 @@ public class CustomerSupportController {
      * @return
      */
     @RequestMapping(value = "contact", method = RequestMethod.GET)
-    public ModelAndView contact(Map<String, Object> model) {
-
+    public ModelAndView contact(Map<String, Object> model, HttpServletRequest request) {
+        
+        // anti hacking captcha
+        request.getSession().setAttribute("captcha", RandomStringUtils.randomAlphabetic(4));
+        
         model.put("lixiContactForm", new LixiContactForm());
 
         return new ModelAndView("customer/contact");

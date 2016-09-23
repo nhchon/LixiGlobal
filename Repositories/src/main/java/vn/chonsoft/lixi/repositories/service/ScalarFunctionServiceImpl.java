@@ -29,6 +29,26 @@ public class ScalarFunctionServiceImpl implements ScalarFunctionService{
     
     /**
      * 
+     * @param catId
+     * @param alive
+     * @return 
+     */
+    @Override
+    public double sumProductPrice(int catId, int alive){
+        
+        String sql = "select sum(g.price) from  vatgia_products g where g.category_id=? and g.alive=?";
+        
+        Double rs = scalarDao.singleResult(sql, catId, alive);
+        if(rs != null){
+            return rs.doubleValue();
+        }
+        else{
+            return 0d;
+        }
+        
+    }
+    /**
+     * 
      * @return 
      */
     @Override

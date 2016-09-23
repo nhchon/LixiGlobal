@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
@@ -709,6 +710,10 @@ public class UserGeneralController {
         if((numOfSiginFailed != null) && numOfSiginFailed >= 4){
             String secCode = request.getParameter("secCode");
             if(StringUtils.isBlank(secCode) || !secCode.equalsIgnoreCase((String)session.getAttribute("captcha"))){
+                
+                // anti hacking captcha
+                session.setAttribute("captcha", RandomStringUtils.randomAlphabetic(4));
+                
                 model.put("signInFailed", 5);
                 return new ModelAndView("user2/register");
             }

@@ -36,4 +36,4 @@ ALTER TABLE `lixi_invoices` ADD `vnd_ship` DOUBLE NOT NULL AFTER `lixi_fee`, ADD
 ALTER TABLE `authorities` ADD `parent_id` BIGINT NOT NULL AFTER `authority`; 
 
 ## 2016-09-22
- "ALTER TABLE `lixi_order_gifts` DROP `exch_price`;"
+ALTER TABLE `lixi_order_gifts` DROP `exch_price`;

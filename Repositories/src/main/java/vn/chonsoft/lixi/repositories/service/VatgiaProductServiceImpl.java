@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,6 +94,22 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
         return this.vgpRepository.findOne(id);
         
     }
+
+    /**
+     * 
+     * @param category
+     * @param alive
+     * @param sort
+     * @return 
+     */
+    @Override
+    public List<VatgiaProduct> findByCategoryIdAndAlive(int category, int alive, Sort sort) {
+        
+        return this.vgpRepository.findByCategoryIdAndAlive(category, alive, sort);
+        
+    }
+    
+    
     /**
      * 
      * @param category
@@ -145,7 +162,7 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
     @Override
     @Transactional
     //@Scheduled(cron = "0 1 1 * * ?")
-    //@Scheduled(fixedDelay=24*60*60*1000, initialDelay=60*1000)
+    @Scheduled(fixedDelay=24*60*60*1000, initialDelay=60*1000)
     public void loadAllVatGiaProducts(){
         
         // get list vatgia categories

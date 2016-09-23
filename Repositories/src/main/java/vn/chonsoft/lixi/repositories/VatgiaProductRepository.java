@@ -7,6 +7,7 @@ package vn.chonsoft.lixi.repositories;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,7 +26,7 @@ public interface VatgiaProductRepository extends JpaRepository<VatgiaProduct, In
     @Query("update VatgiaProduct p set p.alive = :alive where p.categoryId = :categoryId")
     int updateAlive(@Param("categoryId") Integer categoryId, @Param("alive") Integer alive);
     
-    //List<VatgiaProduct>  findByIdIn(Iterable<Integer> ids);
+    List<VatgiaProduct> findByCategoryIdAndAlive(int category, int alive, Sort sort);
     
     List<VatgiaProduct>  findByCategoryIdAndAliveAndPriceIsGreaterThanEqual(int category, int alive, double price);
 

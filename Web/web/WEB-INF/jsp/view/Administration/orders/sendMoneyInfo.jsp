@@ -28,7 +28,7 @@
                            totalGiftMargin = totalGiftMargin + parseFloat($(this).attr('totalGiftMargin'));
                            totalShipCharged = totalShipCharged + parseFloat($(this).attr('totalShipCharged'));
                            totalShipChargedVnd = totalShipChargedVnd + parseFloat($(this).attr('totalShipChargedVnd'));
-                           totalSend = totalSend + parseFloat($(this).attr('totalSentToBaoKim')); //totalVnd - totalGiftMargin + totalShipChargedVnd;
+                           totalSend = roundHundred(totalSend + parseFloat($(this).attr('totalSentToBaoKim')));
                        }
                     });
                     $('#tdOnSelectCount').html($.number(count) + '');
@@ -38,7 +38,7 @@
                     $('#tdGiftMarginOnSelect').html($.number(totalGiftMargin) + '');
                     $('#tdOnSelectShipCharged').html($.number(totalShipCharged, 2) + '')
                     $('#tdOnSelectShipChargedVnd').html($.number(totalShipChargedVnd) + '');
-                    $('#tdTotalSendOnSelect').html($.number(totalSend + totalShipChargedVnd) + '');
+                    $('#tdTotalSendOnSelect').html($.number(roundHundred(totalSend + totalShipChargedVnd)) + '');
                     // input hidden
                     //$('#onSelectVnd').val(totalVnd + '');
                     //$('#onSelectUsd').val(totalUsd + '');

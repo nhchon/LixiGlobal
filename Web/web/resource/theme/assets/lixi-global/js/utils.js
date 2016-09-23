@@ -1,3 +1,7 @@
+function roundHundred(value){
+   return Math.floor(value/100)*100
+}
+
 function strip(html)
 {
    var tmp = document.createElement("DIV");
