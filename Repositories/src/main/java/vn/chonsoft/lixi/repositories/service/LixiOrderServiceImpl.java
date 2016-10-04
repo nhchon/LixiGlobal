@@ -30,10 +30,14 @@ public class LixiOrderServiceImpl implements LixiOrderService{
 
     /**
      * 
+     * Need Page attributes when search one order
+     * 
+     * (Please search source code to find where to use this function)
+     * 
      * @param id
      * @param pageable
      * @return 
-     */
+    */ 
     @Override
     public Page<LixiOrder> findById(Long id, Pageable pageable) {
         

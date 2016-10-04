@@ -37,3 +37,6 @@ ALTER TABLE `authorities` ADD `parent_id` BIGINT NOT NULL AFTER `authority`;
 
 ## 2016-09-22
 ALTER TABLE `lixi_order_gifts` DROP `exch_price`;
+
+## 2016-10-04
+ALTER TABLE `lixi_order_gifts` ADD `recipient_email` VARCHAR(255) NULL AFTER `recipient`;

@@ -36,6 +36,10 @@ public class LixiOrderGift implements Serializable {
     private Long id;
     
     @Basic
+    @Column(name = "recipient_email")
+    private String recipientEmail;
+    
+    @Basic
     @Column(name = "product_id")
     private int productId;
     
@@ -126,6 +130,14 @@ public class LixiOrderGift implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
     }
 
     public int getProductId() {

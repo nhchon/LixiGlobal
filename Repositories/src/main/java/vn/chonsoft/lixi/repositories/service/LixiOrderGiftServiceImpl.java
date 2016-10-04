@@ -131,6 +131,29 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
     
     /**
      * 
+     * @param recipientEmail
+     * @param bkStatus
+     * @return 
+     */
+    @Override
+    public List<LixiOrderGift> findByRecipientEmailAndBkStatus(String recipientEmail, String bkStatus){
+        return this.lxogiftRepository.findByRecipientEmailAndBkStatus(recipientEmail, bkStatus);
+    }
+    
+    /**
+     * 
+     * @param recipientEmail
+     * @param bkStatus
+     * @return 
+     */
+    @Override
+    public List<LixiOrderGift> findByRecipientEmailAndBkStatusIn(String recipientEmail, Iterable<String> bkStatus){
+        
+        return this.lxogiftRepository.findByRecipientEmailAndBkStatusIn(recipientEmail, bkStatus);
+    }
+    
+    /**
+     * 
      * @param id
      * @param order
      * @return 

@@ -4,14 +4,19 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,9 +29,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
+import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
@@ -43,6 +53,8 @@ import vn.chonsoft.lixi.web.beans.LoginedUser;
 @RequestMapping("recipient")
 public class RecipientController {
 
+    private static final Logger log = LogManager.getLogger(RecipientController.class);
+    
     /* session bean - Login user */
     @Autowired
     private LoginedUser loginedUser;
@@ -62,11 +74,44 @@ public class RecipientController {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired
+    private LixiOrderService lxorderService;
+
+    @Autowired
+    private LixiOrderGiftService lxogiftService;
+
+    /**
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "gifts", method = RequestMethod.GET)
+    public ModelAndView gifts(Map<String, Object> model, HttpServletRequest request) {
+        
+        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.PURCHASED.getValue());
+        List<LixiOrderGift> gifts = this.lxogiftService.findByRecipientEmailAndBkStatusIn(loginedUser.getEmail(), statuses);
+        
+        log.info("gifts == null : " + (gifts == null));
+        
+        /**
+         * get order id list
+         * 
+         * https://coderanch.com/t/623127/java/java/array-specific-attribute-values-list
+         */
+        List<Long> oIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
+        
+        List<LixiOrder> orders = lxorderService.findAll(oIds);
+
+        model.put("orders", orders);
+        
+        return new ModelAndView("recipient/gifts/newGifts");
+    }
     /**
      *
      * @param model
      * @param id
-     * @param request
      * @return
      */
     @UserSecurityAnnotation

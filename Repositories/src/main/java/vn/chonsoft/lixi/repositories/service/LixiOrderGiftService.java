@@ -33,6 +33,10 @@ public interface LixiOrderGiftService {
     
     List<LixiOrderGift> findByOrderAndRecipient(LixiOrder order, Recipient recipient);
     
+    List<LixiOrderGift> findByRecipientEmailAndBkStatus(String recipientEmail, String bkStatus);
+    
+    List<LixiOrderGift> findByRecipientEmailAndBkStatusIn(String recipientEmail, Iterable<String> bkStatus);
+    
     LixiOrderGift findById(Long id);
     
     /**

@@ -31,6 +31,10 @@ public interface LixiOrderGiftRepository extends JpaRepository<LixiOrderGift, Lo
     
     List<LixiOrderGift> findByOrderAndRecipient(LixiOrder order, Recipient recipient);
     
+    List<LixiOrderGift> findByRecipientEmailAndBkStatus(String recipientEmail, String bkStatus);
+    
+    List<LixiOrderGift> findByRecipientEmailAndBkStatusIn(String recipientEmail, Iterable<String> bkStatus);
+    
     LixiOrderGift findByIdAndOrder(Long id, LixiOrder order);
     
     LixiOrderGift findByOrderAndRecipientAndProductId(LixiOrder order, Recipient recipient, Integer productId);

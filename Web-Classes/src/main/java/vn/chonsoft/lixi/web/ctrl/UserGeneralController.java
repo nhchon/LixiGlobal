@@ -4,10 +4,11 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
-import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.mail.internet.MimeMessage;
@@ -26,16 +27,16 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.ui.velocity.VelocityEngineUtils;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
@@ -44,7 +45,6 @@ import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserMoneyLevel;
 import vn.chonsoft.lixi.model.UserSecretCode;
-import vn.chonsoft.lixi.model.UserSession;
 import vn.chonsoft.lixi.model.form.UserResetPasswordForm;
 import vn.chonsoft.lixi.model.form.UserSignInForm;
 import vn.chonsoft.lixi.model.form.UserSignUpForm;
@@ -58,7 +58,6 @@ import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.repositories.service.UserMoneyLevelService;
 import vn.chonsoft.lixi.repositories.service.UserSecretCodeService;
 import vn.chonsoft.lixi.repositories.service.UserService;
-import vn.chonsoft.lixi.repositories.service.UserSessionService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -88,9 +87,6 @@ public class UserGeneralController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserSessionService userSessionService;
-    
     @Autowired
     private UserSecretCodeService uscService;
 
@@ -771,18 +767,6 @@ public class UserGeneralController {
                 // change session id
                 request.changeSessionId();
                 
-                /* save to user session table */
-                //UserSession userSess = this.userSessionService.findByEmail(u.getEmail());
-                //if(userSess == null){
-                //    userSess = new UserSession();
-                //}
-                //userSess.setEmail(u.getEmail());
-                //userSess.setLoginDate(Calendar.getInstance().getTime());
-                //userSess.setCreatedBeanDate(loginedUser.getCreatedDateBean());
-                //SimpleDateFormat sdfr = new SimpleDateFormat("MMM/dd/yyyy KK:mm:ss a");
-                //log.info("setLoginDate: " + sdfr.format(userSess.getLoginDate()) + " - setCreatedBeanDate: " + sdfr.format(loginedUser.getCreatedDateBean()));
-                //this.userSessionService.save(userSess);
-                
                 //
                 LiXiUtils.setLoginedUser(loginedUser, u, this.configService.findAll());
 
@@ -837,11 +821,21 @@ public class UserGeneralController {
             return new ModelAndView("user2/register");
 
         }
-
-        // goto next page
-        RedirectView r = new RedirectView(LiXiUtils.getPathOfNextUrl(request.getParameter("nextUrl")), true, true);
-        r.setExposeModelAttributes(false);
-        return new ModelAndView(r);        
+        
+        // check if this user has gifts
+        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.PURCHASED.getValue());
+        List<LixiOrderGift> gifts = this.lxogiftService.findByRecipientEmailAndBkStatusIn(form.getEmail(), statuses);
+        log.info("Sender has gifts: " + (gifts == null));
+        if(StringUtils.isBlank(request.getParameter("nextUrl")) && gifts != null && !gifts.isEmpty()){
+            // sender has gifts
+            return new ModelAndView(new RedirectView("/recipient/gifts", true, true));
+        }
+        else{
+            // goto next page
+            RedirectView r = new RedirectView(LiXiUtils.getPathOfNextUrl(request.getParameter("nextUrl")), true, true);
+            r.setExposeModelAttributes(false);
+            return new ModelAndView(r);        
+        }
     }
 
     /**

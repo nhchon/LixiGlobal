@@ -875,7 +875,7 @@ public class CheckOutController {
                     //////////////////////// SUBMIT ORDER to BAOKIM:  Asynchronously ///
                     //log.info("submitOrdersToBaoKim");
 
-                    lxAsyncMethods.submitOrdersToBaoKim(order);
+                    //lxAsyncMethods.submitOrdersToBaoKim(order); // remove BaoKim 2016-10-04
 
                     //log.info(" // END of submitOrdersToBaoKim");
                     ////////////////////////////////////////////////////////////////////

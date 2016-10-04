@@ -128,6 +128,11 @@ public class LixiOrder implements Serializable {
 
     public void setLixiStatus(String lixiStatus) {
         this.lixiStatus = lixiStatus;
+        
+        /* remove BaoKim 2016-10-04 */
+        for(LixiOrderGift g : gifts){
+            g.setBkStatus(lixiStatus);
+        }
     }
 
     public String getLixiStatusName(){
