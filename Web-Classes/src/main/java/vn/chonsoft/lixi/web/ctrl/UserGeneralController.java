@@ -825,7 +825,6 @@ public class UserGeneralController {
         // check if this user has gifts
         List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.PURCHASED.getValue());
         List<LixiOrderGift> gifts = this.lxogiftService.findByRecipientEmailAndBkStatusIn(form.getEmail(), statuses);
-        log.info("Sender has gifts: " + (gifts == null));
         if(StringUtils.isBlank(request.getParameter("nextUrl")) && gifts != null && !gifts.isEmpty()){
             // sender has gifts
             return new ModelAndView(new RedirectView("/recipient/gifts", true, true));

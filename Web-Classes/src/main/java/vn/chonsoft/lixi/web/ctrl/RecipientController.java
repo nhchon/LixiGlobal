@@ -4,7 +4,6 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -90,21 +89,18 @@ public class RecipientController {
     @RequestMapping(value = "gifts", method = RequestMethod.GET)
     public ModelAndView gifts(Map<String, Object> model, HttpServletRequest request) {
         
-        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.PURCHASED.getValue());
-        List<LixiOrderGift> gifts = this.lxogiftService.findByRecipientEmailAndBkStatusIn(loginedUser.getEmail(), statuses);
-        
-        log.info("gifts == null : " + (gifts == null));
+        // new gifts, recipient did not do anything
+        List<LixiOrderGift> proGifts = this.lxogiftService.findByRecipientEmailAndBkStatusAndBkReceiveMethod(loginedUser.getEmail(), EnumLixiOrderStatus.PROCESSED.getValue(), null);
         
         /**
          * get order id list
          * 
          * https://coderanch.com/t/623127/java/java/array-specific-attribute-values-list
          */
-        List<Long> oIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
-        
-        List<LixiOrder> orders = lxorderService.findAll(oIds);
+        List<Long> proIds = proGifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
+        List<LixiOrder> proOrders = lxorderService.findAll(proIds);
 
-        model.put("orders", orders);
+        model.put("NEW_ORDERS", proOrders);
         
         return new ModelAndView("recipient/gifts/newGifts");
     }

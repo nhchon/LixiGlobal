@@ -22,13 +22,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
-import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.pojo.BankExchangeRate;
@@ -80,7 +78,7 @@ public class LixiExchangeRateServiceImpl implements LixiExchangeRateService{
      * 
      */
     @Override
-    @Scheduled(fixedDelay=1*60*60*1000, initialDelay=60*1000)
+    //@Scheduled(fixedDelay=1*60*60*1000, initialDelay=60*1000)
     public void autoUpdateExFromVCB(){
         
         log.info("========== Auto Update VCB Exchange Rate ====================");

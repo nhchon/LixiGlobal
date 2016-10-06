@@ -37,6 +37,8 @@ public interface LixiOrderGiftService {
     
     List<LixiOrderGift> findByRecipientEmailAndBkStatusIn(String recipientEmail, Iterable<String> bkStatus);
     
+    List<LixiOrderGift> findByRecipientEmailAndBkStatusAndBkReceiveMethod(String recipientEmail, String bkStatus, String bkReceiveMethod);
+    
     LixiOrderGift findById(Long id);
     
     /**
