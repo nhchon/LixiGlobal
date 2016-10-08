@@ -54,9 +54,6 @@
                                     <span title="Master Card">
                                         <label class="drinkcard-cc mastercard"for="mastercard2"></label>
                                     </span>
-<!--                                    <span title="AMEX Card">
-                                        <label class="drinkcard-cc card-type2"for="card-type2"></label>
-                                    </span>-->
                                 </div>
                             </div>
                             <h4 class="text-color-link text-uppercase"><spring:message code="mess.card-details"/></h4>

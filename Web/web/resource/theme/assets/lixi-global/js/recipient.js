@@ -133,6 +133,7 @@ var recOnDetailGift = function handleRecipientHtmlOnDetailGift(data){
                 $('button.edit-receiver').each(function(){$(this).attr('data-receiver-id', data.recId);});
                 
             } else {
+                $("#recId").val(data.recId);
                 // save successfully
                 $("#recId option:selected").attr("firstname", $("#chooseRecipientForm #firstName").val());
                 $("#recId option:selected").html(name + " - " + phone + " - " + email);
@@ -143,12 +144,66 @@ var recOnDetailGift = function handleRecipientHtmlOnDetailGift(data){
         alert(SOMETHING_WRONG_ERROR);
     }
 }
+
+function checkUniqueRecipient(){
+    
+    //if($('#recId').val()=='' || $('#recId').val()=='0'){
+    if ($('#email').isValidEmailAddress()) {
+        $.ajax({
+            url: CHECK_UNIQUE_REC_URL + $('#email').val(),
+            type: "GET",
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR)
+            {
+                /* check if session time out */
+                try{
+                    if(data.sessionExpired === '1'){
+                        var nextUrl = "?nextUrl=" + getNextUrl();
+                        window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                        return;
+                    }
+                }catch(err){}
+                
+                /* */
+                if(data.id > 0){
+                    $('#chooseRecipientForm #recId').val(data.id);
+                    $('#chooseRecipientForm #action').val('edit');
+                    $('#firstName').val(data.firstName);
+                    $('#middleName').val(data.middleName);
+                    $('#lastName').val(data.lastName);
+                    $('#email').val(data.email);
+                    $('#confEmail').val(data.email);
+                    $('#dialCode').val(data.dialCode);
+                    $('#phone').val(data.phone);
+                    alert('We found this receiver already have in our system. Please check again the information below');
+                }
+                
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                //if fails      
+            },
+            statusCode: {
+                403: function (response) {
+                    var nextUrl = "?nextUrl=" + getNextUrl();
+                    window.location.href = CONTEXT_PATH + '/user/signIn' + nextUrl;
+                    return;
+                }
+            }
+        });        
+    }
+    //}
+}
+
 function enableEditRecipientHtmlContent(data, handleFunction) {
 
     $('#editRecipientContent').html(data);
     $('#editRecipientModal').modal({show: true});
 
     $("#chooseRecipientForm #phone").mask("999 999-999?9");
+    
+    $("#chooseRecipientForm #email").blur(function(){checkUniqueRecipient();});
+    
     // handler submit form
     //callback handler for form submit
     $("#chooseRecipientForm").submit(function (e)

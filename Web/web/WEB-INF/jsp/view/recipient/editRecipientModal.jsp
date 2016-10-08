@@ -51,10 +51,10 @@
         </div>
         <div class="form-group">
             <div class="col-lg-5 col-md-5">
-                <label class="control-label"><spring:message code="gift.email_of_recipient"/></label>
+                <label class="control-label"><spring:message code="gift.email_of_recipient"/><span class="errors">*</span></label>
             </div>
             <div class="col-lg-7 col-md-7">
-                <form:input path="email" class="form-control" placeholder="${emailMessage}" />
+                <form:input path="email" class="form-control" placeholder="${emailMessage}" autocomplete="off" />
             </div>
         </div>
         <div class="form-group">
@@ -62,7 +62,7 @@
                 <label class="control-label"></label>
             </div>
             <div class="col-lg-7 col-md-7">
-                <form:input path="confEmail" class="form-control" placeholder="${retypeEmail}" />
+                <form:input path="confEmail" class="form-control" placeholder="${retypeEmail}" autocomplete="off" />
             </div>
         </div>
         <div class="form-group">

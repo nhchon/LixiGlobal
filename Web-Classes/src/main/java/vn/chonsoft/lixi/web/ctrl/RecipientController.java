@@ -28,12 +28,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
+import vn.chonsoft.lixi.model.form.RecipientAddressForm;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
@@ -79,6 +81,58 @@ public class RecipientController {
     @Autowired
     private LixiOrderGiftService lxogiftService;
 
+    @UserSecurityAnnotation
+    @RequestMapping(value = "address", method = RequestMethod.GET)
+    public ModelAndView address(Map<String, Object> model, HttpServletRequest request) {
+        
+        model.put("addressForm", new RecipientAddressForm());
+        
+        return new ModelAndView("recipient/gifts/inputAddress");
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param form
+     * @param errors
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "address", method = RequestMethod.POST)
+    public ModelAndView address(Map<String, Object> model,
+            @Valid RecipientAddressForm form, Errors errors, HttpServletRequest request) {
+        
+        if (errors.hasErrors()) {
+            return new ModelAndView("user2/editName");
+        }
+        
+        try {
+            
+            //Recipient rec = this.reciService.findByEmail(sender, email);
+            // user oldEmail
+            //String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+            
+            // exceptions will be thrown if there is no account
+            //User u = this.userService.findByEmail(email);
+            
+            //u.setFirstName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getFirstName()), null));
+            //u.setMiddleName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getMiddleName()), null));
+            //u.setLastName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getLastName()), null));
+            
+            // save
+            //this.userService.save(u);
+            
+        } catch (ConstraintViolationException e) {
+            
+            model.put("validationErrors", e.getConstraintViolations());
+            return new ModelAndView("user2/editName");
+            
+        }
+        
+        model.put("editSuccess", 1);
+        return new ModelAndView(new RedirectView("/user/yourAccount", true, true), model);
+    }
     /**
      * 
      * @param model
@@ -104,6 +158,22 @@ public class RecipientController {
         
         return new ModelAndView("recipient/gifts/newGifts");
     }
+    
+    @UserSecurityAnnotation
+    @RequestMapping(value = "get/{email:.+}", method = RequestMethod.GET)
+    public ModelAndView getRecipient(Map<String, Object> model, @PathVariable String email) {
+
+        Recipient rec = this.reciService.findByEmail(email);
+        
+        log.info("rec email: " + email);
+        log.info("rec is null: " + (rec==null));
+        
+        model.put("error", 0);
+        model.put("rec", rec);
+
+        return new ModelAndView("recipient/recJson");
+    }
+    
     /**
      *
      * @param model

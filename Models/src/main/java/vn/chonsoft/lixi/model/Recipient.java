@@ -61,6 +61,14 @@ public class Recipient implements Serializable {
     @Column(name = "phone")
     private String phone;
     
+    @Basic
+    @Column(name = "address")
+    private String address;
+    
+    @Basic
+    @Column(name = "province")
+    private String province;
+    
     @Basic(optional = false)
     @Column(name = "activated")
     private boolean activated;
@@ -171,6 +179,22 @@ public class Recipient implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public boolean isActivated() {

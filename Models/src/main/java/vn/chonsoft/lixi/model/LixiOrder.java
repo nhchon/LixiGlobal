@@ -130,8 +130,10 @@ public class LixiOrder implements Serializable {
         this.lixiStatus = lixiStatus;
         
         /* remove BaoKim 2016-10-04 */
-        for(LixiOrderGift g : gifts){
-            g.setBkStatus(lixiStatus);
+        if(gifts != null){
+            for(LixiOrderGift g : gifts){
+                g.setBkStatus(lixiStatus);
+            }
         }
     }
 

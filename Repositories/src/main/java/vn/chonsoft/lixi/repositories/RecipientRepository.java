@@ -31,4 +31,6 @@ public interface RecipientRepository extends JpaRepository<Recipient, Long>{
     Recipient findBySenderAndFirstNameAndMiddleNameAndLastNameAndPhone(User sender, String firstName, String middleName, String lastName, String phone);
     
     Recipient findBySenderAndEmail(User sender, String email);
+    
+    Recipient findByEmail(String email);
 }

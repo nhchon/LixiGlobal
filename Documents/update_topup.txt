@@ -40,3 +40,5 @@ ALTER TABLE `lixi_order_gifts` DROP `exch_price`;
 
 ## 2016-10-04
 ALTER TABLE `lixi_order_gifts` ADD `recipient_email` VARCHAR(255) NULL AFTER `recipient`;
+
+ALTER TABLE `recipients` ADD `address` TEXT NULL AFTER `phone`, ADD `province` VARCHAR(255) NULL AFTER `address`; 

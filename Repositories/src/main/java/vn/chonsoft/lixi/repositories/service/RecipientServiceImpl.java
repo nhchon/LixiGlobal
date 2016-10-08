@@ -44,6 +44,17 @@ public class RecipientServiceImpl implements RecipientService{
         return this.reciRepository.findOne(id);
         
     }
+
+    /**
+     * 
+     * @param email
+     * @return 
+     */
+    @Override
+    public Recipient findByEmail(String email) {
+        return this.reciRepository.findByEmail(email);
+    }
+    
     
     /**
      * 

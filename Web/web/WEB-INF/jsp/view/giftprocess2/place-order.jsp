@@ -33,6 +33,7 @@
             var PLACE_ORDER_DELETE_GIFT_PATH = '<c:url value="/checkout/ajax/delete/gift/"/>';
             var PLACE_ORDER_UPDATE_GIFT_PATH = '<c:url value="/checkout/ajax/update/gift/"/>';
             var EDIT_REC_URL = '<c:url value="/recipient/ajax/edit/"/>';
+            var CHECK_UNIQUE_REC_URL = '<c:url value="/recipient/get/"/>';
             var arrQ = [];
             
             function noAllowRefund(){

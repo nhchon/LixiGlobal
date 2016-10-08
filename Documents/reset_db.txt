@@ -1,4 +1,4 @@
- delete from top_up_result;
+delete from top_up_result;
 
 delete from top_up_mobile_phone;
 

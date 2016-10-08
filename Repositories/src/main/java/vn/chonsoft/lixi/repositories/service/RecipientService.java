@@ -22,6 +22,8 @@ public interface RecipientService {
     
     Recipient findById(Long id);
     
+    Recipient findByEmail(String email);
+    
     Recipient findByEmail(User sender, String email);
     
     Recipient findByNameAndPhone(User sender, String firstName, String middleName, String lastName, String phone);

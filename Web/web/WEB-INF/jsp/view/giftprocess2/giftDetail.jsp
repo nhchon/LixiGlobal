@@ -23,6 +23,8 @@
             var AJAX_CHECK_EXCEED_PATH = '<c:url value="/gifts/ajax/checkExceed"/>';
             var EDIT_REC_URL = '<c:url value="/recipient/ajax/edit/"/>';
             var CREATE_REC_URL = '<c:url value="/recipient/ajax/edit/0"/>';
+            var CHECK_UNIQUE_REC_URL = '<c:url value="/recipient/get/"/>';
+            
             jQuery(document).ready(function () {
                 
                 if ($('.receiver-control-box').length > 0) {
