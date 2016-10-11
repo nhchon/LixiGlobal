@@ -24,7 +24,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import vn.chonsoft.lixi.model.form.support.CustomerProblemForm;
+import vn.chonsoft.lixi.model.support.form.CustomerProblemForm;
 import vn.chonsoft.lixi.EnumCustomerProblemStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiContact;

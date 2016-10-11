@@ -2,7 +2,7 @@
  * Lixi is a Vietnamese word for small gift of money
  * 2015 @ Lixi Global
  */
-package vn.chonsoft.lixi.model.form.support;
+package vn.chonsoft.lixi.model.support.form;
 
 import vn.chonsoft.lixi.validations.NotBlank;
 

@@ -34,7 +34,7 @@
                                     <div class="col-md-4">
                                         <div style="font-size: 16px;font-weight: bold; text-align: center;"><spring:message code="mess.select-method" text="Please Select Gifting Method"/>:</div>
                                         <div style="margin-top: 10px;text-align: center;">
-                                            <button class="btn btn-success pull-left btn-has-link-event" data-link="<c:url value="/recipient/address"/>">GIFTED</button>
+                                            <button class="btn btn-success pull-left btn-has-link-event" data-link="<c:url value="/recipient/address/${LIXI_ORDER.id}"/>">GIFTED</button>
                                             <button class="btn btn-danger pull-right">REFUND</button>
                                         </div>
                                     </div>

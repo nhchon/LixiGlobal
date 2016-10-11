@@ -32,12 +32,15 @@ import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
+import vn.chonsoft.lixi.model.RecAdd;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
 import vn.chonsoft.lixi.model.form.RecipientAddressForm;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
+import vn.chonsoft.lixi.repositories.service.ProvinceService;
+import vn.chonsoft.lixi.repositories.service.RecAddService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
@@ -81,11 +84,43 @@ public class RecipientController {
     @Autowired
     private LixiOrderGiftService lxogiftService;
 
+    @Autowired
+    private ProvinceService provinceService;
+    
+    @Autowired
+    private RecAddService recAddService;
+    
+    /**
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
     @UserSecurityAnnotation
-    @RequestMapping(value = "address", method = RequestMethod.GET)
+    @RequestMapping(value = "thankYou", method = RequestMethod.GET)
     public ModelAndView address(Map<String, Object> model, HttpServletRequest request) {
         
-        model.put("addressForm", new RecipientAddressForm());
+        return new ModelAndView("recipient/gifts/thankYou");
+        
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param oId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "address/{oId}", method = RequestMethod.GET)
+    public ModelAndView address(Map<String, Object> model, @PathVariable Long oId, HttpServletRequest request) {
+        
+        model.put("order", this.lxorderService.findById(oId));
+        model.put("provinces", this.provinceService.findAll());
+        
+        RecipientAddressForm form = new RecipientAddressForm();
+        form.setOId(oId);
+        model.put("recipientAddressForm", form);
         
         return new ModelAndView("recipient/gifts/inputAddress");
     }
@@ -103,35 +138,34 @@ public class RecipientController {
     public ModelAndView address(Map<String, Object> model,
             @Valid RecipientAddressForm form, Errors errors, HttpServletRequest request) {
         
+        model.put("order", this.lxorderService.findById(form.getOId()));
+        model.put("provinces", this.provinceService.findAll());
+        
         if (errors.hasErrors()) {
-            return new ModelAndView("user2/editName");
+            return new ModelAndView("recipient/gifts/inputAddress");
         }
         
         try {
             
-            //Recipient rec = this.reciService.findByEmail(sender, email);
-            // user oldEmail
-            //String email = (String)request.getSession().getAttribute(LiXiConstants.USER_LOGIN_EMAIL);
+            RecAdd recAdd = new RecAdd();
+            recAdd.setName(form.getRecName());
+            recAdd.setAddress(form.getRecAddress());
+            recAdd.setProvince(this.provinceService.findById(form.getRecProvince()));
+            recAdd.setDistrict(form.getRecDist());
+            recAdd.setWard(form.getRecWard());
+            recAdd.setPhone(form.getRecPhone());
+            recAdd.setRecipient(this.reciService.findByEmail(loginedUser.getEmail()));
             
-            // exceptions will be thrown if there is no account
-            //User u = this.userService.findByEmail(email);
-            
-            //u.setFirstName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getFirstName()), null));
-            //u.setMiddleName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getMiddleName()), null));
-            //u.setLastName(StringUtils.defaultIfBlank(LiXiGlobalUtils.html2text(form.getLastName()), null));
-            
-            // save
-            //this.userService.save(u);
+            this.recAddService.save(recAdd);
             
         } catch (ConstraintViolationException e) {
             
             model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView("user2/editName");
+            return new ModelAndView("recipient/gifts/inputAddress");
             
         }
         
-        model.put("editSuccess", 1);
-        return new ModelAndView(new RedirectView("/user/yourAccount", true, true), model);
+        return new ModelAndView(new RedirectView("/recipient/thankYou", true, true));
     }
     /**
      * 
