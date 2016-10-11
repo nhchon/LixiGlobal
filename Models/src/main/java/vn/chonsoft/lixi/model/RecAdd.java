@@ -35,7 +35,10 @@ public class RecAdd implements Serializable {
     @Column(name = "name")
     private String name;
     
-    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Basic(optional = false)
+    @Column(name = "rec_email")
+    private String email;
+    
     @Basic(optional = false)
     @Column(name = "phone")
     private String phone;
@@ -90,6 +93,14 @@ public class RecAdd implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone() {

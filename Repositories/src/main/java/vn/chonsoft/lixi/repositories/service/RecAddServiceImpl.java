@@ -4,6 +4,8 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.chonsoft.lixi.model.RecAdd;
 import vn.chonsoft.lixi.repositories.RecAddRepository;
@@ -15,15 +17,27 @@ import vn.chonsoft.lixi.repositories.RecAddRepository;
 @Service
 public class RecAddServiceImpl implements RecAddService{
 
+    @Autowired
     private RecAddRepository recAddRepository;
     
     /**
      * 
-     * @param recAdd 
+     * @param email
+     * @return 
      */
     @Override
-    public void save(RecAdd recAdd) {
-        this.recAddRepository.save(recAdd);
+    public List<RecAdd> findByEmail(String email){
+        
+        return this.recAddRepository.findByEmail(email);
+    }
+    /**
+     * 
+     * @param recAdd 
+     * @return 
+     */
+    @Override
+    public RecAdd save(RecAdd recAdd) {
+        return this.recAddRepository.save(recAdd);
     }
     
 }

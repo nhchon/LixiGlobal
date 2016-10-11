@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import vn.chonsoft.lixi.model.RecAdd;
 
 /**
@@ -12,5 +13,6 @@ import vn.chonsoft.lixi.model.RecAdd;
  */
 public interface RecAddService {
     
-    void save(RecAdd recAdd);
+    List<RecAdd> findByEmail(String email);
+    RecAdd save(RecAdd recAdd);
 }

@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import vn.chonsoft.lixi.model.RecAdd;
 
@@ -13,4 +14,5 @@ import vn.chonsoft.lixi.model.RecAdd;
  */
 public interface RecAddRepository  extends  JpaRepository<RecAdd, Long>{
     
+    List<RecAdd> findByEmail(String email);
 }

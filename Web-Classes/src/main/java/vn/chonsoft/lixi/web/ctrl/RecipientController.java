@@ -115,6 +115,7 @@ public class RecipientController {
     @RequestMapping(value = "address/{oId}", method = RequestMethod.GET)
     public ModelAndView address(Map<String, Object> model, @PathVariable Long oId, HttpServletRequest request) {
         
+        model.put("recAdds", this.recAddService.findByEmail(loginedUser.getEmail()));
         model.put("order", this.lxorderService.findById(oId));
         model.put("provinces", this.provinceService.findAll());
         
@@ -138,6 +139,7 @@ public class RecipientController {
     public ModelAndView address(Map<String, Object> model,
             @Valid RecipientAddressForm form, Errors errors, HttpServletRequest request) {
         
+        model.put("recAdds", this.recAddService.findByEmail(loginedUser.getEmail()));
         model.put("order", this.lxorderService.findById(form.getOId()));
         model.put("provinces", this.provinceService.findAll());
         
@@ -149,6 +151,7 @@ public class RecipientController {
             
             RecAdd recAdd = new RecAdd();
             recAdd.setName(form.getRecName());
+            recAdd.setEmail(loginedUser.getEmail());
             recAdd.setAddress(form.getRecAddress());
             recAdd.setProvince(this.provinceService.findById(form.getRecProvince()));
             recAdd.setDistrict(form.getRecDist());
