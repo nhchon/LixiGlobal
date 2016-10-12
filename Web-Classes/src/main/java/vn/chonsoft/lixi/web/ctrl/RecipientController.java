@@ -27,12 +27,14 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.RecAdd;
+import vn.chonsoft.lixi.model.RecAddOrder;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
@@ -40,6 +42,7 @@ import vn.chonsoft.lixi.model.form.RecipientAddressForm;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.ProvinceService;
+import vn.chonsoft.lixi.repositories.service.RecAddOrderService;
 import vn.chonsoft.lixi.repositories.service.RecAddService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.UserService;
@@ -90,6 +93,9 @@ public class RecipientController {
     @Autowired
     private RecAddService recAddService;
     
+    @Autowired
+    private RecAddOrderService raoService;
+    
     /**
      * 
      * @param model
@@ -102,6 +108,28 @@ public class RecipientController {
         
         return new ModelAndView("recipient/gifts/thankYou");
         
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param recAddId
+     * @param oId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "selectedAddress", method = RequestMethod.POST)
+    public ModelAndView selecAddress(Map<String, Object> model, @RequestParam Long recAddId, @RequestParam Long oId, HttpServletRequest request) {
+        
+        RecAddOrder rao = new RecAddOrder();
+        rao.setRecEmail(loginedUser.getEmail());
+        rao.setAddId(recAddId);
+        rao.setOrderId(oId);
+        
+        this.raoService.save(rao);
+        
+        return new ModelAndView(new RedirectView("/recipient/thankYou", true, true));
     }
     
     /**
@@ -159,7 +187,15 @@ public class RecipientController {
             recAdd.setPhone(form.getRecPhone());
             recAdd.setRecipient(this.reciService.findByEmail(loginedUser.getEmail()));
             
-            this.recAddService.save(recAdd);
+            recAdd = this.recAddService.save(recAdd);
+            
+            /* save rec-add-order */
+            RecAddOrder rao = new RecAddOrder();
+            rao.setRecEmail(loginedUser.getEmail());
+            rao.setAddId(recAdd.getId());
+            rao.setOrderId(form.getOId());
+        
+            this.raoService.save(rao);
             
         } catch (ConstraintViolationException e) {
             
@@ -303,8 +339,12 @@ public class RecipientController {
                 
             } else {
                 // save or update the recipient
-                Recipient rec = new Recipient();
-                rec.setId(form.getRecId());
+                Recipient rec = this.reciService.findByEmail(form.getEmail());
+                if(rec == null){
+                    rec = new Recipient();
+                    rec.setId(form.getRecId());
+                }
+                /* create new or update information if rec exist */
                 rec.setSender(u);
                 rec.setFirstName(f);
                 rec.setMiddleName(m);

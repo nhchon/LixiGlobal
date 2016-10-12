@@ -29,16 +29,26 @@ public class Bootstrap implements WebApplicationInitializer{
         AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
         rootContext.register(RootContextConfiguration.class);
         container.addListener(new ContextLoaderListener(rootContext));
+
+        /* encoding filter*/
+        FilterRegistration.Dynamic fr = container.addFilter("encodingFilter",
+                new CharacterEncodingFilter());
+        fr.setInitParameter("encoding", "UTF-8");
+        fr.setInitParameter("forceEncoding", "true");
+        fr.addMappingForUrlPatterns(null, false, "/*");
+        
         //
         AnnotationConfigWebApplicationContext servletContext = new AnnotationConfigWebApplicationContext();
         servletContext.register(WebServletContextConfiguration.class);
         ServletRegistration.Dynamic dispatcher = container.addServlet("springDispatcher", new DispatcherServlet(servletContext));
         dispatcher.setLoadOnStartup(1);
+        
         //MultipartConfigElement(location, maxFileSize, maxRequestSize, fileSizeThreshold)
         dispatcher.setMultipartConfig(new MultipartConfigElement(
                 null, 20_971_520L, 41_943_040L, 512_000
         ));
         dispatcher.addMapping("/");
+        
         // Restful services
         AnnotationConfigWebApplicationContext restContext =
                 new AnnotationConfigWebApplicationContext();
@@ -50,13 +60,6 @@ public class Bootstrap implements WebApplicationInitializer{
         );
         dispatcher.setLoadOnStartup(2);
         dispatcher.addMapping("/services/Rest/*");
-        
-        /* encoding filter*/
-        FilterRegistration.Dynamic fr = container.addFilter("encodingFilter",
-                new CharacterEncodingFilter());
-        fr.setInitParameter("encoding", "UTF-8");
-        fr.setInitParameter("forceEncoding", "true");
-        fr.addMappingForUrlPatterns(null, false, "/*");
         
     }
 }

@@ -4,24 +4,6 @@
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
-        <script type="text/javascript">
-            /** Page Script **/
-            var postInvisibleForm = function (url, fields) {
-                var form = $('<form id="mapForm" method="post"></form>')
-                        .attr({action: url, style: 'display: none;'});
-                for (var key in fields) {
-                    if (fields.hasOwnProperty(key))
-                        form.append($('<input type="hidden">').attr({
-                            name: key, value: fields[key]
-                        }));
-                }
-                form.append($('<input type="hidden">').attr({
-                    name: '${_csrf.parameterName}', value: '${_csrf.token}'
-                }));
-                $('body').append(form);
-                form.submit();
-            };
-        </script>
     </jsp:attribute>
 
     <jsp:body>

@@ -7,6 +7,33 @@
     <jsp:attribute name="extraJavascriptContent">
         <script type="text/javascript">
             /** Page Script **/
+            $(document).ready(function () {
+                $("input[name='recAddRadio']").click(function () {
+                    if($(this).prop("checked")){
+                        if($(this).val()==0){
+                            $('#otherAddForm').fadeIn("slow");
+                        }
+                        else{
+                            $('#otherAddForm').fadeOut();
+                        }
+                    }
+                });
+                
+                // submit address
+                $('#btnSubmit').click(function(){
+                    $("input[name='recAddRadio']").each(function(){
+                    if($(this).prop("checked")){
+                        if($(this).val()==0){
+                            // new address, submit form
+                            $('#recipientAddressForm').submit();
+                        }
+                        else{
+                            postInvisibleForm('<c:url value="/recipient/selectedAddress"/>', {recAddId: $(this).val(), oId:$('#oId').val()});
+                        }
+                    }
+                    });
+                });
+            });
         </script>
     </jsp:attribute>
 
@@ -19,6 +46,29 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading"><h3 class="title"><spring:message code="gift-address" text="Nhập địa chỉ giao hàng"/></h3></div>
                                 <div class="panel-body">
+                                    <c:if test="${not empty recAdds}">
+                                        <c:forEach items="${recAdds}" var="rAdd">
+                                            <div class="row" style="margin-bottom: 10px;">
+                                                <div class="col-md-1" style="padding-right: 0px; width: 40px;">
+                                                    <input type="radio"  name="recAddRadio" value="${rAdd.id}">
+                                                </div>
+                                                <div class="col-md-11" style="padding-left: 0px;">
+                                                    ${rAdd.name}<br/>
+                                                    ${rAdd.address}, ${rAdd.ward}, ${rAdd.district}, ${rAdd.province.name}<br/>
+                                                    <spring:message code="message.phone"/>:&nbsp;${rAdd.phone}
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        <div class="row" style="margin-top: 10px;">
+                                            <div class="col-md-1" style="padding-right: 0px; width: 40px;">
+                                                <input type="radio" name="recAddRadio" value="0" checked="">
+                                            </div>
+                                            <div class="col-md-11" style="padding-left: 0px;">
+                                                <spring:message code="new-add" text="Thêm địa chỉ khác"/>
+                                            </div>
+                                        </div>
+                                    </c:if>
+
                                     <c:if test="${validationErrors != null}">
                                         <div class="msg msg-error">
                                             <ul>
@@ -28,75 +78,80 @@
                                             </ul>
                                         </div>
                                     </c:if>
-                                    <c:url value="/recipient/address" var="recAddSubmitUrl"/>
-                                    <form:form method="post" modelAttribute="recipientAddressForm" action="${recAddSubmitUrl}">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label><spring:message code="message.name"/>:</label>
-                                                    <form:input type="text" path="recName" class="form-control"/>
-                                                    <div class="has-error"><form:errors path="recName" cssClass="help-block" element="div"/></div>
+                                    <div id="otherAddForm">
+                                        <c:url value="/recipient/address" var="recAddSubmitUrl"/>
+                                        <form:form method="post" modelAttribute="recipientAddressForm" action="${recAddSubmitUrl}">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><spring:message code="message.name"/>:</label>
+                                                        <form:input type="text" path="recName" class="form-control"/>
+                                                        <div class="has-error"><form:errors path="recName" cssClass="help-block" element="div"/></div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Receiver's Address</label>
-                                                    <form:input type="text" path="recAddress" class="form-control"/>
-                                                    <div class="has-error"><form:errors path="recAddress" cssClass="help-block" element="div"/></div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Receiver's Address</label>
+                                                        <form:input type="text" path="recAddress" class="form-control"/>
+                                                        <div class="has-error"><form:errors path="recAddress" cssClass="help-block" element="div"/></div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Province</label>
-                                                    <form:select path="recProvince" class="form-control">
-                                                        <c:forEach items="${provinces}" var="p">
-                                                            <option value="${p.id}">${p.name}</option>
-                                                        </c:forEach>
-                                                    </form:select>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Province</label>
+                                                        <form:select path="recProvince" class="form-control">
+                                                            <c:forEach items="${provinces}" var="p">
+                                                                <option value="${p.id}">${p.name}</option>
+                                                            </c:forEach>
+                                                        </form:select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label><spring:message code="mess.district" text="Quận/huyện"/></label>
-                                                    <form:input type="text" path="recDist" class="form-control"/>
-                                                    <div class="has-error"><form:errors path="recDist" cssClass="help-block" element="div"/></div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label><spring:message code="mess.district" text="Quận/huyện"/></label>
+                                                        <form:input type="text" path="recDist" class="form-control"/>
+                                                        <div class="has-error"><form:errors path="recDist" cssClass="help-block" element="div"/></div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label><spring:message code="mess.ward" text="Phường, xã"/></label>
-                                                    <form:input type="text" path="recWard" class="form-control"/>
-                                                    <div class="has-error"><form:errors path="recWard" cssClass="help-block" element="div"/></div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label><spring:message code="mess.ward" text="Phường, xã"/></label>
+                                                        <form:input type="text" path="recWard" class="form-control"/>
+                                                        <div class="has-error"><form:errors path="recWard" cssClass="help-block" element="div"/></div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label><spring:message code="mess.cell-phone" text="Điện thoại di động"/></label>
-                                                    <form:input type="text" path="recPhone" class="form-control"/>
-                                                    <div class="has-error"><form:errors path="recPhone" cssClass="help-block" element="div"/></div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label><spring:message code="mess.cell-phone" text="Điện thoại di động"/></label>
+                                                        <form:input type="text" path="recPhone" class="form-control"/>
+                                                        <div class="has-error"><form:errors path="recPhone" cssClass="help-block" element="div"/></div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <form:hidden path="oId"/>
-                                                    <button class="btn btn-primary" type="submit" style="width:300px;"><spring:message code="message.save"/></button>
-                                                    <%--<button class="btn btn-warning" type="button" onclick="location.href = '<c:url value="/recipient/gifts"/>'"><spring:message code="message.cancel"/></button>--%>
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <form:hidden path="oId"/>
+                                                        
+                                                        <%--<button class="btn btn-warning" type="button" onclick="location.href = '<c:url value="/recipient/gifts"/>'"><spring:message code="message.cancel"/></button>--%>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </form:form>
+                                    </div>
+                                        <div class="row" style="margin-top: 20px;">
+                                            <div class="col-md-12"><button id="btnSubmit" class="btn btn-primary" type="button" onclick="" style="width:300px;"><spring:message code="message.save"/></button></div>
                                         </div>
-                                    </form:form>
                                 </div>
                             </div>
                         </div>
