@@ -93,6 +93,9 @@ public class Recipient implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "recipient")
     private List<RecAdd> recAdds;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "recipient")
+    private List<RecAdd> recBanks;
+
     @Transient
     private double sumGift;
     

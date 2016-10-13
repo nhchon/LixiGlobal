@@ -31,7 +31,7 @@ public class RecipientAddressForm {
     @NotBlank(message = "{validate.not_null}")
     private String recPhone;
 
-    @NotNull
+    @NotNull(message = "{validate.not_null}")
     private Long oId;
     
     public RecipientAddressForm(){};

@@ -35,7 +35,7 @@
                                         <div style="font-size: 16px;font-weight: bold; text-align: center;"><spring:message code="mess.select-method" text="Please Select Gifting Method"/>:</div>
                                         <div style="margin-top: 10px;text-align: center;">
                                             <button class="btn btn-success pull-left btn-has-link-event" data-link="<c:url value="/recipient/address/${LIXI_ORDER.id}"/>">GIFTED</button>
-                                            <button class="btn btn-danger pull-right">REFUND</button>
+                                            <button class="btn btn-danger pull-right btn-has-link-event" data-link="<c:url value="/recipient/refund/${LIXI_ORDER.id}"/>">REFUND</button>
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                         </div>
                                         <div class="media-body">
                                             <h4 class="media-heading"><a href="<c:url value="/gifts/detail/${g.productId}"/>" target="_blank">${g.productName}</a></h4>
-                                            <spring:message code="message.quantity" text="Quantity"/>: <strong>${g.productQuantity}</strong> &nbsp; <spring:message code="message.price" text="Price"/>: <strong>VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/></strong>
+                                            <spring:message code="message.quantity" text="Quantity"/>: ${g.productQuantity} &nbsp; <spring:message code="message.price" text="Price"/>: VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/>
                                         </div>
                                     </div>
                                     </c:if>

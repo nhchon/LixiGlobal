@@ -31,26 +31,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.RecAdd;
 import vn.chonsoft.lixi.model.RecAddOrder;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.form.ChooseRecipientForm;
+import vn.chonsoft.lixi.model.form.RecBankForm;
 import vn.chonsoft.lixi.model.form.RecipientAddressForm;
+import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.ProvinceService;
 import vn.chonsoft.lixi.repositories.service.RecAddOrderService;
 import vn.chonsoft.lixi.repositories.service.RecAddService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
+import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
+import vn.chonsoft.lixi.web.util.LiXiUtils;
 
 /**
  *
@@ -96,6 +102,9 @@ public class RecipientController {
     @Autowired
     private RecAddOrderService raoService;
     
+    @Autowired
+    private ShippingChargedService shipService;
+    
     /**
      * 
      * @param model
@@ -113,6 +122,44 @@ public class RecipientController {
     /**
      * 
      * @param model
+     * @param oId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "refund/{oId}", method = RequestMethod.GET)
+    public ModelAndView refund(Map<String, Object> model, @PathVariable Long oId, HttpServletRequest request) {
+        
+        LixiOrder o = this.lxorderService.findById(oId);
+        
+        // get recipient in order
+        RecipientInOrder recInOrder = null;
+        List<RecipientInOrder> recInOrders = LiXiUtils.genMapRecGifts(o);
+        if(recInOrders != null){
+            for(RecipientInOrder rio : recInOrders){
+                if(rio.getRecipient().getEmail().equals(loginedUser.getEmail())){
+                    recInOrder = rio;
+                    break;
+                }
+            }
+            List<ShippingCharged> charged = this.shipService.findAll();
+            if(recInOrder != null) recInOrder.setCharged(charged);
+        }
+        
+        model.put("provinces", this.provinceService.findAll());
+        model.put("rio", recInOrder);
+        
+        RecBankForm form = new RecBankForm();
+        form.setOId(oId);
+        model.put("recBankForm", form);
+        
+        return new ModelAndView("recipient/gifts/inputBank");
+    }
+    
+    
+    /**
+     * 
+     * @param model
      * @param recAddId
      * @param oId
      * @param request
@@ -122,12 +169,27 @@ public class RecipientController {
     @RequestMapping(value = "selectedAddress", method = RequestMethod.POST)
     public ModelAndView selecAddress(Map<String, Object> model, @RequestParam Long recAddId, @RequestParam Long oId, HttpServletRequest request) {
         
+        /* check order id is valid */
+        String oIds = (String)request.getSession().getAttribute("NEW_ORDER_IDS");
+        if(oIds == null || !oIds.contains(","+oId.toString()+",")){
+            return new ModelAndView(new RedirectView("/user/signOut", true, true));
+        }
+        
         RecAddOrder rao = new RecAddOrder();
         rao.setRecEmail(loginedUser.getEmail());
         rao.setAddId(recAddId);
         rao.setOrderId(oId);
         
         this.raoService.save(rao);
+        
+        /* update receive method */
+        LixiOrder o = this.lxorderService.findById(oId);
+        if(o.getGifts() != null){
+            for(LixiOrderGift g : o.getGifts()){
+                g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
+                this.lxogiftService.save(g);
+            }
+        }
         
         return new ModelAndView(new RedirectView("/recipient/thankYou", true, true));
     }
@@ -176,6 +238,11 @@ public class RecipientController {
         }
         
         try {
+            /* check order id is valid */
+            String oIds = (String)request.getSession().getAttribute("NEW_ORDER_IDS");
+            if(oIds == null || !oIds.contains("," + form.getOId().toString()+",")){
+                return new ModelAndView(new RedirectView("/user/signOut", true, true));
+            }
             
             RecAdd recAdd = new RecAdd();
             recAdd.setName(form.getRecName());
@@ -197,6 +264,14 @@ public class RecipientController {
         
             this.raoService.save(rao);
             
+            /* update receive method */
+            LixiOrder o = this.lxorderService.findById(form.getOId());
+            if(o.getGifts() != null){
+                for(LixiOrderGift g : o.getGifts()){
+                    g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
+                    this.lxogiftService.save(g);
+                }
+            }
         } catch (ConstraintViolationException e) {
             
             model.put("validationErrors", e.getConstraintViolations());
@@ -227,6 +302,19 @@ public class RecipientController {
         List<Long> proIds = proGifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
         List<LixiOrder> proOrders = lxorderService.findAll(proIds);
 
+        String oIds = StringUtils.join(proIds, ',');
+        if(oIds != null){
+            if(!oIds.startsWith(",")){
+                oIds = ","+oIds;
+            }
+            if(!oIds.endsWith(",")){
+                oIds = oIds + ",";
+            }
+        }
+        
+        log.info("NEW_ORDER_IDS: " + oIds);
+        
+        request.getSession().setAttribute("NEW_ORDER_IDS", oIds);
         model.put("NEW_ORDERS", proOrders);
         
         return new ModelAndView("recipient/gifts/newGifts");
