@@ -76,6 +76,13 @@
                         </ul>
                     </li>
                     </security:authorize>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Products <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="<c:url value="/Administration/Products/input"/>">List of Products</a></li>
+                            <li><a href="<c:url value="/Administration/Products/input"/>">Input Product</a></li>
+                        </ul>
+                    </li>
                     <security:authorize access="hasAuthority('ADMIN_CONTROL')">
                         <security:authorize access="hasAuthority('SYSTEM_CONFIG_CONTROLLER')">
                             <li id="m03" class="dropdown <c:if test="${m03 eq true}">active</c:if>">
