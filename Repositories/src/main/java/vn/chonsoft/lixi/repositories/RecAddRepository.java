@@ -14,5 +14,7 @@ import vn.chonsoft.lixi.model.RecAdd;
  */
 public interface RecAddRepository  extends  JpaRepository<RecAdd, Long>{
     
+    RecAdd findByEmailAndId(String email, Long id);
+    
     List<RecAdd> findByEmail(String email);
 }

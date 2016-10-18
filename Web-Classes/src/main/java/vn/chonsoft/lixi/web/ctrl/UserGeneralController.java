@@ -4,7 +4,6 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -823,8 +822,9 @@ public class UserGeneralController {
         }
         
         // check if this user has gifts
-        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.PURCHASED.getValue());
-        List<LixiOrderGift> gifts = this.lxogiftService.findByRecipientEmailAndBkStatusIn(form.getEmail(), statuses);
+        //List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.PURCHASED.getValue());
+        //this.lxogiftService.findByRecipientEmailAndBkStatusIn(form.getEmail(), statuses);
+        List<LixiOrderGift> gifts = this.lxogiftService.findByRecipientEmailAndBkStatusAndBkReceiveMethod(loginedUser.getEmail(), EnumLixiOrderStatus.PROCESSED.getValue(), null);
         if(StringUtils.isBlank(request.getParameter("nextUrl")) && gifts != null && !gifts.isEmpty()){
             // sender has gifts
             return new ModelAndView(new RedirectView("/recipient/gifts", true, true));

@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.chonsoft.lixi.model.RecAddOrder;
@@ -18,6 +19,17 @@ public class RecAddOrderServiceImpl implements RecAddOrderService{
     
     @Autowired
     private RecAddOrderRepository raoRepo;
+
+    /**
+     * 
+     * @param addId
+     * @return 
+     */
+    @Override
+    public List<RecAddOrder> findByAddId(Long addId) {
+        return this.raoRepo.findByAddId(addId);
+    }
+    
     
     /**
      * 

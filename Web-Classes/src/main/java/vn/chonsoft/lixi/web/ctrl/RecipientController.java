@@ -6,8 +6,10 @@ package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +38,8 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.RecAdd;
 import vn.chonsoft.lixi.model.RecAddOrder;
+import vn.chonsoft.lixi.model.RecBank;
+import vn.chonsoft.lixi.model.RecBankOrder;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.User;
@@ -48,6 +52,8 @@ import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.ProvinceService;
 import vn.chonsoft.lixi.repositories.service.RecAddOrderService;
 import vn.chonsoft.lixi.repositories.service.RecAddService;
+import vn.chonsoft.lixi.repositories.service.RecBankOrderService;
+import vn.chonsoft.lixi.repositories.service.RecBankService;
 import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.repositories.service.UserService;
@@ -100,7 +106,13 @@ public class RecipientController {
     private RecAddService recAddService;
     
     @Autowired
+    private RecBankService recBankService;
+    
+    @Autowired
     private RecAddOrderService raoService;
+    
+    @Autowired
+    private RecBankOrderService rboService;
     
     @Autowired
     private ShippingChargedService shipService;
@@ -123,13 +135,34 @@ public class RecipientController {
      * 
      * @param model
      * @param oId
+     * @param id
      * @param request
      * @return 
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "refund/{oId}", method = RequestMethod.GET)
-    public ModelAndView refund(Map<String, Object> model, @PathVariable Long oId, HttpServletRequest request) {
+    @RequestMapping(value = "deleteBankAccount", method = RequestMethod.POST)
+    public ModelAndView deleteBankAccount(Map<String, Object> model, @RequestParam Long oId, @RequestParam Long id, HttpServletRequest request) {
         
+        List<RecBankOrder> rbo = this.rboService.findByBankId(id);
+        // check if it in use
+        if(rbo==null || rbo.isEmpty()){
+            
+            RecBank rb = this.recBankService.findById(loginedUser.getEmail(), id);
+            if(rb != null){
+
+                this.recBankService.delete(id);
+            }
+        }
+        
+        return new ModelAndView(new RedirectView("/recipient/refund/" + oId, true, true)); 
+    }
+    
+    /**
+     * 
+     * @param oId
+     * @return 
+     */
+    private RecipientInOrder getRecipientInOrder(Long oId){
         LixiOrder o = this.lxorderService.findById(oId);
         
         // get recipient in order
@@ -146,8 +179,23 @@ public class RecipientController {
             if(recInOrder != null) recInOrder.setCharged(charged);
         }
         
+        return recInOrder;
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param oId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "refund/{oId}", method = RequestMethod.GET)
+    public ModelAndView refund(Map<String, Object> model, @PathVariable Long oId, HttpServletRequest request) {
+        
         model.put("provinces", this.provinceService.findAll());
-        model.put("rio", recInOrder);
+        model.put("rio", getRecipientInOrder(oId));
+        model.put("rbs", this.recBankService.findByEmail(loginedUser.getEmail()));
         
         RecBankForm form = new RecBankForm();
         form.setOId(oId);
@@ -156,6 +204,101 @@ public class RecipientController {
         return new ModelAndView("recipient/gifts/inputBank");
     }
     
+    /**
+     * 
+     * @param model
+     * @param form
+     * @param errors
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "refund", method = RequestMethod.POST)
+    public ModelAndView refund(Map<String, Object> model,
+            @Valid RecBankForm form, Errors errors, HttpServletRequest request) {
+        
+        model.put("provinces", this.provinceService.findAll());
+        model.put("rio", getRecipientInOrder(form.getOId()));
+        model.put("rbs", this.recBankService.findByEmail(loginedUser.getEmail()));
+        
+        if (errors.hasErrors()) {
+            return new ModelAndView("recipient/gifts/inputBank");
+        }
+        
+        try {
+            /* check order id is valid */
+            String oIds = (String)request.getSession().getAttribute("NEW_ORDER_IDS");
+            if(oIds == null || !oIds.contains("," + form.getOId().toString()+",")){
+                return new ModelAndView(new RedirectView("/user/signOut", true, true));
+            }
+            
+            RecBank recBank = new RecBank();
+            recBank.setRecEmail(loginedUser.getEmail());
+            recBank.setTenNguoiHuong(form.getTenNguoiHuong());
+            recBank.setSoTaiKhoan(form.getSoTaiKhoan());
+            recBank.setBankName(form.getBankName());
+            recBank.setChiNhanh(form.getChiNhanh());
+            log.info(form.getChiNhanh());
+            recBank.setProvince(this.provinceService.findById(form.getRecProvince()));
+            recBank.setRecipient(this.reciService.findByEmail(loginedUser.getEmail()));
+            
+            recBank = this.recBankService.save(recBank);
+            
+            /* save rec-bank-order */
+            RecBankOrder rbo = new RecBankOrder();
+            rbo.setRecEmail(loginedUser.getEmail());
+            rbo.setBankId(recBank.getId());
+            rbo.setOrderId(form.getOId());
+        
+            this.rboService.save(rbo);
+            
+            /* update receive method */
+            LixiOrder o = this.lxorderService.findById(form.getOId());
+            if(o.getGifts() != null){
+                for(LixiOrderGift g : o.getGifts()){
+                    g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_MONEY_METHOD);
+                    this.lxogiftService.save(g);
+                }
+            }
+        } catch (ConstraintViolationException e) {
+            
+            model.put("validationErrors", e.getConstraintViolations());
+            return new ModelAndView("recipient/gifts/inputBank");
+            
+        }
+        
+        return new ModelAndView(new RedirectView("/recipient/thankYou", true, true));
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param oId
+     * @param id
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "deleteAddress", method = RequestMethod.POST)
+    public ModelAndView deleteAddress(Map<String, Object> model, @RequestParam Long oId, @RequestParam Long id, HttpServletRequest request) {
+        
+        // check if id not in use
+        List<RecAddOrder> raos = this.raoService.findByAddId(id);
+        log.info("raos is empty: " + (raos.isEmpty()));
+        
+        if(raos==null || raos.isEmpty()){
+            
+            RecAdd ra = this.recAddService.findById(loginedUser.getEmail(), id);
+            
+            log.info("ra is empty: " + (ra == null));
+            if(ra != null){
+                log.info("delete address: ");
+                this.recAddService.delete(id);
+            }
+        }
+        
+        return new ModelAndView(new RedirectView("/recipient/address/" + oId, true, true)); 
+    }
     
     /**
      * 
@@ -281,6 +424,7 @@ public class RecipientController {
         
         return new ModelAndView(new RedirectView("/recipient/thankYou", true, true));
     }
+    
     /**
      * 
      * @param model
@@ -300,6 +444,12 @@ public class RecipientController {
          * https://coderanch.com/t/623127/java/java/array-specific-attribute-values-list
          */
         List<Long> proIds = proGifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
+        // remove duplicate element
+        Set<Long> hs = new HashSet<>();
+        hs.addAll(proIds);
+        proIds.clear();
+        proIds.addAll(hs);
+        
         List<LixiOrder> proOrders = lxorderService.findAll(proIds);
 
         String oIds = StringUtils.join(proIds, ',');

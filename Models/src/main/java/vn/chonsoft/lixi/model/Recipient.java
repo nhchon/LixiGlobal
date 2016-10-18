@@ -11,7 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -90,11 +89,11 @@ public class Recipient implements Serializable {
     @ManyToOne(optional = false)
     private User sender;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "recipient")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipient")
     private List<RecAdd> recAdds;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "recipient")
-    private List<RecAdd> recBanks;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipient")
+    private List<RecBank> recBanks;
 
     @Transient
     private double sumGift;
@@ -280,6 +279,22 @@ public class Recipient implements Serializable {
 
     public void setCompletedOrders(List<LixiOrder> completedOrders) {
         this.completedOrders = completedOrders;
+    }
+
+    public List<RecAdd> getRecAdds() {
+        return recAdds;
+    }
+
+    public void setRecAdds(List<RecAdd> recAdds) {
+        this.recAdds = recAdds;
+    }
+
+    public List<RecBank> getRecBanks() {
+        return recBanks;
+    }
+
+    public void setRecBanks(List<RecBank> recBanks) {
+        this.recBanks = recBanks;
     }
     
     @Override

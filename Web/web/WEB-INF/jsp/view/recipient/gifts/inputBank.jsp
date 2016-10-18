@@ -5,6 +5,53 @@
     </jsp:attribute>
 
     <jsp:attribute name="extraJavascriptContent">
+        <script type="text/javascript">
+            /** Page Script **/
+            $(document).ready(function () {
+                $("input[name='recBankRadio']").click(function () {
+                    if($(this).prop("checked")){
+                        if($(this).val()==0){
+                            $('#otherBankForm').fadeIn("slow");
+                            //
+                            $("button[name='btnDelete']").hide();
+                        }
+                        else{
+                            $('#otherBankForm').fadeOut();
+                            $("button[name='btnDelete']").hide();
+                            $('#btnDelete'+$(this).val()).show();
+                        }
+                    }
+                });
+                
+                // submit address
+                $('#btnSubmit').click(function(){
+                    $("input[name='recBankRadio']").each(function(){
+                    if($(this).prop("checked")){
+                        if($(this).val()==0){
+                            // new address, submit form
+                            $('#recBankForm').submit();
+                        }
+                        else{
+                            postInvisibleForm('<c:url value="/recipient/selectedAddress"/>', {recAddId: $(this).val(), oId:$('#oId').val()});
+                        }
+                    }
+                    });
+                });
+                
+                // delete
+                $("button[name='btnDelete']").click(function(){
+                    var selectedId = 0;
+                    $("input[name='recBankRadio']").each(function(){
+                        if($(this).prop("checked")){
+                            selectedId = $(this).val();
+                            //break;
+                        }
+                    });
+                    
+                    postInvisibleForm('<c:url value="/recipient/deleteBankAccount"/>', {id: selectedId, oId:$('#oId').val()});
+                });
+            });
+        </script>
     </jsp:attribute>
 
     <jsp:body>
@@ -16,9 +63,34 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading"><h3 class="title"><spring:message code="bank-address" text="Nhập thông tin tài khoản nhận tiền"/></h3></div>
                                 <div class="panel-body">
-                                    <div id="otherAddForm">
-                                        <c:url value="/recipient/address" var="recAddSubmitUrl"/>
-                                        <form:form method="post" modelAttribute="recBankForm" action="${recAddSubmitUrl}">
+                                    <c:if test="${not empty rbs}">
+                                        <c:forEach items="${rbs}" var="rBank">
+                                            <div class="row" style="margin-bottom: 10px;">
+                                                <div class="col-md-1" style="padding-right: 0px; width: 40px;">
+                                                    <input type="radio"  name="recBankRadio" value="${rBank.id}">
+                                                </div>
+                                                <div class="col-md-9" style="padding-left: 0px;">
+                                                    ${rBank.soTaiKhoan}<br/>
+                                                    ${rBank.tenNguoiHuong}<br/>
+                                                    ${rBank.bankName}, ${rBank.chiNhanh}, ${rBank.province.name}
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button name="btnDelete" id="btnDelete${rBank.id}" class="btn btn-warning" style="display: none;"><spring:message code="message.delete"/></button>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        <div class="row" style="margin-top: 10px;">
+                                            <div class="col-md-1" style="padding-right: 0px; width: 40px;">
+                                                <input type="radio" name="recBankRadio" value="0" checked="">
+                                            </div>
+                                            <div class="col-md-11" style="padding-left: 0px;">
+                                                <spring:message code="new-bank" text="Thêm tài khoản khác"/>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                    <div id="otherBankForm">
+                                        <c:url value="/recipient/refund" var="recBankSubmitUrl"/>
+                                        <form:form method="post" modelAttribute="recBankForm" action="${recBankSubmitUrl}">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -74,12 +146,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </form:form>
-                                    </div>
-
                                     <div class="row" style="margin-top: 20px;">
                                         <div class="col-md-12"><button id="btnSubmit" class="btn btn-primary" type="button" onclick="" style="width:300px;"><spring:message code="message.save"/></button></div>
                                     </div>
+                                        </form:form>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.repositories.service;
 
+import java.util.List;
 import vn.chonsoft.lixi.model.RecBank;
 
 /**
@@ -13,4 +14,12 @@ import vn.chonsoft.lixi.model.RecBank;
 public interface RecBankService {
     
     RecBank save(RecBank rBank);
+    
+    RecBank findById(Long id);
+    
+    RecBank findById(String email, Long id);
+    
+    void delete(Long id);
+    
+    List<RecBank> findByEmail(String email);
 }

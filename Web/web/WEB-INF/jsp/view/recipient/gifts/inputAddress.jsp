@@ -12,9 +12,14 @@
                     if($(this).prop("checked")){
                         if($(this).val()==0){
                             $('#otherAddForm').fadeIn("slow");
+                            //
+                            $("button[name='btnDelete']").hide();
                         }
                         else{
                             $('#otherAddForm').fadeOut();
+                            //
+                            $("button[name='btnDelete']").hide();
+                            $('#btnDelete'+$(this).val()).show();
                         }
                     }
                 });
@@ -32,6 +37,18 @@
                         }
                     }
                     });
+                });
+                // delete
+                $("button[name='btnDelete']").click(function(){
+                    var selectedId = 0;
+                    $("input[name='recAddRadio']").each(function(){
+                        if($(this).prop("checked")){
+                            selectedId = $(this).val();
+                            //break;
+                        }
+                    });
+                    
+                    postInvisibleForm('<c:url value="/recipient/deleteAddress"/>', {id: selectedId, oId:$('#oId').val()});
                 });
             });
         </script>
@@ -52,10 +69,13 @@
                                                 <div class="col-md-1" style="padding-right: 0px; width: 40px;">
                                                     <input type="radio"  name="recAddRadio" value="${rAdd.id}">
                                                 </div>
-                                                <div class="col-md-11" style="padding-left: 0px;">
+                                                <div class="col-md-9" style="padding-left: 0px;">
                                                     ${rAdd.name}<br/>
                                                     ${rAdd.address}, ${rAdd.ward}, ${rAdd.district}, ${rAdd.province.name}<br/>
                                                     <spring:message code="message.phone"/>:&nbsp;${rAdd.phone}
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button name="btnDelete" id="btnDelete${rAdd.id}" class="btn btn-warning" style="display: none;"><spring:message code="message.delete"/></button>
                                                 </div>
                                             </div>
                                         </c:forEach>
@@ -148,10 +168,10 @@
                                                 </div>
                                             </div>
                                         </form:form>
-                                    </div>
                                         <div class="row" style="margin-top: 20px;">
                                             <div class="col-md-12"><button id="btnSubmit" class="btn btn-primary" type="button" onclick="" style="width:300px;"><spring:message code="message.save"/></button></div>
                                         </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -19,6 +19,37 @@ public class RecAddServiceImpl implements RecAddService{
 
     @Autowired
     private RecAddRepository recAddRepository;
+
+    /**
+     * 
+     * @param id 
+     */
+    @Override
+    public void delete(Long id){
+        this.recAddRepository.delete(id);
+    }
+    /**
+     * 
+     * @param email
+     * @param id
+     * @return 
+     */
+    @Override
+    public RecAdd findById(String email, Long id) {
+        
+        return this.recAddRepository.findByEmailAndId(email, id);
+    }
+
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    @Override
+    public RecAdd findById(Long id) {
+        return this.recAddRepository.findOne(id);
+    }
+    
     
     /**
      * 

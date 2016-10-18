@@ -13,6 +13,13 @@ import vn.chonsoft.lixi.model.RecAdd;
  */
 public interface RecAddService {
     
+    RecAdd findById(String email, Long id);
+    
+    RecAdd findById(Long id);
+    
     List<RecAdd> findByEmail(String email);
+    
     RecAdd save(RecAdd recAdd);
+    
+    void delete(Long id);
 }

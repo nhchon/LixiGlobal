@@ -5,16 +5,15 @@
 package vn.chonsoft.lixi.repositories.service;
 
 import java.util.List;
-import vn.chonsoft.lixi.model.RecAddOrder;
+import vn.chonsoft.lixi.model.RecBankOrder;
 
 /**
  *
  * @author Asus
  */
-public interface RecAddOrderService {
+public interface RecBankOrderService {
     
-    List<RecAddOrder> findByAddId(Long addId);
+    List<RecBankOrder> findByBankId(Long bankId);
     
-    RecAddOrder save(RecAddOrder rao);
-    
+    RecBankOrder save(RecBankOrder rbo);
 }

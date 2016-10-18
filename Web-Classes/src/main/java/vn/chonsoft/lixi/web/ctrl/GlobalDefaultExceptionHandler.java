@@ -162,7 +162,7 @@ public class GlobalDefaultExceptionHandler {
         b.append("</p>");
         
         /* email to admin */
-        emailLixiGlobalError(req, req.getRequestURL().toString(), e.getMessage(), b.toString());
+        //emailLixiGlobalError(req, req.getRequestURL().toString(), e.getMessage(), b.toString());
 
         // Otherwise setup and send the user to a default error-view.
         ModelAndView mav = new ModelAndView();
