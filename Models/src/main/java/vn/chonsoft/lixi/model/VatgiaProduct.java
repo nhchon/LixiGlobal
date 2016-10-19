@@ -9,6 +9,8 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,6 +28,7 @@ public class VatgiaProduct implements Serializable {
     
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
@@ -45,9 +48,6 @@ public class VatgiaProduct implements Serializable {
     @Basic
     @Column(name = "description")
     private String description;
-    
-    @Transient
-    private String beautyDes;
     
     @Basic(optional = false)
     @Column(name = "price")
@@ -71,6 +71,9 @@ public class VatgiaProduct implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
 
+    @Transient
+    private String beautyDes;
+    
     /* selected in current order */
     @Transient
     private Boolean selected;

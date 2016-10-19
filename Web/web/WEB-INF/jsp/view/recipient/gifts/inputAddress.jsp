@@ -168,9 +168,9 @@
                                                 </div>
                                             </div>
                                         </form:form>
-                                        <div class="row" style="margin-top: 20px;">
-                                            <div class="col-md-12"><button id="btnSubmit" class="btn btn-primary" type="button" onclick="" style="width:300px;"><spring:message code="message.save"/></button></div>
-                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 20px;">
+                                        <div class="col-md-12"><button id="btnSubmit" class="btn btn-primary" type="button" onclick="" style="width:300px;"><spring:message code="message.save"/></button></div>
                                     </div>
                                 </div>
                             </div>

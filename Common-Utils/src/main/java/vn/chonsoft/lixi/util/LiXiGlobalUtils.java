@@ -35,41 +35,63 @@ import vn.chonsoft.lixi.pojo.Exrate;
  * @author chonnh
  */
 public abstract class LiXiGlobalUtils {
-    
+
     private static final Logger log = LogManager.getLogger(LiXiGlobalUtils.class);
-    
-    /**
-     * round to hundred
-     * @param a
-     * @return 
-     */
-    public static long floor2Hundred(double a){
-        
-        double temp = Math.floor(a / 100.0) * 100.0;
-        
-        return (long)temp;
-    }
-    
-    
+
     /**
      * 
-     * @param html
+     * @param a
+     * @param percent
+     * @param direction
      * @return 
      */
+    public static double increaseByPercent(double a, double percent, boolean direction) {
+
+        double percentage = percent / 100;
+        // up
+        if (direction) {
+            return a * (1 + percentage);
+        }
+        // down
+        else {
+            return a * (1 - percentage);
+        }
+    }
+
+    /**
+     * round to hundred
+     *
+     * @param a
+     * @return
+     */
+    public static long floor2Hundred(double a) {
+
+        double temp = Math.floor(a / 100.0) * 100.0;
+
+        return (long) temp;
+    }
+
+    /**
+     *
+     * @param html
+     * @return
+     */
     public static String html2text(String html) {
-        
-        if(StringUtils.isEmpty(html)) return html;
-        
+
+        if (StringUtils.isEmpty(html)) {
+            return html;
+        }
+
         String t = Jsoup.parse(html).text();
-        
-        if(!StringUtils.isBlank(t)){
+
+        if (!StringUtils.isBlank(t)) {
             // remove double spaces
             return t.replaceAll("\\s+", " ");
-        }
-        else{
+        } else {
             return t;
         }
     }
+
     /**
      *
      * @param file
@@ -111,9 +133,9 @@ public abstract class LiXiGlobalUtils {
         return bytes;
 
     }
-    
-    public static String getClientIp(HttpServletRequest request){
-        
+
+    public static String getClientIp(HttpServletRequest request) {
+
         /*
         String ipAddress = request.getRemoteAddr();
         if (ipAddress == null) {  
@@ -122,45 +144,44 @@ public abstract class LiXiGlobalUtils {
         }
         
         return ipAddress;
-        */
-        
-        /*
+         */
+ /*
          * http://stackoverflow.com/questions/4678797/how-do-i-get-the-remote-address-of-a-client-in-servlet
          */
-        String ip = request.getHeader("X-Forwarded-For");  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getHeader("Proxy-Client-IP");  
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getHeader("WL-Proxy-Client-IP");  
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getHeader("HTTP_CLIENT_IP");  
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");  
-        }  
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
-            ip = request.getRemoteAddr();  
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
         }
-        
-        return ip;          
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+
+        return ip;
     }
-    
+
     /**
-     * 
+     *
      * @param a
-     * @return 
+     * @return
      */
-    public static double truncD(double a){
-        
-        return (long)a;
+    public static double truncD(double a) {
+
+        return (long) a;
     }
-    
+
     /**
-     * 
+     *
      * @param a
-     * @return 
+     * @return
      */
     public static double round2Decimal(double a) {
 
@@ -168,69 +189,69 @@ public abstract class LiXiGlobalUtils {
     }
 
     /**
-     * 
+     *
      * @param total
-     * @return 
+     * @return
      */
-    public static double getTestTotalAmount(double total){
-        
-        if(total < 10) return 1.0;
-        
-        return round2Decimal(total/10.0);
+    public static double getTestTotalAmount(double total) {
+
+        if (total < 10) {
+            return 1.0;
+        }
+
+        return round2Decimal(total / 10.0);
     }
-    
-    
+
     /**
-     * 
+     *
      * @param netTransStatus
-     * @return 
+     * @return
      */
-    public static String translateNetTransStatus(String netTransStatus){
-    
-        if(EnumTransactionStatus.authorizedPendingCapture.getValue().equals(netTransStatus)||
-           EnumTransactionStatus.capturedPendingSettlement.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.refundPendingSettlement.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.approvedReview.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.underReview.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.FDSPendingReview.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.FDSAuthorizedPendingReview.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.inProgress.getValue().equals(netTransStatus)){
-            
+    public static String translateNetTransStatus(String netTransStatus) {
+
+        if (EnumTransactionStatus.authorizedPendingCapture.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.capturedPendingSettlement.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.refundPendingSettlement.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.approvedReview.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.underReview.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.FDSPendingReview.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.FDSAuthorizedPendingReview.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.inProgress.getValue().equals(netTransStatus)) {
+
             return LiXiGlobalConstants.TRANS_STATUS_IN_PROGRESS;
-            
+
         }
-        
-        if(EnumTransactionStatus.communicationError.getValue().equals(netTransStatus)||
-           EnumTransactionStatus.declined.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.expired.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.generalError.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.failedReview.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.settlementError.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.returnedItem.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.voidedByUser.getValue().equals(netTransStatus) ||
-           EnumTransactionStatus.voided.getValue().equals(netTransStatus)){
-            
+
+        if (EnumTransactionStatus.communicationError.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.declined.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.expired.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.generalError.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.failedReview.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.settlementError.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.returnedItem.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.voidedByUser.getValue().equals(netTransStatus)
+                || EnumTransactionStatus.voided.getValue().equals(netTransStatus)) {
+
             return LiXiGlobalConstants.TRANS_STATUS_DECLINED;
-            
+
         }
-        
-        if(EnumTransactionStatus.refundSettledSuccessfully.getValue().equals(netTransStatus)){
-            
+
+        if (EnumTransactionStatus.refundSettledSuccessfully.getValue().equals(netTransStatus)) {
+
             return LiXiGlobalConstants.TRANS_STATUS_REFUNED;
-            
+
         }
-        
-        if(EnumTransactionStatus.settledSuccessfully.getValue().equals(netTransStatus) || EnumTransactionStatus.couldNotVoid.getValue().equals(netTransStatus)){
-            
+
+        if (EnumTransactionStatus.settledSuccessfully.getValue().equals(netTransStatus) || EnumTransactionStatus.couldNotVoid.getValue().equals(netTransStatus)) {
+
             return LiXiGlobalConstants.TRANS_STATUS_PROCESSED;
-            
+
         }
-        
+
         return netTransStatus;
-    
+
     }
-    
-    
+
     /**
      *
      * @param object
@@ -254,10 +275,10 @@ public abstract class LiXiGlobalUtils {
     }
 
     /**
-     * 
+     *
      * @param <T>
      * @param object
-     * @return 
+     * @return
      */
     public static <T> String marshalWithoutRootElement(T object) {
         try {
@@ -266,7 +287,7 @@ public abstract class LiXiGlobalUtils {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             //marshaller.marshal(object, stringWriter);
-            marshaller.marshal( new JAXBElement(new QName("uri","local"), object.getClass(), object ), stringWriter);
+            marshaller.marshal(new JAXBElement(new QName("uri", "local"), object.getClass(), object), stringWriter);
             return stringWriter.toString();
         } catch (JAXBException e) {
             //
@@ -275,89 +296,93 @@ public abstract class LiXiGlobalUtils {
             return (String.format("Exception while marshalling: %s", e.getMessage()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param <E>
      * @param i
-     * @return 
+     * @return
      */
-    public static <E> List<E> toList(Iterable<E> i)
-    {
+    public static <E> List<E> toList(Iterable<E> i) {
         List<E> list = new ArrayList<>();
         i.forEach(list::add);
         return list;
     }
-    
+
     /**
-     * 
+     *
      * @param phone
-     * @return 
+     * @return
      */
-    public static String checkZeroAtBeginOfPhoneNumber(String phone){
-        
-        if(StringUtils.isBlank(phone)) return phone;
-        
+    public static String checkZeroAtBeginOfPhoneNumber(String phone) {
+
+        if (StringUtils.isBlank(phone)) {
+            return phone;
+        }
+
         // remove blank
         phone = phone.replace("-", "").replace(" ", "").replace("(", "").replace(")", "");
-        
-        if(!phone.startsWith("0")){
-            
+
+        if (!phone.startsWith("0")) {
+
             return "0" + phone;
-        }
-        else{
+        } else {
             return phone;
         }
     }
-    
+
     /**
-     * 
+     *
      * @param rId
-     * @return 
+     * @return
      */
-    public static String getBeautyRId(Long rId){
-        
-        if(rId == null) return "";
-        
+    public static String getBeautyRId(Long rId) {
+
+        if (rId == null) {
+            return "";
+        }
+
         String r = rId.toString();
-        
+
         r = StringUtils.leftPad(r, 8, "0");
-        
+
         StringBuilder br = new StringBuilder();
-        
+
         br.append(LiXiGlobalConstants.R);
         br.append(r);
-        
+
         br.insert(4, '-');
         br.insert(7, '-');
-        
+
         return br.toString();
     }
-    
+
     /**
-     * 
+     *
      * @param rId
-     * @return 
+     * @return
      */
-    public static String getBeautySId(Long rId){
-        
-        if(rId == null) return "";
-        
+    public static String getBeautySId(Long rId) {
+
+        if (rId == null) {
+            return "";
+        }
+
         String r = rId.toString();
-        
+
         r = StringUtils.leftPad(r, 8, "0");
-        
+
         StringBuilder br = new StringBuilder();
-        
+
         br.append(LiXiGlobalConstants.S);
         br.append(r);
-        
+
         br.insert(4, '-');
         br.insert(7, '-');
-        
+
         return br.toString();
     }
- 
+
     /**
      *
      * @return
@@ -413,5 +438,5 @@ public abstract class LiXiGlobalUtils {
 
         return null;
     }
-    
+
 }

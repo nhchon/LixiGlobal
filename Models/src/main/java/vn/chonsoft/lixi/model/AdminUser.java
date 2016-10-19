@@ -32,7 +32,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "admin_users")
 @XmlRootElement
 public class AdminUser implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
