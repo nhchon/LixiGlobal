@@ -39,5 +39,7 @@ public interface VatgiaProductService {
     
     int updateAlive(Integer category, Integer alive);
     
-    public void loadAllVatGiaProducts();
+    void loadAllVatGiaProducts();
+    
+    Page<VatgiaProduct> findAll(Pageable page);
 }

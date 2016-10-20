@@ -34,6 +34,18 @@
         <div class="row">
             <div class="col-md-12">
                 <!-- Content -->
+                <c:if test="${validationErrors != null}">
+                    <div class="msg msg-error">
+                        <ul>
+                            <c:forEach items="${validationErrors}" var="error">
+                                <li><c:out value="${error.message}" /></li>
+                                </c:forEach>
+                        </ul>
+                    </div>
+                </c:if>
+                <c:if test="${param.success eq '1'}">
+                    <div class="alert alert-success" role="alert">Insert success!</div>
+                </c:if>
                 <form:form modelAttribute="inputProductForm">
                     <div class="row">
                         <div class="col-md-12">
@@ -62,6 +74,7 @@
                             <div class="form-group">
                                 <label>Price:</label>
                                 <form:input path="price" class="form-control"/>
+                                <span class="help-block">(Minimum 10$ ~ 200000 VND)</span>
                                 <div class="has-error"><form:errors path="price" cssClass="help-block" element="div"/></div>
                             </div>
                         </div>
@@ -94,10 +107,12 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-primary" style="width: 100px;">Save</button>
-                            <button class="btn btn-warning">Cancel</button>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8" style="text-align: center;">
+                            <button class="btn btn-primary" style="width: 200px;">Save</button>
+                            <button class="btn btn-warning" type="button">Cancel</button>
                         </div>
+                        <div class="col-md-2"></div>
                     </div>
                 </form:form>
 

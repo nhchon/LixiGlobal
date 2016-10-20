@@ -11,12 +11,14 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
+import vn.chonsoft.lixi.repositories.service.VatgiaProductService;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.CategoriesBean;
@@ -52,6 +56,9 @@ public class IndexController {
     
     @Autowired
     private LixiExchangeRateService xrService;
+    
+    @Autowired
+    private VatgiaProductService vgpSer;
     
     /**
      * 
@@ -282,4 +289,49 @@ public class IndexController {
             log.info(e.getMessage(), e);
         }
     }
+    
+    @RequestMapping(value = "/loadProductImage/{id}", method = RequestMethod.GET)
+    public void loadProductImage(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response) {
+        
+        try {
+            
+            BufferedImage image = null;
+            String extension = "jpg";
+            
+            try {
+                VatgiaProduct p = this.vgpSer.findById(id);
+                String imageUrl = p.getImageUrl();
+                
+                extension = FilenameUtils.getExtension(imageUrl);
+                log.info("imageUrl: " + imageUrl);
+                log.info("extension: " + extension);
+                
+                URL url = new URL(imageUrl);
+                //image = ImageIO.read(new BufferedInputStream(url.openStream()));
+                
+                // set mime type as jpg image
+                response.setContentType("image/" + extension);
+                IOUtils.copy(url.openStream(), response.getOutputStream());
+                
+            } catch (IOException e) {
+                log.info(e.getMessage(), e);
+                
+                // gets absolute path of the web application
+                String applicationPath = request.getServletContext().getRealPath("");
+                String noImageFilePath = FilenameUtils.normalize(applicationPath + File.separator + LiXiConstants.WEB_INF_FOLDER + File.separator + LiXiConstants.CATEGORY_ICON_FOLDER + File.separator + "no_image.jpg");
+                File file = new File(noImageFilePath);
+
+                // the line that reads the image file
+                image = ImageIO.read(file);
+                // set mime type as jpg image
+                response.setContentType("image/jpg");
+                // write out stream
+                ImageIO.write(image, extension, response.getOutputStream());
+            }
+            
+        } catch (IOException e) {
+            // todo: return safe photo instead
+            log.info(e.getMessage(), e);
+        }
+    }    
 }

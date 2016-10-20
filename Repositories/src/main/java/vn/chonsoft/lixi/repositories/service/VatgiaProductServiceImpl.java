@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.VatgiaCategory;
@@ -35,6 +34,18 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
     
     @Autowired
     private LiXiVatGiaUtils lxVatGiaUtils;
+
+    /**
+     * 
+     * @param page
+     * @return 
+     */
+    @Override
+    public Page<VatgiaProduct> findAll(Pageable page) {
+        
+        return this.vgpRepository.findAll(page);
+    }
+    
     
     /**
      * 

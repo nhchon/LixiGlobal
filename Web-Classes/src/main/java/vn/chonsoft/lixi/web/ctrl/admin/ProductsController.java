@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +42,28 @@ public class ProductsController {
     @Autowired
     private VatgiaProductService vgpSer;
     
+    /**
+     * 
+     * @param model
+     * @param page
+     * @return 
+     */
+    @RequestMapping(value = "list", method = RequestMethod.GET)
+    public ModelAndView list(Map<String, Object> model, @PageableDefault(value = 50, sort = {"alive", "id"}, direction = Sort.Direction.DESC) Pageable page){
+        
+        Page<VatgiaProduct> pRs = this.vgpSer.findAll(page);
+        
+        model.put("pRs", pRs);
+        
+        return new ModelAndView("Administration/products/listProducts");
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = "input", method = RequestMethod.GET)
     public ModelAndView inputProduct(Map<String, Object> model, HttpServletRequest request){
         
@@ -63,7 +89,7 @@ public class ProductsController {
         model.put("categories", this.lxcSer.findAll());
         
         if (errors.hasErrors()) {
-            return new ModelAndView("recipient/gifts/inputProduct");
+            return new ModelAndView("Administration/products/inputProduct");
         }
         
         try {
