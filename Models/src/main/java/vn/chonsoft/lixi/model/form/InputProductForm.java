@@ -12,6 +12,8 @@ import vn.chonsoft.lixi.validations.NotBlank;
  */
 public class InputProductForm {
     
+    private Integer id = 0;
+    
     @NotBlank(message = "{validate.not_null}")
     private String name;
     
@@ -27,6 +29,14 @@ public class InputProductForm {
     
     @NotBlank(message = "{validate.not_null}")
     private String productSource;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

@@ -26,7 +26,7 @@
     <jsp:body>
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-            <li><a href="<c:url value="/Administration/SystemSupport/list"/>">Issue List</a></li>
+            <li><a href="<c:url value="/Administration/Products/list"/>">List Products</a></li>
         </ul>
 
         <!-- main -->
@@ -44,9 +44,10 @@
                     </div>
                 </c:if>
                 <c:if test="${param.success eq '1'}">
-                    <div class="alert alert-success" role="alert">Insert success!</div>
+                    <div class="alert alert-success" role="alert">Input Product success!</div>
                 </c:if>
-                <form:form modelAttribute="inputProductForm">
+                <c:url value="/Administration/Products/input" var="inputProductUrl"/>
+                <form:form modelAttribute="inputProductForm" action="${inputProductUrl}">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -62,7 +63,7 @@
                                 <label>Category Name:</label>
                                 <form:select path="category" class="form-control">
                                     <c:forEach items="${categories}" var="c">
-                                        <option value="${c.id}">${c.english}</option>
+                                        <option value="${c.id}" <c:if test="${c.id eq inputProductForm.category}">selected=""</c:if>>${c.english}</option>
                                     </c:forEach>
                                 </form:select>
                                 <div class="has-error"><form:errors path="category" cssClass="help-block" element="div"/></div>
@@ -109,6 +110,7 @@
                     <div class="row">
                         <div class="col-md-2"></div>
                         <div class="col-md-8" style="text-align: center;">
+                            <form:hidden path="id"/>
                             <button class="btn btn-primary" style="width: 200px;">Save</button>
                             <button class="btn btn-warning" type="button">Cancel</button>
                         </div>
