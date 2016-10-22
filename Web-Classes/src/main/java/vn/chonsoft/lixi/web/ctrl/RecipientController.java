@@ -124,13 +124,26 @@ public class RecipientController {
      * @return 
      */
     @UserSecurityAnnotation
-    @RequestMapping(value = "thankYou", method = RequestMethod.GET)
-    public ModelAndView address(Map<String, Object> model, HttpServletRequest request) {
+    @RequestMapping(value = "address/thankYou", method = RequestMethod.GET)
+    public ModelAndView giftThankYou(Map<String, Object> model, HttpServletRequest request) {
         
-        return new ModelAndView("recipient/gifts/thankYou");
+        return new ModelAndView("recipient/gifts/giftThankYou");
         
     }
     
+    /**
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "refund/thankYou", method = RequestMethod.GET)
+    public ModelAndView refundThankYou(Map<String, Object> model, HttpServletRequest request) {
+        
+        return new ModelAndView("recipient/gifts/refundThankYou");
+        
+    }
     /**
      * 
      * @param model
@@ -267,7 +280,7 @@ public class RecipientController {
             
         }
         
-        return new ModelAndView(new RedirectView("/recipient/thankYou", true, true));
+        return new ModelAndView(new RedirectView("/recipient/refund/thankYou", true, true));
     }
     
     /**
