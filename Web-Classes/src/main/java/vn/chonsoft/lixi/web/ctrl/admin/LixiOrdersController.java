@@ -40,6 +40,7 @@ import vn.chonsoft.lixi.model.LixiBatchOrder;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.form.LixiOrderSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
@@ -53,6 +54,7 @@ import vn.chonsoft.lixi.repositories.service.LixiBatchService;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
 import vn.chonsoft.lixi.repositories.service.LixiExchangeRateService;
 import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
+import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderSearchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
@@ -80,6 +82,9 @@ public class LixiOrdersController {
     private LixiOrderService lxOrderService;
 
     @Autowired
+    private LixiOrderGiftService lxogiftService;
+
+    @Autowired
     private LixiOrderSearchService lxOrderSearchService;
 
     @Autowired
@@ -105,6 +110,19 @@ public class LixiOrdersController {
 
     @Autowired
     private ShippingChargedService shipService;
+    
+    /**
+     * 
+     * @param model
+     * @return 
+     */
+    public ModelAndView giftedOrders(Map<String, Object> model){
+        
+        List<LixiOrderGift> gifts = this.lxogiftService.findByBkStatusAndBkReceiveMethod(EnumLixiOrderStatus.PROCESSED.getValue(), LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
+        
+        return null;
+        
+    }
     
     /**
      *
