@@ -248,6 +248,7 @@ public class BuyGiftsAjaxController {
                         lxogift.setProductName(vgp.getName());
                         lxogift.setProductImage(vgp.getImageUrl());
                         lxogift.setProductQuantity(quantity);
+                        lxogift.setProductSource(vgp.getLinkDetail());
                         lxogift.setBkStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());// not yet submitted
                         lxogift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());// not yet submitted
                         lxogift.setLixiMargined(false);
