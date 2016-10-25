@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
@@ -116,11 +117,31 @@ public class LixiOrdersController {
      * @param model
      * @return 
      */
+    @RequestMapping(value = "giftedOrders", method = RequestMethod.GET)
     public ModelAndView giftedOrders(Map<String, Object> model){
         
         List<LixiOrderGift> gifts = this.lxogiftService.findByBkStatusAndBkReceiveMethod(EnumLixiOrderStatus.PROCESSED.getValue(), LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
+        List<Long> proIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
+        LiXiGlobalUtils.removeDupEle(proIds);
         
-        return null;
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        List<ShippingCharged> charged = this.shipService.findAll();
+        
+        List<LixiOrder> orders = lxOrderService.findAll(proIds);
+        
+        if (orders != null) {
+            orders.forEach(o -> {
+                
+                List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
+                recInOrder.forEach(r -> {r.setCharged(charged);});
+                
+                mOs.put(o, recInOrder);
+            });
+        }
+
+        model.put("mOs", mOs);
+        
+        return new ModelAndView("Administration/orders/giftedOrder");
         
     }
     

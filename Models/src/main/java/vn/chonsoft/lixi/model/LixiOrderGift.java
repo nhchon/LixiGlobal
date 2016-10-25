@@ -64,6 +64,10 @@ public class LixiOrderGift implements Serializable {
     private int productQuantity;
     
     @Basic
+    @Column(name = "product_source")
+    private String productSource;
+    
+    @Basic
     @Column(name = "bk_status")
     private String bkStatus;
     
@@ -193,6 +197,14 @@ public class LixiOrderGift implements Serializable {
 
     public void setProductQuantity(int productQuantity) {
         this.productQuantity = productQuantity;
+    }
+
+    public String getProductSource() {
+        return productSource;
+    }
+
+    public void setProductSource(String productSource) {
+        this.productSource = productSource;
     }
 
     public Date getCreatedDate() {

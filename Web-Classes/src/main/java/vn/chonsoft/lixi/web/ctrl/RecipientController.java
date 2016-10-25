@@ -6,10 +6,8 @@ package vn.chonsoft.lixi.web.ctrl;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -347,7 +345,7 @@ public class RecipientController {
             }
         }
         
-        return new ModelAndView(new RedirectView("/recipient/thankYou", true, true));
+        return new ModelAndView(new RedirectView("/recipient/address/thankYou", true, true));
     }
     
     /**
@@ -435,7 +433,7 @@ public class RecipientController {
             
         }
         
-        return new ModelAndView(new RedirectView("/recipient/thankYou", true, true));
+        return new ModelAndView(new RedirectView("/recipient/address/thankYou", true, true));
     }
     
     /**
@@ -457,11 +455,7 @@ public class RecipientController {
          * https://coderanch.com/t/623127/java/java/array-specific-attribute-values-list
          */
         List<Long> proIds = proGifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
-        // remove duplicate element
-        Set<Long> hs = new HashSet<>();
-        hs.addAll(proIds);
-        proIds.clear();
-        proIds.addAll(hs);
+        LiXiGlobalUtils.removeDupEle(proIds);
         
         List<LixiOrder> proOrders = lxorderService.findAll(proIds);
 

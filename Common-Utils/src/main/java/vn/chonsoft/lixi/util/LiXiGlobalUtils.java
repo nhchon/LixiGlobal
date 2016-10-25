@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -38,6 +40,19 @@ public abstract class LiXiGlobalUtils {
 
     private static final Logger log = LogManager.getLogger(LiXiGlobalUtils.class);
 
+    /**
+     * 
+     * @param proIds 
+     */
+    public static void removeDupEle(List<Long> proIds){
+        
+        // remove duplicate element
+        Set<Long> hs = new HashSet<>();
+        hs.addAll(proIds);
+        proIds.clear();
+        proIds.addAll(hs);
+        
+    }
     /**
      * 
      * @param a
