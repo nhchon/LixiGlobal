@@ -11,6 +11,7 @@
     </jsp:attribute>
 
     <jsp:body>
+        <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <section class="section-gift bg-default main-section">
             <div class="container post-wrapper" style="padding-top:30px;">
                 <div class="section-receiver">
@@ -34,8 +35,19 @@
                                     <div class="col-md-4">
                                         <div style="font-size: 16px;font-weight: bold; text-align: center;"><spring:message code="mess.select-method" text="Please Select Gifting Method"/>:</div>
                                         <div style="margin-top: 10px;text-align: center;">
+                                            <%-- check out of stock --%>
+                                            <c:set var="outOfStock" value="NO"/>
+                                            <c:forEach var="g" items="${LIXI_ORDER.gifts}">
+                                                <c:if test="${sessionScope['scopedTarget.loginedUser'].email eq g.recipientEmail}">
+                                                    <c:if test="${g.bkSubStatus eq OUT_OF_STOCK}">
+                                                        <c:set var="outOfStock" value="YES"/>
+                                                    </c:if>
+                                                </c:if>
+                                            </c:forEach>
+                                            <c:if test="${outOfStock eq 'NO'}">
                                             <button class="btn btn-success pull-left btn-has-link-event" data-link="<c:url value="/recipient/address/${LIXI_ORDER.id}"/>">GIFTED</button>
-                                            <button class="btn btn-danger pull-right btn-has-link-event" data-link="<c:url value="/recipient/refund/${LIXI_ORDER.id}"/>">REFUND</button>
+                                            </c:if>
+                                            <button class="btn btn-danger <c:if test="${outOfStock eq 'NO'}">pull-right</c:if> btn-has-link-event" data-link="<c:url value="/recipient/refund/${LIXI_ORDER.id}"/>">REFUND</button>
                                         </div>
                                     </div>
                                 </div>

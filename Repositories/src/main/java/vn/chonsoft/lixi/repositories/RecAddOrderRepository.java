@@ -14,5 +14,11 @@ import vn.chonsoft.lixi.model.RecAddOrder;
  */
 public interface RecAddOrderRepository extends  JpaRepository<RecAddOrder, Long>{
     
+    List<RecAddOrder> findByRecEmailAndAddIdAndOrderId(String recEmail, Long addId, Long orderId);
+    
+    List<RecAddOrder> findByAddIdAndOrderId(Long addId, Long orderId);
+    
     List<RecAddOrder> findByAddId(Long addId);
+    
+    List<RecAddOrder> findByOrderIdAndRecEmail(Long orderId, String recEmail);
 }

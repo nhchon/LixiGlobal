@@ -31,9 +31,11 @@
                         if($(this).val()==0){
                             // new address, submit form
                             $('#recipientAddressForm').submit();
+                            return false;
                         }
                         else{
                             postInvisibleForm('<c:url value="/recipient/selectedAddress"/>', {recAddId: $(this).val(), oId:$('#oId').val()});
+                            return false;
                         }
                     }
                     });

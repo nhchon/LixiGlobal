@@ -16,11 +16,14 @@
                 <div class="section-receiver">
                     <div class="row">
                         <div class="col-md-12">
-                            <p>Dear ${sessionScope['scopedTarget.loginedUser'].firstName}</p>
-                            <p><spring:message code="tk-g-01"/>. <spring:message code="tk-g-02"/>. <spring:message code="tk-g-03"/></p>
-                            <p><spring:message code="tk-g-04"/>. <spring:message code="tk-g-05"/>.</p>
-                            <p><spring:message code="tk-g-06"/>.</p>
-                            <p>Lixi.Global Customer Service Team</p>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h4>Dear ${sessionScope['scopedTarget.loginedUser'].firstName}</h4>
+                                    <p><spring:message code="tk-g-01"/>. <spring:message code="tk-g-02"/>. <spring:message code="tk-g-03"/></p>
+                                    <p><spring:message code="tk-g-04"/>. <spring:message code="tk-g-05"/>.</p>
+                                    <p><spring:message code="tk-g-06"/>.</p>
+                                    <p>Lixi.Global Customer Service Team</p>
+                                </div></div>
                         </div>
                     </div>
                 </div>

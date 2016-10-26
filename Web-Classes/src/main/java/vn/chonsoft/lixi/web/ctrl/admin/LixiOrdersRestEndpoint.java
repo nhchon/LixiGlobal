@@ -50,7 +50,7 @@ public class LixiOrdersRestEndpoint {
      * @param form
      * @return 
      */
-    @RequestMapping(value = "bkUpdateStatus", method = RequestMethod.POST)
+    @RequestMapping(value = "bkUpdateStatus_beremoved", method = RequestMethod.POST)
     public ResponseEntity<LixiSimpleMessage> bkUpdateStatus(@RequestBody BaoKimStatusForm form){
         
         LixiSimpleMessage message = new LixiSimpleMessage();

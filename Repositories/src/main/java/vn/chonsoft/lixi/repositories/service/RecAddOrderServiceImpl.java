@@ -20,6 +20,38 @@ public class RecAddOrderServiceImpl implements RecAddOrderService{
     @Autowired
     private RecAddOrderRepository raoRepo;
 
+    @Override
+    public List<RecAddOrder> findByRecEmailAndAddIdAndOrderId(String recEmail, Long addId, Long orderId){
+        
+        return this.raoRepo.findByRecEmailAndAddIdAndOrderId(recEmail, addId, orderId);
+    }
+    
+    /**
+     * 
+     * @param addId
+     * @param orderId
+     * @return 
+     */
+    @Override
+    public List<RecAddOrder> findByAddIdAndOrderId(Long addId, Long orderId){
+        
+        return this.raoRepo.findByAddIdAndOrderId(addId, orderId);
+        
+    }
+    
+    /**
+     * 
+     * @param orderId
+     * @param recEmail
+     * @return 
+     */
+    @Override
+    public List<RecAddOrder> findByOrderIdAndRecEmail(Long orderId, String recEmail){
+     
+        return this.raoRepo.findByOrderIdAndRecEmail(orderId, recEmail);
+        
+    }
+    
     /**
      * 
      * @param addId

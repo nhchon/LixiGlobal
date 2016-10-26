@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,8 @@ import vn.chonsoft.lixi.web.util.LiXiUtils;
 public class RecipientController {
 
     private static final Logger log = LogManager.getLogger(RecipientController.class);
+    
+    private final SimpleDateFormat yyyyMMdd = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     
     /* session bean - Login user */
     @Autowired
@@ -142,6 +145,55 @@ public class RecipientController {
         return new ModelAndView("recipient/gifts/refundThankYou");
         
     }
+    
+    /**
+     * 
+     * @param model
+     * @param recBankId
+     * @param oId
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "selectedBankAccount", method = RequestMethod.POST)
+    public ModelAndView selectedBankAccount(Map<String, Object> model, @RequestParam Long recBankId, @RequestParam Long oId, HttpServletRequest request) {
+        
+        /* check order id is valid */
+        String oIds = (String)request.getSession().getAttribute("NEW_ORDER_IDS");
+        if(oIds == null || !oIds.contains(","+oId.toString()+",")){
+            return new ModelAndView(new RedirectView("/user/signOut", true, true));
+        }
+        
+        LixiOrder o = this.lxorderService.findById(oId);
+        RecipientInOrder thisRio = getRecipientInOrder(o);
+        
+        List<RecBankOrder> rbos = this.rboService.findByRecEmailAndBankIdAndOrderId(loginedUser.getEmail(), recBankId, oId);
+        
+        if(rbos == null || rbos.isEmpty()){
+            RecBankOrder rbo = new RecBankOrder();
+            rbo.setRecEmail(loginedUser.getEmail());
+            rbo.setBankId(recBankId);
+            rbo.setOrderId(oId);
+            log.info("refund amount: " + thisRio.getRefundAmount());
+            rbo.setRefundAmount(thisRio.getRefundAmount());
+
+            this.rboService.save(rbo);
+        }
+        
+        /* update receive method */
+        if(o.getGifts() != null){
+            for(LixiOrderGift g : o.getGifts()){
+                
+                g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_MONEY_METHOD);
+                g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+                
+                this.lxogiftService.save(g);
+            }
+        }
+        
+        return new ModelAndView(new RedirectView("/recipient/refund/thankYou", true, true));
+    }
+    
     /**
      * 
      * @param model
@@ -174,8 +226,16 @@ public class RecipientController {
      * @return 
      */
     private RecipientInOrder getRecipientInOrder(Long oId){
-        LixiOrder o = this.lxorderService.findById(oId);
         
+        return getRecipientInOrder(this.lxorderService.findById(oId));
+    }
+    
+    /**
+     * 
+     * @param o
+     * @return 
+     */
+    private RecipientInOrder getRecipientInOrder(LixiOrder o){
         // get recipient in order
         RecipientInOrder recInOrder = null;
         List<RecipientInOrder> recInOrders = LiXiUtils.genMapRecGifts(o);
@@ -204,9 +264,12 @@ public class RecipientController {
     @RequestMapping(value = "refund/{oId}", method = RequestMethod.GET)
     public ModelAndView refund(Map<String, Object> model, @PathVariable Long oId, HttpServletRequest request) {
         
+        RecipientInOrder thisRio = getRecipientInOrder(oId);
+        
         model.put("provinces", this.provinceService.findAll());
-        model.put("rio", getRecipientInOrder(oId));
+        model.put("rio", thisRio);
         model.put("rbs", this.recBankService.findByEmail(loginedUser.getEmail()));
+        model.put("totalRefund", thisRio.getRefundAmount());
         
         RecBankForm form = new RecBankForm();
         form.setOId(oId);
@@ -229,7 +292,8 @@ public class RecipientController {
             @Valid RecBankForm form, Errors errors, HttpServletRequest request) {
         
         model.put("provinces", this.provinceService.findAll());
-        model.put("rio", getRecipientInOrder(form.getOId()));
+        RecipientInOrder thisRio = getRecipientInOrder(form.getOId());
+        model.put("rio", thisRio);
         model.put("rbs", this.recBankService.findByEmail(loginedUser.getEmail()));
         
         if (errors.hasErrors()) {
@@ -260,6 +324,7 @@ public class RecipientController {
             rbo.setRecEmail(loginedUser.getEmail());
             rbo.setBankId(recBank.getId());
             rbo.setOrderId(form.getOId());
+            rbo.setRefundAmount(thisRio.getRefundAmount());
         
             this.rboService.save(rbo);
             
@@ -267,7 +332,10 @@ public class RecipientController {
             LixiOrder o = this.lxorderService.findById(form.getOId());
             if(o.getGifts() != null){
                 for(LixiOrderGift g : o.getGifts()){
+                    
                     g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_MONEY_METHOD);
+                    g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+                    
                     this.lxogiftService.save(g);
                 }
             }
@@ -329,18 +397,24 @@ public class RecipientController {
             return new ModelAndView(new RedirectView("/user/signOut", true, true));
         }
         
-        RecAddOrder rao = new RecAddOrder();
-        rao.setRecEmail(loginedUser.getEmail());
-        rao.setAddId(recAddId);
-        rao.setOrderId(oId);
-        
-        this.raoService.save(rao);
+        List<RecAddOrder> raos = this.raoService.findByRecEmailAndAddIdAndOrderId(loginedUser.getEmail(), recAddId, oId);
+        if(raos == null || raos.isEmpty()){
+            RecAddOrder rao = new RecAddOrder();
+            rao.setRecEmail(loginedUser.getEmail());
+            rao.setAddId(recAddId);
+            rao.setOrderId(oId);
+
+            this.raoService.save(rao);
+        }
         
         /* update receive method */
         LixiOrder o = this.lxorderService.findById(oId);
         if(o.getGifts() != null){
             for(LixiOrderGift g : o.getGifts()){
+                
                 g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
+                g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+                
                 this.lxogiftService.save(g);
             }
         }
@@ -422,7 +496,10 @@ public class RecipientController {
             LixiOrder o = this.lxorderService.findById(form.getOId());
             if(o.getGifts() != null){
                 for(LixiOrderGift g : o.getGifts()){
+                    
                     g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
+                    g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+                    
                     this.lxogiftService.save(g);
                 }
             }

@@ -13,3 +13,4 @@
 <c:set var="UN_SUBMITTED" value="UnSubmitted"/>
 <c:set var="SENT_INFO" value="SentInfo"/>
 <c:set var="SENT_MONEY" value="SentMoney"/>
+<c:set var="OUT_OF_STOCK" value="outOfStock"/>

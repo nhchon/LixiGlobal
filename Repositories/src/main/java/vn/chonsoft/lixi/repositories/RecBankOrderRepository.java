@@ -14,5 +14,6 @@ import vn.chonsoft.lixi.model.RecBankOrder;
  */
 public interface RecBankOrderRepository extends  JpaRepository<RecBankOrder, Long>{
     
+    List<RecBankOrder> findByRecEmailAndBankIdAndOrderId(String recEmail, Long bankId, Long orderId);
     List<RecBankOrder> findByBankId(Long bankId);
 }

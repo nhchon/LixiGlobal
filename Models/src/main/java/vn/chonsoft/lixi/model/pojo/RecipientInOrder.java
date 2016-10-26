@@ -12,6 +12,8 @@ import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrderGift;
+import vn.chonsoft.lixi.model.RecAdd;
+import vn.chonsoft.lixi.model.RecBank;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
@@ -44,6 +46,10 @@ public class RecipientInOrder {
 
     private List<ShippingCharged> charged;
     private double shippingChargeAmount;
+    
+    private RecAdd recAdd;
+    
+    private RecBank recBank;
     
     public Long getOrderId() {
         return orderId;
@@ -107,6 +113,22 @@ public class RecipientInOrder {
 
     public void setTopUpMobilePhones(List<TopUpMobilePhone> topUpMobilePhones) {
         this.topUpMobilePhones = topUpMobilePhones;
+    }
+
+    public RecAdd getRecAdd() {
+        return recAdd;
+    }
+
+    public void setRecAdd(RecAdd recAdd) {
+        this.recAdd = recAdd;
+    }
+
+    public RecBank getRecBank() {
+        return recBank;
+    }
+
+    public void setRecBank(RecBank recBank) {
+        this.recBank = recBank;
     }
     
     /**
@@ -267,6 +289,15 @@ public class RecipientInOrder {
     public long getShippingChargeAmountVnd() {
         
         return LiXiGlobalUtils.floor2Hundred(getShippingChargeAmount() * lxExchangeRate.getBuy());
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public double getRefundAmount(){
+        
+        return (getShippingChargeAmountVnd() + getGiftTotal().getVnd());
     }
     
     /**

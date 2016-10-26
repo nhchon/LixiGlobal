@@ -1,0 +1,15 @@
+<html>
+    <body>
+        <h5>Dear ${firstName},</h5>
+        
+        <p>We were unable to purchase your gift due to its unavailability. Please log in to your account at 
+            <a href="https://www.lixi.global/user/signIn" target="_blank">https://www.lixi.global/user/signIn</a> url  to collect your refund</p>
+        
+        <p>We apologize for any inconvenience this has caused you. We would like to thank you for using our service.</p>
+
+        <div>
+            Thank you<br/>
+            <h5>Lixi. Global Customer Service</h5>
+        </div>
+    </body>
+</html>

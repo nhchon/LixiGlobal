@@ -10,22 +10,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,6 +50,9 @@ import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiInvoice;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
+import vn.chonsoft.lixi.model.RecAdd;
+import vn.chonsoft.lixi.model.RecAddOrder;
+import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.form.LixiOrderSearchForm;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
@@ -59,6 +70,11 @@ import vn.chonsoft.lixi.repositories.service.LixiOrderGiftService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderSearchService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.PaymentService;
+import vn.chonsoft.lixi.repositories.service.RecAddOrderService;
+import vn.chonsoft.lixi.repositories.service.RecAddService;
+import vn.chonsoft.lixi.repositories.service.RecBankOrderService;
+import vn.chonsoft.lixi.repositories.service.RecBankService;
+import vn.chonsoft.lixi.repositories.service.RecipientService;
 import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
@@ -78,7 +94,8 @@ public class LixiOrdersController {
     private static final Logger log = LogManager.getLogger(LixiOrdersController.class);
 
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
+    private final SimpleDateFormat yyyyMMdd = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    
     @Autowired
     private LixiOrderService lxOrderService;
 
@@ -111,40 +128,149 @@ public class LixiOrdersController {
 
     @Autowired
     private ShippingChargedService shipService;
-    
+
+    @Autowired
+    private RecAddService recAddService;
+
+    @Autowired
+    private RecAddOrderService raoService;
+
+    @Autowired
+    private RecBankService recBankService;
+
+    @Autowired
+    private RecBankOrderService rboService;
+
+    @Autowired
+    private RecipientService recService;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private ThreadPoolTaskScheduler taskScheduler;
+
+    @Autowired
+    private VelocityEngine velocityEngine;
+
     /**
      * 
      * @param model
+     * @param oId
+     * @param recId
+     * @param status
      * @return 
      */
-    @RequestMapping(value = "giftedOrders", method = RequestMethod.GET)
-    public ModelAndView giftedOrders(Map<String, Object> model){
+    @RequestMapping(value = "updateOrderStatus", method = RequestMethod.POST)
+    public ModelAndView updateOrderStatus(Map<String, Object> model, @RequestParam Long oId, @RequestParam Long recId, @RequestParam String status){
         
+        LixiOrder o = this.lxOrderService.findById(oId);
+        Recipient r = this.recService.findById(recId);
+
+        List<LixiOrderGift> gifts = this.lxogiftService.findByOrderAndRecipient(o, r);
+
+        gifts.forEach(g -> {
+            
+            g.setBkStatus(status);
+            g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+
+            this.lxogiftService.save(g);
+        });
+        
+        return new ModelAndView(new RedirectView("/Administration/Orders/giftedOrders", true, true));
+        
+    }
+    
+    /**
+     * @param oId
+     * @param recId
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "outOfStock/{oId}/{recId}", method = RequestMethod.GET)
+    public ModelAndView outOfStock(Map<String, Object> model, @PathVariable Long oId, @PathVariable Long recId) {
+
+        LixiOrder o = this.lxOrderService.findById(oId);
+        Recipient r = this.recService.findById(recId);
+        final String recEmail = r.getEmail();
+
+        List<LixiOrderGift> gifts = this.lxogiftService.findByOrderAndRecipient(o, r);
+
+        gifts.forEach(g -> {
+            g.setBkReceiveMethod(null);
+            g.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.OUT_OF_STOCK.getValue());
+            g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+
+            this.lxogiftService.save(g);
+        });
+
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            @Override
+            public void prepare(MimeMessage mimeMessage) throws Exception {
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+                message.setTo(recEmail);
+                message.setFrom("support@lixi.global");
+                message.setSubject("LiXi.Global - Gift Unavailable Alert");
+                message.setSentDate(Calendar.getInstance().getTime());
+
+                Map<String, Object> model = new HashMap<>();
+                model.put("firstName", r.getFirstName());
+
+                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                        velocityEngine, "emails/out-of-stock.vm", "UTF-8", model);
+                message.setText(text, true);
+            }
+        };
+        // send email to receiver
+        taskScheduler.execute(() -> mailSender.send(preparator));
+
+        return new ModelAndView(new RedirectView("/Administration/Orders/giftedOrders", true, true));
+    }
+
+    /**
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "giftedOrders", method = RequestMethod.GET)
+    public ModelAndView giftedOrders(Map<String, Object> model) {
+
         List<LixiOrderGift> gifts = this.lxogiftService.findByBkStatusAndBkReceiveMethod(EnumLixiOrderStatus.PROCESSED.getValue(), LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
         List<Long> proIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
         LiXiGlobalUtils.removeDupEle(proIds);
-        
+
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         List<ShippingCharged> charged = this.shipService.findAll();
-        
+
         List<LixiOrder> orders = lxOrderService.findAll(proIds);
-        
+
         if (orders != null) {
             orders.forEach(o -> {
-                
+
                 List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
-                recInOrder.forEach(r -> {r.setCharged(charged);});
-                
+                recInOrder.forEach(r -> {
+                    r.setCharged(charged);
+                    // get delivery address
+                    RecAdd ra = null;
+                    List<RecAddOrder> raos = this.raoService.findByOrderIdAndRecEmail(o.getId(), r.getRecipient().getEmail());
+                    if (raos != null && !raos.isEmpty()) {
+                        ra = this.recAddService.findById(raos.get(0).getAddId());
+                    }
+                    // set delivery address
+                    r.setRecAdd(ra);
+                });
+
                 mOs.put(o, recInOrder);
             });
         }
 
         model.put("mOs", mOs);
-        
+
         return new ModelAndView("Administration/orders/giftedOrder");
-        
+
     }
-    
+
     /**
      *
      * @param model
@@ -277,13 +403,15 @@ public class LixiOrdersController {
 
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         List<ShippingCharged> charged = this.shipService.findAll();
-        
+
         if (orders != null) {
             orders.forEach(o -> {
-                
+
                 List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
-                recInOrder.forEach(r -> {r.setCharged(charged);});
-                
+                recInOrder.forEach(r -> {
+                    r.setCharged(charged);
+                });
+
                 mOs.put(o, recInOrder);
             });
         }
@@ -311,11 +439,11 @@ public class LixiOrdersController {
 
         List<RecipientInOrder> recGifts = LiXiUtils.genMapRecGifts(order);
         List<ShippingCharged> charged = this.shipService.findAll();
-        
+
         recGifts.forEach(r -> {
             r.setCharged(charged);
         });
-        
+
         model.put("order", order);
         model.put("recGifts", recGifts);
 
@@ -352,14 +480,16 @@ public class LixiOrdersController {
 
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         List<ShippingCharged> charged = this.shipService.findAll();
-        
+
         if (orders != null) {
 
             orders.forEach(o -> {
-                
+
                 List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
-                recInOrder.forEach(r -> {r.setCharged(charged);});
-                
+                recInOrder.forEach(r -> {
+                    r.setCharged(charged);
+                });
+
                 mOs.put(o, recInOrder);
             });
         }
@@ -437,10 +567,12 @@ public class LixiOrdersController {
         if (orders != null) {
 
             orders.forEach(o -> {
-                
+
                 List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o, baoKimTransferPercent);
-                recInOrder.forEach(r -> {r.setCharged(charged);});
-                
+                recInOrder.forEach(r -> {
+                    r.setCharged(charged);
+                });
+
                 mOs.put(o, recInOrder);
             });
         }
@@ -451,23 +583,23 @@ public class LixiOrdersController {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     private LixiBatch createBatch(int numOfOrder) {
-        
+
         // get current VCB exchange rate
         double vcbCurrentBuyUsd = 0;
         SimpleDateFormat aFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String vcbTime = "";
         BankExchangeRate vcbEx = LiXiGlobalUtils.getVCBExchangeRates();
         Exrate usdEx = null;
-        if(vcbEx != null){
+        if (vcbEx != null) {
             // get usd
-            if(vcbEx.getExrates() != null && !vcbEx.getExrates().isEmpty()){
-            
-                for(Exrate ex : vcbEx.getExrates()){
-                    if(LiXiGlobalConstants.USD.equalsIgnoreCase(ex.getCode())){
+            if (vcbEx.getExrates() != null && !vcbEx.getExrates().isEmpty()) {
+
+                for (Exrate ex : vcbEx.getExrates()) {
+                    if (LiXiGlobalConstants.USD.equalsIgnoreCase(ex.getCode())) {
                         usdEx = ex;
                         break;
                     }
@@ -475,16 +607,15 @@ public class LixiOrdersController {
             }
         }
         /**/
-        if(usdEx != null){
+        if (usdEx != null) {
             vcbCurrentBuyUsd = usdEx.getBuy();
             vcbTime = vcbEx.getTime();
-        }
-        else{
+        } else {
             LixiExchangeRate lxExch = this.lxexrateService.findLastRecord(LiXiConstants.USD);
             vcbCurrentBuyUsd = lxExch.getBuy();
             vcbTime = aFormatter.format(lxExch.getCreatedDate());
         }
-        
+
         // current date
         Date currDate = Calendar.getInstance().getTime();
         SimpleDateFormat format = new SimpleDateFormat("MMddyyyy HH:mm a");
@@ -551,7 +682,7 @@ public class LixiOrdersController {
             double batchUsdShip = 0;
             double senderPaid = 0;
             double costOfGood = 0;
-            
+
             for (LixiOrder order : orders) {
                 // send to bao kim
                 boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
@@ -568,25 +699,25 @@ public class LixiOrdersController {
                     bo.setUsdOnlyGift(sum.getUsd());
 
                     this.batchOrderService.save(bo);
-                    
+
                     batchMargin += order.getGiftMargin(percent);
-                    
+
                     LixiInvoice inv = order.getInvoice();
                     batchVndShip += inv.getVndShip(); // USD
                     batchUsdShip += inv.getUsdShip(); // USD
                     senderPaid += inv.getTotalAmount(); // USD
                     costOfGood += sum.getUsd();//inv.getGiftPrice();
-                    
+
                 }
             }
-            
+
             /* update batch */
             batch.setVndMargin(batchMargin);
             batch.setVndShip(batchVndShip);
             batch.setUsdShip(batchUsdShip);
             batch.setSenderPaid(senderPaid);
             batch.setCostOfGood(costOfGood);
-            
+
             this.batchService.save(batch);
         }
         //

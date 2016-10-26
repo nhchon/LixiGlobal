@@ -28,7 +28,8 @@ public enum EnumLixiOrderStatus {
         
         UN_SUBMITTED("UnSubmitted"),
         SENT_INFO("SentInfo"),
-        SENT_MONEY("SentMoney");
+        SENT_MONEY("SentMoney"),
+        OUT_OF_STOCK("outOfStock");
         
         private final String value;
         

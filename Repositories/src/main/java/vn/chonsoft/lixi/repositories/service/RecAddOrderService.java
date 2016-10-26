@@ -13,7 +13,13 @@ import vn.chonsoft.lixi.model.RecAddOrder;
  */
 public interface RecAddOrderService {
     
+    List<RecAddOrder> findByRecEmailAndAddIdAndOrderId(String recEmail, Long addId, Long orderId);
+    
+    List<RecAddOrder> findByOrderIdAndRecEmail(Long orderId, String recEmail);
+    
     List<RecAddOrder> findByAddId(Long addId);
+    
+    List<RecAddOrder> findByAddIdAndOrderId(Long addId, Long orderId);
     
     RecAddOrder save(RecAddOrder rao);
     

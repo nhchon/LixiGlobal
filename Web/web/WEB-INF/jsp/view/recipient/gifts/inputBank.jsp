@@ -30,9 +30,11 @@
                         if($(this).val()==0){
                             // new address, submit form
                             $('#recBankForm').submit();
+                            return false;
                         }
                         else{
-                            postInvisibleForm('<c:url value="/recipient/selectedAddress"/>', {recAddId: $(this).val(), oId:$('#oId').val()});
+                            postInvisibleForm('<c:url value="/recipient/selectedBankAccount"/>', {recBankId: $(this).val(), oId:$('#oId').val()});
+                            return false;
                         }
                     }
                     });
@@ -167,14 +169,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:set value="${rio.shippingChargeAmount * rio.lxExchangeRate.buy}" var="shippingVnd"/>
-                                            <c:set value="${shippingVnd}" var="totalRefund"/>
                                             <c:forEach var="g" items="${rio.gifts}">
                                                 <tr>
                                                     <td>${g.productName}</td>
                                                     <td>${g.productQuantity}</td>
                                                     <td><fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/></td>
-                                                    <c:set value="${totalRefund + g.productPrice}" var="totalRefund"/>
                                                 </tr>
                                             </c:forEach>
                                                 <tr>
@@ -184,7 +183,7 @@
                                                     <td colspan="2" style="text-align: right;">
                                                         $<fmt:formatNumber minFractionDigits="2" value="${rio.shippingChargeAmount}" pattern="###,###.##"/>
                                                         =
-                                                        <fmt:formatNumber maxFractionDigits="0" value="${shippingVnd}" pattern="###,###"/>
+                                                        <fmt:formatNumber maxFractionDigits="0" value="${rio.shippingChargeAmountVnd}" pattern="###,###"/>
                                                     </td>
                                                 </tr>
                                                 <tr>

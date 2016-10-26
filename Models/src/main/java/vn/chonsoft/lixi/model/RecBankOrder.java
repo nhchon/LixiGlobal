@@ -40,6 +40,10 @@ public class RecBankOrder implements Serializable {
     @Column(name = "order_id")
     private long orderId;
 
+    @Basic
+    @Column(name = "refund_amount")
+    private double refundAmount;
+    
     public RecBankOrder() {
     }
 
@@ -84,6 +88,14 @@ public class RecBankOrder implements Serializable {
 
     public void setOrderId(long orderId) {
         this.orderId = orderId;
+    }
+
+    public double getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(double refundAmount) {
+        this.refundAmount = refundAmount;
     }
 
     @Override
