@@ -20,6 +20,26 @@ public class RecBankOrderServiceImpl implements RecBankOrderService{
     @Autowired
     private RecBankOrderRepository rboRepo;
 
+    /**
+     * 
+     * @param orderId
+     * @param recEmail
+     * @return 
+     */
+    @Override
+    public List<RecBankOrder> findByOrderIdAndRecEmail(Long orderId, String recEmail) {
+        
+        return this.rboRepo.findByOrderIdAndRecEmail(orderId, recEmail);
+        
+    }
+
+    /**
+     * 
+     * @param recEmail
+     * @param bankId
+     * @param orderId
+     * @return 
+     */
     @Override
     public List<RecBankOrder> findByRecEmailAndBankIdAndOrderId(String recEmail, Long bankId, Long orderId){
         

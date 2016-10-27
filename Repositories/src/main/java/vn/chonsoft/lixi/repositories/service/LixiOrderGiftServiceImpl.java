@@ -22,6 +22,18 @@ public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
 
     @Inject LixiOrderGiftRepository lxogiftRepository;
     
+    /**
+     * 
+     * @param bkReceiveMethod
+     * @param bkStatus
+     * @return 
+     */
+    @Override
+    public List<LixiOrderGift> findByBkReceiveMethodAndBkStatusIn(String bkReceiveMethod, Iterable<String> bkStatus){
+        
+        return this.lxogiftRepository.findByBkReceiveMethodAndBkStatusIn(bkReceiveMethod, bkStatus);
+        
+    }
     
     /**
      * 

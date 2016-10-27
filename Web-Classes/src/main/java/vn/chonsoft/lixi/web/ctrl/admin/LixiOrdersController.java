@@ -52,6 +52,8 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.RecAdd;
 import vn.chonsoft.lixi.model.RecAddOrder;
+import vn.chonsoft.lixi.model.RecBank;
+import vn.chonsoft.lixi.model.RecBankOrder;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.form.LixiOrderSearchForm;
@@ -95,7 +97,7 @@ public class LixiOrdersController {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     private final SimpleDateFormat yyyyMMdd = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    
+
     @Autowired
     private LixiOrderService lxOrderService;
 
@@ -154,33 +156,133 @@ public class LixiOrdersController {
     private VelocityEngine velocityEngine;
 
     /**
-     * 
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "refundOrders", method = RequestMethod.GET)
+    public ModelAndView refundOrders(Map<String, Object> model) {
+
+        List<LixiOrderGift> gifts = this.lxogiftService.findByBkStatusAndBkReceiveMethod(EnumLixiOrderStatus.PROCESSED.getValue(), LiXiGlobalConstants.BAOKIM_MONEY_METHOD);
+        List<Long> proIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
+        LiXiGlobalUtils.removeDupEle(proIds);
+
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        List<ShippingCharged> charged = this.shipService.findAll();
+
+        List<LixiOrder> orders = lxOrderService.findAll(proIds);
+
+        if (orders != null) {
+            orders.forEach(o -> {
+
+                List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
+                recInOrder.forEach(r -> {
+                    r.setCharged(charged);
+                    // get delivery address
+                    RecBank rb = null;
+                    List<RecBankOrder> rbos = this.rboService.findByOrderIdAndRecEmail(o.getId(), r.getRecipient().getEmail());
+                    if (rbos != null && !rbos.isEmpty()) {
+                        rb = this.recBankService.findById(rbos.get(0).getBankId());
+                    }
+                    // set delivery address
+                    r.setRecBank(rb);
+                });
+
+                mOs.put(o, recInOrder);
+            });
+        }
+
+        model.put("mOs", mOs);
+
+        return new ModelAndView("Administration/orders/refundOrder");
+
+    }
+
+    /**
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "otherGiftedOrders", method = RequestMethod.GET)
+    public ModelAndView otherGiftedOrders(Map<String, Object> model) {
+
+        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PURCHASED.getValue(), EnumLixiOrderStatus.DELIVERED.getValue(),
+                EnumLixiOrderStatus.UNDELIVERABLE.getValue(), EnumLixiOrderStatus.REFUNDED.getValue());
+
+        List<LixiOrderGift> gifts = this.lxogiftService.findByBkReceiveMethodAndBkStatusIn(LiXiGlobalConstants.BAOKIM_GIFT_METHOD, statuses);
+        List<Long> proIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
+        LiXiGlobalUtils.removeDupEle(proIds);
+
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        List<ShippingCharged> charged = this.shipService.findAll();
+
+        List<LixiOrder> orders = lxOrderService.findAll(proIds);
+
+        if (orders != null) {
+            orders.forEach(o -> {
+
+                List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
+                recInOrder.forEach(r -> {
+                    r.setCharged(charged);
+                    // get delivery address
+                    RecAdd ra = null;
+                    List<RecAddOrder> raos = this.raoService.findByOrderIdAndRecEmail(o.getId(), r.getRecipient().getEmail());
+                    if (raos != null && !raos.isEmpty()) {
+                        ra = this.recAddService.findById(raos.get(0).getAddId());
+                    }
+                    // set delivery address
+                    r.setRecAdd(ra);
+                });
+
+                mOs.put(o, recInOrder);
+            });
+        }
+
+        model.put("mOs", mOs);
+
+        return new ModelAndView("Administration/orders/otherGiftedOrder");
+
+    }
+
+    /**
+     *
      * @param model
      * @param oId
      * @param recId
      * @param status
-     * @return 
+     * @param returnPage
+     * @return
      */
     @RequestMapping(value = "updateOrderStatus", method = RequestMethod.POST)
-    public ModelAndView updateOrderStatus(Map<String, Object> model, @RequestParam Long oId, @RequestParam Long recId, @RequestParam String status){
-        
+    public ModelAndView updateOrderStatus(Map<String, Object> model, @RequestParam Long oId, @RequestParam Long recId,
+            @RequestParam String status, @RequestParam String returnPage) {
+
         LixiOrder o = this.lxOrderService.findById(oId);
         Recipient r = this.recService.findById(recId);
 
         List<LixiOrderGift> gifts = this.lxogiftService.findByOrderAndRecipient(o, r);
 
         gifts.forEach(g -> {
-            
+
             g.setBkStatus(status);
             g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
 
             this.lxogiftService.save(g);
         });
-        
-        return new ModelAndView(new RedirectView("/Administration/Orders/giftedOrders", true, true));
-        
+
+        switch (returnPage) {
+            case "newOrders":
+                return new ModelAndView(new RedirectView("/Administration/Orders/giftedOrders", true, true));
+            case "refundOrders":
+                return new ModelAndView(new RedirectView("/Administration/Orders/refundOrders", true, true));
+            case "otherRefundOrders":
+                return new ModelAndView(new RedirectView("/Administration/Orders/refundOrders", true, true));
+            default:
+                return new ModelAndView(new RedirectView("/Administration/Orders/otherGiftedOrders", true, true));
+        }
+
     }
-    
+
     /**
      * @param oId
      * @param recId

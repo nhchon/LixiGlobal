@@ -15,6 +15,8 @@ public interface RecBankOrderService {
     
     List<RecBankOrder> findByRecEmailAndBankIdAndOrderId(String recEmail, Long bankId, Long orderId);
     
+    List<RecBankOrder> findByOrderIdAndRecEmail(Long orderId, String recEmail);
+    
     List<RecBankOrder> findByBankId(Long bankId);
     
     RecBankOrder save(RecBankOrder rbo);
