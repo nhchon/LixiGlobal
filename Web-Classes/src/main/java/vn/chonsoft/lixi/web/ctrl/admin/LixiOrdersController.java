@@ -203,20 +203,22 @@ public class LixiOrdersController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "otherGiftedOrders", method = RequestMethod.GET)
-    public ModelAndView otherGiftedOrders(Map<String, Object> model) {
+    @RequestMapping(value = "otherOrders", method = RequestMethod.GET)
+    public ModelAndView otherOrders(Map<String, Object> model, @PageableDefault(page = 0, size = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page) {
 
         List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PURCHASED.getValue(), EnumLixiOrderStatus.DELIVERED.getValue(),
-                EnumLixiOrderStatus.UNDELIVERABLE.getValue(), EnumLixiOrderStatus.REFUNDED.getValue());
+                EnumLixiOrderStatus.UNDELIVERABLE.getValue(), EnumLixiOrderStatus.REFUNDED.getValue(),
+                EnumLixiOrderStatus.CANCELED.getValue(), EnumLixiOrderStatus.COMPLETED.getValue());
 
-        List<LixiOrderGift> gifts = this.lxogiftService.findByBkReceiveMethodAndBkStatusIn(LiXiGlobalConstants.BAOKIM_GIFT_METHOD, statuses);
-        List<Long> proIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
-        LiXiGlobalUtils.removeDupEle(proIds);
+        //List<LixiOrderGift> gifts = this.lxogiftService.findByBkReceiveMethodAndBkStatusIn(LiXiGlobalConstants.BAOKIM_GIFT_METHOD, statuses);
+        //List<Long> proIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
+        //LiXiGlobalUtils.removeDupEle(proIds);
 
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         List<ShippingCharged> charged = this.shipService.findAll();
 
-        List<LixiOrder> orders = lxOrderService.findAll(proIds);
+        Page<LixiOrder> pOs = lxOrderService.findByLixiStatusIn(statuses, page);
+        List<LixiOrder> orders = pOs.getContent();
 
         if (orders != null) {
             orders.forEach(o -> {
@@ -239,8 +241,9 @@ public class LixiOrdersController {
         }
 
         model.put("mOs", mOs);
+        model.put("pOs", pOs);
 
-        return new ModelAndView("Administration/orders/otherGiftedOrder");
+        return new ModelAndView("Administration/orders/otherOrder");
 
     }
 

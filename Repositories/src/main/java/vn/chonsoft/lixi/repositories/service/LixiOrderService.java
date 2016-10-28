@@ -50,6 +50,9 @@ public interface LixiOrderService {
     Page<LixiOrder> findByLixiStatus(String status, Pageable page);
     
     @Transactional
+    Page<LixiOrder> findByLixiStatusIn(Iterable<String> status, Pageable page);
+    
+    @Transactional
     List<LixiOrder> findByLixiStatus(String status);
     
     @Transactional

@@ -48,6 +48,8 @@ public interface LixiOrderRepository  extends JpaRepository<LixiOrder, Long>{
     
     List<LixiOrder> findByLixiStatus(String status, Sort sort);
     
+    Page<LixiOrder> findByLixiStatusIn(Iterable<String> status, Pageable page);
+            
     List<LixiOrder> findByLixiSubStatus(String status, Sort sort);
     
     List<LixiOrder> findByLixiStatusAndLixiSubStatus(String status, String subStatus, Sort sort);

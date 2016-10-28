@@ -360,9 +360,11 @@
                                             </td>
                                             <c:if test="${searchForm.status eq 'All' or searchForm.status eq PROCESSED}">
                                             <td style="text-align: right;">
+                                                <%--
                                                 <c:if test="${m.key.lixiStatus eq PROCESSED}">
                                                     <a href="javascript:reSendOrder(${m.key.id});">Re-Send</a> | 
                                                 </c:if>
+                                                --%>
                                                 <c:if test="${m.key.lixiStatus eq PROCESSED and (m.key.lixiSubStatus eq SENT_MONEY or m.key.lixiSubStatus eq SENT_INFO)}">
                                                     <a href="javascript:cancel(${m.key.id});">Cancel</a>
                                                 </c:if>

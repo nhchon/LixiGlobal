@@ -28,6 +28,19 @@ public class LixiOrderServiceImpl implements LixiOrderService{
     @Autowired 
     private LixiOrderRepository lxorderRepository;
 
+    @Transactional
+    @Override
+    public Page<LixiOrder> findByLixiStatusIn(Iterable<String> status, Pageable page) {
+        
+        Page<LixiOrder> ps =  this.lxorderRepository.findByLixiStatusIn(status, page);
+        if(ps != null && ps.hasContent()){
+            ps.getContent().forEach((LixiOrder o) -> LiXiRepoUtils.loadOrder(o));
+        }
+        
+        return ps;
+    }
+
+    
     /**
      * 
      * Need Page attributes when search one order

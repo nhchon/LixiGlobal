@@ -37,7 +37,7 @@
         <ul class="nav nav-tabs">
             <li role="presentation"><a href="<c:url value="/Administration/Orders/giftedOrders"/>"><b>Gifted Orders</b></a></li>
             <li role="presentation" class="active"><a href="<c:url value="/Administration/Orders/refundOrders"/>"><b>Refund Orders</b></a></li>
-            <li role="presentation"><a href="<c:url value="/Administration/Orders/otherGiftedOrders"/>"><b>Others</b></a></li>
+            <li role="presentation"><a href="<c:url value="/Administration/Orders/otherOrders"/>"><b>Others</b></a></li>
         </ul>
         <p>&nbsp;</p>
         <c:forEach items="${mOs}" var="m" varStatus="theCount">

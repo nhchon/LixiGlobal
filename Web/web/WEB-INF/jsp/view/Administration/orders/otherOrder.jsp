@@ -10,7 +10,7 @@
                 if (status !== '-1') {
 
                     if (confirm('Update status this order for this receiver to ' + statusText + "?")) {
-                        postInvisibleForm('<c:url value="/Administration/Orders/updateOrderStatus"/>', {oId: oId, recId: recId, status: status, returnPage:'others'});
+                        postInvisibleForm('<c:url value="/Administration/Orders/updateOrderStatus"/>', {oId: oId, recId: recId, status: status, returnPage: 'others'});
                     }
                 }
             }
@@ -31,7 +31,7 @@
         <ul class="nav nav-tabs">
             <li role="presentation"><a href="<c:url value="/Administration/Orders/giftedOrders"/>"><b>Gifted Orders</b></a></li>
             <li role="presentation"><a href="<c:url value="/Administration/Orders/refundOrders"/>"><b>Refund Orders</b></a></li>
-            <li role="presentation" class="active"><a href="<c:url value="/Administration/Orders/otherGiftedOrders"/>"><b>Others</b></a></li>
+            <li role="presentation" class="active"><a href="<c:url value="/Administration/Orders/otherOrders"/>"><b>Others</b></a></li>
         </ul>
         <p>&nbsp;</p>
         <c:forEach items="${mOs}" var="m" varStatus="theCount">
@@ -80,9 +80,9 @@
                                     <option value="${REFUNDED}" <c:if test="${recStatus eq REFUNDED}">selected=""</c:if>>REFUNDED</option>
                                     <option value="${CANCELED}" <c:if test="${recStatus eq CANCELED}">selected=""</c:if>>CANCELED</option>
                                     <option value="${COMPLETED}" <c:if test="${recStatus eq COMPLETED}">selected=""</c:if>>COMPLETED</option>
-                                </select>
-                                <span class="input-group-btn" style="padding-left: 10px;">
-                                    <button onclick="updateOrderStatus(${m.key.id}, ${rio.recipient.id})" class="btn btn-primary">Update Order Status</button>
+                                    </select>
+                                    <span class="input-group-btn" style="padding-left: 10px;">
+                                        <button onclick="updateOrderStatus(${m.key.id}, ${rio.recipient.id})" class="btn btn-primary">Update Order Status</button>
                                 </span>
                             </div>                                            
                         </div>
@@ -106,7 +106,34 @@
                 </c:if>
             </c:forEach>
         </c:forEach>
+        <div class="row">
+            <div class="col-md-12">
+                <%-- Paging --%>
+                <nav>
+                    <ul class="pagination pull-right">
+                        <c:forEach begin="1" end="${pOs.totalPages}" var="i">
+                            <c:choose>
+                                <c:when test="${(i - 1) == pOs.number}">
+                                    <li class="active">
+                                        <a href="javascript:void(0)">${i}</a>
+                                    </li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li>
+                                        <a href="<c:url value="/Administration/Orders/otherOrders">
+                                               <c:param name="paging.page" value="${i}" />
+                                               <c:param name="paging.sort" value="id,DESC" />
+                                               <c:param name="paging.size" value="50" />
+                                           </c:url>">${i}</a>
+                                    </li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </ul>
+                </nav>
 
+            </div>
+        </div>
         <!-- /main -->
     </jsp:body>
 </template:Admin>

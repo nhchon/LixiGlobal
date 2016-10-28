@@ -67,8 +67,10 @@
                             <ul class="dropdown-menu">
                                 <security:authorize access="hasAuthority('NEW_ORDER_INFO/SEND_MONEY')">
                                 <li><a href="<c:url value="/Administration/Orders/giftedOrders"/>">Order Management</a></li>
+                                <%--
                                 <li><a href="<c:url value="/Administration/Orders/newOrders?oStatus=UnSubmitted"/>">New Order Info</a></li>
                                 <li><a href="<c:url value="/Administration/Orders/sendMoneyInfo"/>">Order Send Money</a></li>
+                                --%>
                                 <li role="separator" class="divider"></li>
                                 </security:authorize>
                                 <security:authorize access="hasAuthority('LIST_UNSUBMITTED_TOPUP')">
