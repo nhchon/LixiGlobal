@@ -269,6 +269,13 @@ public class LixiOrdersController {
 
             this.lxogiftService.save(g);
         });
+        
+        /* */
+        try {
+            lxAsyncMethods.updateLixiOrderStatus(oId, status);
+        } catch (Exception e) {
+            log.info("Rest updateLixiOrder:", e);
+        }
 
         switch (returnPage) {
             case "newOrders":

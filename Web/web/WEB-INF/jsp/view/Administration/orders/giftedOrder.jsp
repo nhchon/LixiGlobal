@@ -27,7 +27,7 @@
         <%@include  file="/WEB-INF/jsp/view/Administration/add-on/order_status.jsp" %>
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-            <li><a href="<c:url value="/Administration/Orders/giftedOrders"/>">Gifted Orders</a></li>
+            <li><a href="<c:url value="/Administration/Orders/giftedOrders"/>">Order Management</a></li>
         </ul>
 
         <!-- main -->
@@ -35,7 +35,8 @@
 
         <!-- Content -->
         <ul class="nav nav-tabs">
-            <li role="presentation" class="active"><a href="<c:url value="/Administration/Orders/giftedOrders"/>"><b>New Orders</b></a></li>
+            <li role="presentation" class="active"><a href="<c:url value="/Administration/Orders/giftedOrders"/>"><b>Gifted Orders</b></a></li>
+            <li role="presentation"><a href="<c:url value="/Administration/Orders/refundOrders"/>"><b>Refund Orders</b></a></li>
             <li role="presentation"><a href="<c:url value="/Administration/Orders/otherGiftedOrders"/>"><b>Others</b></a></li>
         </ul>
         <p>&nbsp;</p>
