@@ -42,7 +42,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.EnumTransactionStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.BillingAddress;
+import vn.chonsoft.lixi.model.LixiCashrun;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiGlobalFee;
 import vn.chonsoft.lixi.model.LixiInvoice;
@@ -50,6 +54,7 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
@@ -57,11 +62,6 @@ import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.VatgiaProduct;
 import vn.chonsoft.lixi.model.form.AddCardForm;
 import vn.chonsoft.lixi.model.form.BankAccountAddForm;
-import vn.chonsoft.lixi.EnumLixiOrderStatus;
-import vn.chonsoft.lixi.EnumTransactionStatus;
-import vn.chonsoft.lixi.LiXiGlobalConstants;
-import vn.chonsoft.lixi.model.LixiCashrun;
-import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.pojo.CashRun;
@@ -760,7 +760,7 @@ public class CheckOutController {
             invoice.setLixiFee((Double)model.get(LiXiConstants.LIXI_HANDLING_FEE_TOTAL));
             invoice.setVndShip((Double)model.get(LiXiConstants.TOTAL_SHIPPING_CHARGED_VND));
             invoice.setUsdShip((Double)model.get(LiXiConstants.TOTAL_SHIPPING_CHARGED));
-            invoice.setTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL));//
+            invoice.setTotalAmount(LiXiGlobalUtils.getTestTotalAmount((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL)));//
             invoice.setTotalAmountVnd((Double)model.get(LiXiConstants.LIXI_FINAL_TOTAL_VND));
             invoice.setNetTransStatus(EnumTransactionStatus.beforePayment.getValue());
             invoice.setInvoiceStatus(LiXiGlobalUtils.translateNetTransStatus(EnumTransactionStatus.beforePayment.getValue()));
@@ -878,6 +878,35 @@ public class CheckOutController {
                     //lxAsyncMethods.submitOrdersToBaoKim(order); // remove BaoKim 2016-10-04
 
                     //log.info(" // END of submitOrdersToBaoKim");
+                    
+                    // email to all receivers
+                    final String senderFullName = order.getSender().getFullName();
+                    for(RecipientInOrder rio : recGifts){
+                        MimeMessagePreparator m = new MimeMessagePreparator() {
+                            @SuppressWarnings({"rawtypes", "unchecked"})
+                            @Override
+                            public void prepare(MimeMessage mimeMessage) throws Exception {
+                                MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+                                message.setTo(emailSender);
+                                //message.setCc(LiXiGlobalConstants.YHANNART_GMAIL);
+                                //message.addCc(LiXiGlobalConstants.CHONNH_GMAIL);
+                                message.setFrom("support@lixi.global");
+                                message.setSubject("LiXi.Global - New Gift Alert");
+                                message.setSentDate(Calendar.getInstance().getTime());
+
+                                Map<String, Object> model = new HashMap<>();
+                                model.put("firstName", rio.getRecipient().getFirstName());
+                                model.put("senderFullName", senderFullName);
+
+                                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                                        velocityEngine, "emails/alert-rec-new-gifts.vm", "UTF-8", model);
+                                message.setText(text, true);
+                            }
+                        };
+                        // send oldEmail
+                        taskScheduler.execute(() -> mailSender.send(m));
+                    }
+                    
                     ////////////////////////////////////////////////////////////////////
                     //log.info("END OF Call Async methods");
 

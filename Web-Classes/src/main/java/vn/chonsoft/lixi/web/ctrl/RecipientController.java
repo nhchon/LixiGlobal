@@ -5,6 +5,7 @@
 package vn.chonsoft.lixi.web.ctrl;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -524,7 +525,8 @@ public class RecipientController {
     public ModelAndView gifts(Map<String, Object> model, HttpServletRequest request) {
         
         // new gifts, recipient did not do anything
-        List<LixiOrderGift> proGifts = this.lxogiftService.findByRecipientEmailAndBkStatusAndBkReceiveMethod(loginedUser.getEmail(), EnumLixiOrderStatus.PROCESSED.getValue(), null);
+        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.UN_PROCESSED.getValue(), EnumLixiOrderStatus.PROCESSED.getValue());
+        List<LixiOrderGift> proGifts = this.lxogiftService.findByRecipientEmailAndBkReceiveMethodAndBkStatusIn(loginedUser.getEmail(), null, statuses);
         
         /**
          * get order id list

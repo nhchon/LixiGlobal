@@ -1,0 +1,40 @@
+<html>
+    <body>
+        <h5>Dear ${firstName},</h5>
+        
+        <p>${senderFullName} has sent you a present. Please log in to <a href="https://www.lixi.global" target="_blank">www.lixi.global</a> to review your gift. </p>
+        
+        <p>If you don't have an account with <a href="https://www.lixi.global/user/signUp" target="_blank">www.lixi.lixi.global</a>, please proceed to open an account with us.</p>
+
+        <p>
+        The gift will be processed between 24 to 72 hours. If the gift is not to your satisfaction, you can request a refund. 
+        The full amount of the gift plus the shipping charge will be deposited to your personal checking account. 
+        You must provide us with your banking information.
+        </p>
+
+        <p>
+        If you need additional support, you can email us at receiver@lixi.global. Don't forget to put in your order number in the Subject Line.
+        </p>
+
+        <p>----------------</p>
+
+        <h5>Chào ${firstName},</h5>
+
+        <p>
+        Anh/Chị ${senderFullName}  vừa gửi cho bạn một món quà. 
+        Bạn vui lòng truy cập vào địa chỉ <a href="https://www.lixi.global" target="_blank">www.lixi.global</a> để nhận món quà của bạn.
+        </p>
+        
+        <p>Nếu bạn chưa có tài khoản tại lixi.global, vui lòng vào đây để lập tài khoản <a href="https://www.lixi.global/user/signUp" target="_blank">www.lixi.lixi.global</a>.</p>
+
+        <p>
+            Món quà của bạn sẽ được chuyển đến trong vòng từ 24h tới 72h. Nếu bạn chưa hài lòng về món quà, vui lòng liên hệ chúng tôi để được hoàn trả.
+        </p>
+
+        <p>Mọi chi tiết vui lòng liên hệ qua email receiver@lixi.global</p>
+        <div>
+            Thank you<br/>
+            <h5>Lixi. Global Customer Service</h5>
+        </div>
+    </body>
+</html>

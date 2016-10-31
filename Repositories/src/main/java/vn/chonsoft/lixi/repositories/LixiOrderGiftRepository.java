@@ -35,11 +35,13 @@ public interface LixiOrderGiftRepository extends JpaRepository<LixiOrderGift, Lo
     
     List<LixiOrderGift> findByRecipientEmailAndBkStatusIn(String recipientEmail, Iterable<String> bkStatus);
     
-    List<LixiOrderGift> findByRecipientEmailAndBkStatusAndBkReceiveMethod(String recipientEmail, String bkStatus, String bkReceiveMethod);
+    List<LixiOrderGift> findByRecipientEmailAndBkReceiveMethodAndBkStatus(String recipientEmail, String bkReceiveMethod, String bkStatus);
     
     List<LixiOrderGift> findByBkStatusAndBkReceiveMethod(String bkStatus, String bkReceiveMethod);
     
     List<LixiOrderGift> findByBkReceiveMethodAndBkStatusIn(String bkReceiveMethod, Iterable<String> bkStatus);
+    
+    List<LixiOrderGift> findByRecipientEmailAndBkReceiveMethodAndBkStatusIn(String recipientEmail, String bkReceiveMethod, Iterable<String> bkStatus);
     
     LixiOrderGift findByIdAndOrder(Long id, LixiOrder order);
     

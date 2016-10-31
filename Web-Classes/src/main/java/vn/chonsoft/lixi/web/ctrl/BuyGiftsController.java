@@ -317,6 +317,7 @@ public class BuyGiftsController {
                     // create lixi order gift
                     LixiOrderGift lxogift = new LixiOrderGift();
                     lxogift.setRecipient(rec);
+                    lxogift.setRecipientEmail(loginedUser.getEmail());
                     lxogift.setOrder(order);
                     lxogift.setCategory(this.vgcService.findOne(vgp.getCategoryId()).getLixiCategory());
                     lxogift.setProductId(productId);

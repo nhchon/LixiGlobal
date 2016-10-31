@@ -54,8 +54,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.EnumTransactionResponseCode;
+import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.AuthorizeCustomerResult;
 import vn.chonsoft.lixi.model.AuthorizePaymentResult;
@@ -66,8 +69,6 @@ import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserBankAccount;
 import vn.chonsoft.lixi.model.UserCard;
-import vn.chonsoft.lixi.EnumTransactionResponseCode;
-import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
@@ -162,7 +163,7 @@ public class PaymentServiceImpl implements PaymentService{
      * 
      */
     @Override
-    //@Scheduled(fixedDelay=1*60*60*1000, initialDelay=60*1000)
+    @Scheduled(fixedDelay=1*60*60*1000, initialDelay=60*1000)
     public void updateAllInvoiceStatus(){
         
         List<String> continueStatus = Arrays.asList(EnumTransactionStatus.inProgress.getValue(),
