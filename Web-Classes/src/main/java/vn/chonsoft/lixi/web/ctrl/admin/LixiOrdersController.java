@@ -201,6 +201,7 @@ public class LixiOrdersController {
     /**
      *
      * @param model
+     * @param page 
      * @return
      */
     @RequestMapping(value = "otherOrders", method = RequestMethod.GET)
@@ -659,7 +660,7 @@ public class LixiOrdersController {
     @RequestMapping(value = "sendMoneyInfo", method = RequestMethod.GET)
     public ModelAndView sendMoneyInfo(Map<String, Object> model) {
 
-        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.GiftStatus.SENT_INFO.getValue());
+        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue());
 
         if (orders != null) {
             Iterator<LixiOrder> iterator = orders.iterator();
@@ -806,16 +807,16 @@ public class LixiOrdersController {
                     bo.setBatch(batch);
                     bo.setOrderId(order.getId());
 
-                    SumVndUsd sum = order.getSentToBaoKim(percent);
+                    SumVndUsd sum = order.getGiftTotal();
                     bo.setVndOnlyGift(sum.getVnd());
                     bo.setUsdOnlyGift(sum.getUsd());
 
                     this.batchOrderService.save(bo);
 
-                    batchMargin += order.getGiftMargin(percent);
+                    //batchMargin += order.getGiftMargin(percent);
 
                     LixiInvoice inv = order.getInvoice();
-                    batchVndShip += inv.getVndShip(); // USD
+                    batchVndShip += inv.getVndShip(); // VND
                     batchUsdShip += inv.getUsdShip(); // USD
                     senderPaid += inv.getTotalAmount(); // USD
                     costOfGood += sum.getUsd();//inv.getGiftPrice();

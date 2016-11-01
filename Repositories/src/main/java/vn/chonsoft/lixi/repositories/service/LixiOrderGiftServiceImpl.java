@@ -21,6 +21,18 @@ import vn.chonsoft.lixi.repositories.LixiOrderGiftRepository;
 public class LixiOrderGiftServiceImpl implements LixiOrderGiftService{
 
     @Inject LixiOrderGiftRepository lxogiftRepository;
+
+    /**
+     * 
+     * @param status
+     * @param oId 
+     */
+    @Transactional
+    @Override
+    public void updateBkStatusByOrderId(String status, Long oId) {
+        this.lxogiftRepository.updateBkStatusByOrderId(status, oId);
+    }
+    
     
     /**
      * 

@@ -22,6 +22,11 @@ public interface LixiOrderGiftRepository extends JpaRepository<LixiOrderGift, Lo
     
     @Modifying
     @Transactional
+    @Query("update LixiOrderGift p set p.bkStatus = :status where p.order.id = :oId")
+    int updateBkStatusByOrderId(@Param("status") String status, @Param("oId") Long oId);
+    
+    @Modifying
+    @Transactional
     @Query("update LixiOrderGift p set p.productId = :productId, p.productPrice = :productPrice where p.id = :id")
     int updateProductIdAndPrice(@Param("productId") int productId, @Param("productPrice") double productPrice, @Param("id") Long id);
     

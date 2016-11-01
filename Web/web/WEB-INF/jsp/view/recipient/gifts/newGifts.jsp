@@ -44,10 +44,13 @@
                                                     </c:if>
                                                 </c:if>
                                             </c:forEach>
-                                            <c:if test="${outOfStock eq 'NO'}">
+                                            <c:if test="${outOfStock ne 'YES'}">
                                             <button class="btn btn-success pull-left btn-has-link-event" data-link="<c:url value="/recipient/address/${LIXI_ORDER.id}"/>">GIFTED</button>
                                             </c:if>
-                                            <button class="btn btn-danger <c:if test="${outOfStock eq 'NO'}">pull-right</c:if> btn-has-link-event" data-link="<c:url value="/recipient/refund/${LIXI_ORDER.id}"/>">REFUND</button>
+                                            
+                                            <c:if test="${(outOfStock eq 'YES') or (LIXI_ORDER.setting eq '1')}">
+                                                <button class="btn btn-danger <c:if test="${outOfStock ne 'YES'}">pull-right</c:if> btn-has-link-event" data-link="<c:url value="/recipient/refund/${LIXI_ORDER.id}"/>">REFUND</button>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>

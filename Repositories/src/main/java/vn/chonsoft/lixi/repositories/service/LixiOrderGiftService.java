@@ -17,6 +17,8 @@ import vn.chonsoft.lixi.model.Recipient;
 @Validated
 public interface LixiOrderGiftService {
     
+    void updateBkStatusByOrderId(String status, Long oId);
+    
     int updateProductIdAndPrice(int productId, double productPrice, Long id);
     
     LixiOrderGift save (LixiOrderGift gift);

@@ -110,6 +110,9 @@ public class PaymentServiceImpl implements PaymentService{
     
     @Autowired
     private LixiOrderService orderService;
+    
+    @Autowired
+    private LixiOrderGiftService giftService;
 
     /**
      * 
@@ -228,9 +231,9 @@ public class PaymentServiceImpl implements PaymentService{
                 
                 if(LiXiGlobalConstants.TRANS_STATUS_PROCESSED.equals(translateStatus)){
                     /* Remove BaoKIm, update order status - 2016-10-04 */
-                    LixiOrder o = invoice.getOrder();
-                    o.setLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue());
-                    this.orderService.save(o);
+                    this.orderService.updateStatus(EnumLixiOrderStatus.PROCESSED.getValue(), invoice.getOrder().getId());
+                    
+                    this.giftService.updateBkStatusByOrderId(EnumLixiOrderStatus.PROCESSED.getValue(), invoice.getOrder().getId());
                 }
                 
                 log.info("Update invoice id " + invoice.getNetTransId() + " : " + translateStatus + " : " + status + " : " + responseCode);

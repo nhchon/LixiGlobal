@@ -12,7 +12,7 @@
                     var count = 0;
                     var totalVnd = 0;
                     var totalUsd = 0;
-                    var totalGiftMargin = 0;
+                    //var totalGiftMargin = 0;
                     var totalShipCharged = 0;
                     var totalShipChargedVnd = 0;
                     var totalSend = 0;
@@ -25,20 +25,19 @@
                            totalVnd = totalVnd + parseFloat($(this).attr('totalAmountVnd'));
                            //alert(parseFloat($(this).attr('totalAmountUsd')))
                            totalUsd = totalUsd + parseFloat($(this).attr('totalAmountUsd'));
-                           totalGiftMargin = totalGiftMargin + parseFloat($(this).attr('totalGiftMargin'));
+                           //totalGiftMargin = totalGiftMargin + parseFloat($(this).attr('totalGiftMargin'));
                            totalShipCharged = totalShipCharged + parseFloat($(this).attr('totalShipCharged'));
                            totalShipChargedVnd = totalShipChargedVnd + parseFloat($(this).attr('totalShipChargedVnd'));
-                           totalSend = roundHundred(totalSend + parseFloat($(this).attr('totalSentToBaoKim')));
+                           totalSend = totalVnd;
                        }
                     });
                     $('#tdOnSelectCount').html($.number(count) + '');
                     $('#tdOnSelectVnd').html($.number(totalVnd) + '');
                     //alert($.number(totalUsd))
                     $('#tdOnSelectUsd').html($.number(totalUsd, 2) + '');
-                    $('#tdGiftMarginOnSelect').html($.number(totalGiftMargin) + '');
                     $('#tdOnSelectShipCharged').html($.number(totalShipCharged, 2) + '')
                     $('#tdOnSelectShipChargedVnd').html($.number(totalShipChargedVnd) + '');
-                    $('#tdTotalSendOnSelect').html($.number(roundHundred(totalSend + totalShipChargedVnd)) + '');
+                    $('#tdTotalSendOnSelect').html('<b>'+$.number(totalSend + roundHundred(totalShipChargedVnd)) + '</b>');
                     // input hidden
                     //$('#onSelectVnd').val(totalVnd + '');
                     //$('#onSelectUsd').val(totalUsd + '');
@@ -177,24 +176,18 @@
                                     <c:set var="totalAmountUsd" value="0"/>
                                     <c:forEach items="${mOs}" var="m" varStatus="theCount">
                                         <c:set var="countRec" value="${theCount.count}"/>
-                                        <c:set var="totalAmountVndOfThisOrder" value="0"/>
-                                        <c:set var="totalAmountUsdOfThisOrder" value="0"/>
-                                        <c:set var="totalGiftMarginOfThisOrder" value="0"/>
+                                        <c:set var="totalAmountVndOfThisOrder" value="${m.key.giftTotal.vnd}"/>
+                                        <c:set var="totalAmountUsdOfThisOrder" value="${m.key.giftTotal.usd}"/>
                                         <c:set var="totalShipCharged" value="0"/>
                                         <c:set var="totalShipChargedVnd" value="0"/>
-                                        <c:set var="totalSentToBaoKim" value="0"/>
                                         <c:forEach items="${m.value}" var="rio">
                                             <c:if test="${not empty rio.gifts}">
-                                                <c:set var="totalAmountVndOfThisOrder" value="${totalAmountVndOfThisOrder + rio.giftTotal.vnd}"/>
-                                                <c:set var="totalAmountUsdOfThisOrder" value="${totalAmountUsdOfThisOrder + rio.giftTotal.usd}"/>
-                                                <c:set var="totalGiftMarginOfThisOrder" value="${totalGiftMarginOfThisOrder + rio.giftMargin}"/>
                                                 <c:set var="totalShipCharged" value="${totalShipCharged + rio.shippingChargeAmount}"/>
                                                 <c:set var="totalShipChargedVnd" value="${totalShipChargedVnd + rio.shippingChargeAmountVnd}"/>
-                                                <c:set var="totalSentToBaoKim" value="${totalSentToBaoKim + rio.sentToBaoKim.vnd}"/>
                                             </c:if>
                                         </c:forEach>
                                         <tr id="rowO${m.key.id}">
-                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalSentToBaoKim="${totalSentToBaoKim}" totalShipChargedVnd="<fmt:formatNumber value="${totalShipChargedVnd}" pattern="######.##"/>" totalShipCharged="${totalShipCharged}" totalGiftMargin="${totalGiftMarginOfThisOrder}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
+                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalShipChargedVnd="<fmt:formatNumber value="${totalShipChargedVnd}" pattern="######.##"/>" totalShipCharged="${totalShipCharged}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
@@ -278,17 +271,9 @@
                             <td>VND<input type="hidden" id="onSelectShipChargedVnd" name="onSelectShipChargedVnd" value="0"/></td>
                         </tr>
                         <tr>
-                            <td>Margin Total</td>
-                            <td style="text-align: right;" id="tdGiftMarginOnSelect"></td>
-                            <td>VND<input type="hidden" id="onSelectMargin" name="onSelectMargin" value="0"/></td>
-                            <td></td><td></td>
-                        </tr>
-                        <tr>
                             <td>Total Send</td>
-                            <td style="text-align: right;" id="tdTotalSendOnSelect"></td>
+                            <td colspan="3" style="text-align: right;" id="tdTotalSendOnSelect"></td>
                             <td>VND</td>
-                            <td></td>
-                            <td></td>
                         </tr>
                     </tbody>
                 </table>
