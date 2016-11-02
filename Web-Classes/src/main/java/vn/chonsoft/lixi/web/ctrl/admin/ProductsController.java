@@ -20,6 +20,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
@@ -50,6 +51,24 @@ public class ProductsController {
     
     @Autowired
     private VatgiaCategoryService vgcSer;
+    
+    /**
+     * 
+     * @param model
+     * @param id
+     * @param active
+     * @return 
+     */
+    @RequestMapping(value = "activate", method = RequestMethod.POST)
+    public ModelAndView activateProduct(Map<String, Object> model, @RequestParam Integer id, @RequestParam Integer active){
+        
+        VatgiaProduct p = this.vgpSer.findById(id);
+        p.setAlive(active);
+        
+        this.vgpSer.save(p);
+        
+        return new ModelAndView(new RedirectView("/Administration/Products/list?paging.page=1&paging.sort=alive,DESC&paging.sort=id,DESC&paging.size=50", true, true));
+    }
     
     /**
      * 
@@ -103,7 +122,7 @@ public class ProductsController {
             form.setCategory(lxc.getId());
             form.setName(vgp.getName());
             form.setImageUrl(vgp.getImageUrl());
-            form.setPrice((int)vgp.getPrice());
+            form.setPrice((int)vgp.getOriginalPrice());
             form.setDescription(vgp.getDescription());
             form.setProductSource(vgp.getLinkDetail());
             
@@ -143,6 +162,7 @@ public class ProductsController {
             vgp.setCategoryId(lxc.getVatgiaId().getId());
             vgp.setCategoryName(lxc.getName());
             vgp.setName(form.getName());
+            vgp.setOriginalPrice(form.getPrice());
             vgp.setPrice(LiXiGlobalUtils.floor2Hundred(LiXiGlobalUtils.increaseByPercent(form.getPrice(), LiXiGlobalConstants.LIXI_DEFAULT_INCREASE_PERCENT, true)));
             vgp.setImageUrl(form.getImageUrl());
             vgp.setDescription(form.getDescription());

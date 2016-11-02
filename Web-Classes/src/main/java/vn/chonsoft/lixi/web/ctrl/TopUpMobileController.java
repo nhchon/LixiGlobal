@@ -4,7 +4,6 @@
  */
 package vn.chonsoft.lixi.web.ctrl;
 
-import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,14 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
 import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
-import vn.chonsoft.lixi.EnumLixiOrderSetting;
-import vn.chonsoft.lixi.EnumLixiOrderStatus;
-import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.repositories.service.CountryService;
@@ -40,6 +39,7 @@ import vn.chonsoft.lixi.repositories.service.TopUpMobilePhoneService;
 import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
+import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
 import vn.chonsoft.lixi.web.beans.LoginedUser;
 import vn.chonsoft.lixi.web.util.LiXiUtils;
@@ -194,7 +194,7 @@ public class TopUpMobileController {
             buy = lxExch.getBuy();
         }
         
-        double amountUsd = LiXiUtils.toUsdPrice(amountTopUp, buy);
+        double amountUsd = LiXiGlobalUtils.toUsdPrice(amountTopUp, buy);
 
         boolean exceed = checkExceed(model, order, userMoneyLevelAmount, amountUsd, buy, topUpId);
         // order is exceed
@@ -302,7 +302,7 @@ public class TopUpMobileController {
             buy = this.lxexrateService.findLastRecord(LiXiConstants.USD).getBuy();
         }
 
-        double amountUsd = LiXiUtils.toUsdPrice(amount, buy);// amount is in VND
+        double amountUsd = LiXiGlobalUtils.toUsdPrice(amount, buy);// amount is in VND
         
         SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order, id, LiXiConstants.LIXI_TOP_UP_TYPE); // [VND, USD]
         double currentPayment = currentPayments[0].getUsd();//USD
@@ -348,7 +348,7 @@ public class TopUpMobileController {
         }
         
         // forward topup amount
-        model.put(LiXiConstants.TOP_UP_AMOUNT, LiXiUtils.toUsdPrice(amount, buy));
+        model.put(LiXiConstants.TOP_UP_AMOUNT, LiXiGlobalUtils.toUsdPrice(amount, buy));
 
         // topup in VND
         model.put(LiXiConstants.TOP_UP_IN_VND, amount);
@@ -508,7 +508,7 @@ public class TopUpMobileController {
 
         SumVndUsd[] currentPayments = LiXiUtils.calculateCurrentPayment(order, id, LiXiConstants.LIXI_TOP_UP_TYPE); // [VND, USD]
         double currentPayment = currentPayments[0].getUsd();//USD
-        currentPayment += LiXiUtils.toUsdPrice(amount, buy);// amount is in USD
+        currentPayment += LiXiGlobalUtils.toUsdPrice(amount, buy);// amount is in USD
 
         if (currentPayment > (u.getUserMoneyLevel().getMoneyLevel().getAmount())) {
 
@@ -527,7 +527,7 @@ public class TopUpMobileController {
             model.put("exceed", 0);
         }
         // forward topup amount
-        model.put(LiXiConstants.TOP_UP_AMOUNT, LiXiUtils.toUsdPrice(amount, buy));
+        model.put(LiXiConstants.TOP_UP_AMOUNT, LiXiGlobalUtils.toUsdPrice(amount, buy));
 
         // topup in VND
         model.put(LiXiConstants.TOP_UP_IN_VND, amount);

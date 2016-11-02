@@ -29,6 +29,8 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
+import vn.chonsoft.lixi.EnumLixiOrderSetting;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.BillingAddress;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.LixiConfig;
@@ -37,13 +39,11 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.LixiOrderCard;
 import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
+import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.User;
 import vn.chonsoft.lixi.model.UserCard;
 import vn.chonsoft.lixi.model.VatgiaProduct;
-import vn.chonsoft.lixi.EnumLixiOrderSetting;
-import vn.chonsoft.lixi.LiXiGlobalConstants;
-import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.model.pojo.SumVndUsd;
 import vn.chonsoft.lixi.pojo.CashRun;
@@ -337,20 +337,6 @@ public class LiXiUtils {
     public static double round(double a) {
 
         return Math.round((a + 0.005) * 100.0) / 100.0;
-    }
-
-    /**
-     * 
-     * @param vnd
-     * @param exchange
-     * @return 
-     */
-    public static double toUsdPrice(double vnd, double exchange){
-        
-        double inUsd = vnd/exchange +0.005;
-        
-        return Math.round(inUsd * 100.0) / 100.0;
-        
     }
 
     /**

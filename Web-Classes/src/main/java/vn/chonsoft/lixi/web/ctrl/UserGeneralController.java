@@ -787,7 +787,7 @@ public class UserGeneralController {
                         
                         for(LixiOrderGift gift : order.getGifts()){
                             
-                            gift.setUsdPrice(LiXiUtils.toUsdPrice(gift.getProductPrice(), exRate.getBuy()));
+                            gift.setUsdPrice(LiXiGlobalUtils.toUsdPrice(gift.getProductPrice(), exRate.getBuy()));
                             
                             this.lxogiftService.save(gift);
                         }
@@ -797,7 +797,7 @@ public class UserGeneralController {
                     if(order.getTopUpMobilePhones()!=null){
                         for(TopUpMobilePhone t : order.getTopUpMobilePhones()){
                             
-                            t.setAmountUsd(LiXiUtils.toUsdPrice(t.getAmount(), exRate.getBuy()));
+                            t.setAmountUsd(LiXiGlobalUtils.toUsdPrice(t.getAmount(), exRate.getBuy()));
                             this.topUpService.save(t);
                         }
                     }

@@ -97,6 +97,7 @@
                                         <th nowrap>Receiver</th><%-- 1 --%>
                                         <th nowrap>Item</th><%-- 2 --%>
                                         <th nowrap>Description</th><%-- 3 --%>
+                                        <th style="text-align: right;">Original Price</th><%-- 4 --%>
                                         <th style="text-align: right;">Amount</th><%-- 4 --%>
                                         <th style="text-align:center;">Method</th>
                                         <th style="text-align:right;">Status</th><%-- 5 --%>
@@ -115,6 +116,10 @@
                                                 <td><b># ${g.id}</b></td>
                                                 <td>${g.productQuantity}</td>
                                                 <td>${g.productName}</td>
+                                                <td style="text-align: right;">
+                                                    <br/>
+                                                    <fmt:formatNumber value="${g.productOriginalPrice}" pattern="###,###.##"/> VND
+                                                </td>
                                                 <td style="text-align: right;">
                                                     <fmt:formatNumber minFractionDigits="2" value="${g.usdPrice}" pattern="###,###.##"/> USD
                                                     <br/>
@@ -218,6 +223,7 @@
                                         <tr>
                                             <td><b>Shipping charge:</b></td>
                                             <td><fmt:formatNumber value="${rio.shippingChargeAmount}" pattern="###,###.##"/> USD</td>
+                                            <td style="text-align: right;"></td>
                                             <td style="text-align: right;"><b>Total (include shipping charge):</b></td>
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber minFractionDigits="2" value="${rio.allTotal.usd + rio.shippingChargeAmount}" pattern="###,###.##"/> USD
@@ -232,6 +238,7 @@
                                         <tr style="border-top: 2px solid #0090d0;">
                                             <td></td>
                                             <td></td>
+                                            <td></td>
                                             <td style="text-align: right;">Gift price</td>
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber minFractionDigits="2" value="${order.invoice.giftPrice}" pattern="###,###.##"/> USD
@@ -240,7 +247,7 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td></td>
+                                            <td></td><td></td>
                                             <td style="text-align: right;">Total shipping charge</td>
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber minFractionDigits="2" value="${totalShipping}" pattern="###,###.##"/> USD
@@ -249,7 +256,7 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td></td>
+                                            <td></td><td></td>
                                             <td style="text-align: right;">Card processing fee</td>
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber minFractionDigits="2" value="${order.invoice.cardFee}" pattern="###,###.##"/> USD
@@ -258,7 +265,7 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td></td>
+                                            <td></td><td></td>
                                             <td style="text-align: right;">Lixi handing fee</td>
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber minFractionDigits="2" value="${order.invoice.lixiFee}" pattern="###,###.##"/> USD
@@ -267,7 +274,7 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td></td>
+                                            <td></td><td></td>
                                             <td style="text-align: right;">Total befor tax</td>
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber minFractionDigits="2" value="${order.invoice.totalAmount}" pattern="###,###.##"/> USD
@@ -276,7 +283,7 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td></td>
+                                            <td></td><td></td>
                                             <td style="text-align: right;">Sale tax</td>
                                             <td style="text-align: right;">
                                                 <fmt:formatNumber minFractionDigits="2" value="0" pattern="###,###.##"/> USD
@@ -285,7 +292,7 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td></td>
+                                            <td></td><td></td>
                                             <td style="text-align: right;"><b>Grand Total</b></td>
                                             <td style="text-align: right;">
                                                 <b><fmt:formatNumber minFractionDigits="2" value="${order.invoice.totalAmount}" pattern="###,###.##"/></b> USD

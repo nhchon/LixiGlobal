@@ -1011,7 +1011,7 @@ public class CheckOutController {
         double currPaymentVnd = currentPayments[0].getVnd();
         if(quantity>0){
             // add selected gift
-            currentPayment += (LiXiUtils.toUsdPrice(price, buy) * quantity);
+            currentPayment += (LiXiGlobalUtils.toUsdPrice(price, buy) * quantity);
             
             currPaymentVnd += (price * quantity);
         }

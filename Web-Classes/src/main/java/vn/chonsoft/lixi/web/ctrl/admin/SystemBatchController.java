@@ -102,7 +102,7 @@ public class SystemBatchController {
                 recInOrder.forEach(r -> {r.setCharged(charged);});
                 
                 mOs.put(o, recInOrder);
-                batchMargin += o.getGiftMargin(baoKimTransferPercent);
+                batchMargin += o.getGiftMargin();
             }
         }
         

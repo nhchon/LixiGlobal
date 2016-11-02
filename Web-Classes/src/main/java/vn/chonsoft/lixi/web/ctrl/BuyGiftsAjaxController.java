@@ -45,6 +45,7 @@ import vn.chonsoft.lixi.repositories.service.UserService;
 import vn.chonsoft.lixi.repositories.service.VatgiaCategoryService;
 import vn.chonsoft.lixi.repositories.service.VatgiaProductService;
 import vn.chonsoft.lixi.repositories.util.LiXiVatGiaUtils;
+import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 import vn.chonsoft.lixi.web.LiXiConstants;
 import vn.chonsoft.lixi.web.annotation.UserSecurityAnnotation;
 import vn.chonsoft.lixi.web.annotation.WebController;
@@ -181,7 +182,7 @@ public class BuyGiftsAjaxController {
         double currPaymentVnd = currentPayments[0].getVnd();
         if (quantity > 0) {
             // add selected gift
-            currentPayment += (LiXiUtils.toUsdPrice(price, buy) * quantity);
+            currentPayment += (LiXiGlobalUtils.toUsdPrice(price, buy) * quantity);
 
             currPaymentVnd += (price * quantity);
         }
@@ -243,8 +244,9 @@ public class BuyGiftsAjaxController {
                         lxogift.setOrder(order);
                         lxogift.setCategory(this.vgcService.findOne(vgp.getCategoryId()).getLixiCategory());
                         lxogift.setProductId(productId);
+                        lxogift.setProductOriginalPrice(vgp.getOriginalPrice());
                         lxogift.setProductPrice(price);
-                        lxogift.setUsdPrice(LiXiUtils.toUsdPrice(price, buy));
+                        lxogift.setUsdPrice(LiXiGlobalUtils.toUsdPrice(price, buy));
                         lxogift.setProductName(vgp.getName());
                         lxogift.setProductImage(vgp.getImageUrl());
                         lxogift.setProductQuantity(quantity);

@@ -3,6 +3,10 @@
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
+            function doActive(id, active){
+                postInvisibleForm('<c:url value="/Administration/Products/activate"/>', {id:id, active:active});
+                return false;
+            }
         </script>    
     </jsp:attribute>
     <jsp:body>
@@ -22,7 +26,8 @@
                             <th>#ID</th>
                             <th></th>
                             <td>Name</td>
-                            <th>Price</th>
+                            <th>Original Price</th>
+                            <th>Sell Price</th>
                             <th>Active</th>
                         </tr>
                     </thead>
@@ -36,6 +41,7 @@
                                 Source: <a href="${p.linkDetail}" target="_blank">${p.linkDetail}</a>
                                 
                             </td>
+                            <td><fmt:formatNumber value="${p.originalPrice}" pattern="###,###.##"/></td>
                             <td><fmt:formatNumber value="${p.price}" pattern="###,###.##"/></td>
                             <td>
                                 ${p.alive}
@@ -43,10 +49,10 @@
                             <td nowrap>
                                 <a href="<c:url value="/Administration/Products/input/${p.id}"/>">Edit</a>&nbsp;&nbsp;
                                 <c:if test="${p.alive eq 1}">
-                                    <a href="">Deactivate</a>
+                                    <a href="javascript:void(0);" onclick="doActive(${p.id}, 0)">Deactivate</a>
                                 </c:if>
                                 <c:if test="${p.alive eq 0}">
-                                    <a href="">Activate</a>
+                                    <a href="javascript:void(0);" onclick="doActive(${p.id}, 1)">Activate</a>
                                 </c:if>
                             </td>
                         </tr>
@@ -54,7 +60,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="5">
+                            <td colspan="6">
                                 <%-- Paging --%>
                                 <nav>
                                     <ul class="pagination pull-right">

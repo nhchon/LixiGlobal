@@ -40,10 +40,6 @@ public class RecipientInOrder {
     private List<LixiOrderGift> gifts;
     private List<TopUpMobilePhone> topUpMobilePhones;
 
-    private SumVndUsd giftTotal = null;
-    private SumVndUsd topUpTotal = null;
-    private SumVndUsd allTotal = null;
-
     private List<ShippingCharged> charged;
     private double shippingChargeAmount;
     
@@ -133,13 +129,13 @@ public class RecipientInOrder {
     
     /**
      * 
-     * BaoKim returns for lixi.global
-     * 
      * @return 
      */
     public double getGiftMargin(){
         
+        /*
         double giftMarginTotal = 0;
+        
         double marginPercent = 100.0 - baoKimTransferPercent;
         
         if (getGifts() != null) {
@@ -151,8 +147,13 @@ public class RecipientInOrder {
                 }
             }
         }
+        */
         
-        return LiXiGlobalUtils.truncD(giftMarginTotal);
+        SumVndUsd ori = getOriginalGiftTotal();
+        SumVndUsd sale = getGiftTotal();
+                
+        /* we don't calculate gift margin in USD */
+        return LiXiGlobalUtils.truncD(sale.getVnd() - ori.getVnd());
     }
     
     /**
@@ -187,12 +188,35 @@ public class RecipientInOrder {
         return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
     }
     
+    /**
+     * 
+     * @return 
+     */
+    public SumVndUsd getOriginalGiftTotal(){
+        
+        // gift type
+        double sumGiftVND = 0;
+        double sumGiftUSD = 0;
+        if (getGifts() != null) {
+            for (LixiOrderGift gift : getGifts()) {
+                    
+                sumGiftVND += (gift.getProductOriginalPrice() * gift.getProductQuantity());
+                sumGiftUSD += LiXiGlobalUtils.toUsdPrice(gift.getProductOriginalPrice(), lxExchangeRate.getBuy()) * gift.getProductQuantity();
+                
+            }
+        }
+        /* round up */
+        sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+        sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
+        
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
+    }
     
     /**
      * 
      * @return 
      */
-    private SumVndUsd calculateGiftTotal(){
+    public SumVndUsd getGiftTotal(){
         
         // gift type
         double sumGiftVND = 0;
@@ -212,19 +236,7 @@ public class RecipientInOrder {
         return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
     }
     
-    
-    /**
-     * 
-     * @return 
-     */
-    public SumVndUsd getGiftTotal(){
-        
-        giftTotal = calculateGiftTotal();
-        
-        return giftTotal;
-    }
-    
-    private SumVndUsd calculateTopUpTotal(){
+    public SumVndUsd getTopUpTotal(){
         
         // top up mobile phone
         double sumTopUpUSD = 0;
@@ -236,14 +248,6 @@ public class RecipientInOrder {
             }
         }
         return new SumVndUsd(LiXiGlobalConstants.LIXI_TOP_UP_TYPE, sumTopUpVND, sumTopUpUSD);
-    }
-    
-    public SumVndUsd getTopUpTotal(){
-        
-        if(topUpTotal == null)
-            topUpTotal = calculateTopUpTotal();
-        
-        return topUpTotal;
     }
     
     public SumVndUsd getAllTotal(){
@@ -266,7 +270,7 @@ public class RecipientInOrder {
         
         if(getGifts()!=null && !getGifts().isEmpty()){
             
-            SumVndUsd tempGiftTotal = calculateGiftTotal();
+            SumVndUsd tempGiftTotal = getGiftTotal();
 
             for(ShippingCharged c : charged){
 

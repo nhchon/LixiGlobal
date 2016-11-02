@@ -286,6 +286,31 @@ public class LixiOrder implements Serializable {
         this.invoice = invoice;
     }
     
+    /**
+     * 
+     * @return 
+     */
+    public SumVndUsd getOriginalGiftTotal(){
+        
+        // gift type
+        double sumGiftVND = 0;
+        double sumGiftUSD = 0;
+        if (getGifts() != null) {
+            for (LixiOrderGift gift : getGifts()) {
+                    
+                sumGiftVND += (gift.getProductOriginalPrice() * gift.getProductQuantity());
+                sumGiftUSD += LiXiGlobalUtils.toUsdPrice(gift.getProductOriginalPrice(), lxExchangeRate.getBuy()) * gift.getProductQuantity();
+                
+            }
+        }
+        /* round up */
+        sumGiftUSD = Math.round(sumGiftUSD * 100.0) / 100.0;
+        sumGiftVND = Math.round(sumGiftVND * 100.0) / 100.0;
+        
+        return new SumVndUsd(LiXiGlobalConstants.LIXI_GIFT_TYPE, sumGiftVND, sumGiftUSD);
+    }
+    
+    
     public SumVndUsd getGiftTotal(){
         
         // gift type
@@ -346,7 +371,8 @@ public class LixiOrder implements Serializable {
      * @param percent
      * @return 
      */
-    public double getGiftMargin(double percent){
+    public double getGiftMargin(){
+        /*
         double giftMarginTotal = 0;
         double marginPercent = 100.0 - percent;
         
@@ -360,8 +386,12 @@ public class LixiOrder implements Serializable {
                 }
             }
         }
+        */
         
+        SumVndUsd ori = getOriginalGiftTotal();
+        SumVndUsd sale = getGiftTotal();
+                
         /* we don't calculate gift margin in USD */
-        return LiXiGlobalUtils.truncD(giftMarginTotal);
+        return LiXiGlobalUtils.truncD(sale.getVnd() - ori.getVnd());
     }
 }

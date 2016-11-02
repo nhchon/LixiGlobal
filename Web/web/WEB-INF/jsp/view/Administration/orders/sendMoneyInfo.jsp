@@ -15,6 +15,7 @@
                     //var totalGiftMargin = 0;
                     var totalShipCharged = 0;
                     var totalShipChargedVnd = 0;
+                    var totalMargin = 0;
                     var totalSend = 0;
                     
                     $('input[name=oIds]').each(function(){
@@ -28,6 +29,7 @@
                            //totalGiftMargin = totalGiftMargin + parseFloat($(this).attr('totalGiftMargin'));
                            totalShipCharged = totalShipCharged + parseFloat($(this).attr('totalShipCharged'));
                            totalShipChargedVnd = totalShipChargedVnd + parseFloat($(this).attr('totalShipChargedVnd'));
+                           totalMargin = totalMargin + parseFloat($(this).attr('totalMargin'));
                            totalSend = totalVnd;
                        }
                     });
@@ -37,6 +39,7 @@
                     $('#tdOnSelectUsd').html($.number(totalUsd, 2) + '');
                     $('#tdOnSelectShipCharged').html($.number(totalShipCharged, 2) + '')
                     $('#tdOnSelectShipChargedVnd').html($.number(totalShipChargedVnd) + '');
+                    $('#tdTotalMarginOnSelect').html($.number(totalMargin));
                     $('#tdTotalSendOnSelect').html('<b>'+$.number(totalSend + roundHundred(totalShipChargedVnd)) + '</b>');
                     // input hidden
                     //$('#onSelectVnd').val(totalVnd + '');
@@ -176,8 +179,9 @@
                                     <c:set var="totalAmountUsd" value="0"/>
                                     <c:forEach items="${mOs}" var="m" varStatus="theCount">
                                         <c:set var="countRec" value="${theCount.count}"/>
-                                        <c:set var="totalAmountVndOfThisOrder" value="${m.key.giftTotal.vnd}"/>
-                                        <c:set var="totalAmountUsdOfThisOrder" value="${m.key.giftTotal.usd}"/>
+                                        <c:set var="totalAmountVndOfThisOrder" value="${m.key.originalGiftTotal.vnd}"/>
+                                        <c:set var="totalMarginVndOfThisOrder" value="${m.key.giftMargin}"/>
+                                        <c:set var="totalAmountUsdOfThisOrder" value="${m.key.originalGiftTotal.usd}"/>
                                         <c:set var="totalShipCharged" value="0"/>
                                         <c:set var="totalShipChargedVnd" value="0"/>
                                         <c:forEach items="${m.value}" var="rio">
@@ -187,7 +191,7 @@
                                             </c:if>
                                         </c:forEach>
                                         <tr id="rowO${m.key.id}">
-                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalShipChargedVnd="<fmt:formatNumber value="${totalShipChargedVnd}" pattern="######.##"/>" totalShipCharged="${totalShipCharged}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
+                                            <td><input type="checkbox" value="${m.key.id}" name="oIds" id="oId${m.key.id}" class="checkbox" totalMargin="${totalMarginVndOfThisOrder}" totalShipChargedVnd="<fmt:formatNumber value="${totalShipChargedVnd}" pattern="######.##"/>" totalShipCharged="${totalShipCharged}" totalAmountVnd="${totalAmountVndOfThisOrder}" totalAmountUsd="${totalAmountUsdOfThisOrder}"/></td>
                                             <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
                                             </td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
@@ -216,10 +220,10 @@
                                             <td style="text-align: right;" nowrap>
                                                 <c:forEach items="${m.value}" var="rio">
                                                     <c:if test="${not empty rio.gifts}">
-                                                    <fmt:formatNumber minFractionDigits="2" value="${rio.giftTotal.usd}" pattern="###,###.##"/> USD<br/>
-                                                    <fmt:formatNumber value="${rio.giftTotal.vnd}" pattern="###,###.##"/> VND<br/>
-                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.giftTotal.vnd}"/>
-                                                    <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.giftTotal.usd}"/>
+                                                    <fmt:formatNumber minFractionDigits="2" value="${rio.originalGiftTotal.usd}" pattern="###,###.##"/> USD<br/>
+                                                    <fmt:formatNumber value="${rio.originalGiftTotal.vnd}" pattern="###,###.##"/> VND<br/>
+                                                    <c:set var="totalAmountVnd" value="${totalAmountVnd + rio.originalGiftTotal.vnd}"/>
+                                                    <c:set var="totalAmountUsd" value="${totalAmountUsd + rio.originalGiftTotal.usd}"/>
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
@@ -269,6 +273,11 @@
                             <td>USD<input type="hidden" id="onSelectShipCharged" name="onSelectShipCharged" value="0"/></td>
                             <td style="text-align: right;" id="tdOnSelectShipChargedVnd"></td>
                             <td>VND<input type="hidden" id="onSelectShipChargedVnd" name="onSelectShipChargedVnd" value="0"/></td>
+                        </tr>
+                        <tr>
+                            <td>Total Margin</td>
+                            <td colspan="3" style="text-align: right;" id="tdTotalMarginOnSelect"></td>
+                            <td>VND</td>
                         </tr>
                         <tr>
                             <td>Total Send</td>

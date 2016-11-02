@@ -49,6 +49,10 @@ public class VatgiaProduct implements Serializable {
     @Column(name = "description")
     private String description;
     
+    @Basic
+    @Column(name = "original_price")
+    private double originalPrice;
+    
     @Basic(optional = false)
     @Column(name = "price")
     private double price;
@@ -163,6 +167,14 @@ public class VatgiaProduct implements Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(double originalPrice) {
+        this.originalPrice = originalPrice;
     }
 
     public double getPriceInUSD(double exchange){

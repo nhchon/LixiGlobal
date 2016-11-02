@@ -255,7 +255,7 @@ public class BuyGiftsController {
         double currPaymentVnd = currentPayments[0].getVnd();
         if(quantity>0){
             // add selected gift
-            currentPayment += (LiXiUtils.toUsdPrice(price, buy) * quantity);
+            currentPayment += (LiXiGlobalUtils.toUsdPrice(price, buy) * quantity);
             
             currPaymentVnd += (price * quantity);
         }
@@ -321,8 +321,9 @@ public class BuyGiftsController {
                     lxogift.setOrder(order);
                     lxogift.setCategory(this.vgcService.findOne(vgp.getCategoryId()).getLixiCategory());
                     lxogift.setProductId(productId);
+                    lxogift.setProductOriginalPrice(vgp.getOriginalPrice());
                     lxogift.setProductPrice(price);
-                    lxogift.setUsdPrice(LiXiUtils.toUsdPrice(price, buy));
+                    lxogift.setUsdPrice(LiXiGlobalUtils.toUsdPrice(price, buy));
                     lxogift.setProductName(vgp.getName());
                     lxogift.setProductImage(vgp.getImageUrl());
                     lxogift.setProductQuantity(quantity);

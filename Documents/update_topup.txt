@@ -42,3 +42,12 @@ ALTER TABLE `lixi_order_gifts` DROP `exch_price`;
 ALTER TABLE `lixi_order_gifts` ADD `recipient_email` VARCHAR(255) NULL AFTER `recipient`;
 
 ALTER TABLE `recipients` ADD `address` TEXT NULL AFTER `phone`, ADD `province` VARCHAR(255) NULL AFTER `address`; 
+
+## 2016-11-02
+ALTER TABLE `vatgia_products` ADD `original_price` DOUBLE NULL AFTER `description`; 
+
+UPDATE `vatgia_products` set original_price= CEILING((price *(1-5/100.0))/100.0)*100.0
+
+ALTER TABLE `lixi_order_gifts` ADD `product_original_price` DOUBLE NULL AFTER `product_id`; 
+
+UPDATE `lixi_order_gifts` set product_original_price= CEILING((product_price *(1-5/100.0))/100.0)*100.0
