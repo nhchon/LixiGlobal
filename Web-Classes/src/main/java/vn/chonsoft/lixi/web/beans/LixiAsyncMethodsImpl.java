@@ -25,19 +25,19 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.ws.WebServiceException;
 import vn.chonsoft.lixi.EnumLixiOrderStatus;
+import vn.chonsoft.lixi.LiXiGlobalConstants;
 import vn.chonsoft.lixi.model.BuyCard;
 import vn.chonsoft.lixi.model.BuyCardResult;
 import vn.chonsoft.lixi.model.DauSo;
+import vn.chonsoft.lixi.model.LixiCashrun;
+import vn.chonsoft.lixi.model.LixiConfig;
 import vn.chonsoft.lixi.model.LixiOrder;
+import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.model.Recipient;
 import vn.chonsoft.lixi.model.TopUpMobilePhone;
 import vn.chonsoft.lixi.model.TopUpResult;
 import vn.chonsoft.lixi.model.VtcResponseCode;
 import vn.chonsoft.lixi.model.VtcServiceCode;
-import vn.chonsoft.lixi.LiXiGlobalConstants;
-import vn.chonsoft.lixi.model.LixiCashrun;
-import vn.chonsoft.lixi.model.LixiConfig;
-import vn.chonsoft.lixi.model.LixiOrderGift;
 import vn.chonsoft.lixi.repositories.service.BuyCardResultService;
 import vn.chonsoft.lixi.repositories.service.BuyCardService;
 import vn.chonsoft.lixi.repositories.service.DauSoService;
@@ -195,11 +195,11 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
             }
         }
         
-        for(TopUpMobilePhone t : order.getTopUpMobilePhones()){
-            if(!status.equals(t.getStatus())){
-                return false;
-            }
-        }
+        //for(TopUpMobilePhone t : order.getTopUpMobilePhones()){
+        //    if(!status.equals(t.getStatus())){
+        //        return false;
+        //    }
+        //}
         
         return true;
     }
@@ -264,7 +264,7 @@ public class LixiAsyncMethodsImpl implements LixiAsyncMethods {
             lxVatGiaUtils.sendShippingFee(LiXiUtils.genMapRecGifts(order, getBaoKimPercent()));
         }
         
-        return lxVatGiaUtils.sendPaymentInfoToBaoKim(order);
+        return rs;//lxVatGiaUtils.sendPaymentInfoToBaoKim(order);
     }
     
     /**

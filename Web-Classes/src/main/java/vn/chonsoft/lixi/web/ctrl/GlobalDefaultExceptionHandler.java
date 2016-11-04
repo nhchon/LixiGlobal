@@ -144,7 +144,7 @@ public class GlobalDefaultExceptionHandler {
         Enumeration eHs = req.getHeaderNames();
         StringBuilder b = new StringBuilder("<p>");
         b.append("<TABLE ALIGN=CENTER BORDER=1>");
-        b.append("<tr><th> Header </th><th> Value </th>");
+        b.append("<tr><th> Header </th><th> Value </th></tr>");
 
         while (eHs.hasMoreElements()) {
             String headers = (String) eHs.nextElement();

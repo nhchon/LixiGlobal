@@ -22,7 +22,7 @@ public interface AdminUserAuthorityRepository extends JpaRepository<AdminUserAut
     @Modifying
     @Transactional
     @Query("SELECT auAuth FROM AdminUserAuthority auAuth WHERE auAuth.authority IN :authorities")
-    List<AdminUserAuthority> findByAuthorityNames(List<String> authorities);
+    List<AdminUserAuthority> findByAuthorityNames(@Param("authorities") List<String> authorities);
     
     AdminUserAuthority findByAdminUserIdAndAuthority(AdminUser adminUserId, String authority);
     

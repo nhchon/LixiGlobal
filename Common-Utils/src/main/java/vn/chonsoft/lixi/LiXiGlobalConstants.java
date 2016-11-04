@@ -10,6 +10,9 @@ package vn.chonsoft.lixi;
  */
 public abstract class LiXiGlobalConstants {
     
+    /* */
+    public static final String LIXI_AUTHORITY_ORDER_MANAGEMENT = "NEW_ORDER_INFO/SEND_MONEY";
+    
     public static final String MONEY_LEVEL = "MONEY_LEVEL";
     
     public static final String BAOKIM_GIFT_METHOD = "GIFT";

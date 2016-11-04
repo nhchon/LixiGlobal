@@ -161,6 +161,11 @@ public class ProductsController {
             vgp.setId(form.getId());
             vgp.setCategoryId(lxc.getVatgiaId().getId());
             vgp.setCategoryName(lxc.getName());
+            log.info("================================");
+            log.info(request.getCharacterEncoding());
+            log.info(form.getName());
+            log.info(LiXiGlobalUtils.toUTF8(form.getName()));
+            log.info("================================");
             vgp.setName(form.getName());
             vgp.setOriginalPrice(form.getPrice());
             vgp.setPrice(LiXiGlobalUtils.floor2Hundred(LiXiGlobalUtils.increaseByPercent(form.getPrice(), LiXiGlobalConstants.LIXI_DEFAULT_INCREASE_PERCENT, true)));

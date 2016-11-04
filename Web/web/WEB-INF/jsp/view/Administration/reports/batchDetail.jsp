@@ -100,7 +100,7 @@
                             <th nowrap class="success">#</th><%-- 1 --%>
                             <th nowrap class="success">File Name</th><%-- 2 --%>
                             <th nowrap class="success"  style="text-align: center;">Time</th><%-- 4 --%>
-                            <th nowrap style="text-align:right;" class="success">Total To BaoKim</th><%-- 5 --%>
+                            <th nowrap style="text-align:right;" class="success">Total Sent</th><%-- 5 --%>
                             <th nowrap class="success" style="text-align:right;">Margined</th>
                             <%--<th nowrap class="success" style="text-align:right;" title="For Allow Refund Orders, but Gifted by user">Cur. Margin(*)</th>--%>
                             <th nowrap class="success" style="text-align: right;">Ship. Charged</th>
@@ -123,7 +123,9 @@
                                 <fmt:formatNumber value="${batch.vndMargin}" pattern="###,###.##"/> VND
                             </td>
                             <%--<td id="giftMargin" style="text-align:right;"></td>--%>
-                            <td nowrap style="text-align:right;"><fmt:formatNumber value="${batch.usdShip}" pattern="###,###.##"/> USD</td>
+                            <td nowrap style="text-align:right;">
+                                <fmt:formatNumber value="${batch.vndShip}" pattern="###,###.##"/> VND<br/>
+                                <fmt:formatNumber value="${batch.usdShip}" pattern="###,###.##"/> USD</td>
                             <td nowrap style="text-align:right;">${batch.createdBy}</td>
                         </tr>
                     </tbody>
@@ -159,7 +161,7 @@
                             <td>$<fmt:formatNumber value="${batch.costOfGood + batch.usdShip}" pattern="###,###.##"/></td>
                         </tr>
                         <c:set var="creditFee" value="${batch.senderPaid * 0.025}"/>
-                        <c:set var="commission" value="${batch.senderPaid - (batch.costOfGood + batch.usdShip)}"/>
+                        <c:set var="commission" value="${batch.senderPaid - (batch.costOfGood)}"/>
                         <!--
                         <tr>
                             <td>

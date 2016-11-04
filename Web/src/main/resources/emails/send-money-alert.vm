@@ -1,0 +1,14 @@
+<html>
+    <body>
+        <h5>Dear all,</h5>
+        
+        <p>Mr Yuric has sent money form some order ids. Report is below</p>
+        
+        <p>${report}</p>
+
+        <div>
+            Thank you<br/>
+            <h5>Lixi. Global Customer Service</h5>
+        </div>
+    </body>
+</html>

@@ -55,6 +55,10 @@ public class LixiBatch implements Serializable {
     private double costOfGood;
     
     @Basic
+    @Column(name = "cost_of_good_vnd")
+    private double costOfGoodVnd;
+    
+    @Basic
     @Column(name = "vnd_margin")
     private double vndMargin;
     
@@ -149,6 +153,14 @@ public class LixiBatch implements Serializable {
 
     public void setCostOfGood(double costOfGood) {
         this.costOfGood = costOfGood;
+    }
+
+    public double getCostOfGoodVnd() {
+        return costOfGoodVnd;
+    }
+
+    public void setCostOfGoodVnd(double costOfGoodVnd) {
+        this.costOfGoodVnd = costOfGoodVnd;
     }
 
     public double getVndMargin() {

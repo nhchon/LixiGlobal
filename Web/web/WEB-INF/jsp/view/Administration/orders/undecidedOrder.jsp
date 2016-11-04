@@ -16,7 +16,7 @@
                 if (status !== '-1') {
 
                     if (confirm('Update status this order for this receiver to ' + statusText + "?")) {
-                        postInvisibleForm('<c:url value="/Administration/Orders/updateOrderStatus"/>', {oId: oId, recId: recId, status: status, returnPage: 'refundOrders'});
+                        postInvisibleForm('<c:url value="/Administration/Orders/updateOrderStatus"/>', {oId: oId, recId: recId, status: status, returnPage:'newOrders'});
                     }
                 }
             }
@@ -31,12 +31,12 @@
         </ul>
 
         <!-- main -->
-        <h2 class="sub-header">Refund Orders</h2>
+        <h2 class="sub-header">Undecided Orders</h2>
 
         <!-- Content -->
         <ul class="nav nav-tabs">
-            <li role="presentation"><a href="<c:url value="/Administration/Orders/giftedOrders"/>"><b>Gifted Orders</b></a></li>
-            <li role="presentation" class="active"><a href="<c:url value="/Administration/Orders/refundOrders"/>"><b>Refund Orders</b></a></li>
+            <li role="presentation" class="active"><a href="<c:url value="/Administration/Orders/giftedOrders"/>"><b>Gifted Orders</b></a></li>
+            <li role="presentation"><a href="<c:url value="/Administration/Orders/refundOrders"/>"><b>Refund Orders</b></a></li>
             <li role="presentation"><a href="<c:url value="/Administration/Orders/undecidedOrders"/>"><b>Undecided Orders</b></a></li>
             <li role="presentation"><a href="<c:url value="/Administration/Orders/otherOrders"/>"><b>Others</b></a></li>
         </ul>
@@ -63,12 +63,12 @@
                     <div class="row alert alert-success">
                         <div class="col-md-6">
                             <b>${rio.recipient.fullName}</b>, ${rio.recipient.email}, ${rio.recipient.phone}
-                            <div style="margin-top: 10px;"><b>Refund to Bank Account</b>: </div>
-                            <div style="font-size:14px;">Account number: <b>${rio.recBank.soTaiKhoan}</b><br/>
-                                Account name: <b>${rio.recBank.tenNguoiHuong}</b><br/>
-                                <b>${rio.recBank.bankName}, ${rio.recBank.chiNhanh}, ${rio.recBank.province.name}</b>
+                            <div style="margin-top: 10px;">Delivery Address: </div>
+                            <div><b>${rio.recAdd.name}</b><br/>
+                                ${rio.recAdd.address}, ${rio.recAdd.ward}, ${rio.recAdd.district}<br/>
+                                ${rio.recAdd.province.name}
                                 <br/>
-                                Email: ${rio.recBank.recEmail}
+                                Email: ${rio.recAdd.email}, Phone: ${rio.recAdd.phone}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -85,10 +85,36 @@
                                 </select>
                                 <span class="input-group-btn" style="padding-left: 10px;">
                                     <button onclick="updateOrderStatus(${m.key.id}, ${rio.recipient.id})" class="btn btn-primary">Update Order Status</button>
+                                    &nbsp;
+                                    <button onclick="outOfStock(${m.key.id}, ${rio.recipient.id})" class="btn btn-danger" style="margin-left:5px;">Out of Stock</button>
                                 </span>
                             </div>                                            
                         </div>
                     </div>
+                    <c:forEach var="g" items="${rio.gifts}" varStatus="gCount">
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-md-1" style="width: 10px; padding-top: 20px;">
+                                <b>${gCount.count}.</b>
+                            </div>
+                            <div class="col-md-11">
+
+
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="media-object" src="${g.productImage}" style="width: 64px; height: 64px;" alt="...">
+                                        </a>
+
+                                    </div>
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><a href="<c:url value="/gifts/detail/${g.productId}"/>" target="_blank">${g.productName}</a></h5>
+                                        <spring:message code="message.quantity" text="Quantity"/>: ${g.productQuantity} &nbsp; <spring:message code="message.price" text="Price"/>: VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/>
+                                        <br/>Source: <a href="${g.productSource}" target="_blank">${g.productSource}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
                 </c:if>
             </c:forEach>
         </c:forEach>

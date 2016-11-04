@@ -40,6 +40,13 @@ public abstract class LiXiGlobalUtils {
 
     private static final Logger log = LogManager.getLogger(LiXiGlobalUtils.class);
 
+    public static String toUTF8(String s) {
+        try {
+            return new String(s.getBytes("ISO-8859-1"), "UTF-8");
+        } catch (java.io.UnsupportedEncodingException e) {
+            return s;
+        }
+    }
     /**
      * 
      * @param vnd

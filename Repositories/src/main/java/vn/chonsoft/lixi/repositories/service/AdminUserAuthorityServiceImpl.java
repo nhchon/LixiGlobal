@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.chonsoft.lixi.model.AdminUser;
 import vn.chonsoft.lixi.model.AdminUserAuthority;
 import vn.chonsoft.lixi.repositories.AdminUserAuthorityRepository;
+import vn.chonsoft.lixi.repositories.util.LiXiRepoUtils;
 import vn.chonsoft.lixi.util.LiXiGlobalUtils;
 
 /**
@@ -68,10 +69,16 @@ public class AdminUserAuthorityServiceImpl implements AdminUserAuthorityService{
      * @param authorities
      * @return 
      */
+    @Transactional
     @Override
     public List<AdminUserAuthority> findByAuthorityNames(List<String> authorities) {
         
-        return LiXiGlobalUtils.toList(this.auAuRepository.findByAuthorityNames(authorities));
+        List<AdminUserAuthority> auaL = LiXiRepoUtils.toList(this.auAuRepository.findByAuthorityNames(authorities));
+        auaL.forEach(aua -> {
+            aua.getAdminUserId().getEmail();
+        });
+        
+        return auaL;
         
     }
 

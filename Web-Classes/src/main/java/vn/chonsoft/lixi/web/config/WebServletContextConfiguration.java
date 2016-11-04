@@ -193,9 +193,9 @@ public class WebServletContextConfiguration  extends WebMvcConfigurerAdapter{
         InternalResourceViewResolver resolver
                 = new InternalResourceViewResolver();
         resolver.setViewClass(JstlView.class);
+        resolver.setContentType("text/html;charset=UTF-8");
         resolver.setPrefix("/WEB-INF/jsp/view/");
         resolver.setSuffix(".jsp");
-        resolver.setContentType("text/html;charset=UTF-8");
         return resolver;
     }
 

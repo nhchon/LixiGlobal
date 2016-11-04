@@ -44,6 +44,7 @@ import vn.chonsoft.lixi.EnumLixiOrderStatus;
 import vn.chonsoft.lixi.EnumTransactionResponseCode;
 import vn.chonsoft.lixi.EnumTransactionStatus;
 import vn.chonsoft.lixi.LiXiGlobalConstants;
+import vn.chonsoft.lixi.model.AdminUserAuthority;
 import vn.chonsoft.lixi.model.LixiBatch;
 import vn.chonsoft.lixi.model.LixiBatchOrder;
 import vn.chonsoft.lixi.model.LixiExchangeRate;
@@ -63,6 +64,7 @@ import vn.chonsoft.lixi.pojo.BankExchangeRate;
 import vn.chonsoft.lixi.pojo.Exrate;
 import vn.chonsoft.lixi.repositories.search.Criterion;
 import vn.chonsoft.lixi.repositories.search.SearchCriteria;
+import vn.chonsoft.lixi.repositories.service.AdminUserAuthorityService;
 import vn.chonsoft.lixi.repositories.service.LixiBatchOrderService;
 import vn.chonsoft.lixi.repositories.service.LixiBatchService;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
@@ -155,6 +157,15 @@ public class LixiOrdersController {
     @Autowired
     private VelocityEngine velocityEngine;
 
+    @Autowired
+    private AdminUserAuthorityService auaService;
+
+    @RequestMapping(value = "undecidedOrders", method = RequestMethod.GET)
+    public ModelAndView undecidedOrders(Map<String, Object> model) {
+        
+        return new ModelAndView("Administration/orders/undecidedOrder");
+        
+    }
     /**
      *
      * @param model
@@ -201,7 +212,7 @@ public class LixiOrdersController {
     /**
      *
      * @param model
-     * @param page 
+     * @param page
      * @return
      */
     @RequestMapping(value = "otherOrders", method = RequestMethod.GET)
@@ -214,7 +225,6 @@ public class LixiOrdersController {
         //List<LixiOrderGift> gifts = this.lxogiftService.findByBkReceiveMethodAndBkStatusIn(LiXiGlobalConstants.BAOKIM_GIFT_METHOD, statuses);
         //List<Long> proIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
         //LiXiGlobalUtils.removeDupEle(proIds);
-
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         List<ShippingCharged> charged = this.shipService.findAll();
 
@@ -273,7 +283,7 @@ public class LixiOrdersController {
 
             this.lxogiftService.save(g);
         });
-        
+
         /* */
         try {
             lxAsyncMethods.updateLixiOrderStatus(oId, status);
@@ -660,7 +670,7 @@ public class LixiOrdersController {
     @RequestMapping(value = "sendMoneyInfo", method = RequestMethod.GET)
     public ModelAndView sendMoneyInfo(Map<String, Object> model) {
 
-        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue());
+        List<LixiOrder> orders = this.lxOrderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.GiftStatus.UN_SUBMITTED.getValue());
 
         if (orders != null) {
             Iterator<LixiOrder> iterator = orders.iterator();
@@ -795,47 +805,112 @@ public class LixiOrdersController {
             double batchUsdShip = 0;
             double senderPaid = 0;
             double costOfGood = 0;
+            double costOfGoodVnd = 0;
+            StringBuilder report = new StringBuilder("<p>");
+            report.append("<TABLE ALIGN=CENTER BORDER=1 width='100%'>");
+            report.append("<tr><th width='20%'> Order ID </th><th> Total </th></tr>");
 
             for (LixiOrder order : orders) {
-                // send to bao kim
-                boolean rs = lxAsyncMethods.sendPaymentInfoToBaoKim(order);
-                /* test local, debug process create Batch */
-                //boolean rs = true;
-                if (rs) {
-                    /* lưu id */
-                    LixiBatchOrder bo = new LixiBatchOrder();
-                    bo.setBatch(batch);
-                    bo.setOrderId(order.getId());
 
-                    SumVndUsd sum = order.getGiftTotal();
-                    bo.setVndOnlyGift(sum.getVnd());
-                    bo.setUsdOnlyGift(sum.getUsd());
+                LixiBatchOrder bo = new LixiBatchOrder();
+                bo.setBatch(batch);
+                bo.setOrderId(order.getId());
 
-                    this.batchOrderService.save(bo);
+                // original price
+                SumVndUsd sum = order.getOriginalGiftTotal();
+                bo.setVndOnlyGift(sum.getVnd());
+                bo.setUsdOnlyGift(sum.getUsd());
 
-                    //batchMargin += order.getGiftMargin(percent);
+                this.batchOrderService.save(bo);
 
-                    LixiInvoice inv = order.getInvoice();
-                    batchVndShip += inv.getVndShip(); // VND
-                    batchUsdShip += inv.getUsdShip(); // USD
-                    senderPaid += inv.getTotalAmount(); // USD
-                    costOfGood += sum.getUsd();//inv.getGiftPrice();
+                LixiInvoice inv = order.getInvoice();
+                report.append("<tr><td width='20%'>");
+                report.append(order.getId());
+                report.append("</td><td style='text-align:center;'>");
+                report.append(LiXiUtils.getNumberFormat().format(sum.getVnd() + inv.getVndShip()));
+                report.append("</td></tr>");
 
+                //batchMargin += order.getGiftMargin(percent);
+                batchVndShip += inv.getVndShip(); // VND
+                batchUsdShip += inv.getUsdShip(); // USD
+                batchMargin += order.getGiftMargin();
+                senderPaid += inv.getTotalAmount(); // USD
+                costOfGood += sum.getUsd();//
+                costOfGoodVnd += sum.getVnd();
+
+                // update order status
+                for (LixiOrderGift gift : order.getGifts()) {
+                    gift.setBkStatus(EnumLixiOrderStatus.PROCESSING.getValue());
+                    gift.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_MONEY.getValue());
+                    gift.setModifiedDate(Calendar.getInstance().getTime());
                 }
-            }
+                order.setLixiStatus(EnumLixiOrderStatus.PROCESSING.getValue());
+                order.setLixiSubStatus(EnumLixiOrderStatus.GiftStatus.SENT_MONEY.getValue());
 
+                this.lxOrderService.save(order);
+            }
+            report.append("</TABLE><BR></p>");
+            report.append("<h4>Total: ");
+            report.append(LiXiUtils.getNumberFormat().format(costOfGoodVnd + batchVndShip));
+            report.append("</h4>");
+            
             /* update batch */
             batch.setVndMargin(batchMargin);
             batch.setVndShip(batchVndShip);
             batch.setUsdShip(batchUsdShip);
             batch.setSenderPaid(senderPaid);
             batch.setCostOfGood(costOfGood);
+            batch.setCostOfGoodVnd(costOfGoodVnd);
 
             this.batchService.save(batch);
+            
+            // send mail
+            List<AdminUserAuthority> auaL = this.auaService.findByAuthorityNames(Arrays.asList(LiXiGlobalConstants.LIXI_AUTHORITY_ORDER_MANAGEMENT));
+            String[] orderManagementEmails = new String[auaL.size() + 1];
+            orderManagementEmails[0] = LiXiGlobalConstants.YHANNART_GMAIL;
+            for (int i=0; i< auaL.size();i++) {
+                orderManagementEmails[i+1] = auaL.get(i).getAdminUserId().getEmail();
+            }
+
+            // email
+            mail2OrderManagementUser(batch.getId(), orderManagementEmails, report.toString());
+            
         }
-        //
+        
         return new ModelAndView(new RedirectView("/Administration/Orders/sendMoneyInfo", true, true));
 
+    }
+
+    /**
+     * 
+     * @param batchId
+     * @param orderManagementEmails
+     * @param report 
+     */
+    private void mail2OrderManagementUser(final long batchId, final String[] orderManagementEmails, final String report) {
+        
+        log.info("Sent Order Money Alert #"+batchId + " to: " + StringUtils.join(orderManagementEmails, ','));
+        
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            @Override
+            public void prepare(MimeMessage mimeMessage) throws Exception {
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+                message.setTo(orderManagementEmails);
+                message.setFrom("support@lixi.global");
+                message.setSubject("LiXi.Global - Send Order Money Alert - Batch ID #" + batchId);
+                message.setSentDate(Calendar.getInstance().getTime());
+
+                Map<String, Object> model = new HashMap<>();
+                model.put("report", report);
+
+                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                        velocityEngine, "emails/send-money-alert.vm", "UTF-8", model);
+                message.setText(text, true);
+            }
+        };
+        // send oldEmail
+        taskScheduler.execute(() -> mailSender.send(preparator));
     }
 
     /**
