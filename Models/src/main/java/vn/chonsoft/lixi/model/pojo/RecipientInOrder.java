@@ -31,6 +31,8 @@ public class RecipientInOrder {
     
     private Integer orderSetting;
     
+    private String receiveMethod;
+    
     private double baoKimTransferPercent;
     
     private LixiExchangeRate lxExchangeRate;
@@ -69,6 +71,14 @@ public class RecipientInOrder {
 
     public void setOrderSetting(Integer orderSetting) {
         this.orderSetting = orderSetting;
+    }
+
+    public String getReceiveMethod() {
+        return receiveMethod;
+    }
+
+    public void setReceiveMethod(String receiveMethod) {
+        this.receiveMethod = receiveMethod;
     }
 
     public double getBaoKimTransferPercent() {

@@ -35,9 +35,9 @@
 
         <!-- Content -->
         <ul class="nav nav-tabs">
-            <li role="presentation" class="active"><a href="<c:url value="/Administration/Orders/giftedOrders"/>"><b>Gifted Orders</b></a></li>
+            <li role="presentation"><a href="<c:url value="/Administration/Orders/giftedOrders"/>"><b>Gifted Orders</b></a></li>
             <li role="presentation"><a href="<c:url value="/Administration/Orders/refundOrders"/>"><b>Refund Orders</b></a></li>
-            <li role="presentation"><a href="<c:url value="/Administration/Orders/undecidedOrders"/>"><b>Undecided Orders</b></a></li>
+            <li role="presentation" class="active"><a href="<c:url value="/Administration/Orders/undecidedOrders"/>"><b>Undecided Orders</b></a></li>
             <li role="presentation"><a href="<c:url value="/Administration/Orders/otherOrders"/>"><b>Others</b></a></li>
         </ul>
         <p>&nbsp;</p>
@@ -59,18 +59,12 @@
                 </div>
             </div>
             <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                <c:if test="${not empty rio.gifts}">
+                <c:if test="${not empty rio.gifts && empty rio.receiveMethod}">
                     <div class="row alert alert-success">
-                        <div class="col-md-6">
-                            <b>${rio.recipient.fullName}</b>, ${rio.recipient.email}, ${rio.recipient.phone}
-                            <div style="margin-top: 10px;">Delivery Address: </div>
-                            <div><b>${rio.recAdd.name}</b><br/>
-                                ${rio.recAdd.address}, ${rio.recAdd.ward}, ${rio.recAdd.district}<br/>
-                                ${rio.recAdd.province.name}
-                                <br/>
-                                Email: ${rio.recAdd.email}, Phone: ${rio.recAdd.phone}
-                            </div>
+                        <div class="col-md-6" style="font-size:14px;">
+                            Receiver: <b>${rio.recipient.fullName}</b>, ${rio.recipient.email}, ${rio.recipient.phone}
                         </div>
+                        <%--
                         <div class="col-md-6">
                             <div class="input-group">
                                 <select id="recOrderStatus${rio.recipient.id}" class="form-control">
@@ -90,6 +84,7 @@
                                 </span>
                             </div>                                            
                         </div>
+                        --%>
                     </div>
                     <c:forEach var="g" items="${rio.gifts}" varStatus="gCount">
                         <div class="row" style="margin-bottom: 10px;">

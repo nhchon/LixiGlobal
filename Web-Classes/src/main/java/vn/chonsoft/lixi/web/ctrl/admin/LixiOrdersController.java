@@ -160,8 +160,44 @@ public class LixiOrdersController {
     @Autowired
     private AdminUserAuthorityService auaService;
 
+    /**
+     * 
+     * @param model
+     * @return 
+     */
     @RequestMapping(value = "undecidedOrders", method = RequestMethod.GET)
     public ModelAndView undecidedOrders(Map<String, Object> model) {
+        
+        List<LixiOrderGift> gifts = this.lxogiftService.findByBkStatusAndBkReceiveMethod(EnumLixiOrderStatus.PROCESSED.getValue(), null);
+        List<Long> proIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
+        LiXiGlobalUtils.removeDupEle(proIds);
+
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        List<ShippingCharged> charged = this.shipService.findAll();
+
+        List<LixiOrder> orders = lxOrderService.findAll(proIds);
+
+        if (orders != null) {
+            orders.forEach(o -> {
+
+                List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
+                recInOrder.forEach(r -> {
+                    r.setCharged(charged);
+                    // get delivery address
+                    RecBank rb = null;
+                    List<RecBankOrder> rbos = this.rboService.findByOrderIdAndRecEmail(o.getId(), r.getRecipient().getEmail());
+                    if (rbos != null && !rbos.isEmpty()) {
+                        rb = this.recBankService.findById(rbos.get(0).getBankId());
+                    }
+                    // set delivery address
+                    r.setRecBank(rb);
+                });
+
+                mOs.put(o, recInOrder);
+            });
+        }
+
+        model.put("mOs", mOs);
         
         return new ModelAndView("Administration/orders/undecidedOrder");
         
@@ -218,9 +254,8 @@ public class LixiOrdersController {
     @RequestMapping(value = "otherOrders", method = RequestMethod.GET)
     public ModelAndView otherOrders(Map<String, Object> model, @PageableDefault(page = 0, size = 50, sort = "id", direction = Sort.Direction.DESC) Pageable page) {
 
-        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PURCHASED.getValue(), EnumLixiOrderStatus.DELIVERED.getValue(),
-                EnumLixiOrderStatus.UNDELIVERABLE.getValue(), EnumLixiOrderStatus.REFUNDED.getValue(),
-                EnumLixiOrderStatus.CANCELED.getValue(), EnumLixiOrderStatus.COMPLETED.getValue());
+        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.PURCHASED.getValue(), EnumLixiOrderStatus.DELIVERED.getValue(),
+                EnumLixiOrderStatus.UNDELIVERABLE.getValue(), EnumLixiOrderStatus.REFUNDED.getValue());
 
         //List<LixiOrderGift> gifts = this.lxogiftService.findByBkReceiveMethodAndBkStatusIn(LiXiGlobalConstants.BAOKIM_GIFT_METHOD, statuses);
         //List<Long> proIds = gifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());

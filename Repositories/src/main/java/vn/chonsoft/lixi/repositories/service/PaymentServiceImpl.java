@@ -730,7 +730,7 @@ public class PaymentServiceImpl implements PaymentService{
         /* Create the payment transaction request */
         TransactionRequestType txnRequest = new TransactionRequestType();
         txnRequest.setTransactionType(TransactionTypeEnum.AUTH_ONLY_TRANSACTION.value());//AUTH_CAPTURE_TRANSACTION
-        txnRequest.setAmount(new BigDecimal(String.valueOf(lxInvoice.getTotalAmount())));
+        txnRequest.setAmount(new BigDecimal(String.valueOf(LiXiGlobalUtils.getTestTotalAmount(lxInvoice.getTotalAmount()))));
         
         //
         //log.info("invoice: " + lxInvoice.getId() + " - " + String.valueOf(lxInvoice.getTotalAmount()));

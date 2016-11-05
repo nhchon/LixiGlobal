@@ -691,9 +691,15 @@ public class LiXiUtils {
             recInOrder.setRecipient(rec);
 
             if (recGifts.containsKey(rec)) {
-
-                recInOrder.setGifts(recGifts.get(rec));
-
+                List<LixiOrderGift> gifts = recGifts.get(rec);
+                // get receive method
+                String receiveMethod = null;
+                if(gifts != null && !gifts.isEmpty()){
+                    receiveMethod = gifts.get(0).getBkReceiveMethod();
+                }
+                
+                recInOrder.setGifts(gifts);
+                recInOrder.setReceiveMethod(receiveMethod);
             }
             
             if (recTopUps.containsKey(rec)) {

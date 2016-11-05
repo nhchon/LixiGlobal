@@ -4,6 +4,7 @@
  */
 package vn.chonsoft.lixi.web.ctrl.admin;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,7 +26,6 @@ import vn.chonsoft.lixi.model.LixiOrder;
 import vn.chonsoft.lixi.model.ShippingCharged;
 import vn.chonsoft.lixi.model.pojo.RecipientInOrder;
 import vn.chonsoft.lixi.repositories.service.LixiConfigService;
-import vn.chonsoft.lixi.repositories.service.LixiInvoiceService;
 import vn.chonsoft.lixi.repositories.service.LixiMonitorService;
 import vn.chonsoft.lixi.repositories.service.LixiOrderService;
 import vn.chonsoft.lixi.repositories.service.ShippingChargedService;
@@ -62,8 +62,13 @@ public class TransactionMonitorController {
     @RequestMapping(value = "report", method = RequestMethod.GET)
     public ModelAndView report(Map<String, Object> model, @PageableDefault(value = 50, sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable){
         
-        double baoKimTransferPercent = LiXiUtils.getBaoKimPercent(this.configService.findByName("LIXI_BAOKIM_TRANFER_PERCENT").getValue());
-        Page<LixiOrder> pOrders = this.orderService.findByLixiStatus(EnumLixiOrderStatus.PROCESSING.getValue(), pageable);
+        //double baoKimTransferPercent = LiXiUtils.getBaoKimPercent(this.configService.findByName("LIXI_BAOKIM_TRANFER_PERCENT").getValue());
+        
+        // don't list complete, cancel order
+        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.UN_PROCESSED.getValue(), EnumLixiOrderStatus.PROCESSED.getValue(),
+                EnumLixiOrderStatus.UNDELIVERABLE.getValue(), EnumLixiOrderStatus.REFUNDED.getValue(),
+                EnumLixiOrderStatus.PURCHASED.getValue(), EnumLixiOrderStatus.DELIVERED.getValue());
+        Page<LixiOrder> pOrders = this.orderService.findByLixiStatusIn(statuses, pageable);
         
         Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
         List<ShippingCharged> charged = this.shipService.findAll();
@@ -73,7 +78,7 @@ public class TransactionMonitorController {
             pOrders.getContent().forEach(o -> {
                 if(o.getGifts()!=null && !o.getGifts().isEmpty())
                 {
-                    List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o, baoKimTransferPercent);
+                    List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
                     recInOrder.forEach(r -> {r.setCharged(charged);});
                 
                     mOs.put(o, recInOrder);

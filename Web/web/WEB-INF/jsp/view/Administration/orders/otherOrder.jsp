@@ -53,10 +53,11 @@
                 </div>
             </div>
             <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                <c:if test="${not empty rio.gifts}">
+                <c:if test="${not empty rio.gifts && (not empty rio.receiveMethod)}">
                     <div class="row alert alert-success">
                         <div class="col-md-6">
                             <b>${rio.recipient.fullName}</b>, ${rio.recipient.email}, ${rio.recipient.phone}
+                            <c:if test="${rio.receiveMethod eq 'GIFT'}">
                             <div style="margin-top: 10px;">Delivery Address: </div>
                             <div><b>${rio.recAdd.name}</b><br/>
                                 ${rio.recAdd.address}, ${rio.recAdd.ward}, ${rio.recAdd.district}<br/>
@@ -64,6 +65,17 @@
                                 <br/>
                                 Email: ${rio.recAdd.email}, Phone: ${rio.recAdd.phone}
                             </div>
+                            </c:if>
+                            <c:if test="${rio.receiveMethod eq 'MONEY'}">
+                            <div style="margin-top: 10px;"><b>Refund to Bank Account</b>: </div>
+                            <div style="font-size:14px;">Account number: <b>${rio.recBank.soTaiKhoan}</b><br/>
+                                Account name: <b>${rio.recBank.tenNguoiHuong}</b><br/>
+                                <b>${rio.recBank.bankName}, ${rio.recBank.chiNhanh}, ${rio.recBank.province.name}</b>
+                                <br/>
+                                Email: ${rio.recBank.recEmail}
+                            </div>
+                                
+                            </c:if>
                         </div>
                         <div class="col-md-6">
                             <div class="input-group">

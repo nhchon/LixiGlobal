@@ -37,7 +37,7 @@
                             <td>${p.id}</td>
                             <td><img src="${p.imageUrl}" class="img-rounded" alt="..." width="50" height="50"></td>
                             <td>
-                                ${p.name}<br/>
+                                <a style="font-weight: bold;color: black;" href="<c:url value="/gifts/detail/${p.id}"/>" target="_blank">${p.name}</a><br/>
                                 Source: <a href="${p.linkDetail}" target="_blank">${p.linkDetail}</a>
                                 
                             </td>

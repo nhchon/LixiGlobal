@@ -59,7 +59,7 @@
                 </div>
             </div>
             <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                <c:if test="${not empty rio.gifts}">
+                <c:if test="${not empty rio.gifts && rio.receiveMethod eq 'GIFT'}">
                     <div class="row alert alert-success">
                         <div class="col-md-6">
                             <b>${rio.recipient.fullName}</b>, ${rio.recipient.email}, ${rio.recipient.phone}
