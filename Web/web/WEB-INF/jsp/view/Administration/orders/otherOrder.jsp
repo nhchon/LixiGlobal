@@ -53,10 +53,11 @@
                 </div>
             </div>
             <c:forEach items="${m.value}" var="rio" varStatus="theValueCount">
-                <c:if test="${not empty rio.gifts && (not empty rio.receiveMethod)}">
+                <c:if test="${not empty rio.gifts}">
                     <div class="row alert alert-success">
                         <div class="col-md-6">
                             <b>${rio.recipient.fullName}</b>, ${rio.recipient.email}, ${rio.recipient.phone}
+                            
                             <c:if test="${rio.receiveMethod eq 'GIFT'}">
                             <div style="margin-top: 10px;">Delivery Address: </div>
                             <div><b>${rio.recAdd.name}</b><br/>
@@ -66,6 +67,7 @@
                                 Email: ${rio.recAdd.email}, Phone: ${rio.recAdd.phone}
                             </div>
                             </c:if>
+                            
                             <c:if test="${rio.receiveMethod eq 'MONEY'}">
                             <div style="margin-top: 10px;"><b>Refund to Bank Account</b>: </div>
                             <div style="font-size:14px;">Account number: <b>${rio.recBank.soTaiKhoan}</b><br/>
@@ -106,6 +108,9 @@
                                 <c:forEach var="g" items="${rio.gifts}" varStatus="gCount">
                                     <tr>
                                         <td><b>${gCount.count}.</b></td>
+                                        <td>
+                                            <img class="media-object" src="${g.productImage}" style="width: 64px; height: 64px;" alt="...">
+                                        </td>
                                         <td>
                                             <a href="<c:url value="/gifts/detail/${g.productId}"/>" target="_blank">${g.productName}</a><br/>
                                             <spring:message code="message.quantity" text="Quantity"/>: ${g.productQuantity} &nbsp; <spring:message code="message.price" text="Price"/>: VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/>
