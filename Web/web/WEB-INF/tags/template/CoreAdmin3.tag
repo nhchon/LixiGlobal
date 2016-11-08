@@ -78,6 +78,7 @@
         <script src="<c:url value="/resource/theme/assets/js/bootstrap/bootstrap.min.js"/>"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="<c:url value="/resource/theme/assets/js/ie10-viewport-bug-workaround.js"/>"></script>
+        <script src="<c:url value="/resource/theme/assets/lixi-global/js/vendor/jquery.maskedinput.min.js"/>"></script>
         <script src="<c:url value="/resource/theme/assets/lixi-global/js/utils.js"/>"></script>        
         <!-- javascript at end of page-->
         <jsp:invoke fragment="javascriptContent" />

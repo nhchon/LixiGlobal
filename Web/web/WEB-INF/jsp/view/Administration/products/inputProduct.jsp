@@ -20,6 +20,8 @@
                     toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor emoticons',
                     image_advtab: true
                 });
+                
+                $('#price').mask("99999?9999");
             });
         </script>    
     </jsp:attribute>
@@ -63,7 +65,7 @@
                                 <label>Category Name:</label>
                                 <form:select path="category" class="form-control">
                                     <c:forEach items="${categories}" var="c">
-                                        <option value="${c.id}" <c:if test="${c.id eq inputProductForm.category}">selected=""</c:if>>${c.english}</option>
+                                        <option value="${c.id}" <c:if test="${c.id eq inputProductForm.category}">selected=""</c:if>>${c.vietnam} - ${c.english}</option>
                                     </c:forEach>
                                 </form:select>
                                 <div class="has-error"><form:errors path="category" cssClass="help-block" element="div"/></div>

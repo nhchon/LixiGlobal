@@ -25,7 +25,7 @@
                         <tr>
                             <th>#ID</th>
                             <th></th>
-                            <td>Name</td>
+                            <th>Name</th>
                             <th>Original Price</th>
                             <th>Sell Price</th>
                             <th>Active</th>

@@ -310,20 +310,37 @@ public class LixiOrdersController {
         Recipient r = this.recService.findById(recId);
 
         List<LixiOrderGift> gifts = this.lxogiftService.findByOrderAndRecipient(o, r);
+        
+        // UNDELIVERABLE == outOfStock
+        if(EnumLixiOrderStatus.UNDELIVERABLE.getValue().equals(status)){
 
-        gifts.forEach(g -> {
+            gifts.forEach(g -> {
+                g.setBkReceiveMethod(null);
+                g.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.OUT_OF_STOCK.getValue());
+                g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
 
-            g.setBkStatus(status);
-            g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+                this.lxogiftService.save(g);
+            });
 
-            this.lxogiftService.save(g);
-        });
+            // send mail
+            sendOutOfStockEmail(r.getEmail(), r.getFirstName());
+        }
+        else{
+            
+            gifts.forEach(g -> {
 
-        /* */
-        try {
-            lxAsyncMethods.updateLixiOrderStatus(oId, status);
-        } catch (Exception e) {
-            log.info("Rest updateLixiOrder:", e);
+                g.setBkStatus(status);
+                g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+
+                this.lxogiftService.save(g);
+            });
+
+            /* */
+            try {
+                lxAsyncMethods.updateLixiOrderStatus(oId, status);
+            } catch (Exception e) {
+                log.info("Rest updateLixiOrder:", e);
+            }
         }
 
         switch (returnPage) {
@@ -350,7 +367,6 @@ public class LixiOrdersController {
 
         LixiOrder o = this.lxOrderService.findById(oId);
         Recipient r = this.recService.findById(recId);
-        final String recEmail = r.getEmail();
 
         List<LixiOrderGift> gifts = this.lxogiftService.findByOrderAndRecipient(o, r);
 
@@ -362,27 +378,9 @@ public class LixiOrdersController {
             this.lxogiftService.save(g);
         });
 
-        MimeMessagePreparator preparator = new MimeMessagePreparator() {
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            @Override
-            public void prepare(MimeMessage mimeMessage) throws Exception {
-                MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
-                message.setTo(recEmail);
-                message.setFrom("support@lixi.global");
-                message.setSubject("LiXi.Global - Gift Unavailable Alert");
-                message.setSentDate(Calendar.getInstance().getTime());
-
-                Map<String, Object> model = new HashMap<>();
-                model.put("firstName", r.getFirstName());
-
-                String text = VelocityEngineUtils.mergeTemplateIntoString(
-                        velocityEngine, "emails/out-of-stock.vm", "UTF-8", model);
-                message.setText(text, true);
-            }
-        };
-        // send email to receiver
-        taskScheduler.execute(() -> mailSender.send(preparator));
-
+        // send mail
+        sendOutOfStockEmail(r.getEmail(), r.getFirstName());
+        
         return new ModelAndView(new RedirectView("/Administration/Orders/giftedOrders", true, true));
     }
 
@@ -834,7 +832,7 @@ public class LixiOrdersController {
             List<LixiOrder> orders = this.lxOrderService.findAll(Arrays.asList(orderIds));
             LixiBatch batch = createBatch(orders.size());
 
-            double percent = getBaoKimPercent();
+            //double percent = getBaoKimPercent();
             double batchMargin = 0;
             double batchVndShip = 0;
             double batchUsdShip = 0;
@@ -916,6 +914,36 @@ public class LixiOrdersController {
 
     }
 
+    /**
+     * 
+     * @param recEmail
+     * @param firstName 
+     */
+    private void sendOutOfStockEmail(String recEmail, String firstName){
+        
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            @Override
+            public void prepare(MimeMessage mimeMessage) throws Exception {
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+                message.setTo(recEmail);
+                message.setFrom("support@lixi.global");
+                message.setSubject("LiXi.Global - Gift Unavailable Alert");
+                message.setSentDate(Calendar.getInstance().getTime());
+
+                Map<String, Object> model = new HashMap<>();
+                model.put("firstName", firstName);
+
+                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                        velocityEngine, "emails/out-of-stock.vm", "UTF-8", model);
+                message.setText(text, true);
+            }
+        };
+        // send email to receiver
+        taskScheduler.execute(() -> mailSender.send(preparator));
+        
+    }
+    
     /**
      * 
      * @param batchId

@@ -50,16 +50,16 @@ public class Bootstrap implements WebApplicationInitializer{
         dispatcher.addMapping("/");
         
         // Restful services
-        AnnotationConfigWebApplicationContext restContext =
-                new AnnotationConfigWebApplicationContext();
-        restContext.register(RestServletContextConfiguration.class);
-        DispatcherServlet servlet = new DispatcherServlet(restContext);
-        servlet.setDispatchOptionsRequest(true);
-        dispatcher = container.addServlet(
-                "springRestDispatcher", servlet
-        );
-        dispatcher.setLoadOnStartup(2);
-        dispatcher.addMapping("/services/Rest/*");
+        //AnnotationConfigWebApplicationContext restContext =
+        //        new AnnotationConfigWebApplicationContext();
+        //restContext.register(RestServletContextConfiguration.class);
+        //DispatcherServlet servlet = new DispatcherServlet(restContext);
+        //servlet.setDispatchOptionsRequest(true);
+        //dispatcher = container.addServlet(
+        //        "springRestDispatcher", servlet
+        //);
+        //dispatcher.setLoadOnStartup(2);
+        //dispatcher.addMapping("/services/Rest/*");
         
     }
 }
