@@ -3,6 +3,12 @@
     <jsp:attribute name="extraJavascriptContent">
         <!-- Javascript -->
         <script type="text/javascript">
+            $(document).ready(function () {
+                $('#category').change(function(){
+                    document.location.href = '<c:url value="/Administration/Products/redirect2List/"/>' + $(this).val();
+                });
+            });
+            
             function doActive(id, active){
                 postInvisibleForm('<c:url value="/Administration/Products/activate"/>', {id:id, active:active});
                 return false;
@@ -16,7 +22,20 @@
         </ul>
 
         <!-- main -->
-        <h2 class="sub-header">List Products</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <h2 class="sub-header">List Products</h2>
+            </div>
+            <div class="col-md-4">
+                <select id="category" name="category" class="form-control">
+                    <option value="0">All Products</option>
+                    <c:forEach items="${categories}" var="c">
+                    <option value="${c.vatgiaId.id}" <c:if test="${c.vatgiaId.id eq catId}">selected=""</c:if>>${c.vietnam} - ${c.english}</option>
+                    </c:forEach>
+                </select>
+            </div>
+        </div>
+        
         <div class="row">
             <div class="col-md-12">
                 <!-- Content -->
@@ -26,9 +45,10 @@
                             <th>#ID</th>
                             <th></th>
                             <th>Name</th>
-                            <th>Original Price</th>
-                            <th>Sell Price</th>
+                            <th nowrap>Original Price</th>
+                            <th nowrap>Sell Price</th>
                             <th>Active</th>
+                            <th style="text-align: right;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,7 +80,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6">
+                            <td colspan="7">
                                 <%-- Paging --%>
                                 <nav>
                                     <ul class="pagination pull-right">
@@ -73,7 +93,7 @@
                                                 </c:when>
                                                 <c:otherwise>
                                                     <li>
-                                                        <a href="<c:url value="/Administration/Products/list">
+                                                        <a href="<c:url value="/Administration/Products/list/${catId}">
                                                            <c:param name="paging.page" value="${i}" />
                                                            <c:param name="paging.sort" value="alive,DESC" />
                                                            <c:param name="paging.sort" value="id,DESC" />

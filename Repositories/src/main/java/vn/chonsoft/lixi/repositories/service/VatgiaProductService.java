@@ -42,4 +42,6 @@ public interface VatgiaProductService {
     void loadAllVatGiaProducts();
     
     Page<VatgiaProduct> findAll(Pageable page);
+    
+    Page<VatgiaProduct> findByCategoryId(int category, Pageable page);
 }

@@ -37,6 +37,19 @@ public class VatgiaProductServiceImpl implements VatgiaProductService{
 
     /**
      * 
+     * @param category
+     * @param page
+     * @return 
+     */
+    @Override
+    public Page<VatgiaProduct> findByCategoryId(int category, Pageable page){
+        
+        return this.vgpRepository.findByCategoryId(category, page);
+        
+    }
+    
+    /**
+     * 
      * @param page
      * @return 
      */

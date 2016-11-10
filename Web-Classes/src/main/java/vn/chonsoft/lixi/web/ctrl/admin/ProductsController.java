@@ -72,30 +72,40 @@ public class ProductsController {
     
     /**
      * 
+     * @param catId
      * @param model
      * @return 
      */
-    @RequestMapping(value = "redirect2List", method = RequestMethod.GET)
-    public ModelAndView redirect2List(Map<String, Object> model){
-        return new ModelAndView(new RedirectView("/Administration/Products/list?paging.page=1&paging.sort=alive,DESC&paging.sort=id,DESC&paging.size=50", true, true));
+    @RequestMapping(value = "redirect2List/{catId}", method = RequestMethod.GET)
+    public ModelAndView redirect2List(Map<String, Object> model, @PathVariable Integer catId){
+        return new ModelAndView(new RedirectView("/Administration/Products/list/"+catId+"?paging.page=1&paging.sort=alive,DESC&paging.sort=id,DESC&paging.size=50", true, true));
     }
     
     /**
      * 
      * @param model
+     * @param catId
      * @param page
      * @return 
      */
-    @RequestMapping(value = "list", method = RequestMethod.GET)
-    public ModelAndView list(Map<String, Object> model, @PageableDefault(page = 0, size = 50, sort = "alive", direction = Sort.Direction.DESC) Pageable page){
+    @RequestMapping(value = "list/{catId}", method = RequestMethod.GET)
+    public ModelAndView list(Map<String, Object> model, @PathVariable Integer catId, @PageableDefault(page = 0, size = 50, sort = "alive", direction = Sort.Direction.DESC) Pageable page){
         
         //, new Sort.Order(Sort.Direction.DESC, "id")
         //log.info("sort just alive");
         //page.getSort().and(new Sort(new Sort.Order(Sort.Direction.DESC, "alive")));
+        Page<VatgiaProduct> pRs = null;
+        if(catId == 0){
+            pRs = this.vgpSer.findAll(page);
+        }
+        else{
+            pRs = this.vgpSer.findByCategoryId(catId, page);
+        }
         
-        Page<VatgiaProduct> pRs = this.vgpSer.findAll(page);
         
+        model.put("categories", this.lxcSer.findAll());
         model.put("pRs", pRs);
+        model.put("catId", catId);
         
         return new ModelAndView("Administration/products/listProducts");
     }
