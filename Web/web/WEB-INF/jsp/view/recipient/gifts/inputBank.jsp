@@ -63,7 +63,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="title"><spring:message code="bank-address" text="Nhập thông tin tài khoản nhận tiền"/></h3></div>
+                                <div class="panel-heading"><h3 class="title"><spring:message code="bank-address"/></h3></div>
                                 <div class="panel-body">
                                     <c:if test="${not empty rbs}">
                                         <c:forEach items="${rbs}" var="rBank">
@@ -86,7 +86,7 @@
                                                 <input type="radio" name="recBankRadio" value="0" checked="">
                                             </div>
                                             <div class="col-md-11" style="padding-left: 0px;">
-                                                <spring:message code="new-bank" text="Thêm tài khoản khác"/>
+                                                <spring:message code="new-bank"/>
                                             </div>
                                         </div>
                                     </c:if>
@@ -96,7 +96,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label><spring:message code="rec-bank-account-number" text="Bank Account Number"/></label>
+                                                        <label><spring:message code="rec-bank-account-number"/></label>
                                                         <form:input type="text" path="soTaiKhoan" class="form-control"/>
                                                         <div class="has-error"><form:errors path="soTaiKhoan" cssClass="help-block" element="div"/></div>
                                                     </div>
@@ -105,7 +105,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label><spring:message code="rec-bank-account-name" text="Bank Account Name"/>:</label>
+                                                        <label><spring:message code="rec-bank-account-name"/>:</label>
                                                         <form:input type="text" path="tenNguoiHuong" class="form-control"/>
                                                         <div class="has-error"><form:errors path="tenNguoiHuong" cssClass="help-block" element="div"/></div>
                                                     </div>
@@ -114,7 +114,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label><spring:message code="bank-name" text="Bank Name"/>:</label>
+                                                        <label><spring:message code="bank-name"/>:</label>
                                                         <form:input type="text" path="bankName" class="form-control"/>
                                                         <div class="has-error"><form:errors path="bankName" cssClass="help-block" element="div"/></div>
                                                     </div>
@@ -123,7 +123,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label><spring:message code="province" text="Province"/></label>
+                                                        <label><spring:message code="province"/></label>
                                                         <form:select path="recProvince" class="form-control">
                                                             <c:forEach items="${provinces}" var="p">
                                                                 <option value="${p.id}">${p.name}</option>
@@ -135,7 +135,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label><spring:message code="chi-nhanh" text="Brand Name"/></label>
+                                                        <label><spring:message code="chi-nhanh"/></label>
                                                         <form:input type="text" path="chiNhanh" class="form-control"/>
                                                         <div class="has-error"><form:errors path="chiNhanh" cssClass="help-block" element="div"/></div>
                                                     </div>
@@ -158,12 +158,12 @@
                         </div>
                         <div class="col-md-4">
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="title"><spring:message code="gift-info" text="Thông tin đơn hàng"/></h3></div>
+                                <div class="panel-heading"><h3 class="title"><spring:message code="gift-info"/></h3></div>
                                 <div class="panel-body">
                                     <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th><spring:message code="san-pham" text="Sản phẩm"/></th>
+                                                <th><spring:message code="san-pham"/></th>
                                                 <th><spring:message code="quantity"/></th>
                                                 <th><spring:message code="message.price"/></th>
                                             </tr>
@@ -178,7 +178,7 @@
                                             </c:forEach>
                                                 <tr>
                                                     <td style="text-align: right;">
-                                                        <spring:message code="shipping-charge" text="Shipping charge"/>
+                                                        <spring:message code="shipping-charge"/>
                                                     </td>
                                                     <td colspan="2" style="text-align: right;">
                                                         $<fmt:formatNumber minFractionDigits="2" value="${rio.shippingChargeAmount}" pattern="###,###.##"/>
@@ -188,7 +188,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: right;">
-                                                        <b><spring:message code="total-refund" text="Total Refund"/></b>
+                                                        <b><spring:message code="total-refund"/></b>
                                                     </td>
                                                     <td colspan="2" style="text-align: right;">
                                                         <b><fmt:formatNumber maxFractionDigits="0" value="${totalRefund}" pattern="###,###"/></b>

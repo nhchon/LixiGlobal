@@ -63,7 +63,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="title"><spring:message code="gift-address" text="Nhập địa chỉ giao hàng"/></h3></div>
+                                <div class="panel-heading"><h3 class="title"><spring:message code="gift-address"/></h3></div>
                                 <div class="panel-body">
                                     <c:if test="${not empty recAdds}">
                                         <c:forEach items="${recAdds}" var="rAdd">
@@ -86,7 +86,7 @@
                                                 <input type="radio" name="recAddRadio" value="0" checked="">
                                             </div>
                                             <div class="col-md-11" style="padding-left: 0px;">
-                                                <spring:message code="new-add" text="Thêm địa chỉ khác"/>
+                                                <spring:message code="new-add"/>
                                             </div>
                                         </div>
                                     </c:if>
@@ -115,7 +115,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label>Receiver's Address</label>
+                                                        <label><spring:message code="gift-address"/></label>
                                                         <form:input type="text" path="recAddress" class="form-control"/>
                                                         <div class="has-error"><form:errors path="recAddress" cssClass="help-block" element="div"/></div>
                                                     </div>
@@ -124,7 +124,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label>Province</label>
+                                                        <label><spring:message code="province"/></label>
                                                         <form:select path="recProvince" class="form-control">
                                                             <c:forEach items="${provinces}" var="p">
                                                                 <option value="${p.id}">${p.name}</option>
@@ -136,7 +136,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label><spring:message code="mess.district" text="Quận/huyện"/></label>
+                                                        <label><spring:message code="mess.district"/></label>
                                                         <form:input type="text" path="recDist" class="form-control"/>
                                                         <div class="has-error"><form:errors path="recDist" cssClass="help-block" element="div"/></div>
                                                     </div>
@@ -145,7 +145,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label><spring:message code="mess.ward" text="Phường, xã"/></label>
+                                                        <label><spring:message code="mess.ward"/></label>
                                                         <form:input type="text" path="recWard" class="form-control"/>
                                                         <div class="has-error"><form:errors path="recWard" cssClass="help-block" element="div"/></div>
                                                     </div>
@@ -154,7 +154,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label><spring:message code="mess.cell-phone" text="Điện thoại di động"/></label>
+                                                        <label><spring:message code="mess.cell-phone"/></label>
                                                         <form:input type="text" path="recPhone" class="form-control"/>
                                                         <div class="has-error"><form:errors path="recPhone" cssClass="help-block" element="div"/></div>
                                                     </div>
@@ -179,12 +179,12 @@
                         </div>
                         <div class="col-md-4">
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="title"><spring:message code="gift-info" text="Thông tin đơn hàng"/></h3></div>
+                                <div class="panel-heading"><h3 class="title"><spring:message code="gift-info"/></h3></div>
                                 <div class="panel-body">
                                     <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th><spring:message code="san-pham" text="Sản phẩm"/></th>
+                                                <th><spring:message code="san-pham"/></th>
                                                 <th><spring:message code="quantity"/></th>
                                                 <th><spring:message code="message.price"/></th>
                                             </tr>

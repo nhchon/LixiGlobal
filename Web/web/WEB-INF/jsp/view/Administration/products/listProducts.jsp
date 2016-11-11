@@ -18,7 +18,7 @@
     <jsp:body>
         <ul class="breadcrumb">
             <li><i class="fa fa-home"></i><a href="<c:url value="/Administration/Dashboard"/>">Home</a></li>
-            <li><a href="<c:url value="/Administration/Products/list"/>">List Product</a></li>
+            <li><a href="<c:url value="/Administration/Products/list/0"/>">List Product</a></li>
         </ul>
 
         <!-- main -->

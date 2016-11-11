@@ -184,11 +184,12 @@ public class RecipientController {
         /* update receive method */
         if(o.getGifts() != null){
             for(LixiOrderGift g : o.getGifts()){
-                
-                g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_MONEY_METHOD);
-                g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
-                
-                this.lxogiftService.save(g);
+                if(loginedUser.getEmail().equals(g.getRecipientEmail())){
+                    g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_MONEY_METHOD);
+                    g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+
+                    this.lxogiftService.save(g);
+                }
             }
         }
         
@@ -333,11 +334,12 @@ public class RecipientController {
             LixiOrder o = this.lxorderService.findById(form.getOId());
             if(o.getGifts() != null){
                 for(LixiOrderGift g : o.getGifts()){
-                    
-                    g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_MONEY_METHOD);
-                    g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
-                    
-                    this.lxogiftService.save(g);
+                    if(loginedUser.getEmail().equals(g.getRecipientEmail())){
+                        g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_MONEY_METHOD);
+                        g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+
+                        this.lxogiftService.save(g);
+                    }
                 }
             }
         } catch (ConstraintViolationException e) {
@@ -412,11 +414,12 @@ public class RecipientController {
         LixiOrder o = this.lxorderService.findById(oId);
         if(o.getGifts() != null){
             for(LixiOrderGift g : o.getGifts()){
-                
-                g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
-                g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
-                
-                this.lxogiftService.save(g);
+                if(loginedUser.getEmail().equals(g.getRecipientEmail())){
+                    g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
+                    g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+
+                    this.lxogiftService.save(g);
+                }
             }
         }
         
@@ -497,11 +500,12 @@ public class RecipientController {
             LixiOrder o = this.lxorderService.findById(form.getOId());
             if(o.getGifts() != null){
                 for(LixiOrderGift g : o.getGifts()){
-                    
-                    g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
-                    g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
-                    
-                    this.lxogiftService.save(g);
+                    if(loginedUser.getEmail().equals(g.getRecipientEmail())){
+                        g.setBkReceiveMethod(LiXiGlobalConstants.BAOKIM_GIFT_METHOD);
+                        g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+
+                        this.lxogiftService.save(g);
+                    }
                 }
             }
         } catch (ConstraintViolationException e) {

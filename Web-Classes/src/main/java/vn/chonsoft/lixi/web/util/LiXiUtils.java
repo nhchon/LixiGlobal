@@ -707,8 +707,6 @@ public class LiXiUtils {
                 recInOrder.setTopUpMobilePhones(recTopUps.get(rec));
 
             }
-            /* */
-            recInOrder.getAllTotal();
             
             recs.add(recInOrder);
         }

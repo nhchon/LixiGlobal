@@ -225,13 +225,13 @@ public class LixiOrdersController {
                 List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
                 recInOrder.forEach(r -> {
                     r.setCharged(charged);
-                    // get delivery address
+                    // get bank account
                     RecBank rb = null;
                     List<RecBankOrder> rbos = this.rboService.findByOrderIdAndRecEmail(o.getId(), r.getRecipient().getEmail());
                     if (rbos != null && !rbos.isEmpty()) {
                         rb = this.recBankService.findById(rbos.get(0).getBankId());
                     }
-                    // set delivery address
+                    // set bank account
                     r.setRecBank(rb);
                 });
 
@@ -280,6 +280,15 @@ public class LixiOrdersController {
                     }
                     // set delivery address
                     r.setRecAdd(ra);
+                    
+                    // get bank account
+                    RecBank rb = null;
+                    List<RecBankOrder> rbos = this.rboService.findByOrderIdAndRecEmail(o.getId(), r.getRecipient().getEmail());
+                    if (rbos != null && !rbos.isEmpty()) {
+                        rb = this.recBankService.findById(rbos.get(0).getBankId());
+                    }
+                    // set bank account
+                    r.setRecBank(rb);
                 });
 
                 mOs.put(o, recInOrder);

@@ -74,6 +74,8 @@
                                 Account name: <b>${rio.recBank.tenNguoiHuong}</b><br/>
                                 <b>${rio.recBank.bankName}, ${rio.recBank.chiNhanh}, ${rio.recBank.province.name}</b>
                                 <br/>
+                                Total refund: <b><fmt:formatNumber value="${rio.refundAmount}" pattern="###,###.##"/> VND</b>
+                                <br/>
                                 Email: ${rio.recBank.recEmail}
                             </div>
                                 
@@ -106,6 +108,7 @@
                         <table class="table table-hover table-responsive table-striped">
                             <tbody>
                                 <c:forEach var="g" items="${rio.gifts}" varStatus="gCount">
+                                    <c:if test="${rio.receiveMethod ne 'MONEY'}">
                                     <tr>
                                         <td><b>${gCount.count}.</b></td>
                                         <td>
@@ -117,6 +120,7 @@
                                             <br/>Source: <a href="${g.productSource}" target="_blank">${g.productSource}</a>
                                         </td>
                                     </tr>
+                                    </c:if>
                                 </c:forEach>
                             </tbody>
                         </table>

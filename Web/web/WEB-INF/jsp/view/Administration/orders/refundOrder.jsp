@@ -68,7 +68,9 @@
                                 Account name: <b>${rio.recBank.tenNguoiHuong}</b><br/>
                                 <b>${rio.recBank.bankName}, ${rio.recBank.chiNhanh}, ${rio.recBank.province.name}</b>
                                 <br/>
-                                Email: ${rio.recBank.recEmail}
+                                Total refund: <b><fmt:formatNumber value="${rio.refundAmount}" pattern="###,###.##"/> VND</b>
+                                <br/>
+                                Email: ${rio.recBank.recEmail} ${rio.receiveMethod}
                             </div>
                         </div>
                         <div class="col-md-6">

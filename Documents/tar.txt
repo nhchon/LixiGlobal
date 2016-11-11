@@ -3,3 +3,7 @@ tar -cvf LixiGlobal-2015-08-01.tar /home/chonnh/Projects/YuricProjects/LixiGloba
 
 
 tar -cvf LixiGlobal-2015-09-24.tar /home/chonnh/Projects/YuricProjects/LixiGlobal
+
+xcopy "E:\AndroidProjects\BeautyApp" "E:\JohnHuynhProjs" /E /Y /R /exclude:exclude.txt
+
+xcopy "E:\AndroidProjects\BeautyApp\beautyapp_android" "E:\JohnHuynhProjs\StorewalkProj" /E /Y /R /exclude:exclude.txt
