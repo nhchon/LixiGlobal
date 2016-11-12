@@ -85,7 +85,7 @@
                                 </div>
                                 <c:if test="${rio.receiveMethod ne 'MONEY'}">
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-responsive table-striped">
+                                    <table class="table table-hover table-responsive table-striped" style="margin-bottom: 0px;">
                                         <tbody>
                                             <c:forEach var="g" items="${rio.gifts}" varStatus="gCount">
                                                 
@@ -96,8 +96,10 @@
                                                     </td>
                                                     <td>
                                                         <a href="<c:url value="/gifts/detail/${g.productId}"/>" target="_blank">${g.productName}</a><br/>
+                                                        <%--
                                                         <spring:message code="message.quantity" text="Quantity"/>: ${g.productQuantity} &nbsp; <spring:message code="message.price" text="Price"/>: VND <fmt:formatNumber value="${g.productPrice}" pattern="###,###.##"/>
                                                         <br/>Source: <a href="${g.productSource}" target="_blank">${g.productSource}</a>
+                                                        --%>
                                                     </td>
                                                 </tr>
                                                 
@@ -109,6 +111,7 @@
                             </c:if>
                             </c:if>
                         </c:forEach>
+                        <p>&nbsp;</p>
                     </c:forEach>
                 </div>
             </div>
