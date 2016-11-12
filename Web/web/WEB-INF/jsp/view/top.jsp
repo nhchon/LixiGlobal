@@ -58,6 +58,13 @@
                         <a class="hvr-underline-from-center nav-link" data-toggle="dropdown" href="<c:url value="/user/orderHistory"/>"><spring:message code="account"/> <i class="fa fa-angle-down"></i></a>
                         <ul class="dropdown-menu nav-level-1">
                             <li>
+                                <a class="nav-sub-link no-boder-top" href="<c:url value="/user/orderHistory"/>"><spring:message code="your-gifts"/></a>
+                                <ul class="nav-level-2">
+                                    <li><a href="<c:url value="/recipient/gifts"/>"><spring:message code="new-gift"/></a></li>
+                                    <li><a href="<c:url value="/recipient/gifts/status"/>"><spring:message code="view-gift-status"/></a></li>
+                                </ul>
+                            </li>
+                            <li>
                                 <a class="nav-sub-link no-boder-top" href="<c:url value="/user/orderHistory"/>"><spring:message code="orders"/></a>
                                 <ul class="nav-level-2">
                                     <li><a href="<c:url value="/user/orderHistory"/>"><spring:message code="view-track-cancel"/></a></li>

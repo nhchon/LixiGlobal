@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -516,6 +517,68 @@ public class RecipientController {
         }
         
         return new ModelAndView(new RedirectView("/recipient/address/thankYou", true, true));
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param request
+     * @return 
+     */
+    @UserSecurityAnnotation
+    @RequestMapping(value = "gifts/status", method = RequestMethod.GET)
+    public ModelAndView giftStatus(Map<String, Object> model, HttpServletRequest request) {
+        
+        // new gifts, recipient did not do anything
+        List<String> statuses = Arrays.asList(EnumLixiOrderStatus.PROCESSED.getValue(), EnumLixiOrderStatus.PURCHASED.getValue(), EnumLixiOrderStatus.DELIVERED.getValue(),
+                EnumLixiOrderStatus.UNDELIVERABLE.getValue(), EnumLixiOrderStatus.REFUNDED.getValue(),
+                EnumLixiOrderStatus.CANCELED.getValue(), EnumLixiOrderStatus.COMPLETED.getValue());
+        List<LixiOrderGift> proGifts = this.lxogiftService.findByRecipientEmailAndBkStatusIn(loginedUser.getEmail(), statuses);
+        
+        /**
+         * get order id list
+         * 
+         * https://coderanch.com/t/623127/java/java/array-specific-attribute-values-list
+         */
+        List<Long> proIds = proGifts.stream().map(g -> g.getOrder().getId()).collect(Collectors.toList());
+        LiXiGlobalUtils.removeDupEle(proIds);
+        
+        Map<LixiOrder, List<RecipientInOrder>> mOs = new LinkedHashMap<>();
+        List<ShippingCharged> charged = this.shipService.findAll();
+        
+        List<LixiOrder> orders = lxorderService.findAll(proIds);
+        if (orders != null) {
+            orders.forEach(o -> {
+
+                List<RecipientInOrder> recInOrder = LiXiUtils.genMapRecGifts(o);
+                recInOrder.forEach(r -> {
+                    r.setCharged(charged);
+                    // get delivery address
+                    RecAdd ra = null;
+                    List<RecAddOrder> raos = this.raoService.findByOrderIdAndRecEmail(o.getId(), r.getRecipient().getEmail());
+                    if (raos != null && !raos.isEmpty()) {
+                        ra = this.recAddService.findById(raos.get(0).getAddId());
+                    }
+                    // set delivery address
+                    r.setRecAdd(ra);
+                    
+                    // get bank account
+                    RecBank rb = null;
+                    List<RecBankOrder> rbos = this.rboService.findByOrderIdAndRecEmail(o.getId(), r.getRecipient().getEmail());
+                    if (rbos != null && !rbos.isEmpty()) {
+                        rb = this.recBankService.findById(rbos.get(0).getBankId());
+                    }
+                    // set bank account
+                    r.setRecBank(rb);
+                });
+
+                mOs.put(o, recInOrder);
+            });
+        }
+
+        model.put("mOs", mOs);
+        
+        return new ModelAndView("recipient/gifts/giftStatus");
     }
     
     /**

@@ -15,7 +15,10 @@
         <section class="section-gift bg-default main-section">
             <div class="container post-wrapper" style="padding-top:30px;">
                 <div class="section-receiver">
-                    <h2 class="title"><spring:message code="your-gifts" text="Your Gifts"/></h2>
+                    <h2 class="title"><spring:message code="your-gifts"/></h2>
+                    <c:if test="${empty NEW_ORDERS}">
+                        <spring:message code="no-gift"/>
+                    </c:if>
                     <c:forEach var="LIXI_ORDER" items="${NEW_ORDERS}">
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -33,7 +36,7 @@
                                         <div><spring:message code="message.phone"/>: ${LIXI_ORDER.sender.phone}</div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div style="font-size: 16px;font-weight: bold; text-align: center;"><spring:message code="mess.select-method" text="Please Select Gifting Method"/>:</div>
+                                        <div style="font-size: 16px;font-weight: bold; text-align: center;"><spring:message code="mess.select-method" text="Chọn phương thức nhận quà"/>:</div>
                                         <div style="margin-top: 10px;text-align: center;">
                                             <%-- check out of stock --%>
                                             <c:set var="outOfStock" value="NO"/>
