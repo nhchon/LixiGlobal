@@ -56,18 +56,19 @@ public class ProductsController {
      * 
      * @param model
      * @param id
+     * @param catId
      * @param active
      * @return 
      */
     @RequestMapping(value = "activate", method = RequestMethod.POST)
-    public ModelAndView activateProduct(Map<String, Object> model, @RequestParam Integer id, @RequestParam Integer active){
+    public ModelAndView activateProduct(Map<String, Object> model, @RequestParam Integer id, @RequestParam Integer catId, @RequestParam Integer active){
         
         VatgiaProduct p = this.vgpSer.findById(id);
         p.setAlive(active);
         
         this.vgpSer.save(p);
         
-        return new ModelAndView(new RedirectView("/Administration/Products/list?paging.page=1&paging.sort=alive,DESC&paging.sort=id,DESC&paging.size=50", true, true));
+        return new ModelAndView(new RedirectView("/Administration/Products/list/"+catId+"?paging.page=1&paging.sort=alive,DESC&paging.sort=id,DESC&paging.size=50", true, true));
     }
     
     /**

@@ -10,7 +10,8 @@
             });
             
             function doActive(id, active){
-                postInvisibleForm('<c:url value="/Administration/Products/activate"/>', {id:id, active:active});
+                var selectedCat = $('#category').val();
+                postInvisibleForm('<c:url value="/Administration/Products/activate"/>', {id:id, catId:selectedCat, active:active});
                 return false;
             }
         </script>    
