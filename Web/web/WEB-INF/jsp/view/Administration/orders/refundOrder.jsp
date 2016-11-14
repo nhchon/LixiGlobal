@@ -75,16 +75,21 @@
                         </div>
                         <div class="col-md-6">
                             <div class="input-group">
+                                <%-- get receiver order status --%>
+                                <c:set var="recStatus" value=""/>
+                                <c:forEach var="g" items="${rio.gifts}" varStatus="gCount">
+                                    <c:set var="recStatus" value="${g.bkStatus}"/>
+                                </c:forEach>
                                 <select id="recOrderStatus${rio.recipient.id}" class="form-control">
                                     <option value="-1">-- Order Status --</option>
-                                    <option value="${PROCESSING}">PROCESSING</option>
-                                    <option value="${PURCHASED}">PURCHASED</option>
-                                    <option value="${DELIVERED}">DELIVERED</option>
-                                    <option value="${UNDELIVERABLE}">UNDELIVERABLE</option>
-                                    <option value="${REFUNDED}">REFUNDED</option>
-                                    <option value="${CANCELED}">CANCELED</option>
-                                    <option value="${COMPLETED}">COMPLETED</option>
-                                </select>
+                                    <option value="${PROCESSING}" <c:if test="${recStatus eq PROCESSING}">selected=""</c:if>>PROCESSING</option>
+                                    <option value="${PURCHASED}" <c:if test="${recStatus eq PURCHASED}">selected=""</c:if>>PURCHASED</option>
+                                    <option value="${DELIVERED}" <c:if test="${recStatus eq DELIVERED}">selected=""</c:if>>DELIVERED</option>
+                                    <option value="${UNDELIVERABLE}" <c:if test="${recStatus eq UNDELIVERABLE}">selected=""</c:if>>UNDELIVERABLE</option>
+                                    <option value="${REFUNDED}" <c:if test="${recStatus eq REFUNDED}">selected=""</c:if>>REFUNDED</option>
+                                    <option value="${CANCELED}" <c:if test="${recStatus eq CANCELED}">selected=""</c:if>>CANCELED</option>
+                                    <option value="${COMPLETED}" <c:if test="${recStatus eq COMPLETED}">selected=""</c:if>>COMPLETED</option>
+                                    </select>
                                 <span class="input-group-btn" style="padding-left: 10px;">
                                     <button onclick="updateOrderStatus(${m.key.id}, ${rio.recipient.id})" class="btn btn-primary">Update Order Status</button>
                                 </span>

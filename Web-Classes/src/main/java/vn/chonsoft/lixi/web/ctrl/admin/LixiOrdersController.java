@@ -321,20 +321,21 @@ public class LixiOrdersController {
         List<LixiOrderGift> gifts = this.lxogiftService.findByOrderAndRecipient(o, r);
         
         // UNDELIVERABLE == outOfStock
-        if(EnumLixiOrderStatus.UNDELIVERABLE.getValue().equals(status)){
+        //if(EnumLixiOrderStatus.UNDELIVERABLE.getValue().equals(status)){
 
-            gifts.forEach(g -> {
-                g.setBkReceiveMethod(null);
-                g.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.OUT_OF_STOCK.getValue());
-                g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
+        //    gifts.forEach(g -> {
+        //        g.setBkReceiveMethod(null);
+        //        g.setBkSubStatus(EnumLixiOrderStatus.GiftStatus.OUT_OF_STOCK.getValue());
+        //        g.setBkUpdated(yyyyMMdd.format(Calendar.getInstance().getTime()));
 
-                this.lxogiftService.save(g);
-            });
+        //        this.lxogiftService.save(g);
+        //    });
 
             // send mail
-            sendOutOfStockEmail(r.getEmail(), r.getFirstName());
-        }
-        else{
+        //    sendOutOfStockEmail(r.getEmail(), r.getFirstName());
+        //}
+        //else
+        //{
             
             gifts.forEach(g -> {
 
@@ -350,7 +351,7 @@ public class LixiOrdersController {
             } catch (Exception e) {
                 log.info("Rest updateLixiOrder:", e);
             }
-        }
+        //}
 
         switch (returnPage) {
             case "newOrders":
