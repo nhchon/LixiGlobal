@@ -1024,7 +1024,7 @@ public class LixiOrdersController {
         LixiOrder order = this.lxOrderService.findById(id);
 
         if (order != null) {
-            boolean c = lxAsyncMethods.cancelOrdersOnBaoKimNoAsync(order);
+            boolean c = true;//lxAsyncMethods.cancelOrdersOnBaoKimNoAsync(order);
             if (c) {
                 LixiInvoice invoice = order.getInvoice();
 

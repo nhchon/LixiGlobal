@@ -196,7 +196,8 @@
                                         <c:set var="totalGiftMargin" value="0"/>
                                         <c:set var="countRec" value="${theCount.count}"/>
                                         <tr id="rowO${m.key.id}" <c:if test="${not empty m.key.invoice.monitored}">class="warning"</c:if>>
-                                            <td><fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.createdDate}"/>
+                                            <td>
+                                            <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.invoiceDate}"/><br/><fmt:formatDate pattern="HH:mm:ss" value="${m.key.invoice.invoiceDate}"/>
                                             </td>
                                             <td nowrap style="text-align:center;"><a href="<c:url value="/Administration/Orders/detail/${m.key.id}"/>">
                                                     <b>${m.key.invoice.invoiceCode}</b>

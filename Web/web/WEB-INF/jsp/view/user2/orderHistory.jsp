@@ -103,7 +103,14 @@
                                         <div class="col-md-2" style="text-align:center;">
                                             <div style="font-size:15px;"><spring:message code="mess.order-date"/></div>
                                             <div style="font-size:14px;padding-top: 8px;">
-                                                <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.modifiedDate}"/>
+                                                <c:choose>
+                                                    <c:when test="${not empty m.key.invoice.invoiceDate}">
+                                                        <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.invoice.invoiceDate}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <fmt:formatDate pattern="MM/dd/yyyy" value="${m.key.createdDate}"/>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </div>
                                         <div class="col-md-2" style="text-align:center;">

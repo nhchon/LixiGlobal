@@ -7,3 +7,8 @@ tar -cvf LixiGlobal-2015-09-24.tar /home/chonnh/Projects/YuricProjects/LixiGloba
 xcopy "E:\AndroidProjects\BeautyApp" "E:\JohnHuynhProjs" /E /Y /R /exclude:exclude.txt
 
 xcopy "E:\AndroidProjects\BeautyApp\beautyapp_android" "E:\JohnHuynhProjs\StorewalkProj" /E /Y /R /exclude:exclude.txt
+
+Error:Execution failed for task ':chapter9:compileReleaseNdk'.
+> NDK not configured.
+Download the NDK from http://developer.android.com/tools/sdk/ndk/.Then add ndk.dir=path/to/ndk in local.properties.
+(On Windows, make sure you escape backslashes, e.g. C:\\ndk rather than C:\ndk)
